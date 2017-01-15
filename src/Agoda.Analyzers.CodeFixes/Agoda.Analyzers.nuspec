@@ -4,8 +4,8 @@
     <id>Agoda.Analyzers</id>
     <version>0.0.0</version>
     <title>Agoda Roslyn Analyzers</title>
-    <authors>IT-TCBuildAgent</authors>
-    <owners>IT-TCBuildAgent</owners>
+    <authors>Joel Dickson</authors>
+    <owners>Agoda Services</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>TBA</description>
     <copyright>Copyright © Agoda 2017</copyright>
