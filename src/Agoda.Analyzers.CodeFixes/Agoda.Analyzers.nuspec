@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
-  <metadata>
+  <metadata minClientVersion="2.7">
     <id>Agoda.Analyzers</id>
     <version>0.0.0</version>
     <title>Agoda Roslyn Analyzers</title>
@@ -17,7 +17,7 @@
     <file src="bin\$Configuration$\Agoda.Analyzers.CodeFixes.dll" target="analyzers\dotnet\cs" />
     <file src="bin\$Configuration$\**\Agoda.Analyzers.CodeFixes.resources.dll" target="analyzers\dotnet\cs" />
     <file src="bin\$Configuration$\Agoda.Analyzers.CodeFixes.pdb" target="analyzers\dotnet\cs" />
-    <file src="..\..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll" target="analyzers\dotnet\cs" />
+    <file src="..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll" target="analyzers\dotnet\cs" />
     <file src="tools\install.ps1" target="tools\" />
     <file src="tools\uninstall.ps1" target="tools\" />
   </files>
