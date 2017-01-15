@@ -35,8 +35,11 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .NET Framework is automatically included -->
+    <None Include="Agoda.Analyzers.nuspec" />
     <None Include="app.config" />
     <None Include="packages.config" />
+    <None Include="tools\install.ps1" />
+    <None Include="tools\uninstall.ps1" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Helpers\CustomBatchFixAllProvider.cs" />

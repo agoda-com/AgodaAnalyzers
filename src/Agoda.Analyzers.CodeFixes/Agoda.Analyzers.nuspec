@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata>
+    <id>Agoda.Analyzers</id>
+    <version>0.0.0</version>
+    <title>Agoda Roslyn Analyzers</title>
+    <authors>IT-TCBuildAgent</authors>
+    <owners>IT-TCBuildAgent</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>TBA</description>
+    <copyright>Copyright © Agoda 2017</copyright>
+  </metadata>
+  <files>
+    <file src="bin\$Configuration$\Agoda.Analyzers.dll" target="analyzers\dotnet\cs" />
+    <file src="bin\$Configuration$\**\Agoda.Analyzers.resources.dll" target="analyzers\dotnet\cs" />
+    <file src="bin\$Configuration$\Agoda.Analyzers.pdb" target="analyzers\dotnet\cs" />
+    <file src="bin\$Configuration$\Agoda.Analyzers.CodeFixes.dll" target="analyzers\dotnet\cs" />
+    <file src="bin\$Configuration$\**\Agoda.Analyzers.CodeFixes.resources.dll" target="analyzers\dotnet\cs" />
+    <file src="bin\$Configuration$\Agoda.Analyzers.CodeFixes.pdb" target="analyzers\dotnet\cs" />
+    <file src="..\..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll" target="analyzers\dotnet\cs" />
+    <file src="tools\install.ps1" target="tools\" />
+    <file src="tools\uninstall.ps1" target="tools\" />
+  </files>
+</package>
