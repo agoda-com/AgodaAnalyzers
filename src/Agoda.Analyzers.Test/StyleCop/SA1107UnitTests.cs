@@ -1,25 +1,26 @@
 ﻿// Copyright (c) Tunnel Vision Laboratories, LLC. All Rights Reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
-namespace StyleCop.Analyzers.Test.ReadabilityRules
-{
-    using System.Collections.Generic;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Microsoft.CodeAnalysis;
-    using Microsoft.CodeAnalysis.CodeFixes;
-    using Microsoft.CodeAnalysis.Diagnostics;
-    using StyleCop.Analyzers.ReadabilityRules;
-    using TestHelper;
-    using Xunit;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
+using Agoda.Analyzers.CodeFixes.StyleCop;
+using Agoda.Analyzers.StyleCop;
+using Agoda.Analyzers.Test.Helpers;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CodeFixes;
+using Microsoft.CodeAnalysis.Diagnostics;
+using NUnit.Framework;
 
+namespace Agoda.Analyzers.Test.StyleCop
+{
     /// <summary>
     /// This class contains unit tests for <see cref="SA1107CodeMustNotContainMultipleStatementsOnOneLine"/> and
     /// <see cref="SA1107CodeFixProvider"/>.
     /// </summary>
     public class SA1107UnitTests : CodeFixVerifier
     {
-        [Fact]
+        [Test]
         public async Task TestCorrectCodeAsync()
         {
             string testCode = @"
@@ -48,7 +49,7 @@ class ClassName
             await this.VerifyCSharpDiagnosticAsync(testCode, EmptyDiagnosticResults, CancellationToken.None).ConfigureAwait(false);
         }
 
-        [Fact]
+        [Test]
         public async Task TestWrongCodeAsync()
         {
             string testCode = @"
@@ -108,7 +109,7 @@ class ClassName
             await this.VerifyCSharpFixAsync(testCode, fixedCode, cancellationToken: CancellationToken.None).ConfigureAwait(false);
         }
 
-        [Fact]
+        [Test]
         public async Task TestThatAnalyzerDoesntCrashOnEmptyBlockAsync()
         {
             string testCode = @"
@@ -123,7 +124,7 @@ class ClassName
             await this.VerifyCSharpDiagnosticAsync(testCode, EmptyDiagnosticResults, CancellationToken.None).ConfigureAwait(false);
         }
 
-        [Fact]
+        [Test]
         public async Task TestThatAnalyzerIgnoresStatementsWithMissingTokenAsync()
         {
             string testCode = @"

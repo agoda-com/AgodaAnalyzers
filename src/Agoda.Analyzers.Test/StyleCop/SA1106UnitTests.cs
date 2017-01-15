@@ -1,24 +1,25 @@
 ﻿// Copyright (c) Tunnel Vision Laboratories, LLC. All Rights Reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
-namespace StyleCop.Analyzers.Test.ReadabilityRules
-{
-    using System.Collections.Generic;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Microsoft.CodeAnalysis.CodeFixes;
-    using Microsoft.CodeAnalysis.Diagnostics;
-    using StyleCop.Analyzers.ReadabilityRules;
-    using TestHelper;
-    using Xunit;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
+using Agoda.Analyzers.CodeFixes.StyleCop;
+using Agoda.Analyzers.StyleCop;
+using Agoda.Analyzers.Test.Helpers;
+using Microsoft.CodeAnalysis.CodeFixes;
+using Microsoft.CodeAnalysis.Diagnostics;
+using NUnit.Framework;
 
+namespace Agoda.Analyzers.Test.StyleCop
+{
     public class SA1106UnitTests : CodeFixVerifier
     {
-        [Theory]
-        [InlineData("if (true)")]
-        [InlineData("if (true) { } else")]
-        [InlineData("for (int i = 0; i < 10; i++)")]
-        [InlineData("while (true)")]
+        [Test]
+        [TestCase("if (true)")]
+        [TestCase("if (true) { } else")]
+        [TestCase("for (int i = 0; i < 10; i++)")]
+        [TestCase("while (true)")]
         public async Task TestEmptyStatementAsBlockAsync(string controlFlowConstruct)
         {
             var testCode = $@"
@@ -48,7 +49,7 @@ class TestClass
             await this.VerifyCSharpFixAsync(testCode, fixedCode).ConfigureAwait(false);
         }
 
-        [Fact]
+        [Test]
         public async Task TestEmptyStatementAsBlockInDoWhileAsync()
         {
             var testCode = @"
@@ -80,7 +81,7 @@ class TestClass
             await this.VerifyCSharpFixAsync(testCode, fixedCode).ConfigureAwait(false);
         }
 
-        [Fact]
+        [Test]
         public async Task TestEmptyStatementWithinBlockAsync()
         {
             var testCode = @"
@@ -114,7 +115,7 @@ class TestClass
             await this.VerifyCSharpFixAsync(testCode, fixedCode).ConfigureAwait(false);
         }
 
-        [Fact]
+        [Test]
         public async Task TestEmptyStatementInForStatementAsync()
         {
             var testCode = @"
@@ -131,7 +132,7 @@ class TestClass
             await this.VerifyCSharpDiagnosticAsync(testCode, EmptyDiagnosticResults, CancellationToken.None).ConfigureAwait(false);
         }
 
-        [Fact]
+        [Test]
         public async Task TestEmptyStatementAsync()
         {
             var testCode = @"
@@ -157,7 +158,7 @@ class TestClass
             await this.VerifyCSharpFixAsync(testCode, fixedCode).ConfigureAwait(false);
         }
 
-        [Fact]
+        [Test]
         public async Task TestLabeledEmptyStatementAsync()
         {
             var testCode = @"
@@ -173,7 +174,7 @@ class TestClass
             await this.VerifyCSharpDiagnosticAsync(testCode, EmptyDiagnosticResults, CancellationToken.None).ConfigureAwait(false);
         }
 
-        [Fact]
+        [Test]
         public async Task TestLabeledEmptyStatementFollowedByEmptyStatementAsync()
         {
             var testCode = @"
@@ -203,7 +204,7 @@ class TestClass
             await this.VerifyCSharpFixAsync(testCode, fixedCode).ConfigureAwait(false);
         }
 
-        [Fact]
+        [Test]
         public async Task TestLabeledEmptyStatementFollowedByNonEmptyStatementAsync()
         {
             var testCode = @"
@@ -233,7 +234,7 @@ class TestClass
             await this.VerifyCSharpFixAsync(testCode, fixedCode).ConfigureAwait(false);
         }
 
-        [Fact]
+        [Test]
         public async Task TestConsecutiveLabelsAsync()
         {
             var testCode = @"
@@ -265,7 +266,7 @@ class TestClass
             await this.VerifyCSharpFixAsync(testCode, fixedCode).ConfigureAwait(false);
         }
 
-        [Fact]
+        [Test]
         public async Task TestSwitchCasesAsync()
         {
             var testCode = @"
@@ -322,12 +323,12 @@ class TestClass
             await this.VerifyCSharpFixAsync(testCode, fixedCode).ConfigureAwait(false);
         }
 
-        [Theory]
-        [InlineData("class Foo { }")]
-        [InlineData("struct Foo { }")]
-        [InlineData("interface IFoo { }")]
-        [InlineData("enum Foo { }")]
-        [InlineData("namespace Foo { }")]
+        [Test]
+        [TestCase("class Foo { }")]
+        [TestCase("struct Foo { }")]
+        [TestCase("interface IFoo { }")]
+        [TestCase("enum Foo { }")]
+        [TestCase("namespace Foo { }")]
         public async Task TestMemberAsync(string declaration)
         {
             var testCode = declaration + ";";
@@ -345,7 +346,7 @@ class TestClass
         /// This is a regression for #1556
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous unit test.</returns>
-        [Fact]
+        [Test]
         public async Task VerifyCodeFixWillRemoveUnnecessaryWhitespaceAsync()
         {
             var testCode = @"
@@ -390,7 +391,7 @@ class TestClass
         /// Verifies that the code fix will not remove relevant trivia.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous unit test.</returns>
-        [Fact]
+        [Test]
         public async Task VerifyCodeFixWillNotRemoveTriviaAsync()
         {
             var testCode = @"

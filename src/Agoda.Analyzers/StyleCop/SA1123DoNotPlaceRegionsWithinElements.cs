@@ -22,7 +22,7 @@ namespace Agoda.Analyzers.StyleCop
     /// decisions as the code is maintained over time.</para>
     /// </remarks>
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    internal class SA1123DoNotPlaceRegionsWithinElements : DiagnosticAnalyzer
+    public class SA1123DoNotPlaceRegionsWithinElements : DiagnosticAnalyzer
     {
         /// <summary>
         /// The ID for diagnostics produced by the <see cref="SA1123DoNotPlaceRegionsWithinElements"/> analyzer.

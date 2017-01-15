@@ -14,7 +14,7 @@ namespace Agoda.Analyzers.Helpers
     /// <summary>
     /// Provides a base class to write a <see cref="FixAllProvider"/> that fixes documents independently.
     /// </summary>
-    internal abstract class DocumentBasedFixAllProvider : FixAllProvider
+    public abstract class DocumentBasedFixAllProvider : FixAllProvider
     {
         protected abstract string CodeActionTitle { get; }
 

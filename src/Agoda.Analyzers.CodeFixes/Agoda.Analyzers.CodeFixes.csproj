@@ -43,7 +43,10 @@
     <Compile Include="Helpers\CustomFixAllProviders.cs" />
     <Compile Include="Helpers\DocumentBasedFixAllProvider.cs" />
     <Compile Include="Helpers\FixAllContextHelper.cs" />
+    <Compile Include="Helpers\TestDiagnosticProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StyleCop\RemoveRegionCodeFixProvider.cs" />
+    <Compile Include="StyleCop\RemoveRegionFixAllProvider.cs" />
     <Compile Include="StyleCop\SA1106CodeFixProvider.cs" />
     <Compile Include="StyleCop\SA1107CodeFixProvider.cs" />
     <Compile Include="StyleCop\SA1107FixAllProvider.cs" />

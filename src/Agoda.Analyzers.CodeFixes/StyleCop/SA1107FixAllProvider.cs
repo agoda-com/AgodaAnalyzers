@@ -12,7 +12,7 @@ using Microsoft.CodeAnalysis.Editing;
 
 namespace Agoda.Analyzers.CodeFixes.StyleCop
 {
-    internal class SA1107FixAllProvider : DocumentBasedFixAllProvider
+    public class SA1107FixAllProvider : DocumentBasedFixAllProvider
     {
         protected override string CodeActionTitle => ReadabilityResources.SA1107CodeFix;
 

@@ -21,7 +21,7 @@ namespace Agoda.Analyzers.CodeFixes.StyleCop
     /// </summary>
     [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(SA1106CodeFixProvider))]
     [Shared]
-    internal class SA1106CodeFixProvider : CodeFixProvider
+    public class SA1106CodeFixProvider : CodeFixProvider
     {
         /// <inheritdoc/>
         public override ImmutableArray<string> FixableDiagnosticIds { get; }
