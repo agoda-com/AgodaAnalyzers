@@ -11,6 +11,8 @@
     <copyright>Copyright © Agoda 2017</copyright>
   </metadata>
   <files>
+    <file src="bin\$Configuration$\Microsoft.CodeAnalysis.Workspaces.dll" target="analyzers\dotnet\cs" />
+    <file src="bin\$Configuration$\Microsoft.CodeAnalysis.dll" target="analyzers\dotnet\cs" />
     <file src="bin\$Configuration$\Agoda.Analyzers.dll" target="analyzers\dotnet\cs" />
     <file src="bin\$Configuration$\**\Agoda.Analyzers.resources.dll" target="analyzers\dotnet\cs" />
     <file src="bin\$Configuration$\Agoda.Analyzers.pdb" target="analyzers\dotnet\cs" />
