@@ -14,7 +14,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
     class AG0002UnitTests: DiagnosticVerifier
 	{
 		[Test]
-		public async Task TestCorrentDeclarationShouldNotCauseAnyIssue()
+		public async Task TestCorrectDeclarationShouldNotCauseAnyIssue()
 		{
 			var code = $@"
 				interface ISomething {{
@@ -37,6 +37,34 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 
 			VerifyDiagnosticResults(diag, analyzersArray, new DiagnosticResult[] { });
 		}
+
+        [Test]
+        public async Task TestExtraPublicDeclarationShouldNotCauseAnyIssue()
+        {
+            var code = $@"
+				interface ISomething {{
+					void DoSomething();
+				}}
+			
+				class TestClass : ISomething {{
+					public void DoSomething() {{
+					}}
+                    public void DoSomething2() {{
+					}}
+				}}
+			";
+
+            var doc = CreateProject(new string[] { code })
+                .Documents
+                .First();
+
+            var analyzersArray = GetCSharpDiagnosticAnalyzers().ToImmutableArray();
+
+            var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzersArray, new Document[] { doc }, CancellationToken.None).ConfigureAwait(false);
+
+            VerifyDiagnosticResults(diag, analyzersArray, new DiagnosticResult[] { });
+        }
+
 
         [Test]
         public async Task TestExplicitInterfaceImplementationShouldNotCauseAnyError()
