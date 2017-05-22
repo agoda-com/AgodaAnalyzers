@@ -9,7 +9,6 @@
 //------------------------------------------------------------------------------
 
 namespace Agoda.Analyzers.StyleCop {
-    using System;
     using System.Reflection;
     
     

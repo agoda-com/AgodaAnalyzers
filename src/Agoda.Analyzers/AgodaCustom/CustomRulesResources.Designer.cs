@@ -87,5 +87,32 @@ namespace Agoda.Analyzers.AgodaCustom {
                 return ResourceManager.GetString("AG0001Title", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pass only the fields that are actually needed, not the entire HttpContext instance.
+        /// </summary>
+        internal static string AG0003Description {
+            get {
+                return ResourceManager.GetString("AG0003Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pass only the fields that are actually needed, not the entire HttpContext instance.
+        /// </summary>
+        internal static string AG0003MessageFormat {
+            get {
+                return ResourceManager.GetString("AG0003MessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Do not pass HttpContext as method argument.
+        /// </summary>
+        internal static string AG0003Title {
+            get {
+                return ResourceManager.GetString("AG0003Title", resourceCulture);
+            }
+        }
     }
 }

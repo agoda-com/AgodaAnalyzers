@@ -40,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AgodaCustom\AG0001DependencyResolverMustNotBeUsed.cs" />
+    <Compile Include="AgodaCustom\AG0003HttpContextCannotBePassedAsMethodArgument.cs" />
     <Compile Include="AgodaCustom\CustomRulesResources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
