@@ -126,4 +126,13 @@
   <data name="AG0001Title" xml:space="preserve">
     <value>Do not use DependencyResolver directly</value>
   </data>
+  <data name="AG0002Description" xml:space="preserve">
+    <value>Test only the public surface of your API</value>
+  </data>
+  <data name="AG0002MessageFormat" xml:space="preserve">
+    <value>Test only the public surface of your API</value>
+  </data>
+  <data name="AG0002Title" xml:space="preserve">
+    <value>Not test private methods</value>
+  </data>
 </root>

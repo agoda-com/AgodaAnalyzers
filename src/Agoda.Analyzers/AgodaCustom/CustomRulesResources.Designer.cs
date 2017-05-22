@@ -87,5 +87,32 @@ namespace Agoda.Analyzers.AgodaCustom {
                 return ResourceManager.GetString("AG0001Title", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Test only the public surface of your API.
+        /// </summary>
+        internal static string AG0002Description {
+            get {
+                return ResourceManager.GetString("AG0002Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Test only the public surface of your API.
+        /// </summary>
+        internal static string AG0002MessageFormat {
+            get {
+                return ResourceManager.GetString("AG0002MessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Not test private methods.
+        /// </summary>
+        internal static string AG0002Title {
+            get {
+                return ResourceManager.GetString("AG0002Title", resourceCulture);
+            }
+        }
     }
 }

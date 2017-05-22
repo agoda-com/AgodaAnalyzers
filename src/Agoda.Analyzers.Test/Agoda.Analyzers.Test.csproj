@@ -128,6 +128,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="AgodaCustom\AG0002UnitTests.cs" />
     <Compile Include="AgodaCustom\AG0001UnitTests.cs" />
     <Compile Include="Helpers\CodeFixVerifier.Helper.cs" />
     <Compile Include="Helpers\DiagnosticResult.cs" />
