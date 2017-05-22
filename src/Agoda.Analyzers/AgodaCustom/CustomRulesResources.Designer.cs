@@ -89,6 +89,12 @@ namespace Agoda.Analyzers.AgodaCustom {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Test only the public surface of your API.
+        /// </summary>
+        internal static string AG0002Description {
+            get {
+                return ResourceManager.GetString("AG0002Description", resourceCulture);
+
         ///   Looks up a localized string similar to Pass only the fields that are actually needed, not the entire HttpContext instance.
         /// </summary>
         internal static string AG0003Description {
@@ -98,6 +104,12 @@ namespace Agoda.Analyzers.AgodaCustom {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Test only the public surface of your API.
+        /// </summary>
+        internal static string AG0002MessageFormat {
+            get {
+                return ResourceManager.GetString("AG0002MessageFormat", resourceCulture);
+
         ///   Looks up a localized string similar to Pass only the fields that are actually needed, not the entire HttpContext instance.
         /// </summary>
         internal static string AG0003MessageFormat {
@@ -107,6 +119,12 @@ namespace Agoda.Analyzers.AgodaCustom {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Not test private methods.
+        /// </summary>
+        internal static string AG0002Title {
+            get {
+                return ResourceManager.GetString("AG0002Title", resourceCulture);
+
         ///   Looks up a localized string similar to Do not pass HttpContext as method argument.
         /// </summary>
         internal static string AG0003Title {
