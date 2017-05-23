@@ -94,12 +94,6 @@ namespace Agoda.Analyzers.AgodaCustom {
         internal static string AG0002Description {
             get {
                 return ResourceManager.GetString("AG0002Description", resourceCulture);
-
-        ///   Looks up a localized string similar to Pass only the fields that are actually needed, not the entire HttpContext instance.
-        /// </summary>
-        internal static string AG0003Description {
-            get {
-                return ResourceManager.GetString("AG0003Description", resourceCulture);
             }
         }
         
@@ -109,12 +103,6 @@ namespace Agoda.Analyzers.AgodaCustom {
         internal static string AG0002MessageFormat {
             get {
                 return ResourceManager.GetString("AG0002MessageFormat", resourceCulture);
-
-        ///   Looks up a localized string similar to Pass only the fields that are actually needed, not the entire HttpContext instance.
-        /// </summary>
-        internal static string AG0003MessageFormat {
-            get {
-                return ResourceManager.GetString("AG0003MessageFormat", resourceCulture);
             }
         }
         
@@ -124,7 +112,28 @@ namespace Agoda.Analyzers.AgodaCustom {
         internal static string AG0002Title {
             get {
                 return ResourceManager.GetString("AG0002Title", resourceCulture);
-
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pass only the fields that are actually needed, not the entire HttpContext instance.
+        /// </summary>
+        internal static string AG0003Description {
+            get {
+                return ResourceManager.GetString("AG0003Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pass only the fields that are actually needed, not the entire HttpContext instance.
+        /// </summary>
+        internal static string AG0003MessageFormat {
+            get {
+                return ResourceManager.GetString("AG0003MessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Do not pass HttpContext as method argument.
         /// </summary>
         internal static string AG0003Title {

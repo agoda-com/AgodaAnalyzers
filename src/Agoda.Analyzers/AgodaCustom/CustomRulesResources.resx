@@ -134,6 +134,7 @@
   </data>
   <data name="AG0002Title" xml:space="preserve">
     <value>Not test private methods</value>
+      </data>
   <data name="AG0003Description" xml:space="preserve">
     <value>Pass only the fields that are actually needed, not the entire HttpContext instance</value>
   </data>
