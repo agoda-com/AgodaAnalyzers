@@ -37,6 +37,7 @@
     <!-- A reference to the entire .NET Framework is automatically included -->
     <None Include="Agoda.Analyzers.nuspec">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </None>
     <None Include="app.config" />
     <None Include="packages.config" />
