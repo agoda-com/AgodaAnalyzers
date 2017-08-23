@@ -178,7 +178,7 @@ namespace Agoda.Analyzers.Test.Helpers
         /// <param name="analyzers">The analyzers that have been run on the sources.</param>
         /// <param name="expectedResults">A collection of <see cref="DiagnosticResult"/>s describing the expected
         /// diagnostics for the sources.</param>
-        private static void VerifyDiagnosticResults(IEnumerable<Diagnostic> actualResults, ImmutableArray<DiagnosticAnalyzer> analyzers, DiagnosticResult[] expectedResults)
+        protected static void VerifyDiagnosticResults(IEnumerable<Diagnostic> actualResults, ImmutableArray<DiagnosticAnalyzer> analyzers, DiagnosticResult[] expectedResults)
         {
             int expectedCount = expectedResults.Length;
             int actualCount = actualResults.Count();

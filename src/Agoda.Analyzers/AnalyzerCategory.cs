@@ -8,6 +8,11 @@ namespace Agoda.Analyzers
     /// </summary>
     internal static class AnalyzerCategory
     {
+		/// <summary>
+		/// Category definition for Agoda custom code quality rules
+		/// </summary>
+		internal const string CustomQualityRules = "Agoda.CSharp.CustomQualityRules";
+
         /// <summary>
         /// Category definition for documentation rules.
         /// </summary>
