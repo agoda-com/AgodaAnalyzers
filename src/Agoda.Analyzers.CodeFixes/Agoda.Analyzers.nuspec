@@ -23,7 +23,7 @@
     <file src="bin\Release\net462\Agoda.Analyzers.CodeFixes.dll" target="analyzers\dotnet\cs" />
     <file src="bin\Release\net462\**\Agoda.Analyzers.CodeFixes.resources.dll" target="analyzers\dotnet\cs" />
     <file src="bin\Release\net462\Agoda.Analyzers.CodeFixes.pdb" target="analyzers\dotnet\cs" />
-    <file src="..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll" target="analyzers\dotnet\cs" />
+    <file src="bin\Release\net462\Newtonsoft.Json.dll" target="analyzers\dotnet\cs" />
     <file src="tools\install.ps1" target="tools\" />
     <file src="tools\uninstall.ps1" target="tools\" />
   </files>
