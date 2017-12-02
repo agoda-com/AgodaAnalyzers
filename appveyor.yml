@@ -34,5 +34,3 @@ deploy:
   api_key:
     secure: nuget_api_key
   artifact: '*.nupkg'
-  on:
-    branch: master
