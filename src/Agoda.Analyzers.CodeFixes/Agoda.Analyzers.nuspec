@@ -11,6 +11,7 @@
     <copyright>Copyright © Agoda 2017</copyright>
     <projectUrl>https://github.com/agoda-com/AgodaAnalyzers</projectUrl>
     <iconUrl>https://avatars3.githubusercontent.com/u/19235448?s=200</iconUrl>
+    <licenseUrl>https://github.com/agoda-com/AgodaAnalyzers</licenseUrl>
   </metadata>
   <files>
     <file src="bin\Release\net462\Microsoft.CodeAnalysis.CSharp.dll" target="analyzers\dotnet\cs" />

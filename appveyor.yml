@@ -30,9 +30,10 @@ artifacts:
   - path: '*.nupkg'
 
 deploy:
-- provider: NuGet
+  provider: NuGet
   api_key:
     secure: nuget_api_key
-  artifact: '*.nupkg'
-  on:
-    branch: master
+  skip_symbols: true
+  artifact: /.*\.nupkg/
+#  on:
+#    branch: master
