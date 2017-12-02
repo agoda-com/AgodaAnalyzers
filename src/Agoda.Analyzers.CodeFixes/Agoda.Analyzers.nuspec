@@ -9,6 +9,8 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>TBA</description>
     <copyright>Copyright © Agoda 2017</copyright>
+    <projectUrl>https://github.com/agoda-com/AgodaAnalyzers</projectUrl>
+    <iconUrl>https://avatars3.githubusercontent.com/u/19235448?s=200</iconUrl>
   </metadata>
   <files>
     <file src="bin\$Configuration$\Microsoft.CodeAnalysis.CSharp.dll" target="analyzers\dotnet\cs" />
