@@ -1,7 +1,4 @@
-﻿// Copyright (c) Tunnel Vision Laboratories, LLC. All Rights Reserved.
-// Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
-
-using Agoda.Analyzers.CodeFixes.Helpers;
+﻿using Agoda.Analyzers.CodeFixes.Helpers;
 using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeFixes;
 

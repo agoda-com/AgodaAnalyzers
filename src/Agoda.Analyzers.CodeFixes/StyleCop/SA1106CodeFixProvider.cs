@@ -1,7 +1,4 @@
-﻿// Copyright (c) Tunnel Vision Laboratories, LLC. All Rights Reserved.
-// Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
-
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
 using System.Composition;
 using System.Threading;
 using System.Threading.Tasks;
@@ -59,7 +56,7 @@ namespace Agoda.Analyzers.CodeFixes.StyleCop
                 return await RemoveSemicolonTextAsync(document, token, cancellationToken).ConfigureAwait(false);
             }
 
-            return await RemoveEmptyStatementAsync(document, root, (EmptyStatementSyntax)token.Parent, cancellationToken).ConfigureAwait(false);
+            return await RemoveEmptyStatementAsync(document, root, (EmptyStatementSyntax) token.Parent, cancellationToken).ConfigureAwait(false);
         }
 
         private static async Task<Document> RemoveEmptyStatementAsync(Document document, SyntaxNode root, EmptyStatementSyntax node, CancellationToken cancellationToken)
@@ -68,26 +65,26 @@ namespace Agoda.Analyzers.CodeFixes.StyleCop
 
             switch (node.Parent.Kind())
             {
-            case SyntaxKind.Block:
-            case SyntaxKind.SwitchSection:
-                // empty statements in a block or switch section can be removed
-                return await RemoveSemicolonTextAsync(document, node.SemicolonToken, cancellationToken).ConfigureAwait(false);
+                case SyntaxKind.Block:
+                case SyntaxKind.SwitchSection:
+                    // empty statements in a block or switch section can be removed
+                    return await RemoveSemicolonTextAsync(document, node.SemicolonToken, cancellationToken).ConfigureAwait(false);
 
-            case SyntaxKind.IfStatement:
-            case SyntaxKind.ElseClause:
-            case SyntaxKind.ForStatement:
-            case SyntaxKind.WhileStatement:
-            case SyntaxKind.DoStatement:
-                // these cases are always replaced with an empty block
-                newRoot = root.ReplaceNode(node, SyntaxFactory.Block().WithTriviaFrom(node));
-                return document.WithSyntaxRoot(newRoot);
+                case SyntaxKind.IfStatement:
+                case SyntaxKind.ElseClause:
+                case SyntaxKind.ForStatement:
+                case SyntaxKind.WhileStatement:
+                case SyntaxKind.DoStatement:
+                    // these cases are always replaced with an empty block
+                    newRoot = root.ReplaceNode(node, SyntaxFactory.Block().WithTriviaFrom(node));
+                    return document.WithSyntaxRoot(newRoot);
 
-            case SyntaxKind.LabeledStatement:
-                // handle this case as a text manipulation for simplicity
-                return await RemoveSemicolonTextAsync(document, node.SemicolonToken, cancellationToken).ConfigureAwait(false);
+                case SyntaxKind.LabeledStatement:
+                    // handle this case as a text manipulation for simplicity
+                    return await RemoveSemicolonTextAsync(document, node.SemicolonToken, cancellationToken).ConfigureAwait(false);
 
-            default:
-                return document;
+                default:
+                    return document;
             }
         }
 

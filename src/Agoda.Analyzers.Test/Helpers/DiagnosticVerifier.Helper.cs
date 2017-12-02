@@ -1,7 +1,4 @@
-﻿// Copyright (c) Tunnel Vision Laboratories, LLC. All Rights Reserved.
-// Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
@@ -98,10 +95,10 @@ namespace Agoda.Analyzers.Test.Helpers
             string[] filenames = null;
             if (fileName != null)
             {
-                filenames = new[] { fileName };
+                filenames = new[] {fileName};
             }
 
-            return this.CreateProject(new[] { source }, language, filenames).Documents.Single();
+            return this.CreateProject(new[] {source}, language, filenames).Documents.Single();
         }
 
         /// <summary>
@@ -126,9 +123,9 @@ namespace Agoda.Analyzers.Test.Helpers
 
             solution.Workspace.Options =
                 solution.Workspace.Options
-                .WithChangedOption(FormattingOptions.IndentationSize, language, this.IndentationSize)
-                .WithChangedOption(FormattingOptions.TabSize, language, this.TabSize)
-                .WithChangedOption(FormattingOptions.UseTabs, language, this.UseTabs);
+                    .WithChangedOption(FormattingOptions.IndentationSize, language, this.IndentationSize)
+                    .WithChangedOption(FormattingOptions.TabSize, language, this.TabSize)
+                    .WithChangedOption(FormattingOptions.UseTabs, language, this.UseTabs);
 
             var settings = this.GetSettings();
 

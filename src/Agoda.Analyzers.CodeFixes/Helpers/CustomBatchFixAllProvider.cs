@@ -1,7 +1,4 @@
-﻿// Copyright (c) Tunnel Vision Laboratories, LLC. All Rights Reserved.
-// Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
-
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -52,7 +49,7 @@ namespace Agoda.Analyzers.CodeFixes.Helpers
 
                 var documents = documentsAndDiagnosticsToFixMap.Keys.ToImmutableArray();
                 var fixesBag = new List<CodeAction>[documents.Length];
-                var options = new ParallelOptions() { CancellationToken = fixAllContext.CancellationToken };
+                var options = new ParallelOptions() {CancellationToken = fixAllContext.CancellationToken};
                 Parallel.ForEach(documents, options, (document, state, index) =>
                 {
                     fixAllContext.CancellationToken.ThrowIfCancellationRequested();
@@ -130,7 +127,7 @@ namespace Agoda.Analyzers.CodeFixes.Helpers
         {
             if (projectsAndDiagnosticsToFixMap != null && projectsAndDiagnosticsToFixMap.Any())
             {
-                var options = new ParallelOptions() { CancellationToken = fixAllContext.CancellationToken };
+                var options = new ParallelOptions() {CancellationToken = fixAllContext.CancellationToken};
                 var fixesBag = new List<CodeAction>[projectsAndDiagnosticsToFixMap.Count];
                 Parallel.ForEach(projectsAndDiagnosticsToFixMap.Keys, options, (project, state, index) =>
                 {
@@ -192,22 +189,22 @@ namespace Agoda.Analyzers.CodeFixes.Helpers
 
             switch (fixAllContext.Scope)
             {
-            case FixAllScope.Custom:
-                return string.Format(HelpersResources.FixAllOccurrencesOfDiagnostic, diagnosticId);
+                case FixAllScope.Custom:
+                    return string.Format(HelpersResources.FixAllOccurrencesOfDiagnostic, diagnosticId);
 
-            case FixAllScope.Document:
-                var document = fixAllContext.Document;
-                return string.Format(HelpersResources.FixAllOccurrencesOfDiagnosticInScope, diagnosticId, document.Name);
+                case FixAllScope.Document:
+                    var document = fixAllContext.Document;
+                    return string.Format(HelpersResources.FixAllOccurrencesOfDiagnosticInScope, diagnosticId, document.Name);
 
-            case FixAllScope.Project:
-                var project = fixAllContext.Project;
-                return string.Format(HelpersResources.FixAllOccurrencesOfDiagnosticInScope, diagnosticId, project.Name);
+                case FixAllScope.Project:
+                    var project = fixAllContext.Project;
+                    return string.Format(HelpersResources.FixAllOccurrencesOfDiagnosticInScope, diagnosticId, project.Name);
 
-            case FixAllScope.Solution:
-                return string.Format(HelpersResources.FixAllOccurrencesOfDiagnosticInSolution, diagnosticId);
+                case FixAllScope.Solution:
+                    return string.Format(HelpersResources.FixAllOccurrencesOfDiagnosticInSolution, diagnosticId);
 
-            default:
-                throw new InvalidOperationException("Not reachable");
+                default:
+                    throw new InvalidOperationException("Not reachable");
             }
         }
 

@@ -1,7 +1,4 @@
-﻿// Copyright (c) Tunnel Vision Laboratories, LLC. All Rights Reserved.
-// Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
-
-using System;
+﻿using System;
 using System.Collections.Immutable;
 using Agoda.Analyzers.Helpers;
 using Microsoft.CodeAnalysis;
@@ -26,6 +23,7 @@ namespace Agoda.Analyzers.StyleCop
         /// The ID for diagnostics produced by the <see cref="SA1106CodeMustNotContainEmptyStatements"/> analyzer.
         /// </summary>
         public const string DiagnosticId = "SA1106";
+
         private static readonly LocalizableString Title = new LocalizableResourceString(nameof(ReadabilityResources.SA1106Title), ReadabilityResources.ResourceManager, typeof(ReadabilityResources));
         private static readonly LocalizableString MessageFormat = new LocalizableResourceString(nameof(ReadabilityResources.SA1106MessageFormat), ReadabilityResources.ResourceManager, typeof(ReadabilityResources));
         private static readonly LocalizableString Description = new LocalizableResourceString(nameof(ReadabilityResources.SA1106Description), ReadabilityResources.ResourceManager, typeof(ReadabilityResources));
@@ -55,7 +53,7 @@ namespace Agoda.Analyzers.StyleCop
 
         private static void HandleBaseTypeDeclaration(SyntaxNodeAnalysisContext context)
         {
-            var declaration = (BaseTypeDeclarationSyntax)context.Node;
+            var declaration = (BaseTypeDeclarationSyntax) context.Node;
 
             if (declaration.SemicolonToken.IsKind(SyntaxKind.SemicolonToken))
             {
@@ -65,7 +63,7 @@ namespace Agoda.Analyzers.StyleCop
 
         private static void HandleNamespaceDeclaration(SyntaxNodeAnalysisContext context)
         {
-            var declaration = (NamespaceDeclarationSyntax)context.Node;
+            var declaration = (NamespaceDeclarationSyntax) context.Node;
 
             if (declaration.SemicolonToken.IsKind(SyntaxKind.SemicolonToken))
             {
@@ -75,7 +73,7 @@ namespace Agoda.Analyzers.StyleCop
 
         private static void HandleEmptyStatement(SyntaxNodeAnalysisContext context)
         {
-            EmptyStatementSyntax syntax = (EmptyStatementSyntax)context.Node;
+            EmptyStatementSyntax syntax = (EmptyStatementSyntax) context.Node;
 
             LabeledStatementSyntax labeledStatementSyntax = syntax.Parent as LabeledStatementSyntax;
             if (labeledStatementSyntax != null)

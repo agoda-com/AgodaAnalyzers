@@ -1,7 +1,4 @@
-﻿// Copyright (c) Tunnel Vision Laboratories, LLC. All Rights Reserved.
-// Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
@@ -39,11 +36,7 @@ namespace Agoda.Analyzers.Test.Helpers
         /// <value>
         /// The value of the <see cref="FormattingOptions.IndentationSize"/> to apply to the test workspace.
         /// </value>
-        public int IndentationSize
-        {
-            get;
-            protected set;
-        }
+        public int IndentationSize { get; protected set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the <see cref="FormattingOptions.UseTabs"/> option is applied to the
@@ -52,11 +45,7 @@ namespace Agoda.Analyzers.Test.Helpers
         /// <value>
         /// The value of the <see cref="FormattingOptions.UseTabs"/> to apply to the test workspace.
         /// </value>
-        public bool UseTabs
-        {
-            get;
-            protected set;
-        }
+        public bool UseTabs { get; protected set; }
 
         /// <summary>
         /// Gets or sets the value of the <see cref="FormattingOptions.TabSize"/> to apply to the test workspace.
@@ -64,11 +53,7 @@ namespace Agoda.Analyzers.Test.Helpers
         /// <value>
         /// The value of the <see cref="FormattingOptions.TabSize"/> to apply to the test workspace.
         /// </value>
-        public int TabSize
-        {
-            get;
-            protected set;
-        }
+        public int TabSize { get; protected set; }
 
         protected static DiagnosticResult[] EmptyDiagnosticResults { get; } = { };
 
@@ -105,7 +90,7 @@ namespace Agoda.Analyzers.Test.Helpers
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         protected Task VerifyCSharpDiagnosticAsync(string source, DiagnosticResult expected, CancellationToken cancellationToken, string filename = null)
         {
-            return VerifyCSharpDiagnosticAsync(source, (DiagnosticResult[]) new[] { expected }, cancellationToken, filename);
+            return VerifyCSharpDiagnosticAsync(source, (DiagnosticResult[]) new[] {expected}, cancellationToken, filename);
         }
 
         /// <summary>
@@ -122,7 +107,7 @@ namespace Agoda.Analyzers.Test.Helpers
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         protected Task VerifyCSharpDiagnosticAsync(string source, DiagnosticResult[] expected, CancellationToken cancellationToken, string filename = null)
         {
-            return this.VerifyDiagnosticsAsync(new[] { source }, LanguageNames.CSharp, this.GetCSharpDiagnosticAnalyzers().ToImmutableArray(), expected, cancellationToken, filename != null ? new[] { filename } : null);
+            return this.VerifyDiagnosticsAsync(new[] {source}, LanguageNames.CSharp, this.GetCSharpDiagnosticAnalyzers().ToImmutableArray(), expected, cancellationToken, filename != null ? new[] {filename} : null);
         }
 
         /// <summary>

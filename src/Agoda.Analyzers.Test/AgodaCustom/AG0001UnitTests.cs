@@ -12,12 +12,12 @@ using System.Collections.Immutable;
 
 namespace Agoda.Analyzers.Test.AgodaCustom
 {
-    class AG0001UnitTests: DiagnosticVerifier
-	{
-		[Test]
-		public async Task TestDependencyResolverUsageAsync()
-		{
-			var code = $@"
+    class AG0001UnitTests : DiagnosticVerifier
+    {
+        [Test]
+        public async Task TestDependencyResolverUsageAsync()
+        {
+            var code = $@"
 				interface ISomething {{
 					void DoSomething();
 				}}
@@ -30,24 +30,24 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}}
 			";
 
-			var reference = MetadataReference.CreateFromFile(typeof(System.Web.Mvc.DependencyResolver).Assembly.Location);
+            var reference = MetadataReference.CreateFromFile(typeof(System.Web.Mvc.DependencyResolver).Assembly.Location);
 
-			var doc = CreateProject(new string[] { code })
-				.AddMetadataReference(reference)
-				.Documents
+            var doc = CreateProject(new string[] {code})
+                .AddMetadataReference(reference)
+                .Documents
                 .First();
 
-			var analyzersArray = GetCSharpDiagnosticAnalyzers().ToImmutableArray();
+            var analyzersArray = GetCSharpDiagnosticAnalyzers().ToImmutableArray();
 
-			var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzersArray, new Document[] { doc }, CancellationToken.None).ConfigureAwait(false);
+            var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzersArray, new Document[] {doc}, CancellationToken.None).ConfigureAwait(false);
             DiagnosticResult expected = CSharpDiagnostic("AG0001").WithLocation(8, 37);
 
-			VerifyDiagnosticResults(diag, analyzersArray, new DiagnosticResult[] { expected });
-		}
+            VerifyDiagnosticResults(diag, analyzersArray, new DiagnosticResult[] {expected});
+        }
 
-		protected override IEnumerable<DiagnosticAnalyzer> GetCSharpDiagnosticAnalyzers()
-		{
-			yield return new AG0001DependencyResolverMustNotBeUsed();
-		}
-	}
+        protected override IEnumerable<DiagnosticAnalyzer> GetCSharpDiagnosticAnalyzers()
+        {
+            yield return new AG0001DependencyResolverMustNotBeUsed();
+        }
+    }
 }

@@ -1,7 +1,4 @@
-﻿// Copyright (c) Tunnel Vision Laboratories, LLC. All Rights Reserved.
-// Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
@@ -23,31 +20,31 @@ namespace Agoda.Analyzers.Helpers
             CodeAction fixAction;
             switch (fixAllContext.Scope)
             {
-            case FixAllScope.Document:
-                fixAction = CodeAction.Create(
-                    this.CodeActionTitle,
-                    cancellationToken => this.GetDocumentFixesAsync(fixAllContext.WithCancellationToken(cancellationToken)),
-                    nameof(DocumentBasedFixAllProvider));
-                break;
+                case FixAllScope.Document:
+                    fixAction = CodeAction.Create(
+                        this.CodeActionTitle,
+                        cancellationToken => this.GetDocumentFixesAsync(fixAllContext.WithCancellationToken(cancellationToken)),
+                        nameof(DocumentBasedFixAllProvider));
+                    break;
 
-            case FixAllScope.Project:
-                fixAction = CodeAction.Create(
-                    this.CodeActionTitle,
-                    cancellationToken => this.GetProjectFixesAsync(fixAllContext.WithCancellationToken(cancellationToken), fixAllContext.Project),
-                    nameof(DocumentBasedFixAllProvider));
-                break;
+                case FixAllScope.Project:
+                    fixAction = CodeAction.Create(
+                        this.CodeActionTitle,
+                        cancellationToken => this.GetProjectFixesAsync(fixAllContext.WithCancellationToken(cancellationToken), fixAllContext.Project),
+                        nameof(DocumentBasedFixAllProvider));
+                    break;
 
-            case FixAllScope.Solution:
-                fixAction = CodeAction.Create(
-                    this.CodeActionTitle,
-                    cancellationToken => this.GetSolutionFixesAsync(fixAllContext.WithCancellationToken(cancellationToken)),
-                    nameof(DocumentBasedFixAllProvider));
-                break;
+                case FixAllScope.Solution:
+                    fixAction = CodeAction.Create(
+                        this.CodeActionTitle,
+                        cancellationToken => this.GetSolutionFixesAsync(fixAllContext.WithCancellationToken(cancellationToken)),
+                        nameof(DocumentBasedFixAllProvider));
+                    break;
 
-            case FixAllScope.Custom:
-            default:
-                fixAction = null;
-                break;
+                case FixAllScope.Custom:
+                default:
+                    fixAction = null;
+                    break;
             }
 
             return Task.FromResult(fixAction);

@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace Agoda.Analyzers.AgodaCustom
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    public class AG0003HttpContextCannotBePassedAsMethodArgument: DiagnosticAnalyzer
+    public class AG0003HttpContextCannotBePassedAsMethodArgument : DiagnosticAnalyzer
     {
         public const string DiagnosticId = "AG0003";
         private static readonly LocalizableString Title = new LocalizableResourceString(nameof(CustomRulesResources.AG0003Title), CustomRulesResources.ResourceManager, typeof(CustomRulesResources));
@@ -50,7 +50,5 @@ namespace Agoda.Analyzers.AgodaCustom
 
             context.RegisterSyntaxNodeAction(DependencyResolverUsageAction, SyntaxKind.Parameter);
         }
-
-
     }
 }

@@ -1,7 +1,4 @@
-﻿// Copyright (c) Tunnel Vision Laboratories, LLC. All Rights Reserved.
-// Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
-
-using System;
+﻿using System;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
 
@@ -29,26 +26,14 @@ namespace Agoda.Analyzers.Test.Helpers
 
         public FileLinePositionSpan[] Spans
         {
-            get
-            {
-                return this.spans ?? (this.spans = new FileLinePositionSpan[] { });
-            }
+            get { return this.spans ?? (this.spans = new FileLinePositionSpan[] { }); }
 
-            set
-            {
-                this.spans = value;
-            }
+            set { this.spans = value; }
         }
 
-        public DiagnosticSeverity Severity
-        {
-            get; set;
-        }
+        public DiagnosticSeverity Severity { get; set; }
 
-        public string Id
-        {
-            get; set;
-        }
+        public string Id { get; set; }
 
         public string Message
         {
@@ -67,30 +52,16 @@ namespace Agoda.Analyzers.Test.Helpers
                 return null;
             }
 
-            set
-            {
-                this.message = value;
-            }
+            set { this.message = value; }
         }
 
-        public LocalizableString MessageFormat
-        {
-            get;
-            set;
-        }
+        public LocalizableString MessageFormat { get; set; }
 
-        public object[] MessageArguments
-        {
-            get;
-            set;
-        }
+        public object[] MessageArguments { get; set; }
 
         public bool HasLocation
         {
-            get
-            {
-                return (this.spans != null) && (this.spans.Length > 0);
-            }
+            get { return (this.spans != null) && (this.spans.Length > 0); }
         }
 
         public DiagnosticResult WithArguments(params object[] arguments)

@@ -22,9 +22,12 @@ namespace Agoda.Analyzers.AgodaCustom
             Category, DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
             description: Description
-            );
+        );
 
-        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get { return ImmutableArray.Create(Rule); } }
+        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics
+        {
+            get { return ImmutableArray.Create(Rule); }
+        }
 
         public override void Initialize(AnalysisContext context)
         {
@@ -33,7 +36,7 @@ namespace Agoda.Analyzers.AgodaCustom
 
         private static void AnalyzeNode(SyntaxNodeAnalysisContext context)
         {
-            var methodDeclaration = (MethodDeclarationSyntax)context.Node;
+            var methodDeclaration = (MethodDeclarationSyntax) context.Node;
 
             if (!methodDeclaration.Modifiers.Any(SyntaxKind.InternalKeyword))
             {

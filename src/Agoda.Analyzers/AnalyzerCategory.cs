@@ -1,17 +1,14 @@
-﻿// Copyright (c) Tunnel Vision Laboratories, LLC. All Rights Reserved.
-// Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
-
-namespace Agoda.Analyzers
+﻿namespace Agoda.Analyzers
 {
     /// <summary>
     /// Class defining the analyzer category constants.
     /// </summary>
     internal static class AnalyzerCategory
     {
-		/// <summary>
-		/// Category definition for Agoda custom code quality rules
-		/// </summary>
-		internal const string CustomQualityRules = "Agoda.CSharp.CustomQualityRules";
+        /// <summary>
+        /// Category definition for Agoda custom code quality rules
+        /// </summary>
+        internal const string CustomQualityRules = "Agoda.CSharp.CustomQualityRules";
 
         /// <summary>
         /// Category definition for documentation rules.

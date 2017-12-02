@@ -12,12 +12,12 @@ using System.Collections.Immutable;
 
 namespace Agoda.Analyzers.Test.AgodaCustom
 {
-    class AG0003UnitTests: DiagnosticVerifier
-	{
-		[Test]
-		public async Task TestHttpContextAsArgument()
-		{
-			var code = $@"
+    class AG0003UnitTests : DiagnosticVerifier
+    {
+        [Test]
+        public async Task TestHttpContextAsArgument()
+        {
+            var code = $@"
                 using System.Web;
 
 				interface ISomething {{
@@ -36,28 +36,29 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}}
 			";
 
-			var reference = MetadataReference.CreateFromFile(typeof(System.Web.HttpContext).Assembly.Location);
+            var reference = MetadataReference.CreateFromFile(typeof(System.Web.HttpContext).Assembly.Location);
 
-			var doc = CreateProject(new string[] { code })
-				.AddMetadataReference(reference)
-				.Documents
+            var doc = CreateProject(new string[] {code})
+                .AddMetadataReference(reference)
+                .Documents
                 .First();
 
-			var analyzersArray = GetCSharpDiagnosticAnalyzers().ToImmutableArray();
+            var analyzersArray = GetCSharpDiagnosticAnalyzers().ToImmutableArray();
 
-			var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzersArray, new Document[] { doc }, CancellationToken.None).ConfigureAwait(false);
+            var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzersArray, new Document[] {doc}, CancellationToken.None).ConfigureAwait(false);
 
             var baseResult = CSharpDiagnostic("AG0003");
-            VerifyDiagnosticResults(diag, analyzersArray, new DiagnosticResult[] {
+            VerifyDiagnosticResults(diag, analyzersArray, new DiagnosticResult[]
+            {
                 baseResult.WithLocation(5, 22),
                 baseResult.WithLocation(10, 44),
                 baseResult.WithLocation(14, 23)
             });
-		}
+        }
 
-		protected override IEnumerable<DiagnosticAnalyzer> GetCSharpDiagnosticAnalyzers()
-		{
-			yield return new AG0003HttpContextCannotBePassedAsMethodArgument();
-		}
-	}
+        protected override IEnumerable<DiagnosticAnalyzer> GetCSharpDiagnosticAnalyzers()
+        {
+            yield return new AG0003HttpContextCannotBePassedAsMethodArgument();
+        }
+    }
 }

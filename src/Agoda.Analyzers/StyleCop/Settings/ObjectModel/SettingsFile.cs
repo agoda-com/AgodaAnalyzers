@@ -1,7 +1,4 @@
-﻿// Copyright (c) Tunnel Vision Laboratories, LLC. All Rights Reserved.
-// Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
-
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace Agoda.Analyzers.StyleCop.Settings.ObjectModel
 {
@@ -11,8 +8,7 @@ namespace Agoda.Analyzers.StyleCop.Settings.ObjectModel
         /// <summary>
         /// This is the backing field for the <see cref="Settings"/> property.
         /// </summary>
-        [JsonProperty("settings", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        private StyleCopSettings settings;
+        [JsonProperty("settings", DefaultValueHandling = DefaultValueHandling.Ignore)] private StyleCopSettings settings;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SettingsFile"/> class
@@ -26,10 +22,7 @@ namespace Agoda.Analyzers.StyleCop.Settings.ObjectModel
 
         public StyleCopSettings Settings
         {
-            get
-            {
-                return this.settings;
-            }
+            get { return this.settings; }
         }
     }
 }

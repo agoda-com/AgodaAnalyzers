@@ -1,7 +1,4 @@
-﻿// Copyright (c) Tunnel Vision Laboratories, LLC. All Rights Reserved.
-// Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
-
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,20 +28,20 @@ namespace Agoda.Analyzers.Helpers
                 var currentTrivia = triviaList[index];
                 switch (currentTrivia.Kind())
                 {
-                case SyntaxKind.EndOfLineTrivia:
-                    if (!endOfLineIsWhitespace)
-                    {
+                    case SyntaxKind.EndOfLineTrivia:
+                        if (!endOfLineIsWhitespace)
+                        {
+                            return index;
+                        }
+
+                        break;
+
+                    case SyntaxKind.WhitespaceTrivia:
+                        break;
+
+                    default:
+                        // encountered non-whitespace trivia -> the search is done.
                         return index;
-                    }
-
-                    break;
-
-                case SyntaxKind.WhitespaceTrivia:
-                    break;
-
-                default:
-                    // encountered non-whitespace trivia -> the search is done.
-                    return index;
                 }
             }
 
@@ -93,25 +90,25 @@ namespace Agoda.Analyzers.Helpers
                 var currentTrivia = triviaList[index];
                 switch (currentTrivia.Kind())
                 {
-                case SyntaxKind.EndOfLineTrivia:
-                    whiteSpaceStartIndex = index;
-                    previousTriviaWasEndOfLine = true;
-                    break;
+                    case SyntaxKind.EndOfLineTrivia:
+                        whiteSpaceStartIndex = index;
+                        previousTriviaWasEndOfLine = true;
+                        break;
 
-                case SyntaxKind.WhitespaceTrivia:
-                    whiteSpaceStartIndex = index;
-                    previousTriviaWasEndOfLine = false;
-                    break;
+                    case SyntaxKind.WhitespaceTrivia:
+                        whiteSpaceStartIndex = index;
+                        previousTriviaWasEndOfLine = false;
+                        break;
 
-                default:
-                    // encountered non-whitespace trivia -> the search is done.
-                    if (previousTriviaWasEndOfLine)
-                    {
-                        whiteSpaceStartIndex++;
-                    }
+                    default:
+                        // encountered non-whitespace trivia -> the search is done.
+                        if (previousTriviaWasEndOfLine)
+                        {
+                            whiteSpaceStartIndex++;
+                        }
 
-                    done = true;
-                    break;
+                        done = true;
+                        break;
                 }
             }
 
@@ -314,16 +311,16 @@ namespace Agoda.Analyzers.Helpers
 
                 switch (triviaList[index].Kind())
                 {
-                case SyntaxKind.WhitespaceTrivia:
-                    // ignore;
-                    break;
+                    case SyntaxKind.WhitespaceTrivia:
+                        // ignore;
+                        break;
 
-                case SyntaxKind.EndOfLineTrivia:
-                    blankLineCount++;
-                    break;
+                    case SyntaxKind.EndOfLineTrivia:
+                        blankLineCount++;
+                        break;
 
-                default:
-                    return blankLineCount > 0;
+                    default:
+                        return blankLineCount > 0;
                 }
 
                 index--;
@@ -354,30 +351,30 @@ namespace Agoda.Analyzers.Helpers
             {
                 switch (triviaList[blankLinesStart].Kind())
                 {
-                case SyntaxKind.WhitespaceTrivia:
-                case SyntaxKind.EndOfLineTrivia:
-                    blankLinesStart--;
-                    break;
+                    case SyntaxKind.WhitespaceTrivia:
+                    case SyntaxKind.EndOfLineTrivia:
+                        blankLinesStart--;
+                        break;
 
-                case SyntaxKind.IfDirectiveTrivia:
-                case SyntaxKind.ElifDirectiveTrivia:
-                case SyntaxKind.ElseDirectiveTrivia:
-                case SyntaxKind.EndIfDirectiveTrivia:
-                    // directives include an embedded end of line
-                    blankLinesStart++;
-                    done = true;
-                    break;
-
-                default:
-                    // include the first end of line (as it is part of the non blank line trivia)
-                    while (!triviaList[blankLinesStart].HasBuiltinEndLine())
-                    {
+                    case SyntaxKind.IfDirectiveTrivia:
+                    case SyntaxKind.ElifDirectiveTrivia:
+                    case SyntaxKind.ElseDirectiveTrivia:
+                    case SyntaxKind.EndIfDirectiveTrivia:
+                        // directives include an embedded end of line
                         blankLinesStart++;
-                    }
+                        done = true;
+                        break;
 
-                    blankLinesStart++;
-                    done = true;
-                    break;
+                    default:
+                        // include the first end of line (as it is part of the non blank line trivia)
+                        while (!triviaList[blankLinesStart].HasBuiltinEndLine())
+                        {
+                            blankLinesStart++;
+                        }
+
+                        blankLinesStart++;
+                        done = true;
+                        break;
                 }
             }
 
@@ -388,8 +385,8 @@ namespace Agoda.Analyzers.Helpers
         internal static bool HasBuiltinEndLine(this SyntaxTrivia trivia)
         {
             return trivia.IsDirective
-                || trivia.IsKind(SyntaxKind.SingleLineDocumentationCommentTrivia)
-                || trivia.IsKind(SyntaxKind.EndOfLineTrivia);
+                   || trivia.IsKind(SyntaxKind.SingleLineDocumentationCommentTrivia)
+                   || trivia.IsKind(SyntaxKind.EndOfLineTrivia);
         }
 
         /// <summary>
@@ -406,23 +403,23 @@ namespace Agoda.Analyzers.Helpers
             {
                 switch (trivia.Kind())
                 {
-                case SyntaxKind.WhitespaceTrivia:
-                    // ignore whitespace
-                    break;
+                    case SyntaxKind.WhitespaceTrivia:
+                        // ignore whitespace
+                        break;
 
-                case SyntaxKind.EndOfLineTrivia:
-                    if (onBlankLine)
-                    {
-                        return true;
-                    }
+                    case SyntaxKind.EndOfLineTrivia:
+                        if (onBlankLine)
+                        {
+                            return true;
+                        }
 
-                    onBlankLine = true;
-                    break;
+                        onBlankLine = true;
+                        break;
 
-                default:
-                    // directive trivia have a builtin end-of-line.
-                    onBlankLine = trivia.IsDirective;
-                    break;
+                    default:
+                        // directive trivia have a builtin end-of-line.
+                        onBlankLine = trivia.IsDirective;
+                        break;
                 }
             }
 
@@ -446,33 +443,33 @@ namespace Agoda.Analyzers.Helpers
 
                 switch (trivia.Kind())
                 {
-                case SyntaxKind.WhitespaceTrivia:
-                    newTriviaList.Add(trivia);
-                    break;
-
-                case SyntaxKind.EndOfLineTrivia:
-                    if (onBlankLine)
-                    {
-                        // strip all preceding white space in the blank line.
-                        while ((newTriviaList.Count > 0) && newTriviaList[newTriviaList.Count - 1].IsKind(SyntaxKind.WhitespaceTrivia))
-                        {
-                            newTriviaList.RemoveAt(newTriviaList.Count - 1);
-                        }
-                    }
-                    else
-                    {
+                    case SyntaxKind.WhitespaceTrivia:
                         newTriviaList.Add(trivia);
-                        onBlankLine = true;
-                    }
+                        break;
 
-                    break;
+                    case SyntaxKind.EndOfLineTrivia:
+                        if (onBlankLine)
+                        {
+                            // strip all preceding white space in the blank line.
+                            while ((newTriviaList.Count > 0) && newTriviaList[newTriviaList.Count - 1].IsKind(SyntaxKind.WhitespaceTrivia))
+                            {
+                                newTriviaList.RemoveAt(newTriviaList.Count - 1);
+                            }
+                        }
+                        else
+                        {
+                            newTriviaList.Add(trivia);
+                            onBlankLine = true;
+                        }
 
-                default:
-                    newTriviaList.Add(trivia);
+                        break;
 
-                    // directive trivia have a builtin end-of-line.
-                    onBlankLine = trivia.IsDirective;
-                    break;
+                    default:
+                        newTriviaList.Add(trivia);
+
+                        // directive trivia have a builtin end-of-line.
+                        onBlankLine = trivia.IsDirective;
+                        break;
                 }
             }
 

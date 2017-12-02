@@ -1,7 +1,4 @@
-﻿// Copyright (c) Tunnel Vision Laboratories, LLC. All Rights Reserved.
-// Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
@@ -51,10 +48,10 @@ namespace Agoda.Analyzers.Test.Helpers
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         protected Task VerifyCSharpFixAsync(string oldSource, string newSource, string batchNewSource = null, string oldFileName = null, string newFileName = null, int? codeFixIndex = null, bool allowNewCompilerDiagnostics = false, int numberOfIncrementalIterations = DefaultNumberOfIncrementalIterations, int numberOfFixAllIterations = 1, CancellationToken cancellationToken = default(CancellationToken))
         {
-            var batchNewSources = batchNewSource == null ? null : new[] { batchNewSource };
-            var oldFileNames = oldFileName == null ? null : new[] { oldFileName };
-            var newFileNames = newFileName == null ? null : new[] { newFileName };
-            return this.VerifyCSharpFixAsync(new[] { oldSource }, new[] { newSource }, batchNewSources, oldFileNames, newFileNames, codeFixIndex, allowNewCompilerDiagnostics, numberOfIncrementalIterations, numberOfFixAllIterations, cancellationToken);
+            var batchNewSources = batchNewSource == null ? null : new[] {batchNewSource};
+            var oldFileNames = oldFileName == null ? null : new[] {oldFileName};
+            var newFileNames = newFileName == null ? null : new[] {newFileName};
+            return this.VerifyCSharpFixAsync(new[] {oldSource}, new[] {newSource}, batchNewSources, oldFileNames, newFileNames, codeFixIndex, allowNewCompilerDiagnostics, numberOfIncrementalIterations, numberOfFixAllIterations, cancellationToken);
         }
 
         /// <summary>
@@ -134,7 +131,7 @@ namespace Agoda.Analyzers.Test.Helpers
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         protected async Task VerifyCSharpFixAllFixAsync(string oldSource, string newSource, int? codeFixIndex = null, bool allowNewCompilerDiagnostics = false, int numberOfIterations = 1, CancellationToken cancellationToken = default(CancellationToken))
         {
-            await this.VerifyFixInternalAsync(LanguageNames.CSharp, this.GetCSharpDiagnosticAnalyzers().ToImmutableArray(), this.GetCSharpCodeFixProvider(), new[] { oldSource }, new[] { newSource }, null, null, codeFixIndex, allowNewCompilerDiagnostics, numberOfIterations, FixAllAnalyzerDiagnosticsInDocumentAsync, cancellationToken).ConfigureAwait(false);
+            await this.VerifyFixInternalAsync(LanguageNames.CSharp, this.GetCSharpDiagnosticAnalyzers().ToImmutableArray(), this.GetCSharpCodeFixProvider(), new[] {oldSource}, new[] {newSource}, null, null, codeFixIndex, allowNewCompilerDiagnostics, numberOfIterations, FixAllAnalyzerDiagnosticsInDocumentAsync, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -205,8 +202,7 @@ namespace Agoda.Analyzers.Test.Helpers
                         }
                     }
                 }
-            }
-            while (!done);
+            } while (!done);
 
             if (expectedNumberOfIterations >= 0)
             {
@@ -318,8 +314,7 @@ namespace Agoda.Analyzers.Test.Helpers
 
                     project = await RecreateProjectDocumentsAsync(fixedProject, cancellationToken).ConfigureAwait(false);
                 }
-            }
-            while (!done);
+            } while (!done);
 
             if (expectedNumberOfIterations >= 0)
             {
@@ -421,7 +416,7 @@ namespace Agoda.Analyzers.Test.Helpers
         private async Task<ImmutableArray<CodeAction>> GetOfferedFixesInternalAsync(string language, string source, int? diagnosticIndex, ImmutableArray<DiagnosticAnalyzer> analyzers, CodeFixProvider codeFixProvider, CancellationToken cancellationToken)
         {
             var document = this.CreateDocument(source, language);
-            var analyzerDiagnostics = await GetSortedDiagnosticsFromDocumentsAsync(analyzers, new[] { document }, cancellationToken).ConfigureAwait(false);
+            var analyzerDiagnostics = await GetSortedDiagnosticsFromDocumentsAsync(analyzers, new[] {document}, cancellationToken).ConfigureAwait(false);
 
             var index = diagnosticIndex.HasValue ? diagnosticIndex.Value : 0;
 
