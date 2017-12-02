@@ -7,6 +7,8 @@ version: 1.0.{build}
 skip_branch_with_pr: true
 image: Visual Studio 2017
 
+configuration: Release
+
 build:
   project: src/AgodaAnalyzers.sln      # path to Visual Studio solution or project
   publish_nuget: true
