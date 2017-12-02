@@ -7,4 +7,5 @@ build:
   project: src/AgodaAnalyzers.sln      # path to Visual Studio solution or project
   publish_nuget: true
 
-  
+before_build:
+  - nuget restore
