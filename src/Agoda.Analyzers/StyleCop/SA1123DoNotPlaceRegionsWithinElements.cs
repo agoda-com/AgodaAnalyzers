@@ -1,7 +1,4 @@
-﻿// Copyright (c) Tunnel Vision Laboratories, LLC. All Rights Reserved.
-// Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
-
-using System;
+﻿using System;
 using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.CodeAnalysis;
@@ -28,6 +25,7 @@ namespace Agoda.Analyzers.StyleCop
         /// The ID for diagnostics produced by the <see cref="SA1123DoNotPlaceRegionsWithinElements"/> analyzer.
         /// </summary>
         public const string DiagnosticId = "SA1123";
+
         private static readonly LocalizableString Title = new LocalizableResourceString(nameof(ReadabilityResources.SA1123Title), ReadabilityResources.ResourceManager, typeof(ReadabilityResources));
         private static readonly LocalizableString MessageFormat = new LocalizableResourceString(nameof(ReadabilityResources.SA1123MessageFormat), ReadabilityResources.ResourceManager, typeof(ReadabilityResources));
         private static readonly LocalizableString Description = new LocalizableResourceString(nameof(ReadabilityResources.SA1123Description), ReadabilityResources.ResourceManager, typeof(ReadabilityResources));
@@ -71,12 +69,12 @@ namespace Agoda.Analyzers.StyleCop
             BlockSyntax syntax = null;
             foreach (var directive in regionSyntax.GetRelatedDirectives())
             {
-                BlockSyntax blockSyntax = directive.AncestorsAndSelf().OfType<BlockSyntax>().LastOrDefault();
+                var blockSyntax = directive.AncestorsAndSelf().OfType<BlockSyntax>().LastOrDefault();
                 if (blockSyntax == null)
                 {
                     return false;
                 }
-                else if (syntax == null)
+                if (syntax == null)
                 {
                     syntax = blockSyntax;
                 }
@@ -91,7 +89,7 @@ namespace Agoda.Analyzers.StyleCop
 
         private static void HandleRegionDirectiveTrivia(SyntaxNodeAnalysisContext context)
         {
-            RegionDirectiveTriviaSyntax regionSyntax = (RegionDirectiveTriviaSyntax)context.Node;
+            var regionSyntax = (RegionDirectiveTriviaSyntax) context.Node;
 
             if (IsCompletelyContainedInBody(regionSyntax))
             {

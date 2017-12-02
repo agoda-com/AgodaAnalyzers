@@ -1,7 +1,4 @@
-﻿// Copyright (c) Tunnel Vision Laboratories, LLC. All Rights Reserved.
-// Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
-
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -20,7 +17,7 @@ namespace Agoda.Analyzers.CodeFixes.Helpers
     /// <summary>
     /// Helper class for "Fix all occurrences" code fix providers.
     /// </summary>
-    internal partial class CustomBatchFixAllProvider : FixAllProvider
+    internal class CustomBatchFixAllProvider : FixAllProvider
     {
         protected CustomBatchFixAllProvider()
         {
@@ -32,14 +29,11 @@ namespace Agoda.Analyzers.CodeFixes.Helpers
         {
             if (fixAllContext.Document != null)
             {
-                var documentsAndDiagnosticsToFixMap = await this.GetDocumentDiagnosticsToFixAsync(fixAllContext).ConfigureAwait(false);
-                return await this.GetFixAsync(documentsAndDiagnosticsToFixMap, fixAllContext).ConfigureAwait(false);
+                var documentsAndDiagnosticsToFixMap = await GetDocumentDiagnosticsToFixAsync(fixAllContext).ConfigureAwait(false);
+                return await GetFixAsync(documentsAndDiagnosticsToFixMap, fixAllContext).ConfigureAwait(false);
             }
-            else
-            {
-                var projectsAndDiagnosticsToFixMap = await this.GetProjectDiagnosticsToFixAsync(fixAllContext).ConfigureAwait(false);
-                return await this.GetFixAsync(projectsAndDiagnosticsToFixMap, fixAllContext).ConfigureAwait(false);
-            }
+            var projectsAndDiagnosticsToFixMap = await GetProjectDiagnosticsToFixAsync(fixAllContext).ConfigureAwait(false);
+            return await GetFixAsync(projectsAndDiagnosticsToFixMap, fixAllContext).ConfigureAwait(false);
         }
 
         public virtual async Task<CodeAction> GetFixAsync(
@@ -52,17 +46,17 @@ namespace Agoda.Analyzers.CodeFixes.Helpers
 
                 var documents = documentsAndDiagnosticsToFixMap.Keys.ToImmutableArray();
                 var fixesBag = new List<CodeAction>[documents.Length];
-                var options = new ParallelOptions() { CancellationToken = fixAllContext.CancellationToken };
+                var options = new ParallelOptions {CancellationToken = fixAllContext.CancellationToken};
                 Parallel.ForEach(documents, options, (document, state, index) =>
                 {
                     fixAllContext.CancellationToken.ThrowIfCancellationRequested();
                     fixesBag[index] = new List<CodeAction>();
-                    this.AddDocumentFixesAsync(document, documentsAndDiagnosticsToFixMap[document], fixesBag[index].Add, fixAllContext).Wait(fixAllContext.CancellationToken);
+                    AddDocumentFixesAsync(document, documentsAndDiagnosticsToFixMap[document], fixesBag[index].Add, fixAllContext).Wait(fixAllContext.CancellationToken);
                 });
 
                 if (fixesBag.Any(fixes => fixes.Count > 0))
                 {
-                    return await this.TryGetMergedFixAsync(fixesBag.SelectMany(i => i), fixAllContext).ConfigureAwait(false);
+                    return await TryGetMergedFixAsync(fixesBag.SelectMany(i => i), fixAllContext).ConfigureAwait(false);
                 }
             }
 
@@ -78,7 +72,7 @@ namespace Agoda.Analyzers.CodeFixes.Helpers
 
             for (var i = 0; i < diagnostics.Length; i++)
             {
-                int currentFixIndex = i;
+                var currentFixIndex = i;
                 cancellationToken.ThrowIfCancellationRequested();
                 var diagnostic = diagnostics[i];
                 fixerTasks[i] = Task.Run(async () =>
@@ -110,14 +104,14 @@ namespace Agoda.Analyzers.CodeFixes.Helpers
             }
 
             await Task.WhenAll(fixerTasks).ConfigureAwait(false);
-            foreach (List<CodeAction> fix in fixes)
+            foreach (var fix in fixes)
             {
                 if (fix == null)
                 {
                     continue;
                 }
 
-                foreach (CodeAction action in fix)
+                foreach (var action in fix)
                 {
                     addFix(action);
                 }
@@ -130,19 +124,19 @@ namespace Agoda.Analyzers.CodeFixes.Helpers
         {
             if (projectsAndDiagnosticsToFixMap != null && projectsAndDiagnosticsToFixMap.Any())
             {
-                var options = new ParallelOptions() { CancellationToken = fixAllContext.CancellationToken };
+                var options = new ParallelOptions {CancellationToken = fixAllContext.CancellationToken};
                 var fixesBag = new List<CodeAction>[projectsAndDiagnosticsToFixMap.Count];
                 Parallel.ForEach(projectsAndDiagnosticsToFixMap.Keys, options, (project, state, index) =>
                 {
                     fixAllContext.CancellationToken.ThrowIfCancellationRequested();
                     var diagnostics = projectsAndDiagnosticsToFixMap[project];
                     fixesBag[index] = new List<CodeAction>();
-                    this.AddProjectFixesAsync(project, diagnostics, fixesBag[index].Add, fixAllContext).Wait(fixAllContext.CancellationToken);
+                    AddProjectFixesAsync(project, diagnostics, fixesBag[index].Add, fixAllContext).Wait(fixAllContext.CancellationToken);
                 });
 
                 if (fixesBag.Any(fixes => fixes.Count > 0))
                 {
-                    return await this.TryGetMergedFixAsync(fixesBag.SelectMany(i => i), fixAllContext).ConfigureAwait(false);
+                    return await TryGetMergedFixAsync(fixesBag.SelectMany(i => i), fixAllContext).ConfigureAwait(false);
                 }
             }
 
@@ -167,10 +161,10 @@ namespace Agoda.Analyzers.CodeFixes.Helpers
             }
 
             var solution = fixAllContext.Solution;
-            var newSolution = await this.TryMergeFixesAsync(solution, batchOfFixes, fixAllContext.CancellationToken).ConfigureAwait(false);
+            var newSolution = await TryMergeFixesAsync(solution, batchOfFixes, fixAllContext.CancellationToken).ConfigureAwait(false);
             if (newSolution != null && newSolution != solution)
             {
-                var title = this.GetFixAllTitle(fixAllContext);
+                var title = GetFixAllTitle(fixAllContext);
                 return CodeAction.Create(title, cancellationToken => Task.FromResult(newSolution));
             }
 
@@ -192,22 +186,22 @@ namespace Agoda.Analyzers.CodeFixes.Helpers
 
             switch (fixAllContext.Scope)
             {
-            case FixAllScope.Custom:
-                return string.Format(HelpersResources.FixAllOccurrencesOfDiagnostic, diagnosticId);
+                case FixAllScope.Custom:
+                    return string.Format(HelpersResources.FixAllOccurrencesOfDiagnostic, diagnosticId);
 
-            case FixAllScope.Document:
-                var document = fixAllContext.Document;
-                return string.Format(HelpersResources.FixAllOccurrencesOfDiagnosticInScope, diagnosticId, document.Name);
+                case FixAllScope.Document:
+                    var document = fixAllContext.Document;
+                    return string.Format(HelpersResources.FixAllOccurrencesOfDiagnosticInScope, diagnosticId, document.Name);
 
-            case FixAllScope.Project:
-                var project = fixAllContext.Project;
-                return string.Format(HelpersResources.FixAllOccurrencesOfDiagnosticInScope, diagnosticId, project.Name);
+                case FixAllScope.Project:
+                    var project = fixAllContext.Project;
+                    return string.Format(HelpersResources.FixAllOccurrencesOfDiagnosticInScope, diagnosticId, project.Name);
 
-            case FixAllScope.Solution:
-                return string.Format(HelpersResources.FixAllOccurrencesOfDiagnosticInSolution, diagnosticId);
+                case FixAllScope.Solution:
+                    return string.Format(HelpersResources.FixAllOccurrencesOfDiagnosticInSolution, diagnosticId);
 
-            default:
-                throw new InvalidOperationException("Not reachable");
+                default:
+                    throw new InvalidOperationException("Not reachable");
             }
         }
 
@@ -231,11 +225,11 @@ namespace Agoda.Analyzers.CodeFixes.Helpers
                 cancellationToken.ThrowIfCancellationRequested();
 
                 // TODO: Parallelize GetChangedSolutionInternalAsync for codeActions
-                ImmutableArray<CodeActionOperation> operations = await codeAction.GetPreviewOperationsAsync(cancellationToken).ConfigureAwait(false);
+                var operations = await codeAction.GetPreviewOperationsAsync(cancellationToken).ConfigureAwait(false);
                 ApplyChangesOperation singleApplyChangesOperation = null;
                 foreach (var operation in operations)
                 {
-                    ApplyChangesOperation applyChangesOperation = operation as ApplyChangesOperation;
+                    var applyChangesOperation = operation as ApplyChangesOperation;
                     if (applyChangesOperation == null)
                     {
                         continue;
@@ -311,7 +305,7 @@ namespace Agoda.Analyzers.CodeFixes.Helpers
                 var mergedDocuments = new ConcurrentDictionary<DocumentId, SourceText>();
                 var documentsToMergeArray = documentsToMergeMap.ToImmutableArray();
                 var mergeTasks = new Task[documentsToMergeArray.Length];
-                for (int i = 0; i < documentsToMergeArray.Length; i++)
+                for (var i = 0; i < documentsToMergeArray.Length; i++)
                 {
                     cancellationToken.ThrowIfCancellationRequested();
                     var kvp = documentsToMergeArray[i];
@@ -369,7 +363,7 @@ namespace Agoda.Analyzers.CodeFixes.Helpers
         {
             var successfullyMergedChanges = new List<TextChange>();
 
-            int cumulativeChangeIndex = 0;
+            var cumulativeChangeIndex = 0;
             foreach (var change in await newDocument.GetTextChangesAsync(oldDocument, cancellationToken).ConfigureAwait(false))
             {
                 cancellationToken.ThrowIfCancellationRequested();
@@ -399,12 +393,9 @@ namespace Agoda.Analyzers.CodeFixes.Helpers
                             // Bail out merge efforts and return the original 'cumulativeChanges'.
                             return cumulativeChanges;
                         }
-                        else
-                        {
-                            // The current change in consideration is identical to an existing change
-                            successfullyMergedChanges.Add(change);
-                            cumulativeChangeIndex++;
-                        }
+                        // The current change in consideration is identical to an existing change
+                        successfullyMergedChanges.Add(change);
+                        cumulativeChangeIndex++;
                     }
                 }
                 else

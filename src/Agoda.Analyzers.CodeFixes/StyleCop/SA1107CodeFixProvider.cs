@@ -1,7 +1,4 @@
-﻿// Copyright (c) Tunnel Vision Laboratories, LLC. All Rights Reserved.
-// Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
-
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
 using System.Composition;
 using System.Diagnostics;
 using System.Threading.Tasks;
@@ -59,10 +56,10 @@ namespace Agoda.Analyzers.CodeFixes.StyleCop
 
         private static Task<Document> GetTransformedDocumentAsync(Document document, SyntaxNode root, SyntaxNode node)
         {
-            SyntaxNode newSyntaxRoot = root;
+            var newSyntaxRoot = root;
             Debug.Assert(!node.HasLeadingTrivia, "The trivia should be trailing trivia of the previous node");
 
-            SyntaxNode newNode = node.WithLeadingTrivia(SyntaxFactory.ElasticCarriageReturnLineFeed);
+            var newNode = node.WithLeadingTrivia(SyntaxFactory.ElasticCarriageReturnLineFeed);
             newSyntaxRoot = newSyntaxRoot.ReplaceNode(node, newNode);
 
             return Task.FromResult(document.WithSyntaxRoot(newSyntaxRoot));

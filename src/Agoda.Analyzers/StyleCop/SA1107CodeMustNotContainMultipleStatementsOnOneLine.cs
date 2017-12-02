@@ -1,7 +1,4 @@
-﻿// Copyright (c) Tunnel Vision Laboratories, LLC. All Rights Reserved.
-// Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
-
-using System;
+﻿using System;
 using System.Collections.Immutable;
 using Agoda.Analyzers.Helpers;
 using Microsoft.CodeAnalysis;
@@ -27,6 +24,7 @@ namespace Agoda.Analyzers.StyleCop
         /// analyzer.
         /// </summary>
         public const string DiagnosticId = "SA1107";
+
         private static readonly LocalizableString Title = new LocalizableResourceString(nameof(ReadabilityResources.SA1107Title), ReadabilityResources.ResourceManager, typeof(ReadabilityResources));
         private static readonly LocalizableString MessageFormat = new LocalizableResourceString(nameof(ReadabilityResources.SA1107MessageFormat), ReadabilityResources.ResourceManager, typeof(ReadabilityResources));
         private static readonly LocalizableString Description = new LocalizableResourceString(nameof(ReadabilityResources.SA1107Description), ReadabilityResources.ResourceManager, typeof(ReadabilityResources));
@@ -52,15 +50,15 @@ namespace Agoda.Analyzers.StyleCop
 
         private static void HandleBlock(SyntaxNodeAnalysisContext context)
         {
-            BlockSyntax block = context.Node as BlockSyntax;
+            var block = context.Node as BlockSyntax;
 
             if (block != null && block.Statements.Any())
             {
                 var previousStatement = block.Statements[0];
-                FileLinePositionSpan previousStatementLocation = previousStatement.GetLineSpan();
+                var previousStatementLocation = previousStatement.GetLineSpan();
                 FileLinePositionSpan currentStatementLocation;
 
-                for (int i = 1; i < block.Statements.Count; i++)
+                for (var i = 1; i < block.Statements.Count; i++)
                 {
                     var currentStatement = block.Statements[i];
                     currentStatementLocation = currentStatement.GetLineSpan();

@@ -1,7 +1,4 @@
-﻿// Copyright (c) Tunnel Vision Laboratories, LLC. All Rights Reserved.
-// Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
@@ -27,9 +24,9 @@ namespace Agoda.Analyzers.Test.Helpers
 
         public DiagnosticVerifier()
         {
-            this.IndentationSize = DefaultIndentationSize;
-            this.TabSize = DefaultTabSize;
-            this.UseTabs = DefaultUseTabs;
+            IndentationSize = DefaultIndentationSize;
+            TabSize = DefaultTabSize;
+            UseTabs = DefaultUseTabs;
         }
 
         /// <summary>
@@ -39,11 +36,7 @@ namespace Agoda.Analyzers.Test.Helpers
         /// <value>
         /// The value of the <see cref="FormattingOptions.IndentationSize"/> to apply to the test workspace.
         /// </value>
-        public int IndentationSize
-        {
-            get;
-            protected set;
-        }
+        public int IndentationSize { get; protected set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the <see cref="FormattingOptions.UseTabs"/> option is applied to the
@@ -52,11 +45,7 @@ namespace Agoda.Analyzers.Test.Helpers
         /// <value>
         /// The value of the <see cref="FormattingOptions.UseTabs"/> to apply to the test workspace.
         /// </value>
-        public bool UseTabs
-        {
-            get;
-            protected set;
-        }
+        public bool UseTabs { get; protected set; }
 
         /// <summary>
         /// Gets or sets the value of the <see cref="FormattingOptions.TabSize"/> to apply to the test workspace.
@@ -64,11 +53,7 @@ namespace Agoda.Analyzers.Test.Helpers
         /// <value>
         /// The value of the <see cref="FormattingOptions.TabSize"/> to apply to the test workspace.
         /// </value>
-        public int TabSize
-        {
-            get;
-            protected set;
-        }
+        public int TabSize { get; protected set; }
 
         protected static DiagnosticResult[] EmptyDiagnosticResults { get; } = { };
 
@@ -80,30 +65,7 @@ namespace Agoda.Analyzers.Test.Helpers
         public async Task TestEmptySourceAsync()
         {
             var testCode = string.Empty;
-            await this.VerifyCSharpDiagnosticAsync(testCode, EmptyDiagnosticResults, CancellationToken.None).ConfigureAwait(false);
-        }
-
-        /// <summary>
-        /// Verifies that each diagnostics contains a <see cref="DiagnosticDescriptor.HelpLinkUri"/> in the expected
-        /// format.
-        /// </summary>
-        [Test]
-        public void TestHelpLink()
-        {
-            foreach (var diagnosticAnalyzer in this.GetCSharpDiagnosticAnalyzers())
-            {
-                foreach (var diagnostic in diagnosticAnalyzer.SupportedDiagnostics)
-                {
-                    if (diagnostic.DefaultSeverity == DiagnosticSeverity.Hidden && diagnostic.CustomTags.Contains(WellKnownDiagnosticTags.NotConfigurable))
-                    {
-                        // This diagnostic will never appear in the UI.
-                        continue;
-                    }
-
-                    string expected = $"https://github.com/DotNetAnalyzers/StyleCopAnalyzers/blob/master/documentation/{diagnostic.Id}.md";
-                    Assert.AreEqual(expected, diagnostic.HelpLinkUri);
-                }
-            }
+            await VerifyCSharpDiagnosticAsync(testCode, EmptyDiagnosticResults, CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -128,7 +90,7 @@ namespace Agoda.Analyzers.Test.Helpers
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         protected Task VerifyCSharpDiagnosticAsync(string source, DiagnosticResult expected, CancellationToken cancellationToken, string filename = null)
         {
-            return VerifyCSharpDiagnosticAsync(source, (DiagnosticResult[]) new[] { expected }, cancellationToken, filename);
+            return VerifyCSharpDiagnosticAsync(source, new[] {expected}, cancellationToken, filename);
         }
 
         /// <summary>
@@ -145,7 +107,7 @@ namespace Agoda.Analyzers.Test.Helpers
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         protected Task VerifyCSharpDiagnosticAsync(string source, DiagnosticResult[] expected, CancellationToken cancellationToken, string filename = null)
         {
-            return this.VerifyDiagnosticsAsync(new[] { source }, LanguageNames.CSharp, this.GetCSharpDiagnosticAnalyzers().ToImmutableArray(), expected, cancellationToken, filename != null ? new[] { filename } : null);
+            return VerifyDiagnosticsAsync(new[] {source}, LanguageNames.CSharp, GetCSharpDiagnosticAnalyzers().ToImmutableArray(), expected, cancellationToken, filename != null ? new[] {filename} : null);
         }
 
         /// <summary>
@@ -163,7 +125,7 @@ namespace Agoda.Analyzers.Test.Helpers
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         protected Task VerifyCSharpDiagnosticAsync(string[] sources, DiagnosticResult[] expected, CancellationToken cancellationToken, string[] filenames = null)
         {
-            return this.VerifyDiagnosticsAsync(sources, LanguageNames.CSharp, this.GetCSharpDiagnosticAnalyzers().ToImmutableArray(), expected, cancellationToken, filenames);
+            return VerifyDiagnosticsAsync(sources, LanguageNames.CSharp, GetCSharpDiagnosticAnalyzers().ToImmutableArray(), expected, cancellationToken, filenames);
         }
 
         /// <summary>
@@ -180,19 +142,19 @@ namespace Agoda.Analyzers.Test.Helpers
         /// diagnostics for the sources.</param>
         protected static void VerifyDiagnosticResults(IEnumerable<Diagnostic> actualResults, ImmutableArray<DiagnosticAnalyzer> analyzers, DiagnosticResult[] expectedResults)
         {
-            int expectedCount = expectedResults.Length;
-            int actualCount = actualResults.Count();
+            var expectedCount = expectedResults.Length;
+            var actualCount = actualResults.Count();
 
             if (expectedCount != actualCount)
             {
-                string diagnosticsOutput = actualResults.Any() ? FormatDiagnostics(analyzers, actualResults.ToArray()) : "    NONE.";
+                var diagnosticsOutput = actualResults.Any() ? FormatDiagnostics(analyzers, actualResults.ToArray()) : "    NONE.";
 
                 Assert.True(
                     false,
                     string.Format("Mismatch between number of diagnostics returned, expected \"{0}\" actual \"{1}\"\r\n\r\nDiagnostics:\r\n{2}\r\n", expectedCount, actualCount, diagnosticsOutput));
             }
 
-            for (int i = 0; i < expectedResults.Length; i++)
+            for (var i = 0; i < expectedResults.Length; i++)
             {
                 var actual = actualResults.ElementAt(i);
                 var expected = expectedResults[i];
@@ -201,7 +163,7 @@ namespace Agoda.Analyzers.Test.Helpers
                 {
                     if (actual.Location != Location.None)
                     {
-                        string message =
+                        var message =
                             string.Format(
                                 "Expected:\nA project diagnostic with No location\nActual:\n{0}",
                                 FormatDiagnostics(analyzers, actual));
@@ -224,7 +186,7 @@ namespace Agoda.Analyzers.Test.Helpers
                                 FormatDiagnostics(analyzers, actual)));
                     }
 
-                    for (int j = 0; j < additionalLocations.Length; ++j)
+                    for (var j = 0; j < additionalLocations.Length; ++j)
                     {
                         VerifyDiagnosticLocation(analyzers, actual, additionalLocations[j], expected.Spans[j + 1]);
                     }
@@ -232,7 +194,7 @@ namespace Agoda.Analyzers.Test.Helpers
 
                 if (actual.Id != expected.Id)
                 {
-                    string message =
+                    var message =
                         string.Format(
                             "Expected diagnostic id to be \"{0}\" was \"{1}\"\r\n\r\nDiagnostic:\r\n    {2}\r\n",
                             expected.Id,
@@ -243,7 +205,7 @@ namespace Agoda.Analyzers.Test.Helpers
 
                 if (actual.Severity != expected.Severity)
                 {
-                    string message =
+                    var message =
                         string.Format(
                             "Expected diagnostic severity to be \"{0}\" was \"{1}\"\r\n\r\nDiagnostic:\r\n    {2}\r\n",
                             expected.Severity,
@@ -254,7 +216,7 @@ namespace Agoda.Analyzers.Test.Helpers
 
                 if (actual.GetMessage() != expected.Message)
                 {
-                    string message =
+                    var message =
                         string.Format(
                             "Expected diagnostic message to be \"{0}\" was \"{1}\"\r\n\r\nDiagnostic:\r\n    {2}\r\n",
                             expected.Message,
@@ -279,14 +241,14 @@ namespace Agoda.Analyzers.Test.Helpers
         {
             var actualSpan = actual.GetLineSpan();
 
-            string message =
+            var message =
                 string.Format(
                     "Expected diagnostic to be in file \"{0}\" was actually in file \"{1}\"\r\n\r\nDiagnostic:\r\n    {2}\r\n",
                     expected.Path,
                     actualSpan.Path,
                     FormatDiagnostics(analyzers, diagnostic));
             Assert.True(
-                actualSpan.Path == expected.Path || (actualSpan.Path != null && actualSpan.Path.Contains("Test0.") && expected.Path.Contains("Test.")),
+                actualSpan.Path == expected.Path || actualSpan.Path != null && actualSpan.Path.Contains("Test0.") && expected.Path.Contains("Test."),
                 message);
 
             var actualStartLinePosition = actualSpan.StartLinePosition;
@@ -305,7 +267,7 @@ namespace Agoda.Analyzers.Test.Helpers
             if (expectedLinePosition.Line > 0)
             {
                 Assert.True(
-                    (actualLinePosition.Line + 1) == expectedLinePosition.Line,
+                    actualLinePosition.Line + 1 == expectedLinePosition.Line,
                     string.Format(
                         "Expected diagnostic to {0} on line \"{1}\" was actually on line \"{2}\"\r\n\r\nDiagnostic:\r\n    {3}\r\n",
                         positionText,
@@ -318,7 +280,7 @@ namespace Agoda.Analyzers.Test.Helpers
             if (expectedLinePosition.Character > 0)
             {
                 Assert.True(
-                    (actualLinePosition.Character + 1) == expectedLinePosition.Character,
+                    actualLinePosition.Character + 1 == expectedLinePosition.Character,
                     string.Format(
                         "Expected diagnostic to {0} at column \"{1}\" was actually at column \"{2}\"\r\n\r\nDiagnostic:\r\n    {3}\r\n",
                         positionText,
@@ -337,7 +299,7 @@ namespace Agoda.Analyzers.Test.Helpers
         private static string FormatDiagnostics(ImmutableArray<DiagnosticAnalyzer> analyzers, params Diagnostic[] diagnostics)
         {
             var builder = new StringBuilder();
-            for (int i = 0; i < diagnostics.Length; ++i)
+            for (var i = 0; i < diagnostics.Length; ++i)
             {
                 var diagnosticsId = diagnostics[i].Id;
 
@@ -359,7 +321,7 @@ namespace Agoda.Analyzers.Test.Helpers
                             location.IsInSource,
                             string.Format("Test base does not currently handle diagnostics in metadata locations. Diagnostic in metadata:\r\n{0}", diagnostics[i]));
 
-                        string resultMethodName = diagnostics[i].Location.SourceTree.FilePath.EndsWith(".cs") ? "GetCSharpResultAt" : "GetBasicResultAt";
+                        var resultMethodName = diagnostics[i].Location.SourceTree.FilePath.EndsWith(".cs") ? "GetCSharpResultAt" : "GetBasicResultAt";
                         var linePosition = diagnostics[i].Location.GetLineSpan().StartLinePosition;
 
                         builder.AppendFormat(
@@ -417,7 +379,7 @@ namespace Agoda.Analyzers.Test.Helpers
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         private async Task VerifyDiagnosticsAsync(string[] sources, string language, ImmutableArray<DiagnosticAnalyzer> analyzers, DiagnosticResult[] expected, CancellationToken cancellationToken, string[] filenames)
         {
-            VerifyDiagnosticResults(await this.GetSortedDiagnosticsAsync(sources, language, analyzers, cancellationToken, filenames).ConfigureAwait(false), analyzers, expected);
+            VerifyDiagnosticResults(await GetSortedDiagnosticsAsync(sources, language, analyzers, cancellationToken, filenames).ConfigureAwait(false), analyzers, expected);
 
             // If filenames is null we want to test for exclusions too
             if (filenames == null)
@@ -433,7 +395,7 @@ namespace Agoda.Analyzers.Test.Helpers
                         .Select(x => x.WithLineOffset(1))
                         .ToArray();
 
-                    VerifyDiagnosticResults(await this.GetSortedDiagnosticsAsync(sources.Select(x => " // <auto-generated>\r\n" + x).ToArray(), language, analyzers, cancellationToken, null).ConfigureAwait(false), analyzers, expectedResults);
+                    VerifyDiagnosticResults(await GetSortedDiagnosticsAsync(sources.Select(x => " // <auto-generated>\r\n" + x).ToArray(), language, analyzers, cancellationToken, null).ConfigureAwait(false), analyzers, expectedResults);
                 }
             }
         }

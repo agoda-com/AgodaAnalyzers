@@ -1,11 +1,8 @@
-﻿// Copyright (c) Tunnel Vision Laboratories, LLC. All Rights Reserved.
-// Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
+﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.CodeAnalysis;
 
 namespace StyleCop.Analyzers
 {
-    using System.Diagnostics.CodeAnalysis;
-    using Microsoft.CodeAnalysis;
-
     internal static class AnalyzerConstants
     {
         static AnalyzerConstants()

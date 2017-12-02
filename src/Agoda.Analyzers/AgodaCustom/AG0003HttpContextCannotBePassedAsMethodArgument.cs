@@ -1,19 +1,15 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using System;
+using System.Collections.Immutable;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using StyleCop.Analyzers;
-using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Agoda.Analyzers.AgodaCustom
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    public class AG0003HttpContextCannotBePassedAsMethodArgument: DiagnosticAnalyzer
+    public class AG0003HttpContextCannotBePassedAsMethodArgument : DiagnosticAnalyzer
     {
         public const string DiagnosticId = "AG0003";
         private static readonly LocalizableString Title = new LocalizableResourceString(nameof(CustomRulesResources.AG0003Title), CustomRulesResources.ResourceManager, typeof(CustomRulesResources));
@@ -32,7 +28,7 @@ namespace Agoda.Analyzers.AgodaCustom
         {
             var methodParam = context.Node as ParameterSyntax;
 
-            SimpleNameSyntax simpleType = (methodParam.Type as QualifiedNameSyntax)?.Right ?? methodParam.Type as SimpleNameSyntax;
+            var simpleType = (methodParam.Type as QualifiedNameSyntax)?.Right ?? methodParam.Type as SimpleNameSyntax;
             if (simpleType == null)
                 return;
 
@@ -50,7 +46,5 @@ namespace Agoda.Analyzers.AgodaCustom
 
             context.RegisterSyntaxNodeAction(DependencyResolverUsageAction, SyntaxKind.Parameter);
         }
-
-
     }
 }

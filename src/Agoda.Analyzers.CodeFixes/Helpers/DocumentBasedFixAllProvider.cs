@@ -1,7 +1,4 @@
-﻿// Copyright (c) Tunnel Vision Laboratories, LLC. All Rights Reserved.
-// Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
@@ -23,31 +20,31 @@ namespace Agoda.Analyzers.Helpers
             CodeAction fixAction;
             switch (fixAllContext.Scope)
             {
-            case FixAllScope.Document:
-                fixAction = CodeAction.Create(
-                    this.CodeActionTitle,
-                    cancellationToken => this.GetDocumentFixesAsync(fixAllContext.WithCancellationToken(cancellationToken)),
-                    nameof(DocumentBasedFixAllProvider));
-                break;
+                case FixAllScope.Document:
+                    fixAction = CodeAction.Create(
+                        CodeActionTitle,
+                        cancellationToken => GetDocumentFixesAsync(fixAllContext.WithCancellationToken(cancellationToken)),
+                        nameof(DocumentBasedFixAllProvider));
+                    break;
 
-            case FixAllScope.Project:
-                fixAction = CodeAction.Create(
-                    this.CodeActionTitle,
-                    cancellationToken => this.GetProjectFixesAsync(fixAllContext.WithCancellationToken(cancellationToken), fixAllContext.Project),
-                    nameof(DocumentBasedFixAllProvider));
-                break;
+                case FixAllScope.Project:
+                    fixAction = CodeAction.Create(
+                        CodeActionTitle,
+                        cancellationToken => GetProjectFixesAsync(fixAllContext.WithCancellationToken(cancellationToken), fixAllContext.Project),
+                        nameof(DocumentBasedFixAllProvider));
+                    break;
 
-            case FixAllScope.Solution:
-                fixAction = CodeAction.Create(
-                    this.CodeActionTitle,
-                    cancellationToken => this.GetSolutionFixesAsync(fixAllContext.WithCancellationToken(cancellationToken)),
-                    nameof(DocumentBasedFixAllProvider));
-                break;
+                case FixAllScope.Solution:
+                    fixAction = CodeAction.Create(
+                        CodeActionTitle,
+                        cancellationToken => GetSolutionFixesAsync(fixAllContext.WithCancellationToken(cancellationToken)),
+                        nameof(DocumentBasedFixAllProvider));
+                    break;
 
-            case FixAllScope.Custom:
-            default:
-                fixAction = null;
-                break;
+                case FixAllScope.Custom:
+                default:
+                    fixAction = null;
+                    break;
             }
 
             return Task.FromResult(fixAction);
@@ -75,7 +72,7 @@ namespace Agoda.Analyzers.Helpers
                 return fixAllContext.Document;
             }
 
-            var newRoot = await this.FixAllInDocumentAsync(fixAllContext, fixAllContext.Document, diagnostics).ConfigureAwait(false);
+            var newRoot = await FixAllInDocumentAsync(fixAllContext, fixAllContext.Document, diagnostics).ConfigureAwait(false);
             if (newRoot == null)
             {
                 return fixAllContext.Document;
@@ -88,8 +85,8 @@ namespace Agoda.Analyzers.Helpers
         {
             var documentDiagnosticsToFix = await FixAllContextHelper.GetDocumentDiagnosticsToFixAsync(fixAllContext).ConfigureAwait(false);
 
-            Solution solution = fixAllContext.Solution;
-            List<Task<SyntaxNode>> newDocuments = new List<Task<SyntaxNode>>(documents.Length);
+            var solution = fixAllContext.Solution;
+            var newDocuments = new List<Task<SyntaxNode>>(documents.Length);
             foreach (var document in documents)
             {
                 ImmutableArray<Diagnostic> diagnostics;
@@ -99,10 +96,10 @@ namespace Agoda.Analyzers.Helpers
                     continue;
                 }
 
-                newDocuments.Add(this.FixAllInDocumentAsync(fixAllContext, document, diagnostics));
+                newDocuments.Add(FixAllInDocumentAsync(fixAllContext, document, diagnostics));
             }
 
-            for (int i = 0; i < documents.Length; i++)
+            for (var i = 0; i < documents.Length; i++)
             {
                 var newDocumentRoot = await newDocuments[i].ConfigureAwait(false);
                 if (newDocumentRoot == null)
@@ -118,13 +115,13 @@ namespace Agoda.Analyzers.Helpers
 
         private Task<Solution> GetProjectFixesAsync(FixAllContext fixAllContext, Project project)
         {
-            return this.GetSolutionFixesAsync(fixAllContext, project.Documents.ToImmutableArray());
+            return GetSolutionFixesAsync(fixAllContext, project.Documents.ToImmutableArray());
         }
 
         private Task<Solution> GetSolutionFixesAsync(FixAllContext fixAllContext)
         {
-            ImmutableArray<Document> documents = fixAllContext.Solution.Projects.SelectMany(i => i.Documents).ToImmutableArray();
-            return this.GetSolutionFixesAsync(fixAllContext, documents);
+            var documents = fixAllContext.Solution.Projects.SelectMany(i => i.Documents).ToImmutableArray();
+            return GetSolutionFixesAsync(fixAllContext, documents);
         }
     }
 }

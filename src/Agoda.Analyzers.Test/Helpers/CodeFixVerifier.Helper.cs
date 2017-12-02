@@ -1,7 +1,4 @@
-﻿// Copyright (c) Tunnel Vision Laboratories, LLC. All Rights Reserved.
-// Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Threading;
@@ -56,8 +53,8 @@ namespace Agoda.Analyzers.Test.Helpers
             var oldArray = diagnostics.OrderBy(d => d.Location.SourceSpan.Start).ToArray();
             var newArray = newDiagnostics.OrderBy(d => d.Location.SourceSpan.Start).ToArray();
 
-            int oldIndex = 0;
-            int newIndex = 0;
+            var oldIndex = 0;
+            var newIndex = 0;
 
             while (newIndex < newArray.Length)
             {

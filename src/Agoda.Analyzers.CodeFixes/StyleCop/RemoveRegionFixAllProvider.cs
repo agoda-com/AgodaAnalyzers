@@ -1,7 +1,4 @@
-﻿// Copyright (c) Tunnel Vision Laboratories, LLC. All Rights Reserved.
-// Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
-
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
 using Agoda.Analyzers.Helpers;
@@ -22,7 +19,7 @@ namespace Agoda.Analyzers.CodeFixes.StyleCop
                 return null;
             }
 
-            SyntaxNode root = await document.GetSyntaxRootAsync().ConfigureAwait(false);
+            var root = await document.GetSyntaxRootAsync().ConfigureAwait(false);
 
             var nodesToRemove = diagnostics.Select(d => root.FindNode(d.Location.SourceSpan, findInsideTrivia: true))
                 .Where(node => node != null && !node.IsMissing)

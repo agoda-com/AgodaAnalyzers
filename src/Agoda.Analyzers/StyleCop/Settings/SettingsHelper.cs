@@ -1,7 +1,4 @@
-﻿// Copyright (c) Tunnel Vision Laboratories, LLC. All Rights Reserved.
-// Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
-
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
 using System.IO;
 using System.Threading;
 using Agoda.Analyzers.StyleCop.Settings.ObjectModel;
@@ -73,7 +70,7 @@ namespace Agoda.Analyzers.StyleCop.Settings
 
         internal static StyleCopSettings GetStyleCopSettings(this AnalysisContext context, AnalyzerOptions options, DeserializationFailureBehavior failureBehavior, CancellationToken cancellationToken)
         {
-            SourceText text = TryGetStyleCopSettingsText(options, cancellationToken);
+            var text = TryGetStyleCopSettingsText(options, cancellationToken);
             if (text == null)
             {
                 return new StyleCopSettings();
@@ -102,7 +99,7 @@ namespace Agoda.Analyzers.StyleCop.Settings
         internal static StyleCopSettings GetStyleCopSettings(this CompilationStartAnalysisContext context, AnalyzerOptions options, DeserializationFailureBehavior failureBehavior, CancellationToken cancellationToken)
 #pragma warning restore RS1012 // Start action has no registered actions.
         {
-            SourceText text = TryGetStyleCopSettingsText(options, cancellationToken);
+            var text = TryGetStyleCopSettingsText(options, cancellationToken);
             if (text == null)
             {
                 return new StyleCopSettings();
@@ -164,7 +161,7 @@ namespace Agoda.Analyzers.StyleCop.Settings
                 {
                     if (Path.GetFileName(additionalFile.Path).ToLowerInvariant() == SettingsFileName)
                     {
-                        SourceText additionalTextContent = additionalFile.GetText(cancellationToken);
+                        var additionalTextContent = additionalFile.GetText(cancellationToken);
                         var root = JsonConvert.DeserializeObject<SettingsFile>(additionalTextContent.ToString());
 
                         if (root == null)

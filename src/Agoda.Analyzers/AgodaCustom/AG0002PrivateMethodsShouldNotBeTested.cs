@@ -1,8 +1,8 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using System.Collections.Immutable;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
-using System.Collections.Immutable;
 
 namespace Agoda.Analyzers.AgodaCustom
 {
@@ -15,16 +15,19 @@ namespace Agoda.Analyzers.AgodaCustom
         private static readonly LocalizableString Description = new LocalizableResourceString(nameof(CustomRulesResources.AG0002Description), CustomRulesResources.ResourceManager, typeof(CustomRulesResources));
         private const string Category = "Usage";
 
-        private static DiagnosticDescriptor Rule = new DiagnosticDescriptor(
+        private static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(
             DiagnosticId,
             Title,
             MessageFormat,
             Category, DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
             description: Description
-            );
+        );
 
-        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get { return ImmutableArray.Create(Rule); } }
+        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics
+        {
+            get { return ImmutableArray.Create(Rule); }
+        }
 
         public override void Initialize(AnalysisContext context)
         {
@@ -33,7 +36,7 @@ namespace Agoda.Analyzers.AgodaCustom
 
         private static void AnalyzeNode(SyntaxNodeAnalysisContext context)
         {
-            var methodDeclaration = (MethodDeclarationSyntax)context.Node;
+            var methodDeclaration = (MethodDeclarationSyntax) context.Node;
 
             if (!methodDeclaration.Modifiers.Any(SyntaxKind.InternalKeyword))
             {

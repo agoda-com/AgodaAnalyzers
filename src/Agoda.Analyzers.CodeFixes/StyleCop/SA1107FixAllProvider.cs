@@ -1,7 +1,4 @@
-﻿// Copyright (c) Tunnel Vision Laboratories, LLC. All Rights Reserved.
-// Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
-
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
 using System.Threading.Tasks;
 using Agoda.Analyzers.Helpers;
 using Agoda.Analyzers.StyleCop;
@@ -23,11 +20,11 @@ namespace Agoda.Analyzers.CodeFixes.StyleCop
                 return null;
             }
 
-            DocumentEditor editor = await DocumentEditor.CreateAsync(document, fixAllContext.CancellationToken).ConfigureAwait(false);
+            var editor = await DocumentEditor.CreateAsync(document, fixAllContext.CancellationToken).ConfigureAwait(false);
 
-            SyntaxNode root = editor.GetChangedRoot();
+            var root = editor.GetChangedRoot();
 
-            ImmutableList<SyntaxNode> nodesToChange = ImmutableList.Create<SyntaxNode>();
+            var nodesToChange = ImmutableList.Create<SyntaxNode>();
 
             // Make sure all nodes we care about are tracked
             foreach (var diagnostic in diagnostics)

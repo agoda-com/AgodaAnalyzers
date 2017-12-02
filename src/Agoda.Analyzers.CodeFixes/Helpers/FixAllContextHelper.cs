@@ -1,7 +1,4 @@
-﻿// Copyright (c) Tunnel Vision Laboratories, LLC. All Rights Reserved.
-// Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
-
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
@@ -25,42 +22,42 @@ namespace Agoda.Analyzers.Helpers
 
             switch (fixAllContext.Scope)
             {
-            case FixAllScope.Document:
-                if (document != null)
-                {
-                    var documentDiagnostics = await fixAllContext.GetDocumentDiagnosticsAsync(document).ConfigureAwait(false);
-                    return ImmutableDictionary<Document, ImmutableArray<Diagnostic>>.Empty.SetItem(document, documentDiagnostics);
-                }
+                case FixAllScope.Document:
+                    if (document != null)
+                    {
+                        var documentDiagnostics = await fixAllContext.GetDocumentDiagnosticsAsync(document).ConfigureAwait(false);
+                        return ImmutableDictionary<Document, ImmutableArray<Diagnostic>>.Empty.SetItem(document, documentDiagnostics);
+                    }
 
-                break;
+                    break;
 
-            case FixAllScope.Project:
-                projectsToFix = ImmutableArray.Create(project);
-                allDiagnostics = await GetAllDiagnosticsAsync(fixAllContext, project).ConfigureAwait(false);
-                break;
+                case FixAllScope.Project:
+                    projectsToFix = ImmutableArray.Create(project);
+                    allDiagnostics = await GetAllDiagnosticsAsync(fixAllContext, project).ConfigureAwait(false);
+                    break;
 
-            case FixAllScope.Solution:
-                projectsToFix = project.Solution.Projects
-                    .Where(p => p.Language == project.Language)
-                    .ToImmutableArray();
+                case FixAllScope.Solution:
+                    projectsToFix = project.Solution.Projects
+                        .Where(p => p.Language == project.Language)
+                        .ToImmutableArray();
 
-                var diagnostics = new ConcurrentDictionary<ProjectId, ImmutableArray<Diagnostic>>();
-                var tasks = new Task[projectsToFix.Length];
-                for (int i = 0; i < projectsToFix.Length; i++)
-                {
-                    fixAllContext.CancellationToken.ThrowIfCancellationRequested();
-                    var projectToFix = projectsToFix[i];
-                    tasks[i] = Task.Run(
-                        async () =>
-                        {
-                            var projectDiagnostics = await GetAllDiagnosticsAsync(fixAllContext, projectToFix).ConfigureAwait(false);
-                            diagnostics.TryAdd(projectToFix.Id, projectDiagnostics);
-                        }, fixAllContext.CancellationToken);
-                }
+                    var diagnostics = new ConcurrentDictionary<ProjectId, ImmutableArray<Diagnostic>>();
+                    var tasks = new Task[projectsToFix.Length];
+                    for (var i = 0; i < projectsToFix.Length; i++)
+                    {
+                        fixAllContext.CancellationToken.ThrowIfCancellationRequested();
+                        var projectToFix = projectsToFix[i];
+                        tasks[i] = Task.Run(
+                            async () =>
+                            {
+                                var projectDiagnostics = await GetAllDiagnosticsAsync(fixAllContext, projectToFix).ConfigureAwait(false);
+                                diagnostics.TryAdd(projectToFix.Id, projectDiagnostics);
+                            }, fixAllContext.CancellationToken);
+                    }
 
-                await Task.WhenAll(tasks).ConfigureAwait(false);
-                allDiagnostics = allDiagnostics.AddRange(diagnostics.SelectMany(i => i.Value.Where(x => fixAllContext.DiagnosticIds.Contains(x.Id))));
-                break;
+                    await Task.WhenAll(tasks).ConfigureAwait(false);
+                    allDiagnostics = allDiagnostics.AddRange(diagnostics.SelectMany(i => i.Value.Where(x => fixAllContext.DiagnosticIds.Contains(x.Id))));
+                    break;
             }
 
             if (allDiagnostics.IsEmpty)
@@ -78,26 +75,26 @@ namespace Agoda.Analyzers.Helpers
             {
                 switch (fixAllContext.Scope)
                 {
-                case FixAllScope.Project:
-                    var diagnostics = await fixAllContext.GetProjectDiagnosticsAsync(project).ConfigureAwait(false);
-                    return ImmutableDictionary<Project, ImmutableArray<Diagnostic>>.Empty.SetItem(project, diagnostics);
+                    case FixAllScope.Project:
+                        var diagnostics = await fixAllContext.GetProjectDiagnosticsAsync(project).ConfigureAwait(false);
+                        return ImmutableDictionary<Project, ImmutableArray<Diagnostic>>.Empty.SetItem(project, diagnostics);
 
-                case FixAllScope.Solution:
-                    var projectsAndDiagnostics = new ConcurrentDictionary<Project, ImmutableArray<Diagnostic>>();
-                    var options = new ParallelOptions() { CancellationToken = fixAllContext.CancellationToken };
-                    Parallel.ForEach(project.Solution.Projects, options, proj =>
-                    {
-                        fixAllContext.CancellationToken.ThrowIfCancellationRequested();
-                        var projectDiagnosticsTask = fixAllContext.GetProjectDiagnosticsAsync(proj);
-                        projectDiagnosticsTask.Wait(fixAllContext.CancellationToken);
-                        var projectDiagnostics = projectDiagnosticsTask.Result;
-                        if (projectDiagnostics.Any())
+                    case FixAllScope.Solution:
+                        var projectsAndDiagnostics = new ConcurrentDictionary<Project, ImmutableArray<Diagnostic>>();
+                        var options = new ParallelOptions {CancellationToken = fixAllContext.CancellationToken};
+                        Parallel.ForEach(project.Solution.Projects, options, proj =>
                         {
-                            projectsAndDiagnostics.TryAdd(proj, projectDiagnostics);
-                        }
-                    });
+                            fixAllContext.CancellationToken.ThrowIfCancellationRequested();
+                            var projectDiagnosticsTask = fixAllContext.GetProjectDiagnosticsAsync(proj);
+                            projectDiagnosticsTask.Wait(fixAllContext.CancellationToken);
+                            var projectDiagnostics = projectDiagnosticsTask.Result;
+                            if (projectDiagnostics.Any())
+                            {
+                                projectsAndDiagnostics.TryAdd(proj, projectDiagnostics);
+                            }
+                        });
 
-                    return projectsAndDiagnostics.ToImmutableDictionary();
+                        return projectsAndDiagnostics.ToImmutableDictionary();
                 }
             }
 

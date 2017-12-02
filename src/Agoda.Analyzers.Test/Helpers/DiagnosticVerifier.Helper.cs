@@ -1,7 +1,4 @@
-﻿// Copyright (c) Tunnel Vision Laboratories, LLC. All Rights Reserved.
-// Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
@@ -67,7 +64,7 @@ namespace Agoda.Analyzers.Test.Helpers
                     }
                     else
                     {
-                        for (int i = 0; i < documents.Length; i++)
+                        for (var i = 0; i < documents.Length; i++)
                         {
                             var document = documents[i];
                             var tree = await document.GetSyntaxTreeAsync(cancellationToken).ConfigureAwait(false);
@@ -98,10 +95,10 @@ namespace Agoda.Analyzers.Test.Helpers
             string[] filenames = null;
             if (fileName != null)
             {
-                filenames = new[] { fileName };
+                filenames = new[] {fileName};
             }
 
-            return this.CreateProject(new[] { source }, language, filenames).Documents.Single();
+            return CreateProject(new[] {source}, language, filenames).Documents.Single();
         }
 
         /// <summary>
@@ -114,7 +111,7 @@ namespace Agoda.Analyzers.Test.Helpers
         {
             var compilationOptions = new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary, allowUnsafe: true);
 
-            Solution solution = new AdhocWorkspace()
+            var solution = new AdhocWorkspace()
                 .CurrentSolution
                 .AddProject(projectId, TestProjectName, TestProjectName, language)
                 .WithProjectCompilationOptions(projectId, compilationOptions)
@@ -126,24 +123,24 @@ namespace Agoda.Analyzers.Test.Helpers
 
             solution.Workspace.Options =
                 solution.Workspace.Options
-                .WithChangedOption(FormattingOptions.IndentationSize, language, this.IndentationSize)
-                .WithChangedOption(FormattingOptions.TabSize, language, this.TabSize)
-                .WithChangedOption(FormattingOptions.UseTabs, language, this.UseTabs);
+                    .WithChangedOption(FormattingOptions.IndentationSize, language, IndentationSize)
+                    .WithChangedOption(FormattingOptions.TabSize, language, TabSize)
+                    .WithChangedOption(FormattingOptions.UseTabs, language, UseTabs);
 
-            var settings = this.GetSettings();
+            var settings = GetSettings();
 
-            StyleCopSettings defaultSettings = new StyleCopSettings();
-            if (this.IndentationSize != defaultSettings.Indentation.IndentationSize
-                || this.UseTabs != defaultSettings.Indentation.UseTabs
-                || this.TabSize != defaultSettings.Indentation.TabSize)
+            var defaultSettings = new StyleCopSettings();
+            if (IndentationSize != defaultSettings.Indentation.IndentationSize
+                || UseTabs != defaultSettings.Indentation.UseTabs
+                || TabSize != defaultSettings.Indentation.TabSize)
             {
                 var indentationSettings = $@"
 {{
   ""settings"": {{
     ""indentation"": {{
-      ""indentationSize"": {this.IndentationSize},
-      ""useTabs"": {this.UseTabs.ToString().ToLowerInvariant()},
-      ""tabSize"": {this.TabSize}
+      ""indentationSize"": {IndentationSize},
+      ""useTabs"": {UseTabs.ToString().ToLowerInvariant()},
+      ""tabSize"": {TabSize}
     }}
   }}
 }}
@@ -155,7 +152,7 @@ namespace Agoda.Analyzers.Test.Helpers
                 }
                 else
                 {
-                    JObject mergedSettings = JsonConvert.DeserializeObject<JObject>(settings);
+                    var mergedSettings = JsonConvert.DeserializeObject<JObject>(settings);
                     mergedSettings.Merge(JsonConvert.DeserializeObject<JObject>(indentationSettings));
                     settings = JsonConvert.SerializeObject(mergedSettings);
                 }
@@ -167,7 +164,7 @@ namespace Agoda.Analyzers.Test.Helpers
                 solution = solution.AddAdditionalDocument(documentId, SettingsHelper.SettingsFileName, settings);
             }
 
-            ParseOptions parseOptions = solution.GetProject(projectId).ParseOptions;
+            var parseOptions = solution.GetProject(projectId).ParseOptions;
             return solution.WithProjectParseOptions(projectId, parseOptions.WithDocumentationMode(DocumentationMode.Diagnose));
         }
 
@@ -191,16 +188,13 @@ namespace Agoda.Analyzers.Test.Helpers
 
         protected DiagnosticResult CSharpDiagnostic(string diagnosticId = null)
         {
-            var analyzers = this.GetCSharpDiagnosticAnalyzers();
-            var supportedDiagnostics = Enumerable.SelectMany<DiagnosticAnalyzer, DiagnosticDescriptor>(analyzers, analyzer => analyzer.SupportedDiagnostics);
+            var analyzers = GetCSharpDiagnosticAnalyzers();
+            var supportedDiagnostics = analyzers.SelectMany(analyzer => analyzer.SupportedDiagnostics);
             if (diagnosticId == null)
             {
-                return this.CSharpDiagnostic(supportedDiagnostics.Single());
+                return CSharpDiagnostic(supportedDiagnostics.Single());
             }
-            else
-            {
-                return this.CSharpDiagnostic(supportedDiagnostics.Single(i => i.Id == diagnosticId));
-            }
+            return CSharpDiagnostic(supportedDiagnostics.Single(i => i.Id == diagnosticId));
         }
 
         protected DiagnosticResult CSharpDiagnostic(DiagnosticDescriptor descriptor)
@@ -213,7 +207,7 @@ namespace Agoda.Analyzers.Test.Helpers
             return new DiagnosticResult
             {
                 Id = errorIdentifier,
-                Severity = DiagnosticSeverity.Error,
+                Severity = DiagnosticSeverity.Error
             };
         }
 
@@ -232,8 +226,8 @@ namespace Agoda.Analyzers.Test.Helpers
         /// strings.</returns>
         protected Project CreateProject(string[] sources, string language = LanguageNames.CSharp, string[] filenames = null)
         {
-            Project project = this.CreateProjectImpl(sources, language, filenames);
-            return this.ApplyCompilationOptions(project);
+            var project = CreateProjectImpl(sources, language, filenames);
+            return ApplyCompilationOptions(project);
         }
 
         /// <summary>
@@ -247,16 +241,16 @@ namespace Agoda.Analyzers.Test.Helpers
         /// strings.</returns>
         protected virtual Project CreateProjectImpl(string[] sources, string language, string[] filenames)
         {
-            string fileNamePrefix = DefaultFilePathPrefix;
-            string fileExt = language == LanguageNames.CSharp ? CSharpDefaultFileExt : VisualBasicDefaultExt;
+            var fileNamePrefix = DefaultFilePathPrefix;
+            var fileExt = language == LanguageNames.CSharp ? CSharpDefaultFileExt : VisualBasicDefaultExt;
 
             var projectId = ProjectId.CreateNewId(debugName: TestProjectName);
-            var solution = this.CreateSolution(projectId, language);
+            var solution = CreateSolution(projectId, language);
 
-            int count = 0;
-            for (int i = 0; i < sources.Length; i++)
+            var count = 0;
+            for (var i = 0; i < sources.Length; i++)
             {
-                string source = sources[i];
+                var source = sources[i];
                 var newFileName = filenames?[i] ?? fileNamePrefix + count + "." + fileExt;
                 var documentId = DocumentId.CreateNewId(projectId, debugName: newFileName);
                 solution = solution.AddDocument(documentId, newFileName, SourceText.From(source));
@@ -279,7 +273,7 @@ namespace Agoda.Analyzers.Test.Helpers
         /// <returns>The modified project.</returns>
         protected virtual Project ApplyCompilationOptions(Project project)
         {
-            var analyzers = this.GetCSharpDiagnosticAnalyzers();
+            var analyzers = GetCSharpDiagnosticAnalyzers();
 
             var supportedDiagnosticsSpecificOptions = new Dictionary<string, ReportDiagnostic>();
             foreach (var analyzer in analyzers)
@@ -294,7 +288,7 @@ namespace Agoda.Analyzers.Test.Helpers
             // Report exceptions during the analysis process as errors
             supportedDiagnosticsSpecificOptions.Add("AD0001", ReportDiagnostic.Error);
 
-            foreach (var id in this.GetDisabledDiagnostics())
+            foreach (var id in GetDisabledDiagnostics())
             {
                 supportedDiagnosticsSpecificOptions[id] = ReportDiagnostic.Suppress;
             }
@@ -303,7 +297,7 @@ namespace Agoda.Analyzers.Test.Helpers
             var modifiedSpecificDiagnosticOptions = supportedDiagnosticsSpecificOptions.ToImmutableDictionary().SetItems(project.CompilationOptions.SpecificDiagnosticOptions);
             var modifiedCompilationOptions = project.CompilationOptions.WithSpecificDiagnosticOptions(modifiedSpecificDiagnosticOptions);
 
-            Solution solution = project.Solution.WithProjectCompilationOptions(project.Id, modifiedCompilationOptions);
+            var solution = project.Solution.WithProjectCompilationOptions(project.Id, modifiedCompilationOptions);
             return solution.GetProject(project.Id);
         }
 
@@ -333,7 +327,7 @@ namespace Agoda.Analyzers.Test.Helpers
         /// <see cref="Diagnostic.Location"/>.</returns>
         private Task<ImmutableArray<Diagnostic>> GetSortedDiagnosticsAsync(string[] sources, string language, ImmutableArray<DiagnosticAnalyzer> analyzers, CancellationToken cancellationToken, string[] filenames)
         {
-            return GetSortedDiagnosticsFromDocumentsAsync(analyzers, this.GetDocuments(sources, language, filenames), cancellationToken);
+            return GetSortedDiagnosticsFromDocumentsAsync(analyzers, GetDocuments(sources, language, filenames), cancellationToken);
         }
 
         /// <summary>
@@ -352,7 +346,7 @@ namespace Agoda.Analyzers.Test.Helpers
                 throw new ArgumentException("Unsupported Language");
             }
 
-            var project = this.CreateProject(sources, language, filenames);
+            var project = CreateProject(sources, language, filenames);
             var documents = project.Documents.ToArray();
 
             if (sources.Length != documents.Length)
