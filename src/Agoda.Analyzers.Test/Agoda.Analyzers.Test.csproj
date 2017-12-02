@@ -61,7 +61,7 @@
     <PackageReference Include="System.Runtime" Version="4.1.0" />
     <PackageReference Include="System.Runtime.Extensions" Version="4.1.0" />
     <PackageReference Include="System.Threading" Version="4.0.11" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.0.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.5.0" />
     <PackageReference Include="MSTest.TestAdapter" Version="1.1.11" />
     <PackageReference Include="MSTest.TestFramework" Version="1.1.11" />
   </ItemGroup>
