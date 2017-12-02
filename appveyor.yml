@@ -30,6 +30,6 @@ deploy:
 - provider: NuGet
   api_key:
     secure: nuget_api_key
-  artifact: 'src\Agoda.Analyzers.CodeFixes\*.nupkg'
+  artifact: '*.nupkg'
   on:
     branch: master
