@@ -84,29 +84,6 @@ namespace Agoda.Analyzers.Test.Helpers
         }
 
         /// <summary>
-        /// Verifies that each diagnostics contains a <see cref="DiagnosticDescriptor.HelpLinkUri"/> in the expected
-        /// format.
-        /// </summary>
-        [Test]
-        public void TestHelpLink()
-        {
-            foreach (var diagnosticAnalyzer in this.GetCSharpDiagnosticAnalyzers())
-            {
-                foreach (var diagnostic in diagnosticAnalyzer.SupportedDiagnostics)
-                {
-                    if (diagnostic.DefaultSeverity == DiagnosticSeverity.Hidden && diagnostic.CustomTags.Contains(WellKnownDiagnosticTags.NotConfigurable))
-                    {
-                        // This diagnostic will never appear in the UI.
-                        continue;
-                    }
-
-                    string expected = $"https://github.com/DotNetAnalyzers/StyleCopAnalyzers/blob/master/documentation/{diagnostic.Id}.md";
-                    Assert.AreEqual(expected, diagnostic.HelpLinkUri);
-                }
-            }
-        }
-
-        /// <summary>
         /// Gets the C# analyzers being tested
         /// </summary>
         /// <returns>
