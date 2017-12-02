@@ -13,16 +13,16 @@
     <iconUrl>https://avatars3.githubusercontent.com/u/19235448?s=200</iconUrl>
   </metadata>
   <files>
-    <file src="bin\$Configuration$\Microsoft.CodeAnalysis.CSharp.dll" target="analyzers\dotnet\cs" />
-    <file src="bin\$Configuration$\System.Reflection.Metadata.dll" target="analyzers\dotnet\cs" />
-    <file src="bin\$Configuration$\Microsoft.CodeAnalysis.Workspaces.dll" target="analyzers\dotnet\cs" />
-    <file src="bin\$Configuration$\Microsoft.CodeAnalysis.dll" target="analyzers\dotnet\cs" />
-    <file src="bin\$Configuration$\Agoda.Analyzers.dll" target="analyzers\dotnet\cs" />
-    <file src="bin\$Configuration$\**\Agoda.Analyzers.resources.dll" target="analyzers\dotnet\cs" />
-    <file src="bin\$Configuration$\Agoda.Analyzers.pdb" target="analyzers\dotnet\cs" />
-    <file src="bin\$Configuration$\Agoda.Analyzers.CodeFixes.dll" target="analyzers\dotnet\cs" />
-    <file src="bin\$Configuration$\**\Agoda.Analyzers.CodeFixes.resources.dll" target="analyzers\dotnet\cs" />
-    <file src="bin\$Configuration$\Agoda.Analyzers.CodeFixes.pdb" target="analyzers\dotnet\cs" />
+    <file src="bin\Release\Microsoft.CodeAnalysis.CSharp.dll" target="analyzers\dotnet\cs" />
+    <file src="bin\Release\System.Reflection.Metadata.dll" target="analyzers\dotnet\cs" />
+    <file src="bin\Release\Microsoft.CodeAnalysis.Workspaces.dll" target="analyzers\dotnet\cs" />
+    <file src="bin\Release\Microsoft.CodeAnalysis.dll" target="analyzers\dotnet\cs" />
+    <file src="bin\Release\Agoda.Analyzers.dll" target="analyzers\dotnet\cs" />
+    <file src="bin\Release\**\Agoda.Analyzers.resources.dll" target="analyzers\dotnet\cs" />
+    <file src="bin\Release\Agoda.Analyzers.pdb" target="analyzers\dotnet\cs" />
+    <file src="bin\Release\Agoda.Analyzers.CodeFixes.dll" target="analyzers\dotnet\cs" />
+    <file src="bin\Release\**\Agoda.Analyzers.CodeFixes.resources.dll" target="analyzers\dotnet\cs" />
+    <file src="bin\Release\Agoda.Analyzers.CodeFixes.pdb" target="analyzers\dotnet\cs" />
     <file src="..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll" target="analyzers\dotnet\cs" />
     <file src="tools\install.ps1" target="tools\" />
     <file src="tools\uninstall.ps1" target="tools\" />
