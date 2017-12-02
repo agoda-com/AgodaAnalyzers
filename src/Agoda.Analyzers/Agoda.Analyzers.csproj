@@ -39,10 +39,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Agoda.Analyzers.nuspec">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <SubType>Designer</SubType>
-    </None>
     <None Include="app.config" />
     <None Include="packages.config" />
     <None Include="tools\install.ps1">
