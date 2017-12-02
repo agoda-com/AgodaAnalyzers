@@ -7,8 +7,15 @@ build:
   project: src/AgodaAnalyzers.sln      # path to Visual Studio solution or project
   publish_nuget: true
 
+assembly_info:
+  patch: true
+  file: '**\AssemblyInfo.*'
+  assembly_version: '$(buildVersion)'
+  assembly_file_version: '$(buildVersion)'
+  assembly_informational_version: '$(nugetVersion)'
+
 before_build:
   - nuget restore src
 
 after_build:
-  - nuget pack src\Agoda.Analyzers.CodeFixes\Agoda.Analyzers.nuspec
+  - nuget pack src\Agoda.Analyzers.CodeFixes\Agoda.Analyzers.nuspec -Version $(nugetVersion)
