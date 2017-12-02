@@ -19,7 +19,7 @@ namespace Agoda.Analyzers.CodeFixes.StyleCop
                 return null;
             }
 
-            SyntaxNode root = await document.GetSyntaxRootAsync().ConfigureAwait(false);
+            var root = await document.GetSyntaxRootAsync().ConfigureAwait(false);
 
             var nodesToRemove = diagnostics.Select(d => root.FindNode(d.Location.SourceSpan, findInsideTrivia: true))
                 .Where(node => node != null && !node.IsMissing)

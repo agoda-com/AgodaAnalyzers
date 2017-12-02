@@ -58,14 +58,14 @@ namespace Agoda.Analyzers.Helpers
             where T : IReadOnlyList<SyntaxTrivia>
         {
             var firstNonWhitespaceTriviaIndex = IndexOfFirstNonWhitespaceTrivia(triviaList);
-            var startIndex = (firstNonWhitespaceTriviaIndex == -1) ? triviaList.Count : firstNonWhitespaceTriviaIndex;
+            var startIndex = firstNonWhitespaceTriviaIndex == -1 ? triviaList.Count : firstNonWhitespaceTriviaIndex;
 
             for (var index = startIndex - 1; index >= 0; index--)
             {
                 // Find an end-of-line trivia, to indicate that there actually are blank lines and not just excess whitespace.
                 if (triviaList[index].IsKind(SyntaxKind.EndOfLineTrivia))
                 {
-                    return index == (triviaList.Count - 1) ? -1 : index + 1;
+                    return index == triviaList.Count - 1 ? -1 : index + 1;
                 }
             }
 
@@ -82,10 +82,10 @@ namespace Agoda.Analyzers.Helpers
             where T : IReadOnlyList<SyntaxTrivia>
         {
             var done = false;
-            int whiteSpaceStartIndex = -1;
+            var whiteSpaceStartIndex = -1;
             var previousTriviaWasEndOfLine = false;
 
-            for (var index = triviaList.Count - 1; !done && (index >= 0); index--)
+            for (var index = triviaList.Count - 1; !done && index >= 0; index--)
             {
                 var currentTrivia = triviaList[index];
                 switch (currentTrivia.Kind())
@@ -112,7 +112,7 @@ namespace Agoda.Analyzers.Helpers
                 }
             }
 
-            return (whiteSpaceStartIndex < triviaList.Count) ? whiteSpaceStartIndex : -1;
+            return whiteSpaceStartIndex < triviaList.Count ? whiteSpaceStartIndex : -1;
         }
 
         /// <summary>
@@ -148,13 +148,13 @@ namespace Agoda.Analyzers.Helpers
                 throw new ArgumentException("The specified range of elements does not exist in the list.");
             }
 
-            SyntaxTrivia[] trivia = new SyntaxTrivia[list.Count - count];
-            for (int i = 0; i < index; i++)
+            var trivia = new SyntaxTrivia[list.Count - count];
+            for (var i = 0; i < index; i++)
             {
                 trivia[i] = list[i];
             }
 
-            for (int i = index; i + count < list.Count; i++)
+            for (var i = index; i + count < list.Count; i++)
             {
                 trivia[i] = list[i + count];
             }
@@ -188,7 +188,7 @@ namespace Agoda.Analyzers.Helpers
         /// </returns>
         internal static int LastIndexOf(this SyntaxTriviaList list, SyntaxKind kind)
         {
-            for (int i = list.Count - 1; i >= 0; i--)
+            for (var i = list.Count - 1; i >= 0; i--)
             {
                 if (list[i].IsKind(kind))
                 {
@@ -207,7 +207,7 @@ namespace Agoda.Analyzers.Helpers
         internal static SyntaxTriviaList WithoutTrailingWhitespace(this SyntaxTriviaList triviaList)
         {
             var trailingWhitespaceIndex = IndexOfTrailingWhitespace(triviaList);
-            return (trailingWhitespaceIndex >= 0) ? SyntaxFactory.TriviaList(triviaList.Take(trailingWhitespaceIndex)) : triviaList;
+            return trailingWhitespaceIndex >= 0 ? SyntaxFactory.TriviaList(triviaList.Take(trailingWhitespaceIndex)) : triviaList;
         }
 
         /// <summary>
@@ -220,7 +220,7 @@ namespace Agoda.Analyzers.Helpers
         internal static SyntaxTriviaList WithoutLeadingWhitespace(this SyntaxTriviaList triviaList, bool endOfLineIsWhitespace = true)
         {
             var nonWhitespaceIndex = IndexOfFirstNonWhitespaceTrivia(triviaList, endOfLineIsWhitespace);
-            return (nonWhitespaceIndex >= 0) ? SyntaxFactory.TriviaList(triviaList.Skip(nonWhitespaceIndex)) : SyntaxFactory.TriviaList();
+            return nonWhitespaceIndex >= 0 ? SyntaxFactory.TriviaList(triviaList.Skip(nonWhitespaceIndex)) : SyntaxFactory.TriviaList();
         }
 
         /// <summary>
@@ -290,12 +290,12 @@ namespace Agoda.Analyzers.Helpers
 
             // skip any leading whitespace
             var index = triviaList.Count - 1;
-            while ((index >= 0) && triviaList[index].IsKind(SyntaxKind.WhitespaceTrivia))
+            while (index >= 0 && triviaList[index].IsKind(SyntaxKind.WhitespaceTrivia))
             {
                 index--;
             }
 
-            if ((index < 0) || !triviaList[index].HasBuiltinEndLine())
+            if (index < 0 || !triviaList[index].HasBuiltinEndLine())
             {
                 return false;
             }
@@ -340,14 +340,14 @@ namespace Agoda.Analyzers.Helpers
             var leadingWhitespaceStart = triviaList.Count - 1;
 
             // skip leading whitespace in front of the while keyword
-            while ((leadingWhitespaceStart > 0) && triviaList[leadingWhitespaceStart - 1].IsKind(SyntaxKind.WhitespaceTrivia))
+            while (leadingWhitespaceStart > 0 && triviaList[leadingWhitespaceStart - 1].IsKind(SyntaxKind.WhitespaceTrivia))
             {
                 leadingWhitespaceStart--;
             }
 
             var blankLinesStart = leadingWhitespaceStart - 1;
             var done = false;
-            while (!done && (blankLinesStart >= 0))
+            while (!done && blankLinesStart >= 0)
             {
                 switch (triviaList[blankLinesStart].Kind())
                 {
@@ -397,7 +397,7 @@ namespace Agoda.Analyzers.Helpers
         /// <returns>True if the given trivia list contains one or more blank lines.</returns>
         internal static bool ContainsBlankLines(this IReadOnlyList<SyntaxTrivia> triviaList, bool startsOnNewLine = true)
         {
-            bool onBlankLine = startsOnNewLine;
+            var onBlankLine = startsOnNewLine;
 
             foreach (var trivia in triviaList)
             {
@@ -434,7 +434,7 @@ namespace Agoda.Analyzers.Helpers
         /// <returns>A new <see cref="SyntaxTriviaList"/> that is a copy of the passed <paramref name="triviaList"/> without blank lines.</returns>
         internal static SyntaxTriviaList WithoutBlankLines(this SyntaxTriviaList triviaList, bool startsOnNewLine = true)
         {
-            bool onBlankLine = startsOnNewLine;
+            var onBlankLine = startsOnNewLine;
             var newTriviaList = new List<SyntaxTrivia>();
 
             for (var i = 0; i < triviaList.Count; i++)
@@ -451,7 +451,7 @@ namespace Agoda.Analyzers.Helpers
                         if (onBlankLine)
                         {
                             // strip all preceding white space in the blank line.
-                            while ((newTriviaList.Count > 0) && newTriviaList[newTriviaList.Count - 1].IsKind(SyntaxKind.WhitespaceTrivia))
+                            while (newTriviaList.Count > 0 && newTriviaList[newTriviaList.Count - 1].IsKind(SyntaxKind.WhitespaceTrivia))
                             {
                                 newTriviaList.RemoveAt(newTriviaList.Count - 1);
                             }
@@ -478,12 +478,12 @@ namespace Agoda.Analyzers.Helpers
 
         private static int BinarySearch(SyntaxTriviaList leadingTrivia, SyntaxTrivia trivia)
         {
-            int low = 0;
-            int high = leadingTrivia.Count - 1;
+            var low = 0;
+            var high = leadingTrivia.Count - 1;
             while (low <= high)
             {
-                int index = low + ((high - low) >> 1);
-                int order = leadingTrivia[index].Span.CompareTo(trivia.Span);
+                var index = low + ((high - low) >> 1);
+                var order = leadingTrivia[index].Span.CompareTo(trivia.Span);
 
                 if (order == 0)
                 {
@@ -517,8 +517,8 @@ namespace Agoda.Analyzers.Helpers
             {
                 this.part1 = part1;
                 this.part2 = part2;
-                this.part1Count = part1.Count;
-                this.Count = part1.Count + part2.Count;
+                part1Count = part1.Count;
+                Count = part1.Count + part2.Count;
             }
 
             public int Count { get; }
@@ -527,29 +527,26 @@ namespace Agoda.Analyzers.Helpers
             {
                 get
                 {
-                    if (index < this.part1Count)
+                    if (index < part1Count)
                     {
-                        return this.part1[index];
+                        return part1[index];
                     }
-                    else if (index < this.Count)
+                    if (index < Count)
                     {
-                        return this.part2[index - this.part1Count];
+                        return part2[index - part1Count];
                     }
-                    else
-                    {
-                        throw new IndexOutOfRangeException();
-                    }
+                    throw new IndexOutOfRangeException();
                 }
             }
 
             public IEnumerator<SyntaxTrivia> GetEnumerator()
             {
-                foreach (var item in this.part1)
+                foreach (var item in part1)
                 {
                     yield return item;
                 }
 
-                foreach (var item in this.part2)
+                foreach (var item in part2)
                 {
                     yield return item;
                 }
@@ -557,7 +554,7 @@ namespace Agoda.Analyzers.Helpers
 
             IEnumerator IEnumerable.GetEnumerator()
             {
-                return this.GetEnumerator();
+                return GetEnumerator();
             }
 
             public SyntaxTrivia First()
@@ -567,17 +564,17 @@ namespace Agoda.Analyzers.Helpers
 
             public SyntaxTrivia Last()
             {
-                return this[this.Count - 1];
+                return this[Count - 1];
             }
 
             public bool Any(SyntaxKind kind)
             {
-                return this.part1.Any(kind) || this.part2.Any(kind);
+                return part1.Any(kind) || part2.Any(kind);
             }
 
             public bool All(Func<SyntaxTrivia, bool> predicate)
             {
-                foreach (var trivia in this.part1)
+                foreach (var trivia in part1)
                 {
                     if (!predicate(trivia))
                     {
@@ -585,7 +582,7 @@ namespace Agoda.Analyzers.Helpers
                     }
                 }
 
-                foreach (var trivia in this.part2)
+                foreach (var trivia in part2)
                 {
                     if (!predicate(trivia))
                     {

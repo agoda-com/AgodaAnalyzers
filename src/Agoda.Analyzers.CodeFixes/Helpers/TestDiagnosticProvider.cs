@@ -19,17 +19,17 @@ namespace Agoda.Analyzers.CodeFixes.Helpers
 
         public override Task<IEnumerable<Diagnostic>> GetAllDiagnosticsAsync(Project project, CancellationToken cancellationToken)
         {
-            return Task.FromResult<IEnumerable<Diagnostic>>(this.diagnostics);
+            return Task.FromResult<IEnumerable<Diagnostic>>(diagnostics);
         }
 
         public override Task<IEnumerable<Diagnostic>> GetDocumentDiagnosticsAsync(Document document, CancellationToken cancellationToken)
         {
-            return Task.FromResult(this.diagnostics.Where(i => i.Location.GetLineSpan().Path == document.Name));
+            return Task.FromResult(diagnostics.Where(i => i.Location.GetLineSpan().Path == document.Name));
         }
 
         public override Task<IEnumerable<Diagnostic>> GetProjectDiagnosticsAsync(Project project, CancellationToken cancellationToken)
         {
-            return Task.FromResult(this.diagnostics.Where(i => !i.Location.IsInSource));
+            return Task.FromResult(diagnostics.Where(i => !i.Location.IsInSource));
         }
 
         internal static TestDiagnosticProvider Create(ImmutableArray<Diagnostic> diagnostics)

@@ -17,12 +17,12 @@ namespace Agoda.Analyzers.StyleCop.Settings.ObjectModel
         [JsonConstructor]
         protected SettingsFile()
         {
-            this.settings = new StyleCopSettings();
+            settings = new StyleCopSettings();
         }
 
         public StyleCopSettings Settings
         {
-            get { return this.settings; }
+            get { return settings; }
         }
     }
 }

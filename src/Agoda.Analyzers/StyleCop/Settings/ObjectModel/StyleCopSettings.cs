@@ -16,10 +16,10 @@ namespace Agoda.Analyzers.StyleCop.Settings.ObjectModel
         [JsonConstructor]
         public StyleCopSettings()
         {
-            this.indentation = new IndentationSettings();
+            indentation = new IndentationSettings();
         }
 
         public IndentationSettings Indentation =>
-            this.indentation;
+            indentation;
     }
 }

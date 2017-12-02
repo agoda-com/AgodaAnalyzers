@@ -92,8 +92,8 @@ namespace Agoda.Analyzers.CodeFixes.StyleCop
         {
             TextChange textChange;
 
-            SourceText sourceText = await document.GetTextAsync(cancellationToken).ConfigureAwait(false);
-            TextLine line = sourceText.Lines.GetLineFromPosition(token.SpanStart);
+            var sourceText = await document.GetTextAsync(cancellationToken).ConfigureAwait(false);
+            var line = sourceText.Lines.GetLineFromPosition(token.SpanStart);
             if (sourceText.ToString(line.Span).Trim() == token.Text)
             {
                 // remove the line containing the semicolon token

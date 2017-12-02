@@ -20,7 +20,7 @@ namespace Agoda.Analyzers.Test.StyleCop
         [Test]
         public async Task TestCorrectCodeAsync()
         {
-            string testCode = @"
+            var testCode = @"
 using System;
 class ClassName
 {
@@ -43,13 +43,13 @@ class ClassName
     }
 }
 ";
-            await this.VerifyCSharpDiagnosticAsync(testCode, EmptyDiagnosticResults, CancellationToken.None).ConfigureAwait(false);
+            await VerifyCSharpDiagnosticAsync(testCode, EmptyDiagnosticResults, CancellationToken.None).ConfigureAwait(false);
         }
 
         [Test]
         public async Task TestWrongCodeAsync()
         {
-            string testCode = @"
+            var testCode = @"
 using System;
 class ClassName
 {
@@ -70,13 +70,13 @@ class ClassName
 ";
             var expected = new[]
             {
-                this.CSharpDiagnostic().WithLocation(7, 20),
-                this.CSharpDiagnostic().WithLocation(7, 38),
-                this.CSharpDiagnostic().WithLocation(14, 11),
-                this.CSharpDiagnostic().WithLocation(16, 50),
+                CSharpDiagnostic().WithLocation(7, 20),
+                CSharpDiagnostic().WithLocation(7, 38),
+                CSharpDiagnostic().WithLocation(14, 11),
+                CSharpDiagnostic().WithLocation(16, 50)
             };
 
-            string fixedCode = @"
+            var fixedCode = @"
 using System;
 class ClassName
 {
@@ -101,15 +101,15 @@ class ClassName
 }
 ";
 
-            await this.VerifyCSharpDiagnosticAsync(testCode, expected, CancellationToken.None).ConfigureAwait(false);
-            await this.VerifyCSharpDiagnosticAsync(fixedCode, EmptyDiagnosticResults, CancellationToken.None).ConfigureAwait(false);
-            await this.VerifyCSharpFixAsync(testCode, fixedCode, cancellationToken: CancellationToken.None).ConfigureAwait(false);
+            await VerifyCSharpDiagnosticAsync(testCode, expected, CancellationToken.None).ConfigureAwait(false);
+            await VerifyCSharpDiagnosticAsync(fixedCode, EmptyDiagnosticResults, CancellationToken.None).ConfigureAwait(false);
+            await VerifyCSharpFixAsync(testCode, fixedCode, cancellationToken: CancellationToken.None).ConfigureAwait(false);
         }
 
         [Test]
         public async Task TestThatAnalyzerDoesntCrashOnEmptyBlockAsync()
         {
-            string testCode = @"
+            var testCode = @"
 using System;
 class ClassName
 {
@@ -118,13 +118,13 @@ class ClassName
     }
 }
 ";
-            await this.VerifyCSharpDiagnosticAsync(testCode, EmptyDiagnosticResults, CancellationToken.None).ConfigureAwait(false);
+            await VerifyCSharpDiagnosticAsync(testCode, EmptyDiagnosticResults, CancellationToken.None).ConfigureAwait(false);
         }
 
         [Test]
         public async Task TestThatAnalyzerIgnoresStatementsWithMissingTokenAsync()
         {
-            string testCode = @"
+            var testCode = @"
 using System;
 class ClassName
 {
@@ -138,16 +138,16 @@ class ClassName
     }
 }
 ";
-            DiagnosticResult expected = new DiagnosticResult
+            var expected = new DiagnosticResult
             {
                 Id = "CS1002",
                 Message = "; expected",
-                Severity = DiagnosticSeverity.Error,
+                Severity = DiagnosticSeverity.Error
             };
 
             expected = expected.WithLocation(7, 14);
 
-            await this.VerifyCSharpDiagnosticAsync(testCode, expected, CancellationToken.None).ConfigureAwait(false);
+            await VerifyCSharpDiagnosticAsync(testCode, expected, CancellationToken.None).ConfigureAwait(false);
         }
 
         protected override IEnumerable<DiagnosticAnalyzer> GetCSharpDiagnosticAnalyzers()

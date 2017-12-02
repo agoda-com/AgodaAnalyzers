@@ -20,11 +20,11 @@ namespace Agoda.Analyzers.CodeFixes.StyleCop
                 return null;
             }
 
-            DocumentEditor editor = await DocumentEditor.CreateAsync(document, fixAllContext.CancellationToken).ConfigureAwait(false);
+            var editor = await DocumentEditor.CreateAsync(document, fixAllContext.CancellationToken).ConfigureAwait(false);
 
-            SyntaxNode root = editor.GetChangedRoot();
+            var root = editor.GetChangedRoot();
 
-            ImmutableList<SyntaxNode> nodesToChange = ImmutableList.Create<SyntaxNode>();
+            var nodesToChange = ImmutableList.Create<SyntaxNode>();
 
             // Make sure all nodes we care about are tracked
             foreach (var diagnostic in diagnostics)

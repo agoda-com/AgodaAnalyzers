@@ -69,12 +69,12 @@ namespace Agoda.Analyzers.StyleCop
             BlockSyntax syntax = null;
             foreach (var directive in regionSyntax.GetRelatedDirectives())
             {
-                BlockSyntax blockSyntax = directive.AncestorsAndSelf().OfType<BlockSyntax>().LastOrDefault();
+                var blockSyntax = directive.AncestorsAndSelf().OfType<BlockSyntax>().LastOrDefault();
                 if (blockSyntax == null)
                 {
                     return false;
                 }
-                else if (syntax == null)
+                if (syntax == null)
                 {
                     syntax = blockSyntax;
                 }
@@ -89,7 +89,7 @@ namespace Agoda.Analyzers.StyleCop
 
         private static void HandleRegionDirectiveTrivia(SyntaxNodeAnalysisContext context)
         {
-            RegionDirectiveTriviaSyntax regionSyntax = (RegionDirectiveTriviaSyntax) context.Node;
+            var regionSyntax = (RegionDirectiveTriviaSyntax) context.Node;
 
             if (IsCompletelyContainedInBody(regionSyntax))
             {

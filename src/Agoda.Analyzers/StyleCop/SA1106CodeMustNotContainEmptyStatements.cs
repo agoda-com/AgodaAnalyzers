@@ -73,17 +73,17 @@ namespace Agoda.Analyzers.StyleCop
 
         private static void HandleEmptyStatement(SyntaxNodeAnalysisContext context)
         {
-            EmptyStatementSyntax syntax = (EmptyStatementSyntax) context.Node;
+            var syntax = (EmptyStatementSyntax) context.Node;
 
-            LabeledStatementSyntax labeledStatementSyntax = syntax.Parent as LabeledStatementSyntax;
+            var labeledStatementSyntax = syntax.Parent as LabeledStatementSyntax;
             if (labeledStatementSyntax != null)
             {
-                BlockSyntax blockSyntax = labeledStatementSyntax.Parent as BlockSyntax;
+                var blockSyntax = labeledStatementSyntax.Parent as BlockSyntax;
                 if (blockSyntax != null)
                 {
-                    for (int i = blockSyntax.Statements.Count - 1; i >= 0; i--)
+                    for (var i = blockSyntax.Statements.Count - 1; i >= 0; i--)
                     {
-                        StatementSyntax statement = blockSyntax.Statements[i];
+                        var statement = blockSyntax.Statements[i];
 
                         // allow an empty statement to be used for a label, but only if no non-empty statements exist
                         // before the end of the block

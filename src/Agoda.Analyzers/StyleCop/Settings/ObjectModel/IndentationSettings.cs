@@ -26,18 +26,18 @@ namespace Agoda.Analyzers.StyleCop.Settings.ObjectModel
         [JsonConstructor]
         protected internal IndentationSettings()
         {
-            this.indentationSize = 4;
-            this.tabSize = 4;
-            this.useTabs = false;
+            indentationSize = 4;
+            tabSize = 4;
+            useTabs = false;
         }
 
         public int IndentationSize =>
-            this.indentationSize;
+            indentationSize;
 
         public int TabSize =>
-            this.tabSize;
+            tabSize;
 
         public bool UseTabs =>
-            this.useTabs;
+            useTabs;
     }
 }

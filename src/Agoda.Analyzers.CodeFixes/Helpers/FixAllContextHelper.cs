@@ -43,7 +43,7 @@ namespace Agoda.Analyzers.Helpers
 
                     var diagnostics = new ConcurrentDictionary<ProjectId, ImmutableArray<Diagnostic>>();
                     var tasks = new Task[projectsToFix.Length];
-                    for (int i = 0; i < projectsToFix.Length; i++)
+                    for (var i = 0; i < projectsToFix.Length; i++)
                     {
                         fixAllContext.CancellationToken.ThrowIfCancellationRequested();
                         var projectToFix = projectsToFix[i];
@@ -81,7 +81,7 @@ namespace Agoda.Analyzers.Helpers
 
                     case FixAllScope.Solution:
                         var projectsAndDiagnostics = new ConcurrentDictionary<Project, ImmutableArray<Diagnostic>>();
-                        var options = new ParallelOptions() {CancellationToken = fixAllContext.CancellationToken};
+                        var options = new ParallelOptions {CancellationToken = fixAllContext.CancellationToken};
                         Parallel.ForEach(project.Solution.Projects, options, proj =>
                         {
                             fixAllContext.CancellationToken.ThrowIfCancellationRequested();

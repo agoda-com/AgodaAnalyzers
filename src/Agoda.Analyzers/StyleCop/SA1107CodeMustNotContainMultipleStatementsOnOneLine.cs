@@ -50,15 +50,15 @@ namespace Agoda.Analyzers.StyleCop
 
         private static void HandleBlock(SyntaxNodeAnalysisContext context)
         {
-            BlockSyntax block = context.Node as BlockSyntax;
+            var block = context.Node as BlockSyntax;
 
             if (block != null && block.Statements.Any())
             {
                 var previousStatement = block.Statements[0];
-                FileLinePositionSpan previousStatementLocation = previousStatement.GetLineSpan();
+                var previousStatementLocation = previousStatement.GetLineSpan();
                 FileLinePositionSpan currentStatementLocation;
 
-                for (int i = 1; i < block.Statements.Count; i++)
+                for (var i = 1; i < block.Statements.Count; i++)
                 {
                     var currentStatement = block.Statements[i];
                     currentStatementLocation = currentStatement.GetLineSpan();

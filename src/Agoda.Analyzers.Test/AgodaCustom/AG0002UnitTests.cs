@@ -1,13 +1,13 @@
-﻿using Agoda.Analyzers.Test.Helpers;
-using NUnit.Framework;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.CodeAnalysis.Diagnostics;
 using Agoda.Analyzers.AgodaCustom;
+using Agoda.Analyzers.Test.Helpers;
 using Microsoft.CodeAnalysis;
-using System.Collections.Immutable;
+using Microsoft.CodeAnalysis.Diagnostics;
+using NUnit.Framework;
 
 namespace Agoda.Analyzers.Test.AgodaCustom
 {
@@ -27,13 +27,13 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}}
 			";
 
-            var doc = CreateProject(new string[] {code})
+            var doc = CreateProject(new[] {code})
                 .Documents
                 .First();
 
             var analyzersArray = GetCSharpDiagnosticAnalyzers().ToImmutableArray();
 
-            var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzersArray, new Document[] {doc}, CancellationToken.None).ConfigureAwait(false);
+            var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzersArray, new[] {doc}, CancellationToken.None).ConfigureAwait(false);
 
             VerifyDiagnosticResults(diag, analyzersArray, new DiagnosticResult[] { });
         }
@@ -54,13 +54,13 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}}
 			";
 
-            var doc = CreateProject(new string[] {code})
+            var doc = CreateProject(new[] {code})
                 .Documents
                 .First();
 
             var analyzersArray = GetCSharpDiagnosticAnalyzers().ToImmutableArray();
 
-            var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzersArray, new Document[] {doc}, CancellationToken.None).ConfigureAwait(false);
+            var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzersArray, new[] {doc}, CancellationToken.None).ConfigureAwait(false);
 
             VerifyDiagnosticResults(diag, analyzersArray, new DiagnosticResult[] { });
         }
@@ -80,13 +80,13 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}}
 			";
 
-            var doc = CreateProject(new string[] {code})
+            var doc = CreateProject(new[] {code})
                 .Documents
                 .First();
 
             var analyzersArray = GetCSharpDiagnosticAnalyzers().ToImmutableArray();
 
-            var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzersArray, new Document[] {doc}, CancellationToken.None).ConfigureAwait(false);
+            var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzersArray, new[] {doc}, CancellationToken.None).ConfigureAwait(false);
 
             VerifyDiagnosticResults(diag, analyzersArray, new DiagnosticResult[] { });
         }
@@ -109,16 +109,16 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}}
 			";
 
-            var doc = CreateProject(new string[] {code})
+            var doc = CreateProject(new[] {code})
                 .Documents
                 .First();
 
             var analyzersArray = GetCSharpDiagnosticAnalyzers().ToImmutableArray();
 
-            var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzersArray, new Document[] {doc}, CancellationToken.None).ConfigureAwait(false);
-            DiagnosticResult expected = CSharpDiagnostic("AG0002").WithLocation(10, 21);
+            var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzersArray, new[] {doc}, CancellationToken.None).ConfigureAwait(false);
+            var expected = CSharpDiagnostic("AG0002").WithLocation(10, 21);
 
-            VerifyDiagnosticResults(diag, analyzersArray, new DiagnosticResult[] {expected});
+            VerifyDiagnosticResults(diag, analyzersArray, new[] {expected});
         }
 
         protected override IEnumerable<DiagnosticAnalyzer> GetCSharpDiagnosticAnalyzers()

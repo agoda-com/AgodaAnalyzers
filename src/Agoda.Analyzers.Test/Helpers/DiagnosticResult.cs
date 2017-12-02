@@ -19,16 +19,16 @@ namespace Agoda.Analyzers.Test.Helpers
         public DiagnosticResult(DiagnosticDescriptor descriptor)
             : this()
         {
-            this.Id = descriptor.Id;
-            this.Severity = descriptor.DefaultSeverity;
-            this.MessageFormat = descriptor.MessageFormat;
+            Id = descriptor.Id;
+            Severity = descriptor.DefaultSeverity;
+            MessageFormat = descriptor.MessageFormat;
         }
 
         public FileLinePositionSpan[] Spans
         {
-            get { return this.spans ?? (this.spans = new FileLinePositionSpan[] { }); }
+            get { return spans ?? (spans = new FileLinePositionSpan[] { }); }
 
-            set { this.spans = value; }
+            set { spans = value; }
         }
 
         public DiagnosticSeverity Severity { get; set; }
@@ -39,20 +39,20 @@ namespace Agoda.Analyzers.Test.Helpers
         {
             get
             {
-                if (this.message != null)
+                if (message != null)
                 {
-                    return this.message;
+                    return message;
                 }
 
-                if (this.MessageFormat != null)
+                if (MessageFormat != null)
                 {
-                    return string.Format(this.MessageFormat.ToString(), this.MessageArguments ?? EmptyArguments);
+                    return string.Format(MessageFormat.ToString(), MessageArguments ?? EmptyArguments);
                 }
 
                 return null;
             }
 
-            set { this.message = value; }
+            set { message = value; }
         }
 
         public LocalizableString MessageFormat { get; set; }
@@ -61,57 +61,57 @@ namespace Agoda.Analyzers.Test.Helpers
 
         public bool HasLocation
         {
-            get { return (this.spans != null) && (this.spans.Length > 0); }
+            get { return spans != null && spans.Length > 0; }
         }
 
         public DiagnosticResult WithArguments(params object[] arguments)
         {
-            DiagnosticResult result = this;
+            var result = this;
             result.MessageArguments = arguments;
             return result;
         }
 
         public DiagnosticResult WithMessage(string message)
         {
-            DiagnosticResult result = this;
+            var result = this;
             result.Message = message;
             return result;
         }
 
         public DiagnosticResult WithMessageFormat(LocalizableString messageFormat)
         {
-            DiagnosticResult result = this;
+            var result = this;
             result.MessageFormat = messageFormat;
             return result;
         }
 
         public DiagnosticResult WithLocation(int line, int column)
         {
-            return this.WithLocation(DefaultPath, line, column);
+            return WithLocation(DefaultPath, line, column);
         }
 
         public DiagnosticResult WithLocation(string path, int line, int column)
         {
             var linePosition = new LinePosition(line, column);
 
-            return this.AppendSpan(new FileLinePositionSpan(path, linePosition, linePosition));
+            return AppendSpan(new FileLinePositionSpan(path, linePosition, linePosition));
         }
 
         public DiagnosticResult WithSpan(int startLine, int startColumn, int endLine, int endColumn)
         {
-            return this.WithSpan(DefaultPath, startLine, startColumn, endLine, endColumn);
+            return WithSpan(DefaultPath, startLine, startColumn, endLine, endColumn);
         }
 
         public DiagnosticResult WithSpan(string path, int startLine, int startColumn, int endLine, int endColumn)
         {
-            return this.AppendSpan(new FileLinePositionSpan(path, new LinePosition(startLine, startColumn), new LinePosition(endLine, endColumn)));
+            return AppendSpan(new FileLinePositionSpan(path, new LinePosition(startLine, startColumn), new LinePosition(endLine, endColumn)));
         }
 
         public DiagnosticResult WithLineOffset(int offset)
         {
-            DiagnosticResult result = this;
+            var result = this;
             Array.Resize(ref result.spans, result.spans?.Length ?? 0);
-            for (int i = 0; i < result.spans.Length; i++)
+            for (var i = 0; i < result.spans.Length; i++)
             {
                 var newStartLinePosition = new LinePosition(result.spans[i].StartLinePosition.Line + offset, result.spans[i].StartLinePosition.Character);
                 var newEndLinePosition = new LinePosition(result.spans[i].EndLinePosition.Line + offset, result.spans[i].EndLinePosition.Character);
@@ -126,29 +126,29 @@ namespace Agoda.Analyzers.Test.Helpers
         {
             FileLinePositionSpan[] newSpans;
 
-            if (this.spans != null)
+            if (spans != null)
             {
-                newSpans = new FileLinePositionSpan[this.spans.Length + 1];
-                Array.Copy(this.spans, newSpans, this.spans.Length);
-                newSpans[this.spans.Length] = span;
+                newSpans = new FileLinePositionSpan[spans.Length + 1];
+                Array.Copy(spans, newSpans, spans.Length);
+                newSpans[spans.Length] = span;
             }
             else
             {
                 newSpans = new FileLinePositionSpan[1]
                 {
-                    span,
+                    span
                 };
             }
 
             // clone the object, so that the fluent syntax will work on immutable objects.
             return new DiagnosticResult
             {
-                Id = this.Id,
-                Message = this.message,
-                MessageFormat = this.MessageFormat,
-                MessageArguments = this.MessageArguments,
-                Severity = this.Severity,
-                Spans = newSpans,
+                Id = Id,
+                Message = message,
+                MessageFormat = MessageFormat,
+                MessageArguments = MessageArguments,
+                Severity = Severity,
+                Spans = newSpans
             };
         }
     }

@@ -1,14 +1,14 @@
-﻿using Agoda.Analyzers.Test.Helpers;
-using NUnit.Framework;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.CodeAnalysis.Diagnostics;
+using System.Web;
 using Agoda.Analyzers.AgodaCustom;
+using Agoda.Analyzers.Test.Helpers;
 using Microsoft.CodeAnalysis;
-using System.Collections.Immutable;
-
+using Microsoft.CodeAnalysis.Diagnostics;
+using NUnit.Framework;
 
 namespace Agoda.Analyzers.Test.AgodaCustom
 {
@@ -36,19 +36,19 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}}
 			";
 
-            var reference = MetadataReference.CreateFromFile(typeof(System.Web.HttpContext).Assembly.Location);
+            var reference = MetadataReference.CreateFromFile(typeof(HttpContext).Assembly.Location);
 
-            var doc = CreateProject(new string[] {code})
+            var doc = CreateProject(new[] {code})
                 .AddMetadataReference(reference)
                 .Documents
                 .First();
 
             var analyzersArray = GetCSharpDiagnosticAnalyzers().ToImmutableArray();
 
-            var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzersArray, new Document[] {doc}, CancellationToken.None).ConfigureAwait(false);
+            var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzersArray, new[] {doc}, CancellationToken.None).ConfigureAwait(false);
 
             var baseResult = CSharpDiagnostic("AG0003");
-            VerifyDiagnosticResults(diag, analyzersArray, new DiagnosticResult[]
+            VerifyDiagnosticResults(diag, analyzersArray, new[]
             {
                 baseResult.WithLocation(5, 22),
                 baseResult.WithLocation(10, 44),

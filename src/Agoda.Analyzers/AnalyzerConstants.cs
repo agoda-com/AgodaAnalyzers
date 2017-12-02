@@ -1,8 +1,8 @@
-﻿namespace StyleCop.Analyzers
-{
-    using System.Diagnostics.CodeAnalysis;
-    using Microsoft.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.CodeAnalysis;
 
+namespace StyleCop.Analyzers
+{
     internal static class AnalyzerConstants
     {
         static AnalyzerConstants()

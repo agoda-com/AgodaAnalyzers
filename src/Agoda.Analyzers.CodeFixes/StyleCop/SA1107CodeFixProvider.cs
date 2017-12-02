@@ -56,10 +56,10 @@ namespace Agoda.Analyzers.CodeFixes.StyleCop
 
         private static Task<Document> GetTransformedDocumentAsync(Document document, SyntaxNode root, SyntaxNode node)
         {
-            SyntaxNode newSyntaxRoot = root;
+            var newSyntaxRoot = root;
             Debug.Assert(!node.HasLeadingTrivia, "The trivia should be trailing trivia of the previous node");
 
-            SyntaxNode newNode = node.WithLeadingTrivia(SyntaxFactory.ElasticCarriageReturnLineFeed);
+            var newNode = node.WithLeadingTrivia(SyntaxFactory.ElasticCarriageReturnLineFeed);
             newSyntaxRoot = newSyntaxRoot.ReplaceNode(node, newNode);
 
             return Task.FromResult(document.WithSyntaxRoot(newSyntaxRoot));

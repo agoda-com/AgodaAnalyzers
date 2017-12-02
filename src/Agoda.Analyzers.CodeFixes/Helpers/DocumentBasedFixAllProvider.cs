@@ -22,22 +22,22 @@ namespace Agoda.Analyzers.Helpers
             {
                 case FixAllScope.Document:
                     fixAction = CodeAction.Create(
-                        this.CodeActionTitle,
-                        cancellationToken => this.GetDocumentFixesAsync(fixAllContext.WithCancellationToken(cancellationToken)),
+                        CodeActionTitle,
+                        cancellationToken => GetDocumentFixesAsync(fixAllContext.WithCancellationToken(cancellationToken)),
                         nameof(DocumentBasedFixAllProvider));
                     break;
 
                 case FixAllScope.Project:
                     fixAction = CodeAction.Create(
-                        this.CodeActionTitle,
-                        cancellationToken => this.GetProjectFixesAsync(fixAllContext.WithCancellationToken(cancellationToken), fixAllContext.Project),
+                        CodeActionTitle,
+                        cancellationToken => GetProjectFixesAsync(fixAllContext.WithCancellationToken(cancellationToken), fixAllContext.Project),
                         nameof(DocumentBasedFixAllProvider));
                     break;
 
                 case FixAllScope.Solution:
                     fixAction = CodeAction.Create(
-                        this.CodeActionTitle,
-                        cancellationToken => this.GetSolutionFixesAsync(fixAllContext.WithCancellationToken(cancellationToken)),
+                        CodeActionTitle,
+                        cancellationToken => GetSolutionFixesAsync(fixAllContext.WithCancellationToken(cancellationToken)),
                         nameof(DocumentBasedFixAllProvider));
                     break;
 
@@ -72,7 +72,7 @@ namespace Agoda.Analyzers.Helpers
                 return fixAllContext.Document;
             }
 
-            var newRoot = await this.FixAllInDocumentAsync(fixAllContext, fixAllContext.Document, diagnostics).ConfigureAwait(false);
+            var newRoot = await FixAllInDocumentAsync(fixAllContext, fixAllContext.Document, diagnostics).ConfigureAwait(false);
             if (newRoot == null)
             {
                 return fixAllContext.Document;
@@ -85,8 +85,8 @@ namespace Agoda.Analyzers.Helpers
         {
             var documentDiagnosticsToFix = await FixAllContextHelper.GetDocumentDiagnosticsToFixAsync(fixAllContext).ConfigureAwait(false);
 
-            Solution solution = fixAllContext.Solution;
-            List<Task<SyntaxNode>> newDocuments = new List<Task<SyntaxNode>>(documents.Length);
+            var solution = fixAllContext.Solution;
+            var newDocuments = new List<Task<SyntaxNode>>(documents.Length);
             foreach (var document in documents)
             {
                 ImmutableArray<Diagnostic> diagnostics;
@@ -96,10 +96,10 @@ namespace Agoda.Analyzers.Helpers
                     continue;
                 }
 
-                newDocuments.Add(this.FixAllInDocumentAsync(fixAllContext, document, diagnostics));
+                newDocuments.Add(FixAllInDocumentAsync(fixAllContext, document, diagnostics));
             }
 
-            for (int i = 0; i < documents.Length; i++)
+            for (var i = 0; i < documents.Length; i++)
             {
                 var newDocumentRoot = await newDocuments[i].ConfigureAwait(false);
                 if (newDocumentRoot == null)
@@ -115,13 +115,13 @@ namespace Agoda.Analyzers.Helpers
 
         private Task<Solution> GetProjectFixesAsync(FixAllContext fixAllContext, Project project)
         {
-            return this.GetSolutionFixesAsync(fixAllContext, project.Documents.ToImmutableArray());
+            return GetSolutionFixesAsync(fixAllContext, project.Documents.ToImmutableArray());
         }
 
         private Task<Solution> GetSolutionFixesAsync(FixAllContext fixAllContext)
         {
-            ImmutableArray<Document> documents = fixAllContext.Solution.Projects.SelectMany(i => i.Documents).ToImmutableArray();
-            return this.GetSolutionFixesAsync(fixAllContext, documents);
+            var documents = fixAllContext.Solution.Projects.SelectMany(i => i.Documents).ToImmutableArray();
+            return GetSolutionFixesAsync(fixAllContext, documents);
         }
     }
 }
