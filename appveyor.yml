@@ -22,7 +22,7 @@ before_build:
   - nuget restore src
 
 after_build:
-  - nuget pack src\Agoda.Analyzers.CodeFixes\Agoda.Analyzers.nuspec -Version {version}
+  - nuget pack src\Agoda.Analyzers.CodeFixes\Agoda.Analyzers.nuspec -Version %version%
 
 deploy:
 - provider: NuGet
