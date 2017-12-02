@@ -29,7 +29,6 @@ deploy:
 - provider: NuGet
   api_key:
     secure: xxx
-  skip_symbols: true
   artifact: /.*\.nupkg/
 
 #  on:
