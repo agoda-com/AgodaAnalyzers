@@ -1,8 +1,9 @@
-﻿using System.Collections.Immutable;
+﻿using Agoda.Analyzers.Helpers;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
+using System.Collections.Immutable;
 
 namespace Agoda.Analyzers.AgodaCustom
 {
@@ -12,7 +13,7 @@ namespace Agoda.Analyzers.AgodaCustom
         public const string DiagnosticId = "AG0002";
         private static readonly LocalizableString Title = new LocalizableResourceString(nameof(CustomRulesResources.AG0002Title), CustomRulesResources.ResourceManager, typeof(CustomRulesResources));
         private static readonly LocalizableString MessageFormat = new LocalizableResourceString(nameof(CustomRulesResources.AG0002MessageFormat), CustomRulesResources.ResourceManager, typeof(CustomRulesResources));
-        private static readonly LocalizableString Description = new LocalizableResourceString(nameof(CustomRulesResources.AG0002Description), CustomRulesResources.ResourceManager, typeof(CustomRulesResources));
+        private static readonly LocalizableString Description = DescriptionContentLoader.GetAnalyzerDescription(nameof(AG0002PrivateMethodsShouldNotBeTested));
         private const string Category = "Usage";
 
         private static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(

@@ -1,0 +1,39 @@
+﻿<p>
+    You should not expose any functionality from your class that not used in the public interface.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+   interface ISomething 
+    {
+	    void DoSomething();
+	}
+			
+    class TestClass : ISomething 
+    {
+        public void DoSomething() 
+        {
+
+        }
+        internal void DoSomething2() 
+        {
+
+        }
+    }
+</pre>
+
+<h2>Compliant Code Example</h2>
+<pre>
+    interface ISomething 
+    {
+	    void DoSomething();
+	}
+			
+    class TestClass : ISomething 
+    {
+        public void DoSomething() 
+        {
+
+        }
+    }
+</pre>
