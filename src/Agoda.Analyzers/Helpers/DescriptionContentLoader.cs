@@ -5,6 +5,8 @@ namespace Agoda.Analyzers.Helpers
 {
     public static class DescriptionContentLoader
     {
+        private static string localPath => Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+
         /// <summary>
         /// Load analyzer html description from the project
         /// </summary>
@@ -12,7 +14,7 @@ namespace Agoda.Analyzers.Helpers
         /// <returns>Content of the analyzer description.</returns>
         public static string GetAnalyzerDescription(string analyzerName)
         {
-            string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), $"RuleContent\\{analyzerName}.html");
+            string path = Path.Combine(localPath, $"RuleContent\\{analyzerName}.html");
             var content = File.ReadAllText(path);
             return content;
         }
