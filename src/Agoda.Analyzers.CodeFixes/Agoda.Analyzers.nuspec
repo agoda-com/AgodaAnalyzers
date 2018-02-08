@@ -25,6 +25,7 @@
     <file src="bin\Release\net462\**\Agoda.Analyzers.CodeFixes.resources.dll" target="analyzers\dotnet\cs" />
     <file src="bin\Release\net462\Agoda.Analyzers.CodeFixes.pdb" target="analyzers\dotnet\cs" />
     <file src="bin\Release\net462\Newtonsoft.Json.dll" target="analyzers\dotnet\cs" />
+    <file src="bin\Release\net462\RuleContent\*.html" target="analyzers\dotnet\cs\RuleContent" />
     <file src="tools\install.ps1" target="tools\" />
     <file src="tools\uninstall.ps1" target="tools\" />
   </files>
