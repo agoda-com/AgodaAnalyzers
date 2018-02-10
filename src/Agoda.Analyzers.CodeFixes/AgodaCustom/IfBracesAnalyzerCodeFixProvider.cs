@@ -51,7 +51,7 @@ namespace Agoda.Analyzers.CodeFixes.AgodaCustom
 
             // Register a code action that will invoke the fix.
             context.RegisterCodeFix(
-                CodeAction.Create("Add braces",
+                CodeAction.Create("Add required braces",
                 c => AddBracesAsync(context.Document, declaration, c)),
                 diagnostic);
         }
