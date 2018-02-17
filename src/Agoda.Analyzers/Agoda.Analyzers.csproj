@@ -38,6 +38,8 @@
   <ItemGroup>
     <Compile Update="AgodaCustom\CustomRulesResources.Designer.cs">
       <DependentUpon>CustomRulesResources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
     </Compile>
     <Compile Update="Helpers\HelpersResources.Designer.cs">
       <DependentUpon>HelpersResources.resx</DependentUpon>
@@ -52,6 +54,12 @@
     <None Include="tools\uninstall.ps1">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="AgodaCustom\CustomRulesResources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>CustomRulesResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Update="RuleContent\AG0001DependencyResolverMustNotBeUsed.html">
