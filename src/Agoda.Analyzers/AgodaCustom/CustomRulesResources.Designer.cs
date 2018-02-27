@@ -10,7 +10,6 @@
 
 namespace Agoda.Analyzers.AgodaCustom {
     using System;
-    using System.Reflection;
     
     
     /// <summary>
@@ -20,10 +19,10 @@ namespace Agoda.Analyzers.AgodaCustom {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class CustomRulesResources {
+    public class CustomRulesResources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -37,10 +36,10 @@ namespace Agoda.Analyzers.AgodaCustom {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Agoda.Analyzers.AgodaCustom.CustomRulesResources", typeof(CustomRulesResources).GetTypeInfo().Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Agoda.Analyzers.AgodaCustom.CustomRulesResources", typeof(CustomRulesResources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -52,7 +51,7 @@ namespace Agoda.Analyzers.AgodaCustom {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -64,7 +63,7 @@ namespace Agoda.Analyzers.AgodaCustom {
         /// <summary>
         ///   Looks up a localized string similar to Access dependencies in a resolver-agnostic way.
         /// </summary>
-        internal static string AG0001Description {
+        public static string AG0001Description {
             get {
                 return ResourceManager.GetString("AG0001Description", resourceCulture);
             }
@@ -73,7 +72,7 @@ namespace Agoda.Analyzers.AgodaCustom {
         /// <summary>
         ///   Looks up a localized string similar to Access dependencies in a resolver-agnostic way.
         /// </summary>
-        internal static string AG0001MessageFormat {
+        public static string AG0001MessageFormat {
             get {
                 return ResourceManager.GetString("AG0001MessageFormat", resourceCulture);
             }
@@ -82,7 +81,7 @@ namespace Agoda.Analyzers.AgodaCustom {
         /// <summary>
         ///   Looks up a localized string similar to Do not use DependencyResolver directly.
         /// </summary>
-        internal static string AG0001Title {
+        public static string AG0001Title {
             get {
                 return ResourceManager.GetString("AG0001Title", resourceCulture);
             }
@@ -91,7 +90,7 @@ namespace Agoda.Analyzers.AgodaCustom {
         /// <summary>
         ///   Looks up a localized string similar to Test only the public surface of your API.
         /// </summary>
-        internal static string AG0002Description {
+        public static string AG0002Description {
             get {
                 return ResourceManager.GetString("AG0002Description", resourceCulture);
             }
@@ -100,7 +99,7 @@ namespace Agoda.Analyzers.AgodaCustom {
         /// <summary>
         ///   Looks up a localized string similar to Test only the public surface of your API.
         /// </summary>
-        internal static string AG0002MessageFormat {
+        public static string AG0002MessageFormat {
             get {
                 return ResourceManager.GetString("AG0002MessageFormat", resourceCulture);
             }
@@ -109,7 +108,7 @@ namespace Agoda.Analyzers.AgodaCustom {
         /// <summary>
         ///   Looks up a localized string similar to Not test private methods.
         /// </summary>
-        internal static string AG0002Title {
+        public static string AG0002Title {
             get {
                 return ResourceManager.GetString("AG0002Title", resourceCulture);
             }
@@ -118,7 +117,7 @@ namespace Agoda.Analyzers.AgodaCustom {
         /// <summary>
         ///   Looks up a localized string similar to Pass only the fields that are actually needed, not the entire HttpContext instance.
         /// </summary>
-        internal static string AG0003Description {
+        public static string AG0003Description {
             get {
                 return ResourceManager.GetString("AG0003Description", resourceCulture);
             }
@@ -127,7 +126,7 @@ namespace Agoda.Analyzers.AgodaCustom {
         /// <summary>
         ///   Looks up a localized string similar to Pass only the fields that are actually needed, not the entire HttpContext instance.
         /// </summary>
-        internal static string AG0003MessageFormat {
+        public static string AG0003MessageFormat {
             get {
                 return ResourceManager.GetString("AG0003MessageFormat", resourceCulture);
             }
@@ -136,9 +135,36 @@ namespace Agoda.Analyzers.AgodaCustom {
         /// <summary>
         ///   Looks up a localized string similar to Do not pass HttpContext as method argument.
         /// </summary>
-        internal static string AG0003Title {
+        public static string AG0003Title {
             get {
                 return ResourceManager.GetString("AG0003Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string AG0004Description {
+            get {
+                return ResourceManager.GetString("AG0004Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This method is blocking on async code which can cause threadpool starvation..
+        /// </summary>
+        public static string AG0004MessageFormat {
+            get {
+                return ResourceManager.GetString("AG0004MessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Don&apos;t Mix Blocking and Async.
+        /// </summary>
+        public static string AG0004Title {
+            get {
+                return ResourceManager.GetString("AG0004Title", resourceCulture);
             }
         }
     }

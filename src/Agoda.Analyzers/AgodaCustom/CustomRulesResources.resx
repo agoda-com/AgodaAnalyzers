@@ -134,7 +134,7 @@
   </data>
   <data name="AG0002Title" xml:space="preserve">
     <value>Not test private methods</value>
-      </data>
+  </data>
   <data name="AG0003Description" xml:space="preserve">
     <value>Pass only the fields that are actually needed, not the entire HttpContext instance</value>
   </data>
@@ -143,5 +143,14 @@
   </data>
   <data name="AG0003Title" xml:space="preserve">
     <value>Do not pass HttpContext as method argument</value>
+  </data>
+  <data name="AG0004Description" xml:space="preserve">
+    <value />
+  </data>
+  <data name="AG0004MessageFormat" xml:space="preserve">
+    <value>This method is blocking on async code which can cause threadpool starvation.</value>
+  </data>
+  <data name="AG0004Title" xml:space="preserve">
+    <value>Don't Mix Blocking and Async</value>
   </data>
 </root>
