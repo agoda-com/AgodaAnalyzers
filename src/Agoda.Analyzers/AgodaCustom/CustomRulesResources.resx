@@ -153,4 +153,7 @@
   <data name="AG0004Title" xml:space="preserve">
     <value>Don't Mix Blocking and Async</value>
   </data>
+  <data name="AG0005Title" xml:space="preserve">
+    <value>Test method names must follow convention</value>
+  </data>
 </root>
