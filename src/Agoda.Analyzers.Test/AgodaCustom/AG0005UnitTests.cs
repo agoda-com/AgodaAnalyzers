@@ -24,25 +24,25 @@ namespace Tests
     public class TestClass
     {{
         [Test]
-		public void This_IsValid(){{}}
-
-		[Test]
-		public void This_Is_Valid(){{}}
+        public void This_IsValid(){{}}
 
         [Test]
-		public void This_1s_Valid(){{}}
-
-		[Test]
-		public void This_IsAlso_QuiteValid555(){{}}
+        public void This_Is_Valid(){{}}
 
         [Test]
-		public void ThisIsInvalid(){{}}
+        public void This_1s_Valid(){{}}
 
         [Test]
-		public void This_Is_In_Valid(){{}}
+        public void This_IsAlso_QuiteValid555(){{}}
 
         [Test]
-		public void This_Is_invalid(){{}}
+        public void ThisIsInvalid(){{}}
+
+        [Test]
+        public void This_Is_In_Valid(){{}}
+
+        [Test]
+        public void This_Is_invalid(){{}}
 
         public void ThisIsNotATest(){{}}
 	}}
