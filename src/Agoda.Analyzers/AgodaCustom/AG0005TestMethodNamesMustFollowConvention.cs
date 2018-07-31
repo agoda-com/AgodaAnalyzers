@@ -35,7 +35,14 @@ namespace Agoda.Analyzers.AgodaCustom
 
         private void AnalyzeNode(SyntaxNodeAnalysisContext context)
         {
-            var methodDeclaration = (MethodDeclarationSyntax)context.Node;
+            var methodDeclaration = (MethodDeclarationSyntax) context.Node;
+
+            if (methodDeclaration.Modifiers.Any(SyntaxKind.PrivateKeyword)
+                || methodDeclaration.IsKind(SyntaxKind.InterfaceDeclaration) 
+                || methodDeclaration.IsKind(SyntaxKind.ExplicitInterfaceSpecifier))
+            {
+                return;
+            }
 
             // ensure has a Test attribute
             var hasTestAttribute = methodDeclaration.AttributeLists
