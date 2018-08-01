@@ -4,7 +4,6 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Agoda.Analyzers.Helpers;
-using StyleCop.Analyzers;
 
 namespace Agoda.Analyzers.AgodaCustom
 {

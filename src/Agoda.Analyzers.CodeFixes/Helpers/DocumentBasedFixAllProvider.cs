@@ -6,7 +6,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeFixes;
 
-namespace Agoda.Analyzers.Helpers
+namespace Agoda.Analyzers.CodeFixes.Helpers
 {
     /// <summary>
     /// Provides a base class to write a <see cref="FixAllProvider"/> that fixes documents independently.

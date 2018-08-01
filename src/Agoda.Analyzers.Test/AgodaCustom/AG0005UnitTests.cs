@@ -47,7 +47,13 @@ namespace Tests
         public void ThisIsNotATest(){{}}  // not a test, so should validate
 
         [Test]
-        private void Is_This_EvenPossible(){{}} // private, so should validate
+        private void PrivateMethod(){{}} // private, so should validate
+
+        [Test]
+        protected void ProtectedMethod(){{}} // protected, so should validate
+
+        [Test]
+        internal void InternalMethod(){{}} // internal, so should validate
 	}}
 }}";
 

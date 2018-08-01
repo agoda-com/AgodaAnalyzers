@@ -6,7 +6,6 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Agoda.Analyzers.Helpers;
-using StyleCop.Analyzers;
 
 namespace Agoda.Analyzers.AgodaCustom
 {
@@ -37,7 +36,7 @@ namespace Agoda.Analyzers.AgodaCustom
         {
             var methodDeclaration = (MethodDeclarationSyntax) context.Node;
 
-            if (methodDeclaration.Modifiers.Any(SyntaxKind.PrivateKeyword)
+            if (!methodDeclaration.Modifiers.Any(SyntaxKind.PublicKeyword)
                 || methodDeclaration.IsKind(SyntaxKind.InterfaceDeclaration) 
                 || methodDeclaration.IsKind(SyntaxKind.ExplicitInterfaceSpecifier))
             {

@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Microsoft.CodeAnalysis;
 
-namespace StyleCop.Analyzers
+namespace Agoda.Analyzers
 {
     internal static class AnalyzerConstants
     {

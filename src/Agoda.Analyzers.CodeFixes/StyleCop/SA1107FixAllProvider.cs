@@ -1,5 +1,6 @@
 ﻿using System.Collections.Immutable;
 using System.Threading.Tasks;
+using Agoda.Analyzers.CodeFixes.Helpers;
 using Agoda.Analyzers.Helpers;
 using Agoda.Analyzers.StyleCop;
 using Microsoft.CodeAnalysis;
