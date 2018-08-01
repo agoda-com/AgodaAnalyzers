@@ -1,8 +1,7 @@
-﻿using Agoda.Analyzers.CodeFixes.Helpers;
-using Microsoft.CodeAnalysis.CodeActions;
+﻿using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeFixes;
 
-namespace Agoda.Analyzers.Helpers
+namespace Agoda.Analyzers.CodeFixes.Helpers
 {
     /// <summary>
     /// Contains custom implementations of <see cref="FixAllProvider"/>.
