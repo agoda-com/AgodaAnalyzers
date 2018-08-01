@@ -36,7 +36,7 @@ namespace Agoda.Analyzers.AgodaCustom
         {
             var methodDeclaration = (MethodDeclarationSyntax) context.Node;
 
-            if (methodDeclaration.Modifiers.Any(SyntaxKind.PrivateKeyword)
+            if (!methodDeclaration.Modifiers.Any(SyntaxKind.PublicKeyword)
                 || methodDeclaration.IsKind(SyntaxKind.InterfaceDeclaration) 
                 || methodDeclaration.IsKind(SyntaxKind.ExplicitInterfaceSpecifier))
             {
