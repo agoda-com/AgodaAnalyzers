@@ -1,0 +1,64 @@
+﻿﻿<p>
+   You should not use blocking async code. 
+</p>
+<p>
+    Wait,WaitAll,WaitAny gonna block your current thread and prevent your application to use this thread to others works.
+</p>
+
+<h1>Wait()</h1>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class TestClass
+{
+	public void Test()
+	{
+		var test = new Task(() => { });
+		test.Wait();
+	}
+}
+</pre>
+
+<h2>Compliant Code Example</h2>
+<pre>
+public class TestClass
+{
+	public async Task Test()
+	{
+		var test = new Task(() => { });
+		var result = await test;		
+	}
+}
+
+</pre>
+
+
+<h1>WaitAll()</h1>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class TestClass
+{
+	public void Test()
+	{
+		var test = new Task(() => { });
+		var test2 = new Task(() => { });
+		
+		Task.WaitAll(test,test2);
+	}
+}
+
+</pre>
+
+<h2>Compliant Code Example</h2>
+<pre>
+public class TestClass
+{
+	public void Test()
+	{
+		var test = new Task(() => { });
+		var test2 = new Task(() => { });
+		Task.WhenAll(test,test2);
+	}
+}
+</pre>

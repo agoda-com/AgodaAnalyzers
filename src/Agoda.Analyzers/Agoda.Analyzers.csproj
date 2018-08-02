@@ -68,6 +68,12 @@
     <None Update="RuleContent\AG0002PrivateMethodsShouldNotBeTested.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="RuleContent\AG0004AsyncAnalyzer.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="RuleContent\AG0006NotOveruseReflection.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="RuleContent\AG0005TestMethodNamesMustFollowConvention.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

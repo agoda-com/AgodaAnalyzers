@@ -17,47 +17,47 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         public async Task TestTestMethodNamesMustFollowConvention()
         {
             var code = $@"
-using NUnit.Framework;
+                    using NUnit.Framework;
 
-namespace Tests
-{{
-    public class TestClass
-    {{
-        [Test]
-        public void This_IsValid(){{}} // should validate
+                    namespace Tests
+                    {{
+                        public class TestClass
+                        {{
+                            [Test]
+                            public void This_IsValid(){{}} // should validate
 
-        [Test]
-        public void This_Is_Valid(){{}} // should validate
+                            [Test]
+                            public void This_Is_Valid(){{}} // should validate
 
-        [Test]
-        public void This_1s_Valid(){{}} // should validate
+                            [Test]
+                            public void This_1s_Valid(){{}} // should validate
 
-        [Test]
-        public void This_IsAlso_QuiteValid555(){{}} // should validate
+                            [Test]
+                            public void This_IsAlso_QuiteValid555(){{}} // should validate
 
-        [Test]
-        public void ThisIsInvalid(){{}} // no underscores, so should not validate
+                            [Test]
+                            public void ThisIsInvalid(){{}} // no underscores, so should not validate
 
-        [Test]
-        public void This_Is_In_Valid(){{}} // too many underscores, so should not validate
+                            [Test]
+                            public void This_Is_In_Valid(){{}} // too many underscores, so should not validate
 
-        [Test]
-        public void This_Is_invalid(){{}} // incorrect casing, so should not validate
+                            [Test]
+                            public void This_Is_invalid(){{}} // incorrect casing, so should not validate
 
-        public void ThisIsNotATest(){{}}  // not a test, so should validate
+                            public void ThisIsNotATest(){{}}  // not a test, so should validate
 
-        [Test]
-        private void PrivateMethod(){{}} // private, so should validate
+                            [Test]
+                            private void PrivateMethod(){{}} // private, so should validate
 
-        [Test]
-        protected void ProtectedMethod(){{}} // protected, so should validate
+                            [Test]
+                            protected void ProtectedMethod(){{}} // protected, so should validate
 
-        [Test]
-        internal void InternalMethod(){{}} // internal, so should validate
-	}}
-}}";
+                            [Test]
+                            internal void InternalMethod(){{}} // internal, so should validate
+	                    }}
+                    }}";
 
-            var nUnit = MetadataReference.CreateFromFile(typeof(NUnit.Framework.TestFixtureAttribute).Assembly.Location);
+            var nUnit = MetadataReference.CreateFromFile(typeof(TestFixtureAttribute).Assembly.Location);
 
             var doc = CreateProject(new[] { code })
                 .AddMetadataReference(nUnit)
