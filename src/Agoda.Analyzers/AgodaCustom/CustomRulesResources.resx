@@ -156,4 +156,7 @@
   <data name="AG0005Title" xml:space="preserve">
     <value>Test method names must follow convention</value>
   </data>
+  <data name="AG0006Title" xml:space="preserve">
+    <value>Class should have only one public constructor</value>
+  </data>
 </root>
