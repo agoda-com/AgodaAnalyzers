@@ -68,10 +68,13 @@
     <None Update="RuleContent\AG0002PrivateMethodsShouldNotBeTested.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="RuleContent\AG0003HttpContextCannotBePassedAsMethodArgument.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="RuleContent\AG0005TestMethodNamesMustFollowConvention.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="RuleContent\AG0003HttpContextCannotBePassedAsMethodArgument.html">
+    <None Update="RuleContent\AG0006ClassShouldHaveOnlyOnePublicConstructor.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
