@@ -176,5 +176,14 @@ namespace Agoda.Analyzers.AgodaCustom {
                 return ResourceManager.GetString("AG0005Title", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Test method names must follow convention.
+        /// </summary>
+        public static string AG0006Title {
+            get {
+                return ResourceManager.GetString("AG0006Title", resourceCulture);
+            }
+        }
     }
 }
