@@ -1,0 +1,17 @@
+﻿<p>
+    The <code>DependencyResolver</code> should not be used directly in the codebase. We should expose our dependencies as a constructor parameter.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+   var exampleService = DependencyResolver.Current.GetService<IExampleService>();
+</pre>
+
+<h2>Compliant Code Example</h2>
+<pre>
+    public class ExampleClass
+    {
+        public ExampleClass(IExampleService exampleService) { }
+    }
+
+</pre>
