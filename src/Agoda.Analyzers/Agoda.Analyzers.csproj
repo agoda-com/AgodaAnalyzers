@@ -74,7 +74,7 @@
     <None Update="RuleContent\AG0005TestMethodNamesMustFollowConvention.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="RuleContent\AG0006ClassShouldHaveOnlyOnePublicConstructor.html">
+    <None Update="RuleContent\AG0006ClassShouldNotHaveMoreThanOnePublicConstructor.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
