@@ -15,22 +15,12 @@ namespace Agoda.Analyzers.Test.AgodaCustom
     internal class AG0006UnitTests : DiagnosticVerifier
     {
         [Test]
-        public async Task ClassShouldHaveOnlyOnePublicConstructor_ShouldNotShowWarningForZeroPublicConstructor()
+        [TestCase(classWithoutRegisterAndNoPublicConstructor)]
+        [TestCase(classWithoutRegisterAndMultiplePublicConstructors)]
+        [TestCase(classWithRegisterAndNoPublicConstructor)]
+        [TestCase(classWithRegisterAndSinglePublicConstructor)]
+        public async Task ClassShouldHaveOnlyOnePublicConstructor_ShouldNotShowWarning(string code)
         {
-            var code = $@"
-namespace Agoda.Analyzers.Test
-{{
-    public class TestClass
-    {{
-        private int value;
-
-        private TestClass()
-        {{
-            value = 0;
-        }}
-    }}
-}}";
-
             var doc = CreateProject(new[] {code})
                 .Documents
                 .First();
@@ -45,57 +35,9 @@ namespace Agoda.Analyzers.Test
         }
 
         [Test]
-        public async Task ClassShouldHaveOnlyOnePublicConstructor_ShouldNotShowWarningForOnePublicConstructor()
+        [TestCase(classWithRegisterAndMultiplePublicConstructors, 5, 5)]
+        public async Task ClassShouldHaveOnlyOnePublicConstructor_ShouldShowWarning(string code, int lineNumber, int columnNumber)
         {
-            var code = $@"
-namespace Agoda.Analyzers.Test
-{{
-    public class TestClass
-    {{
-        private int value;
-
-        public TestClass()
-        {{
-            value = 0;
-        }}
-    }}
-}}";
-
-            var doc = CreateProject(new[] {code})
-                .Documents
-                .First();
-
-            var analyzersArray = GetCSharpDiagnosticAnalyzers().ToImmutableArray();
-
-            var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzersArray, new[] {doc}, CancellationToken.None)
-                .ConfigureAwait(false);
-
-            CSharpDiagnostic(AG0006ClassShouldNotHaveMoreThanOnePublicConstructor.DiagnosticId);
-            VerifyDiagnosticResults(diag, analyzersArray, new DiagnosticResult[0]);
-        }
-
-        [Test]
-        public async Task ClassShouldHaveOnlyOnePublicConstructor_ShouldShowWarningForTwoPublicConstructors()
-        {
-            var code = $@"
-namespace Agoda.Analyzers.Test
-{{
-    public class TestClass
-    {{
-        private int value;
-
-        public TestClass()
-        {{
-            value = 0;
-        }}
-
-        public TestClass(int value)
-        {{
-            this.value = value;
-        }}
-    }}
-}}";
-
             var doc = CreateProject(new[] {code})
                 .Documents
                 .First();
@@ -108,7 +50,7 @@ namespace Agoda.Analyzers.Test
             var baseResult = CSharpDiagnostic(AG0006ClassShouldNotHaveMoreThanOnePublicConstructor.DiagnosticId);
             VerifyDiagnosticResults(diag, analyzersArray, new[]
             {
-                baseResult.WithLocation(4, 5)
+                baseResult.WithLocation(lineNumber, columnNumber)
             });
         }
 
@@ -116,5 +58,108 @@ namespace Agoda.Analyzers.Test
         {
             yield return new AG0006ClassShouldNotHaveMoreThanOnePublicConstructor();
         }
+
+        private const string classWithoutRegisterAndNoPublicConstructor = @"
+namespace Agoda.Analyzers.Test
+{
+    public class TestClass
+    {
+        private int value;
+
+        private TestClass()
+        {
+            value = 0;
+        }
+    }
+}";
+
+        private const string classWithoutRegisterAndMultiplePublicConstructors = @"
+using System;
+namespace Agoda.Analyzers.Test
+{
+    [Custom]
+    public class TestClass
+    {
+        private int value;
+
+        private TestClass()
+        {
+            value = 0;
+        }
+    }
+    
+    internal class Custom : Attribute
+    {
+        
+    }
+}";
+
+        private const string classWithRegisterAndNoPublicConstructor = @"
+using System;
+namespace Agoda.Analyzers.Test
+{
+    [RegisterGlobal]
+    public class TestClass
+    {
+        private int value;
+
+        private TestClass()
+        {
+            value = 0;
+        }
+    }
+    
+    internal class RegisterGlobal : Attribute
+    {
+        
+    }
+}";
+
+        private const string classWithRegisterAndSinglePublicConstructor = @"
+using System;
+namespace Agoda.Analyzers.Test
+{
+    [RegisterSingleton]
+    public class TestClass
+    {
+        private int value;
+
+        public TestClass()
+        {
+            value = 0;
+        }
+    }
+    
+    internal class RegisterSingleton : Attribute
+    {
+        
+    }
+}";
+
+        private const string classWithRegisterAndMultiplePublicConstructors = @"
+using System;
+namespace Agoda.Analyzers.Test
+{
+    [RegisterPerRequest]
+    public class TestClass
+    {
+        private int value;
+
+        public TestClass()
+        {
+            value = 0;
+        }
+
+        public TestClass(int value)
+        {
+            this.value = value;
+        }
+    }
+    
+    internal class RegisterPerRequest : Attribute
+    {
+        
+    }
+}";
     }
 }
