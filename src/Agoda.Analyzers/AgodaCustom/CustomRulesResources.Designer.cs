@@ -178,11 +178,20 @@ namespace Agoda.Analyzers.AgodaCustom {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Test method names must follow convention.
+        ///   Looks up a localized string similar to Class should have only one public constructor.
         /// </summary>
         public static string AG0006Title {
             get {
                 return ResourceManager.GetString("AG0006Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Prevent returning null from a method / property whose return value implements IEnumerable.
+        /// </summary>
+        public static string AG0008Title {
+            get {
+                return ResourceManager.GetString("AG0008Title", resourceCulture);
             }
         }
     }
