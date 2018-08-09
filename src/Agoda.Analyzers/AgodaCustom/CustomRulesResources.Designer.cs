@@ -178,11 +178,20 @@ namespace Agoda.Analyzers.AgodaCustom {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Test method names must follow convention.
+        ///   Looks up a localized string similar to Class should have only one public constructor.
         /// </summary>
         public static string AG0006Title {
             get {
                 return ResourceManager.GetString("AG0006Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Controllers should not access HttpRequest.QueryString directly but use ASP.NET model binding instead.
+        /// </summary>
+        public static string AG0007Title {
+            get {
+                return ResourceManager.GetString("AG0007Title", resourceCulture);
             }
         }
     }
