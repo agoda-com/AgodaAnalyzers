@@ -136,6 +136,68 @@ namespace Agoda.Analyzers.Test
             VerifyDiagnosticResults(diag, analyzersArray, new DiagnosticResult[] { });
         }
 
+        [Test]
+        public async Task PreventReturningNullForReturnValueOfIEnumerable_ShouldReportNullReturnFromProperty()
+        {
+            var code = @"
+using System.Collections.Generic;
+
+namespace Agoda.Analyzers.Test
+{
+    public class TestClass
+    {
+        public IEnumerable<string> Data {
+            get {
+                return null;
+            }
+        }
+        public IEnumerable<string> SecondProperty => null;
+    }
+}";
+
+            var doc = CreateProject(new[] { code })
+                .Documents
+                .First();
+
+            var analyzersArray = GetCSharpDiagnosticAnalyzers().ToImmutableArray();
+
+            var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzersArray, new[] { doc }, CancellationToken.None)
+                .ConfigureAwait(false);
+
+            var expected = CSharpDiagnostic(AG0008PreventReturningNullForReturnValueOfIEnumerable.DiagnosticId);
+            VerifyDiagnosticResults(diag, analyzersArray, new DiagnosticResult[] {
+                expected.WithLocation(10, 17),
+                expected.WithLocation(13, 51)
+            });
+        }
+
+        [Test]
+        public async Task PreventReturningNullForReturnValueOfIEnumerable_ShouldNotReportNullReturnFromPropertyOfStringOrOtherType()
+        {
+            var code = @"
+using System.Collections.Generic;
+
+namespace Agoda.Analyzers.Test
+{
+    public class TestClass
+    {
+        public string ThisIsOk => null;
+        public int? SomeOptionalNumber => null;
+    }
+}";
+
+            var doc = CreateProject(new[] { code })
+                .Documents
+                .First();
+
+            var analyzersArray = GetCSharpDiagnosticAnalyzers().ToImmutableArray();
+
+            var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzersArray, new[] { doc }, CancellationToken.None)
+                .ConfigureAwait(false);
+
+            VerifyDiagnosticResults(diag, analyzersArray, new DiagnosticResult[] {});
+        }
+
         protected override IEnumerable<DiagnosticAnalyzer> GetCSharpDiagnosticAnalyzers()
         {
             yield return new AG0008PreventReturningNullForReturnValueOfIEnumerable();

@@ -31,27 +31,41 @@ namespace Agoda.Analyzers.AgodaCustom
 
         public override void Initialize(AnalysisContext context)
         {
-            context.RegisterSyntaxNodeAction(AnalyzeNode, new[] { SyntaxKind.ReturnKeyword, SyntaxKind.ReturnStatement, SyntaxKind.NullLiteralExpression });
+            context.RegisterSyntaxNodeAction(AnalyzeNode, new[] {
+                SyntaxKind.ReturnStatement,
+                SyntaxKind.ArrowExpressionClause,
+            });
         }
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Descriptor);
 
-        private void AnalyzeNode(SyntaxNodeAnalysisContext context)
+        private bool ContainsNullExpression(SyntaxNodeAnalysisContext context)
         {
             if (context.Node.IsKind(SyntaxKind.ReturnStatement))
             {
                 ReturnStatementSyntax statement = (ReturnStatementSyntax)context.Node;
-                if (statement.Expression.IsKind(SyntaxKind.NullLiteralExpression)) // will fail to catch the tertiary operator with null value
+                return statement.Expression.IsKind(SyntaxKind.NullLiteralExpression);
+            }
+            else if (context.Node.IsKind(SyntaxKind.ArrowExpressionClause))
+            {
+                ArrowExpressionClauseSyntax statement = (ArrowExpressionClauseSyntax)context.Node;
+                return statement.Expression.IsKind(SyntaxKind.NullLiteralExpression);
+            }
+            return false;
+        }
+
+        private void AnalyzeNode(SyntaxNodeAnalysisContext context)
+        {
+            if (ContainsNullExpression(context))
+            {
+                if (context.ContainingSymbol.Kind == SymbolKind.Method)
                 {
-                    if (context.ContainingSymbol.Kind == SymbolKind.Method)
+                    IMethodSymbol method = (IMethodSymbol)context.ContainingSymbol;
+                    var methodReturnType = method.ReturnType as INamedTypeSymbol;
+                    if (methodReturnType?.ConstructedFrom.Interfaces.Any(x => x.ToDisplayString() == "System.Collections.IEnumerable") == true
+                        && methodReturnType.ConstructedFrom.ToDisplayString() != "string")
                     {
-                        IMethodSymbol method = (IMethodSymbol)context.ContainingSymbol;
-                        var methodReturnType = method.ReturnType as INamedTypeSymbol;
-                        if (methodReturnType?.ConstructedFrom.Interfaces.Any(x => x.ToDisplayString() == "System.Collections.IEnumerable") == true
-                            && methodReturnType.ConstructedFrom.ToDisplayString() != "string")
-                        {   
-                            context.ReportDiagnostic(Diagnostic.Create(Descriptor, statement.GetLocation()));
-                        }
+                        context.ReportDiagnostic(Diagnostic.Create(Descriptor, context.Node.GetLocation()));
                     }
                 }
             }
