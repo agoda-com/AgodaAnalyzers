@@ -9,20 +9,20 @@ using Microsoft.CodeAnalysis.Diagnostics;
 namespace Agoda.Analyzers.AgodaCustom
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    public class AG0008PreventReturningNullForReturnValueOfIEnumerable : DiagnosticAnalyzer
+    public class AG0020PreventReturningNullForReturnValueOfIEnumerable : DiagnosticAnalyzer
     {
-        public const string DiagnosticId = "AG0008";
+        public const string DiagnosticId = "AG0020";
 
         private static readonly LocalizableString Title = new LocalizableResourceString(
-            nameof(CustomRulesResources.AG0008Title), CustomRulesResources.ResourceManager,
+            nameof(CustomRulesResources.AG0020Title), CustomRulesResources.ResourceManager,
             typeof(CustomRulesResources));
 
         private static readonly LocalizableString MessageFormat = new LocalizableResourceString(
-            nameof(CustomRulesResources.AG0008Title), CustomRulesResources.ResourceManager,
+            nameof(CustomRulesResources.AG0020Title), CustomRulesResources.ResourceManager,
             typeof(CustomRulesResources));
 
         private static readonly LocalizableString Description =
-            DescriptionContentLoader.GetAnalyzerDescription(nameof(AG0008PreventReturningNullForReturnValueOfIEnumerable));
+            DescriptionContentLoader.GetAnalyzerDescription(nameof(AG0020PreventReturningNullForReturnValueOfIEnumerable));
 
         private static readonly DiagnosticDescriptor Descriptor =
             new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, AnalyzerCategory.CustomQualityRules,

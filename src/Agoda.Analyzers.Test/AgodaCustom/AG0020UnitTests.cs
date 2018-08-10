@@ -12,7 +12,7 @@ using NUnit.Framework;
 
 namespace Agoda.Analyzers.Test.AgodaCustom
 {
-    internal class AG0008UnitTests : DiagnosticVerifier
+    internal class AG0020UnitTests : DiagnosticVerifier
     {
         [Test]
         public async Task PreventReturningNullForReturnValueOfIEnumerable_ShouldReportCorrectly()
@@ -40,7 +40,7 @@ namespace Agoda.Analyzers.Test
             var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzersArray, new[] {doc}, CancellationToken.None)
                 .ConfigureAwait(false);
 
-            var expected = CSharpDiagnostic(AG0008PreventReturningNullForReturnValueOfIEnumerable.DiagnosticId);
+            var expected = CSharpDiagnostic(AG0020PreventReturningNullForReturnValueOfIEnumerable.DiagnosticId);
             VerifyDiagnosticResults(diag, analyzersArray, new DiagnosticResult[] {
                 expected.WithLocation(10, 13)
             });
@@ -72,7 +72,7 @@ namespace Agoda.Analyzers.Test
             var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzersArray, new[] {doc}, CancellationToken.None)
                 .ConfigureAwait(false);
 
-            var expected = CSharpDiagnostic(AG0008PreventReturningNullForReturnValueOfIEnumerable.DiagnosticId);
+            var expected = CSharpDiagnostic(AG0020PreventReturningNullForReturnValueOfIEnumerable.DiagnosticId);
             VerifyDiagnosticResults(diag, analyzersArray, new DiagnosticResult[] {
                 expected.WithLocation(10, 13)
             });
@@ -164,7 +164,7 @@ namespace Agoda.Analyzers.Test
             var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzersArray, new[] { doc }, CancellationToken.None)
                 .ConfigureAwait(false);
 
-            var expected = CSharpDiagnostic(AG0008PreventReturningNullForReturnValueOfIEnumerable.DiagnosticId);
+            var expected = CSharpDiagnostic(AG0020PreventReturningNullForReturnValueOfIEnumerable.DiagnosticId);
             VerifyDiagnosticResults(diag, analyzersArray, new DiagnosticResult[] {
                 expected.WithLocation(10, 17),
                 expected.WithLocation(13, 51)
@@ -200,7 +200,7 @@ namespace Agoda.Analyzers.Test
 
         protected override IEnumerable<DiagnosticAnalyzer> GetCSharpDiagnosticAnalyzers()
         {
-            yield return new AG0008PreventReturningNullForReturnValueOfIEnumerable();
+            yield return new AG0020PreventReturningNullForReturnValueOfIEnumerable();
         }
     }
 }

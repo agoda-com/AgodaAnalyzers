@@ -77,7 +77,7 @@
     <None Update="RuleContent\AG0006ClassShouldNotHaveMoreThanOnePublicConstructor.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="RuleContent\AG0008PreventReturningNullForReturnValueOfIEnumerable.html">
+    <None Update="RuleContent\AG0020PreventReturningNullForReturnValueOfIEnumerable.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
