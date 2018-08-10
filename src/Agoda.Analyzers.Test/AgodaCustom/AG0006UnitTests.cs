@@ -18,7 +18,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         private const string CUSTOM_ATTRIBUTE = "CustomAttribute";
 
         [Test]
-        public async Task RegisteredComponentShouldNotHaveMoreThanOnePublicConstructor_ShouldNotShowWarningWhenNoRegisterAttribute()
+        public async Task AG0006_WhenNoRegisterAttribute_ShouldntShowAnyWarning()
         {
             var code = ClassBuilder.New()
                 .WithNamespace()
@@ -30,7 +30,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         }
 
         [Test]
-        public async Task RegisteredComponentShouldNotHaveMoreThanOnePublicConstructor_ShouldNotShowWarningWhenNoConstructor()
+        public async Task AG0006_WhenNoConstructor_ShouldntShowAnyWarning()
         {
             var code = ClassBuilder.New()
                 .WithNamespace()
@@ -42,7 +42,19 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         }
 
         [Test]
-        public async Task RegisteredComponentShouldNotHaveMoreThanOnePublicConstructor_ShouldNotShowWarningWhenOnePrivateConstructor()
+        public async Task AG0006_WhenOnePublicConstructor_ShouldntShowAnyWarning()
+        {
+            var code = ClassBuilder.New()
+                .WithNamespace()
+                .WithClass(numberOfPublicConstructors: 1, attribute: REGISTER_SINGLETON)
+                .WithAttributeClass(REGISTER_SINGLETON)
+                .Build();
+
+            await TestForNoWarnings(code);
+        }
+
+        [Test]
+        public async Task AG0006_WhenOnePrivateConstructor_ShowWarning()
         {
             var code = ClassBuilder.New()
                 .WithNamespace()
@@ -50,23 +62,17 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 .WithAttributeClass(REGISTER_SINGLETON)
                 .Build();
 
-            await TestForNoWarnings(code);
+            var baseResult =
+                CSharpDiagnostic(AG0006RegisteredComponentShouldHaveExactlyOnePublicConstructor.DiagnosticId);
+            var expected = new[]
+            {
+                baseResult.WithLocation(4, 2)
+            };
+            await TestForNoWarnings(code, expected);
         }
 
         [Test]
-        public async Task RegisteredComponentShouldNotHaveMoreThanOnePublicConstructor_ShouldNotShowWarningWhenOnePublicConstructor()
-        {
-            var code = ClassBuilder.New()
-                .WithNamespace()
-                .WithClass(numberOfPrivateConstructors: 1, numberOfPublicConstructors: 1, attribute: REGISTER_SINGLETON)
-                .WithAttributeClass(REGISTER_SINGLETON)
-                .Build();
-
-            await TestForNoWarnings(code);
-        }
-
-        [Test]
-        public async Task RegisteredComponentShouldNotHaveMoreThanOnePublicConstructor_ShouldShowWarningWhenTwoPublicConstructors()
+        public async Task AG0006_WhenTwoPublicConstructors_ShowWarning()
         {
             var code = ClassBuilder.New()
                 .WithNamespace()
@@ -74,7 +80,8 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 .WithAttributeClass(REGISTER_SINGLETON)
                 .Build();
 
-            var baseResult = CSharpDiagnostic(AG0006RegisteredComponentShouldNotHaveMoreThanOnePublicConstructor.DiagnosticId);
+            var baseResult =
+                CSharpDiagnostic(AG0006RegisteredComponentShouldHaveExactlyOnePublicConstructor.DiagnosticId);
             var expected = new[]
             {
                 baseResult.WithLocation(4, 2)
@@ -94,13 +101,13 @@ namespace Agoda.Analyzers.Test.AgodaCustom
             var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzersArray, new[] {doc}, CancellationToken.None)
                 .ConfigureAwait(false);
 
-            
+
             VerifyDiagnosticResults(diag, analyzersArray, expected);
         }
 
         protected override IEnumerable<DiagnosticAnalyzer> GetCSharpDiagnosticAnalyzers()
         {
-            yield return new AG0006RegisteredComponentShouldNotHaveMoreThanOnePublicConstructor();
+            yield return new AG0006RegisteredComponentShouldHaveExactlyOnePublicConstructor();
         }
     }
 }

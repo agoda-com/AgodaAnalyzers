@@ -10,7 +10,7 @@ using Microsoft.CodeAnalysis.Diagnostics;
 namespace Agoda.Analyzers.AgodaCustom
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    public class AG0006RegisteredComponentShouldNotHaveMoreThanOnePublicConstructor : DiagnosticAnalyzer
+    public class AG0006RegisteredComponentShouldHaveExactlyOnePublicConstructor : DiagnosticAnalyzer
     {
         public const string DiagnosticId = "AG0006";
         private const string PUBLIC = "public";
@@ -25,7 +25,7 @@ namespace Agoda.Analyzers.AgodaCustom
             typeof(CustomRulesResources));
 
         private static readonly LocalizableString Description =
-            DescriptionContentLoader.GetAnalyzerDescription(nameof(AG0006RegisteredComponentShouldNotHaveMoreThanOnePublicConstructor));
+            DescriptionContentLoader.GetAnalyzerDescription(nameof(AG0006RegisteredComponentShouldHaveExactlyOnePublicConstructor));
 
         private static readonly DiagnosticDescriptor Descriptor =
             new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, AnalyzerCategory.CustomQualityRules,
@@ -51,13 +51,18 @@ namespace Agoda.Analyzers.AgodaCustom
                 .Any(MatchTestAttributeName.IsMatch);
 
             if (!hasRegisterAttribute) return;
+
+            var constructors = classDeclaration.Members
+                .Where(member => member is ConstructorDeclarationSyntax)
+                .Cast<ConstructorDeclarationSyntax>()
+                .ToList();
             
-            var constructors = classDeclaration.Members.ToList().FindAll(a => a is ConstructorDeclarationSyntax);
-            var publicConstructors = constructors.FindAll(c =>
-                ((ConstructorDeclarationSyntax) c).Modifiers.Any(t => t.Text.ToLower().Equals(PUBLIC)));
-            
-            if (publicConstructors.Count < 2)
-                return;
+            if (constructors.Count == 0) return; 
+
+            var publicConstructorsCount = constructors
+                .Count(constructor => constructor.Modifiers.Any(modifier => modifier.Text == PUBLIC));
+
+            if (publicConstructorsCount == 1) return;
             
             context.ReportDiagnostic(Diagnostic.Create(Descriptor, classDeclaration.GetLocation()));
         }
