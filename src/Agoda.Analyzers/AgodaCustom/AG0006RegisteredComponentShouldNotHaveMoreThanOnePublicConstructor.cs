@@ -10,7 +10,7 @@ using Microsoft.CodeAnalysis.Diagnostics;
 namespace Agoda.Analyzers.AgodaCustom
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    public class AG0006ClassShouldNotHaveMoreThanOnePublicConstructor : DiagnosticAnalyzer
+    public class AG0006RegisteredComponentShouldNotHaveMoreThanOnePublicConstructor : DiagnosticAnalyzer
     {
         public const string DiagnosticId = "AG0006";
         private const string PUBLIC = "public";
@@ -25,7 +25,7 @@ namespace Agoda.Analyzers.AgodaCustom
             typeof(CustomRulesResources));
 
         private static readonly LocalizableString Description =
-            DescriptionContentLoader.GetAnalyzerDescription(nameof(AG0006ClassShouldNotHaveMoreThanOnePublicConstructor));
+            DescriptionContentLoader.GetAnalyzerDescription(nameof(AG0006RegisteredComponentShouldNotHaveMoreThanOnePublicConstructor));
 
         private static readonly DiagnosticDescriptor Descriptor =
             new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, AnalyzerCategory.CustomQualityRules,

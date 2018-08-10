@@ -18,7 +18,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         private const string CUSTOM_ATTRIBUTE = "CustomAttribute";
 
         [Test]
-        public async Task ClassShouldNotHaveMoreThanOnePublicConstructor_ShouldNotShowWarningWhenNoRegisterAttribute()
+        public async Task RegisteredComponentShouldNotHaveMoreThanOnePublicConstructor_ShouldNotShowWarningWhenNoRegisterAttribute()
         {
             var code = ClassBuilder.New()
                 .WithNamespace()
@@ -30,7 +30,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         }
 
         [Test]
-        public async Task ClassShouldNotHaveMoreThanOnePublicConstructor_ShouldNotShowWarningWhenNoConstructor()
+        public async Task RegisteredComponentShouldNotHaveMoreThanOnePublicConstructor_ShouldNotShowWarningWhenNoConstructor()
         {
             var code = ClassBuilder.New()
                 .WithNamespace()
@@ -42,7 +42,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         }
 
         [Test]
-        public async Task ClassShouldNotHaveMoreThanOnePublicConstructor_ShouldNotShowWarningWhenOnePrivateConstructor()
+        public async Task RegisteredComponentShouldNotHaveMoreThanOnePublicConstructor_ShouldNotShowWarningWhenOnePrivateConstructor()
         {
             var code = ClassBuilder.New()
                 .WithNamespace()
@@ -54,7 +54,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         }
 
         [Test]
-        public async Task ClassShouldNotHaveMoreThanOnePublicConstructor_ShouldNotShowWarningWhenOnePublicConstructor()
+        public async Task RegisteredComponentShouldNotHaveMoreThanOnePublicConstructor_ShouldNotShowWarningWhenOnePublicConstructor()
         {
             var code = ClassBuilder.New()
                 .WithNamespace()
@@ -66,7 +66,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         }
 
         [Test]
-        public async Task ClassShouldNotHaveMoreThanOnePublicConstructor_ShouldShowWarningWhenTwoPublicConstructors()
+        public async Task RegisteredComponentShouldNotHaveMoreThanOnePublicConstructor_ShouldShowWarningWhenTwoPublicConstructors()
         {
             var code = ClassBuilder.New()
                 .WithNamespace()
@@ -74,7 +74,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 .WithAttributeClass(REGISTER_SINGLETON)
                 .Build();
 
-            var baseResult = CSharpDiagnostic(AG0006ClassShouldNotHaveMoreThanOnePublicConstructor.DiagnosticId);
+            var baseResult = CSharpDiagnostic(AG0006RegisteredComponentShouldNotHaveMoreThanOnePublicConstructor.DiagnosticId);
             var expected = new[]
             {
                 baseResult.WithLocation(4, 2)
@@ -100,7 +100,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 
         protected override IEnumerable<DiagnosticAnalyzer> GetCSharpDiagnosticAnalyzers()
         {
-            yield return new AG0006ClassShouldNotHaveMoreThanOnePublicConstructor();
+            yield return new AG0006RegisteredComponentShouldNotHaveMoreThanOnePublicConstructor();
         }
     }
 }
