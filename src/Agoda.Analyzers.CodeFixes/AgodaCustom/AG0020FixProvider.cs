@@ -53,8 +53,11 @@ namespace Agoda.Analyzers.CodeFixes.AgodaCustom
 
             var method = returnStatement.Ancestors().OfType<MethodDeclarationSyntax>().First();
             var returnType = method.ReturnType as GenericNameSyntax;
-            var defaultExp = SyntaxFactory.DefaultExpression(returnType);
-            var newText = defaultExp.GetText().ToString();
+            var listType = SyntaxFactory.IdentifierName(SyntaxFactory.Identifier("List")) as TypeSyntax;
+            var listSyntax = SyntaxFactory.GenericName(listType.GetFirstToken(), returnType.TypeArgumentList);
+            var objConstr = SyntaxFactory.ObjectCreationExpression(listSyntax, SyntaxFactory.ArgumentList(), null);
+
+            var newText = objConstr.NormalizeWhitespace().ToString();
 
             TextSpan spanToRemove = TextSpan.FromBounds(token.GetNextToken().Span.Start, token.GetNextToken().Span.End);
             
