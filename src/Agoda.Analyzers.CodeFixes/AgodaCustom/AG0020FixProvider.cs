@@ -49,7 +49,7 @@ namespace Agoda.Analyzers.CodeFixes.AgodaCustom
 
         private async static Task<Document> ConvertToEmptyEnumerableAsync(Document document, SyntaxToken token, CancellationToken cancellationToken)
         {
-            var returnStatement = token.Parent as ReturnStatementSyntax;
+            var returnStatement = token.Parent;
 
             var method = returnStatement.Ancestors().OfType<MethodDeclarationSyntax>().First();
             var returnType = method.ReturnType as GenericNameSyntax;
