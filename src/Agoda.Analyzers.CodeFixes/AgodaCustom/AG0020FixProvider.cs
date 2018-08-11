@@ -49,10 +49,19 @@ namespace Agoda.Analyzers.CodeFixes.AgodaCustom
 
         private async static Task<Document> ConvertToEmptyEnumerableAsync(Document document, SyntaxToken token, CancellationToken cancellationToken)
         {
-            var returnStatement = token.Parent;
+            var statement = token.Parent;
 
-            var method = returnStatement.Ancestors().OfType<MethodDeclarationSyntax>().First();
-            var returnType = method.ReturnType as GenericNameSyntax;
+            GenericNameSyntax returnType = null;
+
+            MemberDeclarationSyntax method = statement.Ancestors().OfType<MethodDeclarationSyntax>().FirstOrDefault();
+            if (method != null)
+                returnType = (method as MethodDeclarationSyntax).ReturnType as GenericNameSyntax;
+            else
+            {
+                var p = statement.Ancestors().OfType<PropertyDeclarationSyntax>().FirstOrDefault();
+                returnType = p.ChildNodes().First() as GenericNameSyntax;
+            }
+
             var listType = SyntaxFactory.IdentifierName(SyntaxFactory.Identifier("List")) as TypeSyntax;
             var listSyntax = SyntaxFactory.GenericName(listType.GetFirstToken(), returnType.TypeArgumentList);
             var objConstr = SyntaxFactory.ObjectCreationExpression(listSyntax, SyntaxFactory.ArgumentList(), null);
