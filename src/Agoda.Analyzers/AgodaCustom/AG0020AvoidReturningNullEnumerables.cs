@@ -9,7 +9,7 @@ using Microsoft.CodeAnalysis.Diagnostics;
 namespace Agoda.Analyzers.AgodaCustom
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    public class AG0020PreventReturningNullForReturnValueOfIEnumerable : DiagnosticAnalyzer
+    public class AG0020AvoidReturningNullEnumerables : DiagnosticAnalyzer
     {
         public const string DiagnosticId = "AG0020";
 
@@ -22,7 +22,7 @@ namespace Agoda.Analyzers.AgodaCustom
             typeof(CustomRulesResources));
 
         private static readonly LocalizableString Description =
-            DescriptionContentLoader.GetAnalyzerDescription(nameof(AG0020PreventReturningNullForReturnValueOfIEnumerable));
+            DescriptionContentLoader.GetAnalyzerDescription(nameof(AG0020AvoidReturningNullEnumerables));
 
         private static readonly DiagnosticDescriptor Descriptor =
             new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, AnalyzerCategory.CustomQualityRules,
@@ -31,6 +31,9 @@ namespace Agoda.Analyzers.AgodaCustom
 
         public override void Initialize(AnalysisContext context)
         {
+            context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
+            context.EnableConcurrentExecution();
+
             context.RegisterSyntaxNodeAction(AnalyzeNode, new[] {
                 SyntaxKind.ReturnStatement,
                 SyntaxKind.ArrowExpressionClause,
@@ -56,18 +59,16 @@ namespace Agoda.Analyzers.AgodaCustom
 
         private void AnalyzeNode(SyntaxNodeAnalysisContext context)
         {
-            if (ContainsNullExpression(context))
+            if (ContainsNullExpression(context) && context.ContainingSymbol.Kind == SymbolKind.Method)
             {
-                if (context.ContainingSymbol.Kind == SymbolKind.Method)
+                IMethodSymbol method = (IMethodSymbol)context.ContainingSymbol;
+                var methodReturnType = method.ReturnType as INamedTypeSymbol;
+                if ((methodReturnType?.ConstructedFrom.Interfaces.Any(x => x.ToDisplayString() == "System.Collections.IEnumerable")).Value
+                    && methodReturnType.ConstructedFrom.ToDisplayString() != "string")
                 {
-                    IMethodSymbol method = (IMethodSymbol)context.ContainingSymbol;
-                    var methodReturnType = method.ReturnType as INamedTypeSymbol;
-                    if (methodReturnType?.ConstructedFrom.Interfaces.Any(x => x.ToDisplayString() == "System.Collections.IEnumerable") == true
-                        && methodReturnType.ConstructedFrom.ToDisplayString() != "string")
-                    {
-                        context.ReportDiagnostic(Diagnostic.Create(Descriptor, context.Node.GetLocation()));
-                    }
+                    context.ReportDiagnostic(Diagnostic.Create(Descriptor, context.Node.GetLocation()));
                 }
+
             }
         }
     }

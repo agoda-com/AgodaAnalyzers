@@ -187,7 +187,16 @@ namespace Agoda.Analyzers.AgodaCustom {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Prevent returning null from a method / property whose return value implements IEnumerable.
+        ///   Looks up a localized string similar to Return an empty IEnumerable&lt;T&gt;.
+        /// </summary>
+        public static string AG0020FixTitle {
+            get {
+                return ResourceManager.GetString("AG0020FixTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Do not return null when the retun value is IEnumerable&lt;T&gt;.
         /// </summary>
         public static string AG0020Title {
             get {
