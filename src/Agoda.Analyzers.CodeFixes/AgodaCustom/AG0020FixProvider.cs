@@ -68,7 +68,7 @@ namespace Agoda.Analyzers.CodeFixes.AgodaCustom
 
             var newText = objConstr.NormalizeWhitespace().ToString();
 
-            TextSpan spanToRemove = TextSpan.FromBounds(token.GetNextToken().Span.Start, token.GetNextToken().Span.End);
+            TextSpan spanToRemove = TextSpan.FromBounds(token.Span.Start, token.Span.End);
             
             var sourceText = await document.GetTextAsync(cancellationToken).ConfigureAwait(false);
             var change = new TextChange(spanToRemove, newText);

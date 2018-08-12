@@ -37,36 +37,50 @@ namespace Agoda.Analyzers.AgodaCustom
             context.RegisterSyntaxNodeAction(AnalyzeNode, new[] {
                 SyntaxKind.ReturnStatement,
                 SyntaxKind.ArrowExpressionClause,
+                SyntaxKind.ConditionalExpression
             });
         }
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Descriptor);
 
-        private bool ContainsNullExpression(SyntaxNodeAnalysisContext context)
+        private Location GetNullLiteralLocation(ExpressionSyntax expression)
+        {
+            if (expression.IsKind(SyntaxKind.NullLiteralExpression))
+                return expression.GetLocation();
+            return null;
+        }
+
+        private Location IsReturningNullLiteral(SyntaxNodeAnalysisContext context)
         {
             if (context.Node.IsKind(SyntaxKind.ReturnStatement))
             {
-                ReturnStatementSyntax statement = (ReturnStatementSyntax)context.Node;
-                return statement.Expression.IsKind(SyntaxKind.NullLiteralExpression);
+                var statement = context.Node as ReturnStatementSyntax;
+                return GetNullLiteralLocation(statement.Expression);
             }
             else if (context.Node.IsKind(SyntaxKind.ArrowExpressionClause))
             {
-                ArrowExpressionClauseSyntax statement = (ArrowExpressionClauseSyntax)context.Node;
-                return statement.Expression.IsKind(SyntaxKind.NullLiteralExpression);
+                var statement = context.Node as ArrowExpressionClauseSyntax;
+                return GetNullLiteralLocation(statement.Expression);
             }
-            return false;
+            else if (context.Node.IsKind(SyntaxKind.ConditionalExpression))
+            {
+                var statement = context.Node as ConditionalExpressionSyntax;
+                return GetNullLiteralLocation(statement.WhenTrue) ?? GetNullLiteralLocation(statement.WhenFalse);
+            }
+            return null;
         }
 
         private void AnalyzeNode(SyntaxNodeAnalysisContext context)
         {
-            if (ContainsNullExpression(context) && context.ContainingSymbol.Kind == SymbolKind.Method)
+            Location location = IsReturningNullLiteral(context);
+            if (location != null && context.ContainingSymbol.Kind == SymbolKind.Method)
             {
                 IMethodSymbol method = (IMethodSymbol)context.ContainingSymbol;
                 var methodReturnType = method.ReturnType as INamedTypeSymbol;
                 if ((methodReturnType?.ConstructedFrom.Interfaces.Any(x => x.ToDisplayString() == "System.Collections.IEnumerable")).Value
                     && methodReturnType.ConstructedFrom.ToDisplayString() != "string")
                 {
-                    context.ReportDiagnostic(Diagnostic.Create(Descriptor, context.Node.GetLocation()));
+                    context.ReportDiagnostic(Diagnostic.Create(Descriptor, location));
                 }
 
             }
