@@ -14,107 +14,100 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 {
     internal class AG0006UnitTests : DiagnosticVerifier
     {
+        private const string REGISTER_SINGLETON = "RegisterSingleton";
+        private const string CUSTOM_ATTRIBUTE = "CustomAttribute";
+
         [Test]
-        public async Task ClassShouldHaveOnlyOnePublicConstructor_ShouldNotShowWarningForZeroPublicConstructor()
+        public async Task AG0006_WhenNoRegisterAttribute_ShouldntShowAnyWarning()
         {
-            var code = $@"
-namespace Agoda.Analyzers.Test
-{{
-    public class TestClass
-    {{
-        private int value;
+            var code = ClassBuilder.New()
+                .WithNamespace()
+                .WithClass(numberOfPublicConstructors: 2, attribute: CUSTOM_ATTRIBUTE)
+                .WithAttributeClass(CUSTOM_ATTRIBUTE)
+                .Build();
 
-        private TestClass()
-        {{
-            value = 0;
-        }}
-    }}
-}}";
-
-            var doc = CreateProject(new[] {code})
-                .Documents
-                .First();
-
-            var analyzersArray = GetCSharpDiagnosticAnalyzers().ToImmutableArray();
-
-            var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzersArray, new[] {doc}, CancellationToken.None)
-                .ConfigureAwait(false);
-
-            CSharpDiagnostic(AG0006ClassShouldNotHaveMoreThanOnePublicConstructor.DiagnosticId);
-            VerifyDiagnosticResults(diag, analyzersArray, new DiagnosticResult[0]);
+            await TestForNoWarnings(code);
         }
 
         [Test]
-        public async Task ClassShouldHaveOnlyOnePublicConstructor_ShouldNotShowWarningForOnePublicConstructor()
+        public async Task AG0006_WhenNoConstructor_ShouldntShowAnyWarning()
         {
-            var code = $@"
-namespace Agoda.Analyzers.Test
-{{
-    public class TestClass
-    {{
-        private int value;
+            var code = ClassBuilder.New()
+                .WithNamespace()
+                .WithClass(attribute: REGISTER_SINGLETON)
+                .WithAttributeClass(REGISTER_SINGLETON)
+                .Build();
 
-        public TestClass()
-        {{
-            value = 0;
-        }}
-    }}
-}}";
-
-            var doc = CreateProject(new[] {code})
-                .Documents
-                .First();
-
-            var analyzersArray = GetCSharpDiagnosticAnalyzers().ToImmutableArray();
-
-            var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzersArray, new[] {doc}, CancellationToken.None)
-                .ConfigureAwait(false);
-
-            CSharpDiagnostic(AG0006ClassShouldNotHaveMoreThanOnePublicConstructor.DiagnosticId);
-            VerifyDiagnosticResults(diag, analyzersArray, new DiagnosticResult[0]);
+            await TestForNoWarnings(code);
         }
 
         [Test]
-        public async Task ClassShouldHaveOnlyOnePublicConstructor_ShouldShowWarningForTwoPublicConstructors()
+        public async Task AG0006_WhenOnePublicConstructor_ShouldntShowAnyWarning()
         {
-            var code = $@"
-namespace Agoda.Analyzers.Test
-{{
-    public class TestClass
-    {{
-        private int value;
+            var code = ClassBuilder.New()
+                .WithNamespace()
+                .WithClass(numberOfPublicConstructors: 1, attribute: REGISTER_SINGLETON)
+                .WithAttributeClass(REGISTER_SINGLETON)
+                .Build();
 
-        public TestClass()
-        {{
-            value = 0;
-        }}
+            await TestForNoWarnings(code);
+        }
 
-        public TestClass(int value)
-        {{
-            this.value = value;
-        }}
-    }}
-}}";
+        [Test]
+        public async Task AG0006_WhenOnePrivateConstructor_ShowWarning()
+        {
+            var code = ClassBuilder.New()
+                .WithNamespace()
+                .WithClass(numberOfPrivateConstructors: 1, attribute: REGISTER_SINGLETON)
+                .WithAttributeClass(REGISTER_SINGLETON)
+                .Build();
 
-            var doc = CreateProject(new[] {code})
-                .Documents
-                .First();
-
-            var analyzersArray = GetCSharpDiagnosticAnalyzers().ToImmutableArray();
-
-            var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzersArray, new[] {doc}, CancellationToken.None)
-                .ConfigureAwait(false);
-
-            var baseResult = CSharpDiagnostic(AG0006ClassShouldNotHaveMoreThanOnePublicConstructor.DiagnosticId);
-            VerifyDiagnosticResults(diag, analyzersArray, new[]
+            var baseResult =
+                CSharpDiagnostic(AG0006RegisteredComponentShouldHaveExactlyOnePublicConstructor.DiagnosticId);
+            var expected = new[]
             {
-                baseResult.WithLocation(4, 5)
-            });
+                baseResult.WithLocation(4, 2)
+            };
+            await TestForNoWarnings(code, expected);
+        }
+
+        [Test]
+        public async Task AG0006_WhenTwoPublicConstructors_ShowWarning()
+        {
+            var code = ClassBuilder.New()
+                .WithNamespace()
+                .WithClass(numberOfPrivateConstructors: 1, numberOfPublicConstructors: 2, attribute: REGISTER_SINGLETON)
+                .WithAttributeClass(REGISTER_SINGLETON)
+                .Build();
+
+            var baseResult =
+                CSharpDiagnostic(AG0006RegisteredComponentShouldHaveExactlyOnePublicConstructor.DiagnosticId);
+            var expected = new[]
+            {
+                baseResult.WithLocation(4, 2)
+            };
+            await TestForNoWarnings(code, expected);
+        }
+
+        private async Task TestForNoWarnings(string code, DiagnosticResult[] expected = null)
+        {
+            expected = expected ?? new DiagnosticResult[0];
+            var doc = CreateProject(new[] {code})
+                .Documents
+                .First();
+
+            var analyzersArray = GetCSharpDiagnosticAnalyzers().ToImmutableArray();
+
+            var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzersArray, new[] {doc}, CancellationToken.None)
+                .ConfigureAwait(false);
+
+
+            VerifyDiagnosticResults(diag, analyzersArray, expected);
         }
 
         protected override IEnumerable<DiagnosticAnalyzer> GetCSharpDiagnosticAnalyzers()
         {
-            yield return new AG0006ClassShouldNotHaveMoreThanOnePublicConstructor();
+            yield return new AG0006RegisteredComponentShouldHaveExactlyOnePublicConstructor();
         }
     }
 }
