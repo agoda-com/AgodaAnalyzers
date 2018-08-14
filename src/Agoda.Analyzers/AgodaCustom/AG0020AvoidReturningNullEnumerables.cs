@@ -76,9 +76,12 @@ namespace Agoda.Analyzers.AgodaCustom
             if (location != null && context.ContainingSymbol.Kind == SymbolKind.Method)
             {
                 IMethodSymbol method = (IMethodSymbol)context.ContainingSymbol;
+                var isArray = method.ReturnType is IArrayTypeSymbol;
                 var methodReturnType = method.ReturnType as INamedTypeSymbol;
-                if ((methodReturnType?.ConstructedFrom.Interfaces.Any(x => x.ToDisplayString() == "System.Collections.IEnumerable")).Value
-                    && methodReturnType.ConstructedFrom.ToDisplayString() != "string")
+                if (isArray ||
+                    (methodReturnType != null
+                     && methodReturnType.ConstructedFrom.Interfaces.Any(x => x.ToDisplayString() == "System.Collections.IEnumerable")
+                     && methodReturnType.ConstructedFrom.ToDisplayString() != "string"))
                 {
                     context.ReportDiagnostic(Diagnostic.Create(Descriptor, location));
                 }

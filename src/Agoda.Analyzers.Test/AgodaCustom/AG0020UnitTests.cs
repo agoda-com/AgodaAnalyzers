@@ -42,7 +42,7 @@ namespace Agoda.Analyzers.Test
 
             var expected = CSharpDiagnostic(AG0020AvoidReturningNullEnumerables.DiagnosticId);
             VerifyDiagnosticResults(diag, analyzersArray, new DiagnosticResult[] {
-                expected.WithLocation(10, 13)
+                expected.WithLocation(10, 20)
             });
         }
 
@@ -74,7 +74,7 @@ namespace Agoda.Analyzers.Test
 
             var expected = CSharpDiagnostic(AG0020AvoidReturningNullEnumerables.DiagnosticId);
             VerifyDiagnosticResults(diag, analyzersArray, new DiagnosticResult[] {
-                expected.WithLocation(10, 13)
+                expected.WithLocation(10, 20)
             });
         }
 
@@ -166,8 +166,8 @@ namespace Agoda.Analyzers.Test
 
             var expected = CSharpDiagnostic(AG0020AvoidReturningNullEnumerables.DiagnosticId);
             VerifyDiagnosticResults(diag, analyzersArray, new DiagnosticResult[] {
-                expected.WithLocation(10, 17),
-                expected.WithLocation(13, 51)
+                expected.WithLocation(10, 24),
+                expected.WithLocation(13, 54)
             });
         }
 
@@ -196,6 +196,34 @@ namespace Agoda.Analyzers.Test
                 .ConfigureAwait(false);
 
             VerifyDiagnosticResults(diag, analyzersArray, new DiagnosticResult[] {});
+        }
+
+        [Test]
+        public async Task PreventReturningNullForReturnValueOfIEnumerable_ShouldReportNullReturnFromStringArray()
+        {
+            var code = @"
+namespace Agoda.Analyzers.Test
+{
+    public class TestClass
+    {
+        public string[] Method()
+        {
+            return null;
+        }
+    }
+}";
+
+            var doc = CreateProject(new[] { code })
+                .Documents
+                .First();
+
+            var analyzersArray = GetCSharpDiagnosticAnalyzers().ToImmutableArray();
+
+            var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzersArray, new[] { doc }, CancellationToken.None)
+                .ConfigureAwait(false);
+
+            var expected = CSharpDiagnostic(AG0020AvoidReturningNullEnumerables.DiagnosticId);
+            VerifyDiagnosticResults(diag, analyzersArray, new DiagnosticResult[] { expected.WithLocation(8, 20) });
         }
 
         protected override IEnumerable<DiagnosticAnalyzer> GetCSharpDiagnosticAnalyzers()
