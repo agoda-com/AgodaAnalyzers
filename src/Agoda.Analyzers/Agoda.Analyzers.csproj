@@ -77,5 +77,8 @@
     <None Update="RuleContent\AG0006RegisteredComponentShouldHaveExactlyOnePublicConstructor.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="RuleContent\AG0030PreventUseOfDynamics.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>
