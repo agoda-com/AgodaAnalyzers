@@ -25,7 +25,6 @@ namespace Agoda.Analyzers.AgodaCustom
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = ImmutableArray.Create(Descriptor);
 
         private static readonly Regex MatchTestAttributeName = new Regex("^Test");
-        private static readonly string[] AssertionIdentifiers = { "Assert", "Should" };
 
         public override void Initialize(AnalysisContext context)
         {
@@ -35,7 +34,6 @@ namespace Agoda.Analyzers.AgodaCustom
         private static void AnalyzeNode(SyntaxNodeAnalysisContext context)
         {
             var methodDeclaration = context.Node as MethodDeclarationSyntax;
-
             if (!methodDeclaration.Modifiers.Any(SyntaxKind.PublicKeyword)
                 || methodDeclaration.IsKind(SyntaxKind.InterfaceDeclaration)
                 || methodDeclaration.IsKind(SyntaxKind.ExplicitInterfaceSpecifier))
@@ -44,30 +42,55 @@ namespace Agoda.Analyzers.AgodaCustom
             }
 
             // check if it is a Test method with Test attribute or not
-            var hasTestAttribute = methodDeclaration.AttributeLists
+            if (!IsTestMethod(methodDeclaration)) return;
+
+            // check if the method body invokes some kind of Assertion or not
+            if (HasNUnitAssertion(methodDeclaration, context) || HasShouldlyAssertion(methodDeclaration, context)) return;
+
+            context.ReportDiagnostic(Diagnostic.Create(Descriptor, context.Node.GetLocation()));
+        }
+
+        private static bool IsTestMethod(MethodDeclarationSyntax methodDeclaration)
+        {
+            return methodDeclaration.AttributeLists
                 .SelectMany(al => al.Attributes)
                 .Select(a => a.Name as IdentifierNameSyntax)
                 .Where(name => name != null)
                 .Select(name => name.Identifier.ValueText)
                 .Any(MatchTestAttributeName.IsMatch);
+        }
 
-            if (!hasTestAttribute) return;
-            
-            // check if the method body invokes some kind of Assertion or not
-            var hasAssertInvocation = methodDeclaration.Body.Statements
-                .Where(statement => statement.IsKind(SyntaxKind.ExpressionStatement))
-                .Select(statement => (statement as ExpressionStatementSyntax).Expression)
-                .Where(expression => expression.IsKind(SyntaxKind.InvocationExpression))
-                .Select(invocation => (invocation as InvocationExpressionSyntax).Expression)
-                .Where(invocation => invocation.IsKind(SyntaxKind.SimpleMemberAccessExpression))
-                .Select(memberAccess => (memberAccess as MemberAccessExpressionSyntax).Expression)
-                .Where(memberAccess => memberAccess.IsKind(SyntaxKind.IdentifierName))
-                .Select(identifier => (identifier as IdentifierNameSyntax).Identifier)
-                .Any(identifier => AssertionIdentifiers.Contains(identifier.Value));
+        private static bool HasNUnitAssertion(MethodDeclarationSyntax methodDeclaration, SyntaxNodeAnalysisContext context)
+        {
+            return methodDeclaration.Body.Statements
+                .OfType<ExpressionStatementSyntax>()
+                .Select(ess => ess.Expression)
+                .OfType<InvocationExpressionSyntax>()
+                .Select(ies => ies.Expression)
+                .OfType<MemberAccessExpressionSyntax>()
+                .Select(mae => mae.Expression)
+                .OfType<IdentifierNameSyntax>()
+                .Select(ins => context.SemanticModel.GetSymbolInfo(ins).Symbol)
+                .Any(symbol => symbol.ContainingNamespace.ToDisplayString() == "NUnit.Framework"
+                            && symbol.ContainingModule.ToDisplayString() == "nunit.framework.dll"
+                            && symbol.Name.StartsWith("Assert"));
+        }
 
-            if (hasAssertInvocation) return;
-
-            context.ReportDiagnostic(Diagnostic.Create(Descriptor, context.Node.GetLocation()));
+        private static bool HasShouldlyAssertion(MethodDeclarationSyntax methodDeclaration, SyntaxNodeAnalysisContext context)
+        {
+            return methodDeclaration.Body.Statements
+                .OfType<ExpressionStatementSyntax>()
+                .Select(ess => ess.Expression)
+                .OfType<InvocationExpressionSyntax>()
+                .Select(ies => ies.Expression)
+                .OfType<MemberAccessExpressionSyntax>()
+                .Select(mae => mae.Name)
+                .OfType<IdentifierNameSyntax>()
+                .Select(ins => context.SemanticModel.GetSymbolInfo(ins).Symbol)
+                .Any(symbol => symbol.ContainingNamespace.ToDisplayString() == "Shouldly"
+                            && symbol.ContainingModule.ToDisplayString() == "Shouldly.dll"
+                            && symbol.ContainingType.ToDisplayString() == "Shouldly.ShouldBeTestExtensions"
+                            && symbol.Name.StartsWith("Should"));
         }
     }
 }
