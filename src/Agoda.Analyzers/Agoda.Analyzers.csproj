@@ -74,7 +74,7 @@
     <None Update="RuleContent\AG0005TestMethodNamesMustFollowConvention.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="RuleContent\AG0006ClassShouldNotHaveMoreThanOnePublicConstructor.html">
+    <None Update="RuleContent\AG0006RegisteredComponentShouldHaveExactlyOnePublicConstructor.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="RuleContent\AG0020AvoidReturningNullEnumerables.html">
