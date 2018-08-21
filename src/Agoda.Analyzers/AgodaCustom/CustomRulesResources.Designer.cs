@@ -185,5 +185,16 @@ namespace Agoda.Analyzers.AgodaCustom {
                 return ResourceManager.GetString("AG0006Title", resourceCulture);
             }
         }
+
+        /// <summary>
+        /// Ensure test method contains at least one assertion
+        /// </summary>
+        public static string AG0012Title
+        {
+            get
+            {
+                return ResourceManager.GetString("AG0012Title", resourceCulture);
+            }
+        }
     }
 }
