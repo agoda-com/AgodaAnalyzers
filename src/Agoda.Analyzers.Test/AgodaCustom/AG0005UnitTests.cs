@@ -17,6 +17,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         public async Task TestTestMethodNamesMustFollowConvention()
         {
             var code = $@"
+using System.Collections;
 using NUnit.Framework;
 
 namespace Tests
@@ -24,40 +25,51 @@ namespace Tests
     public class TestClass
     {{
         [Test]
-        public void This_IsValid(){{}} // should validate
+        public void This_IsValid(){{}}
 
         [Test]
-        public void This_Is_Valid(){{}} // should validate
+        public void This_Is_Valid(){{}}
 
         [Test]
-        public void This_1s_Valid(){{}} // should validate
+        public void This_1s_Valid(){{}}
 
         [Test]
-        public void This_IsAlso_QuiteValid555(){{}} // should validate
+        public void This_IsAlso_QuiteValid555(){{}}
 
         [Test]
-        public void ThisIsInvalid(){{}} // no underscores, so should not validate
+        public void ThisIsInvalid(){{}} // no underscores, so invalid
+
+        [TestCase]
+        public void This_Is_In_Valid(){{}} // too many underscores, so invalid
+
+        [TestCaseSource(typeof(MyTestDataClass), ""TestCases"")]
+        public void This_Is_invalid(){{}} // incorrect casing, so invalid
+
+        public void ThisIsNotATest(){{}}  // not a test = valid
 
         [Test]
-        public void This_Is_In_Valid(){{}} // too many underscores, so should not validate
+        private void PrivateMethod(){{}} // private = so valid
 
         [Test]
-        public void This_Is_invalid(){{}} // incorrect casing, so should not validate
-
-        public void ThisIsNotATest(){{}}  // not a test, so should validate
+        protected void ProtectedMethod(){{}} // protected = valid
 
         [Test]
-        private void PrivateMethod(){{}} // private, so should validate
-
-        [Test]
-        protected void ProtectedMethod(){{}} // protected, so should validate
-
-        [Test]
-        internal void InternalMethod(){{}} // internal, so should validate
+        internal void InternalMethod(){{}} // internal = valid
 	}}
+
+    public class MyTestDataClass
+    {{
+        public static IEnumerable TestCases
+        {{
+            get
+            {{
+                yield return null;
+            }}
+        }}  
+    }}
 }}";
 
-            var nUnit = MetadataReference.CreateFromFile(typeof(NUnit.Framework.TestFixtureAttribute).Assembly.Location);
+            var nUnit = MetadataReference.CreateFromFile(typeof(TestFixtureAttribute).Assembly.Location);
 
             var doc = CreateProject(new[] { code })
                 .AddMetadataReference(nUnit)
@@ -71,9 +83,9 @@ namespace Tests
             var baseResult = CSharpDiagnostic(AG0005TestMethodNamesMustFollowConvention.DiagnosticId);
             VerifyDiagnosticResults(diag, analyzersArray, new[]
             {
-                baseResult.WithLocation(20, 9),
-                baseResult.WithLocation(23, 9),
-                baseResult.WithLocation(26, 9),
+                baseResult.WithLocation(21, 9),
+                baseResult.WithLocation(24, 9),
+                baseResult.WithLocation(27, 9),
             });
         }
 
