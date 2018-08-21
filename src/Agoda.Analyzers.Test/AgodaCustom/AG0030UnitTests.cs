@@ -97,6 +97,24 @@ namespace Agoda.Analyzers.Test.AgodaCustom
             await TestForResults(code, expected);
         }
 
+        [Test]
+        public async Task AG0030_WhenDynamicInInterface_ShowWarning()
+        {
+            var code = $@"
+				interface TestInterface {{
+					dynamic TestMethod1();
+				}}
+			";
+
+            var baseResult =
+                CSharpDiagnostic(AG0030PreventUseOfDynamics.DiagnosticId);
+            var expected = new[]
+            {
+                baseResult.WithLocation(3, 6)
+            };
+            await TestForResults(code, expected);
+        }
+        
         private async Task TestForResults(string code, DiagnosticResult[] expected = null)
         {
             expected = expected ?? new DiagnosticResult[0];
