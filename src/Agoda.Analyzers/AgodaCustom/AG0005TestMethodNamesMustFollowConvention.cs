@@ -22,7 +22,6 @@ namespace Agoda.Analyzers.AgodaCustom
             new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, AnalyzerCategory.CustomQualityRules,
                 DiagnosticSeverity.Warning, AnalyzerConstants.EnabledByDefault, Description, null, WellKnownDiagnosticTags.EditAndContinue);
 
-        private static readonly Regex MatchTestAttributeName = new Regex("^Test");
         private static readonly Regex MatchValidTestName = new Regex("^[A-Z][a-zA-Z0-9]*_[A-Z0-9][a-zA-Z0-9]*(_[A-Z0-9][a-zA-Z0-9]*)?$");
 
         public override void Initialize(AnalysisContext context)
@@ -36,6 +35,7 @@ namespace Agoda.Analyzers.AgodaCustom
         {
             var methodDeclaration = (MethodDeclarationSyntax) context.Node;
 
+            // ensure public method
             if (!methodDeclaration.Modifiers.Any(SyntaxKind.PublicKeyword)
                 || methodDeclaration.IsKind(SyntaxKind.InterfaceDeclaration) 
                 || methodDeclaration.IsKind(SyntaxKind.ExplicitInterfaceSpecifier))
@@ -43,15 +43,13 @@ namespace Agoda.Analyzers.AgodaCustom
                 return;
             }
 
-            // ensure has a Test attribute
-            var hasTestAttribute = methodDeclaration.AttributeLists
-                .SelectMany(al => al.Attributes)
-                .Select(a => a.Name as IdentifierNameSyntax)
-                .Where(name => name != null)
-                .Select(name => name.Identifier.ValueText)
-                .Any(MatchTestAttributeName.IsMatch);
-            if (!hasTestAttribute) return;
-
+            var hasNunitTestAttribute = context.SemanticModel
+                .GetDeclaredSymbol(methodDeclaration)
+                .GetAttributes()
+                .Select(a => a.AttributeClass.BaseType.ToDisplayString())
+                .Any(displayString => displayString == "NUnit.Framework.NUnitAttribute");
+            if (!hasNunitTestAttribute) return;
+                
             // ensure valid name
             var methodName = methodDeclaration.Identifier.ValueText;
             if (MatchValidTestName.IsMatch(methodName)) return;
