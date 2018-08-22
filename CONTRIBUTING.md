@@ -1,9 +1,12 @@
 ## Contributing
 
-Please ensure that:
-
-- Your analyzer uses a DiagnosticID (eg. AG0XXX) that is not already assigned. If in doubt, see existing issues (open and closed) to determine the next free ID.
-- If you wish to propose a new analyzer then create one with the title in the format "AG0XXX: My analyzer title" and label it "New rule".
-- Assign yourself to your issue and move it to the "In Progress" column on our [project board](https://github.com/agoda-com/AgodaAnalyzers/projects/1)
-- You tag your pull request as a fix for the issue (put something like "Fixes "#31" in the description). 
+- Pick an analyzer not assigned to anyone from the [todo column of our project board](https://github.com/agoda-com/AgodaAnalyzers/projects/1) - or feel free to propose a new one.
+  - For a new analyzer, create a new issue with the title in the format "AG0XXX: My analyzer title" and add the "New rule" label.
+   - Ensure your new analyzer uses a DiagnosticID (eg. AG0XXX) that is not already assigned. If in doubt, see existing [issues](https://github.com/agoda-com/AgodaAnalyzers/issues?utf8=%E2%9C%93&q=is%3Aissue) (open and closed) to determine the next free ID.
+- Assign the issue to yourself to your issue and move it to the "In Progress" column on our [project board](https://github.com/agoda-com/AgodaAnalyzers/projects/1).
+- Create a PR and tag the original issue number in the description (eg. "Fixes "#31"). Your PR should contain:
+  - Your analyzer.
+  - Unit tests.
+  - An HTML description of the analyzer, including what it checks for, why it does it, and examples on how to fix any problems it finds ([examples](https://github.com/agoda-com/AgodaAnalyzers/tree/master/src/Agoda.Analyzers/RuleContent])).
+  - A corresponding automatic Code Fix, if you are feeling adventurous. 
 - Your PR should includes changes only for a single issue.
