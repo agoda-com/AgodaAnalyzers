@@ -17,20 +17,22 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         public async Task AG0012_WhenCreateTestMethodWithNUnit_ShouldContainAtLeastOneAssertion()
         {
             var code = $@"
+using NUnit.Framework;
+
 namespace Tests
 {{
-    using NUnit.Framework;
-
     public class TestClass
     {{
         [Test]
-        public void This_Is_Valid(){{
+        public void This_Is_Valid()
+        {{
             int[] arrayToAssert = {{ 1, 2, 3 }};
             Assert.That(arrayToAssert, Has.Exactly(1).EqualTo(3));
         }}
 
         [Test]
-        public void This_Is_Not_Valid(){{
+        public void This_Is_Not_Valid()
+        {{
             int[] arrayToAssert = {{ 1, 2, 3 }};
         }}
 	}}
@@ -50,7 +52,7 @@ namespace Tests
 
             VerifyDiagnosticResults(diag, analyzersArray, new[]
             {
-                baseResult.WithLocation(14, 9),
+                baseResult.WithLocation(15, 9),
             });
         }
 
@@ -66,13 +68,15 @@ namespace Tests
     public class TestClass
     {{
         [Test]
-        public void This_Is_Valid(){{
+        public void This_Is_Valid()
+        {{
             int[] arrayForShouldBe = {{ 1, 2, 3 }};
             arrayForShouldBe.Length.ShouldBe(3);
         }}
 
         [Test]
-        public void This_Is_Not_Valid(){{
+        public void This_Is_Not_Valid()
+        {{
             int[] arrayForShouldBe = {{ 1, 2, 3 }};
         }}
 	}}
@@ -94,7 +98,7 @@ namespace Tests
 
             VerifyDiagnosticResults(diag, analyzersArray, new[]
             {
-                baseResult.WithLocation(15, 9),
+                baseResult.WithLocation(16, 9),
             });
         }
 

@@ -1,0 +1,55 @@
+﻿﻿<p>
+    Test method names should contain at least one assertion.
+</p>
+<p>
+    This may be NUnit's Assert or one of Shouldly's <a href="http://docs.shouldly-lib.net/v2.4.0/docs">(Shouldly documentation)</a>.
+</p>
+
+<h2>Example for NUnit's Assert</h2>
+<pre>
+using NUnit.Framework;
+
+namespace Tests
+{
+    public class TestClass
+    {
+        [Test]
+        public void This_Is_Valid()
+        {
+            int[] arrayToAssert = { 1, 2, 3 };
+            Assert.That(arrayToAssert, Has.Exactly(1).EqualTo(3));
+        }
+
+        [Test]
+        public void This_Is_Not_Valid()
+        {
+            int[] arrayToAssert = { 1, 2, 3 };
+        }
+    }
+}
+</pre>
+
+<h2>Example for Shouldly's Assert</h2>
+<pre>
+using NUnit.Framework;
+using Shouldly;
+
+namespace Tests
+{
+    public class TestClass
+    {
+        [Test]
+        public void This_Is_Valid()
+        {
+            int[] arrayForShouldBe = { 1, 2, 3 };
+            arrayForShouldBe.Length.ShouldBe(3);
+        }
+
+        [Test]
+        public void This_Is_Not_Valid()
+        {
+            int[] arrayForShouldBe = { 1, 2, 3 };
+        }
+	}
+}
+</pre>
