@@ -12,7 +12,6 @@ namespace Agoda.Analyzers.AgodaCustom
     public class AG0030PreventUseOfDynamics : DiagnosticAnalyzer
     {
         public const string DiagnosticId = "AG0030";
-        private const string DYNAMIC = "dynamic";
 
         private static readonly LocalizableString Title = new LocalizableResourceString(
             nameof(CustomRulesResources.AG0030Title), CustomRulesResources.ResourceManager,
@@ -41,23 +40,21 @@ namespace Agoda.Analyzers.AgodaCustom
         private void AnalyzeVariableDeclaration(SyntaxNodeAnalysisContext context)
         {
             var variableDeclaration = (VariableDeclarationSyntax) context.Node;
-            var declarationType = variableDeclaration.Type.GetText().ToString();
-
-            if (!declarationType.Contains(DYNAMIC))
-                return;
-
+            if (ValidateReturnType(variableDeclaration.Type)) return;
             context.ReportDiagnostic(Diagnostic.Create(Descriptor, variableDeclaration.GetLocation()));
         }
 
         private void AnalyzeMethodDeclaration(SyntaxNodeAnalysisContext context)
         {
             var methodDeclaration = (MethodDeclarationSyntax) context.Node;
-            var returnType = methodDeclaration.ReturnType.GetText().ToString();
-
-            if (!returnType.Contains(DYNAMIC))
-                return;
-
+            if (ValidateReturnType(methodDeclaration.ReturnType)) return;
             context.ReportDiagnostic(Diagnostic.Create(Descriptor, methodDeclaration.GetLocation()));
+        }
+
+        private bool ValidateReturnType(TypeSyntax returnTypeSyntax)
+        {
+            var returnType = returnTypeSyntax.GetText().ToString().Trim();
+            return returnType != "dynamic";
         }
     }
 }

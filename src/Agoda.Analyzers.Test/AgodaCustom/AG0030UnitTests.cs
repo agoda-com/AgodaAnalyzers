@@ -17,16 +17,16 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         [Test]
         public async Task AG0030_WhenNoDynamic_ShouldntShowAnyWarning()
         {
-            var code = $@"
-				class TestClass {{
-					public void TestMethod1() {{
+            var code = @"
+				class TestClass {
+					public void TestMethod1() {
 						int instance = 1;
-					}}
+					}
 
-                    public int TestMethod2() {{
+                    public int TestMethod2() {
 						return 1;
-					}}
-				}}
+					}
+				}
 			";
 
             await TestForResults(code);
@@ -35,12 +35,12 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         [Test]
         public async Task AG0030_WhenMethodReturnsDynamic_ShowWarning()
         {
-            var code = $@"
-				class TestClass {{
-					public dynamic TestMethod2() {{
+            var code = @"
+				class TestClass {
+					public dynamic TestMethod2() {
 						return 1;
-					}}
-				}}
+					}
+				}
 			";
 
             var baseResult =
@@ -55,12 +55,12 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         [Test]
         public async Task AG0030_WhenDynamicVariableDeclared_ShowWarning()
         {
-            var code = $@"
-				class TestClass {{
-					public void TestMethod1() {{
+            var code = @"
+				class TestClass {
+					public void TestMethod1() {
 						dynamic instance = 1;
-					}}
-				}}
+					}
+				}
 			";
 
             var baseResult =
@@ -75,16 +75,16 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         [Test]
         public async Task AG0030_WhenMultipleDynamicUsed_ShowWarning()
         {
-            var code = $@"
-				class TestClass {{
-					public dynamic TestMethod2() {{
+            var code = @"
+				class TestClass {
+					public dynamic TestMethod2() {
 						return 1;
-					}}
+					}
 
-					public void TestMethod1() {{
+					public void TestMethod1() {
 						dynamic instance = 1;
-					}}
-				}}
+					}
+				}
 			";
 
             var baseResult =
@@ -96,14 +96,30 @@ namespace Agoda.Analyzers.Test.AgodaCustom
             };
             await TestForResults(code, expected);
         }
+        
+        [Test]
+        public async Task AG0030_WhenReturnTypeContainsTheStringDynamic_ShouldntShowAnyWarning()
+        {
+            var code = @"        
+                class Xdynamic { }
+ 
+                class TestClass {
+                    public Xdynamic TestMethod2() {
+                        return null;
+                    }
+                }
+                ";
+
+            await TestForResults(code);
+        }
 
         [Test]
         public async Task AG0030_WhenDynamicInInterface_ShowWarning()
         {
-            var code = $@"
-				interface TestInterface {{
+            var code = @"
+				interface TestInterface {
 					dynamic TestMethod1();
-				}}
+				}
 			";
 
             var baseResult =
