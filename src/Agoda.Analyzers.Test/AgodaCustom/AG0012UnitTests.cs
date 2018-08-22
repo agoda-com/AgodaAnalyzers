@@ -62,6 +62,7 @@ namespace Tests
             var code = $@"
 using NUnit.Framework;
 using Shouldly;
+using System;
 
 namespace Tests
 {{
@@ -78,6 +79,14 @@ namespace Tests
         public void This_Is_Not_Valid()
         {{
             int[] arrayForShouldBe = {{ 1, 2, 3 }};
+        }}
+
+        [Test]
+        public void This_Is_Valid_ShouldStaticClasses()
+        {{
+            Should.Throw<DivideByZeroException>(() => {{
+                var y = 100 / 2;
+            }});
         }}
 	}}
 }}";
@@ -98,7 +107,7 @@ namespace Tests
 
             VerifyDiagnosticResults(diag, analyzersArray, new[]
             {
-                baseResult.WithLocation(16, 9),
+                baseResult.WithLocation(17, 9),
             });
         }
 

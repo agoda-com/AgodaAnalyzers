@@ -26,6 +26,12 @@ namespace Agoda.Analyzers.AgodaCustom
 
         private static readonly Regex MatchTestAttributeName = new Regex("^Test");
 
+        private static readonly AssertLibraryInfo[] AssertionLibraryList =
+        {
+            new AssertLibraryInfo("NUnit.Framework", "nunit.framework.dll", "Assert"),
+            new AssertLibraryInfo("Shouldly", "Shouldly.dll", "Should", "Shouldly.Should"),
+        };
+
         public override void Initialize(AnalysisContext context)
         {
             context.RegisterSyntaxNodeAction(AnalyzeNode, SyntaxKind.MethodDeclaration);
@@ -45,7 +51,7 @@ namespace Agoda.Analyzers.AgodaCustom
             if (!IsTestMethod(methodDeclaration)) return;
 
             // check if the method body invokes some kind of Assertion or not
-            if (HasNUnitAssertion(methodDeclaration, context) || HasShouldlyAssertion(methodDeclaration, context)) return;
+            if (HasInvokedAssertStaticMethod(methodDeclaration, context) || HasInvokedAssertExtensionMethod(methodDeclaration, context)) return;
 
             context.ReportDiagnostic(Diagnostic.Create(Descriptor, context.Node.GetLocation()));
         }
@@ -60,7 +66,7 @@ namespace Agoda.Analyzers.AgodaCustom
                 .Any(MatchTestAttributeName.IsMatch);
         }
 
-        private static bool HasNUnitAssertion(MethodDeclarationSyntax methodDeclaration, SyntaxNodeAnalysisContext context)
+        private static bool HasInvokedAssertStaticMethod(MethodDeclarationSyntax methodDeclaration, SyntaxNodeAnalysisContext context)
         {
             return methodDeclaration.Body.Statements
                 .OfType<ExpressionStatementSyntax>()
@@ -71,12 +77,13 @@ namespace Agoda.Analyzers.AgodaCustom
                 .Select(mae => mae.Expression)
                 .OfType<IdentifierNameSyntax>()
                 .Select(ins => context.SemanticModel.GetSymbolInfo(ins).Symbol)
-                .Any(symbol => symbol.ContainingNamespace.ToDisplayString() == "NUnit.Framework"
-                            && symbol.ContainingModule.ToDisplayString() == "nunit.framework.dll"
-                            && symbol.Name.StartsWith("Assert"));
+                .Any(symbol => AssertionLibraryList.Any(lib
+                    => symbol.ContainingNamespace.ToDisplayString() == lib.Namespace
+                    && symbol.ContainingModule.ToDisplayString() == lib.Module
+                    && symbol.Name == lib.Name));
         }
 
-        private static bool HasShouldlyAssertion(MethodDeclarationSyntax methodDeclaration, SyntaxNodeAnalysisContext context)
+        private static bool HasInvokedAssertExtensionMethod(MethodDeclarationSyntax methodDeclaration, SyntaxNodeAnalysisContext context)
         {
             return methodDeclaration.Body.Statements
                 .OfType<ExpressionStatementSyntax>()
@@ -87,10 +94,34 @@ namespace Agoda.Analyzers.AgodaCustom
                 .Select(mae => mae.Name)
                 .OfType<IdentifierNameSyntax>()
                 .Select(ins => context.SemanticModel.GetSymbolInfo(ins).Symbol)
-                .Any(symbol => symbol.ContainingNamespace.ToDisplayString() == "Shouldly"
-                            && symbol.ContainingModule.ToDisplayString() == "Shouldly.dll"
-                            && symbol.ContainingType.ToDisplayString() == "Shouldly.ShouldBeTestExtensions"
-                            && symbol.Name.StartsWith("Should"));
+                .Any(symbol => AssertionLibraryList
+                    .Where(lib => lib.HasExtenstionMethods).Any(lib
+                    => symbol.ContainingNamespace.ToDisplayString() == lib.Namespace
+                    && symbol.ContainingModule.ToDisplayString() == lib.Module
+                    && symbol.ContainingType.ToDisplayString().StartsWith(lib.Type)
+                    && symbol.Name.StartsWith(lib.Name)));
         }
+
+        #region private class
+
+        private class AssertLibraryInfo
+        {
+            public string Namespace;
+            public string Module;
+            public string Name;
+            public string Type;
+            public bool HasExtenstionMethods;
+
+            public AssertLibraryInfo(string namespaceTitle, string module, string name, string type = null)
+            {
+                Namespace = namespaceTitle;
+                Module = module;
+                Name = name;
+                Type = type;
+                HasExtenstionMethods = type != null;
+            }
+        }
+
+        #endregion
     }
 }
