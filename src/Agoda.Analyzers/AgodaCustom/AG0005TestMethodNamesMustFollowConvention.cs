@@ -35,12 +35,23 @@ namespace Agoda.Analyzers.AgodaCustom
         {
             var methodDeclaration = (MethodDeclarationSyntax) context.Node;
 
+            if (!IsTestCase(methodDeclaration, context)) return;
+                
+            // ensure valid name
+            var methodName = methodDeclaration.Identifier.ValueText;
+            if (MatchValidTestName.IsMatch(methodName)) return;
+
+            context.ReportDiagnostic(Diagnostic.Create(Descriptor, methodDeclaration.GetLocation()));
+        }
+
+        public bool IsTestCase(MethodDeclarationSyntax methodDeclaration, SyntaxNodeAnalysisContext context)
+        {
             // ensure public method
             if (!methodDeclaration.Modifiers.Any(SyntaxKind.PublicKeyword)
-                || methodDeclaration.IsKind(SyntaxKind.InterfaceDeclaration) 
+                || methodDeclaration.IsKind(SyntaxKind.InterfaceDeclaration)
                 || methodDeclaration.IsKind(SyntaxKind.ExplicitInterfaceSpecifier))
             {
-                return;
+                return false;
             }
 
             var hasNunitTestAttribute = context.SemanticModel
@@ -48,13 +59,9 @@ namespace Agoda.Analyzers.AgodaCustom
                 .GetAttributes()
                 .Select(a => a.AttributeClass.BaseType.ToDisplayString())
                 .Any(displayString => displayString == "NUnit.Framework.NUnitAttribute");
-            if (!hasNunitTestAttribute) return;
-                
-            // ensure valid name
-            var methodName = methodDeclaration.Identifier.ValueText;
-            if (MatchValidTestName.IsMatch(methodName)) return;
+            if (!hasNunitTestAttribute) return false;
 
-            context.ReportDiagnostic(Diagnostic.Create(Descriptor, methodDeclaration.GetLocation()));
+            return true;
         }
     }
 }

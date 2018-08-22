@@ -47,8 +47,8 @@ namespace Agoda.Analyzers.AgodaCustom
                 return;
             }
 
-            // check if it is a Test method with Test attribute or not
-            if (!IsTestMethod(methodDeclaration)) return;
+            // check if it is a Test case or not
+            if (!(new AG0005TestMethodNamesMustFollowConvention().IsTestCase(methodDeclaration, context))) return;
 
             // check if the method body invokes some kind of Assertion or not
             if (HasInvokedAssertStaticMethod(methodDeclaration, context) || HasInvokedAssertExtensionMethod(methodDeclaration, context)) return;
