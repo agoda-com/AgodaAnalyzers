@@ -52,20 +52,7 @@ namespace Agoda.Analyzers.AgodaCustom
         {
             var methodDeclaration = (MethodDeclarationSyntax) context.Node;
 
-            // ensure public method
-            if (!methodDeclaration.Modifiers.Any(SyntaxKind.PublicKeyword)
-                || methodDeclaration.IsKind(SyntaxKind.InterfaceDeclaration) 
-                || methodDeclaration.IsKind(SyntaxKind.ExplicitInterfaceSpecifier))
-            {
-                return;
-            }
-
-            var hasNunitTestAttribute = context.SemanticModel
-                .GetDeclaredSymbol(methodDeclaration)
-                .GetAttributes()
-                .Select(a => a.AttributeClass.BaseType.ToDisplayString())
-                .Any(displayString => displayString == "NUnit.Framework.NUnitAttribute");
-            if (!hasNunitTestAttribute) return;
+            if (!MethodHelper.IsTestCase(methodDeclaration, context)) return;
                 
             // ensure valid name
             var methodName = methodDeclaration.Identifier.ValueText;
