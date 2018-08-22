@@ -102,8 +102,6 @@ namespace Agoda.Analyzers.AgodaCustom
                     && symbol.Name.StartsWith(lib.Name)));
         }
 
-        #region private class
-
         private class AssertLibraryInfo
         {
             public string Namespace;
@@ -121,7 +119,5 @@ namespace Agoda.Analyzers.AgodaCustom
                 HasExtenstionMethods = type != null;
             }
         }
-
-        #endregion
     }
 }
