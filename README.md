@@ -30,6 +30,10 @@ public override void Initialize(AnalysisContext context)
 }
 ```
 
+### Want to dive straight in?
+
+Take a look at our analyzer 
+
 ### The AnalyzeNode method
 
 This is where the fun begins. Each time the Roslyn compiler encounters a node with a registered `SyntaxKind` it will call our AnalyzeNode method with the context. For example:

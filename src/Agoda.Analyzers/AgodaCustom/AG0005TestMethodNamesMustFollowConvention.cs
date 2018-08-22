@@ -38,6 +38,7 @@ namespace Agoda.Analyzers.AgodaCustom
             null, 
             WellKnownDiagnosticTags.EditAndContinue);
 
+        // Test names must be in the format Xxxx_Yyyy or Xxxx_Yyyy_Zzzz 
         private static readonly Regex MatchValidTestName = new Regex("^[A-Z][a-zA-Z0-9]*_[A-Z0-9][a-zA-Z0-9]*(_[A-Z0-9][a-zA-Z0-9]*)?$");
 
         public override void Initialize(AnalysisContext context)
