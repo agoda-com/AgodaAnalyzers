@@ -17,17 +17,17 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         [Test]
         public async Task TestDependencyResolverUsageAsync()
         {
-            var code = $@"
-				interface ISomething {{
+            var code = @"
+				interface ISomething {
 					void DoSomething();
-				}}
+				}
 			
-				class TestClass {{
-					public void TestMethod() {{
+				class TestClass {
+					public void TestMethod() {
 						var instance = System.Web.Mvc.DependencyResolver.Current.GetService(typeof(ISomething));
 						//instance.DoSomething();
-					}}
-				}}
+					}
+				}
 			";
 
             var reference = MetadataReference.CreateFromFile(typeof(DependencyResolver).Assembly.Location);

@@ -16,15 +16,15 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         [Test]
         public async Task TestCorrectDeclarationShouldNotCauseAnyIssue()
         {
-            var code = $@"
-				interface ISomething {{
+            var code = @"
+				interface ISomething {
 					void DoSomething();
-				}}
+				}
 			
-				class TestClass : ISomething {{
-					public void DoSomething() {{
-					}}
-				}}
+				class TestClass : ISomething {
+					public void DoSomething() {
+					}
+				}
 			";
 
             var doc = CreateProject(new[] {code})
