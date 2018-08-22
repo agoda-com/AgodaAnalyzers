@@ -16,7 +16,7 @@ An analyzer inherits from the abstract class [`DiagnosticAnalyzer`](https://docs
 
 ### [`SupportedDiagnostics`](https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.diagnostics.diagnosticanalyzer.supporteddiagnostics?view=roslyn-dotnet)
 
-A property specifying one or more [`DiagnosticDescriptor`](https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.diagnosticdescriptor?view=roslyn-dotnet)s  representing the metadata of your analyzer - for instance the title, error message, severity, etc. This is mainly trivial stuff.
+A property specifying one or more [`DiagnosticDescriptor`](https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.diagnosticdescriptor?view=roslyn-dotnet)s representing the metadata of your analyzer, for instance the title, error message, severity, etc.
 
 ### [`Initialize`](https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.diagnostics.diagnosticanalyzer.initialize?view=roslyn-dotnet)
 
@@ -67,7 +67,10 @@ private void AnalyzeNode(SyntaxNodeAnalysisContext context)
 
     // If we find a problem, we report it like this. The Descriptor here refers to one of the descriptors
     // we passed to the SupportedDiagnostics property above.
-    context.ReportDiagnostic(Diagnostic.Create(Descriptor, methodDeclaration.GetLocation()));
+    if (weFoundAnError) 
+    {
+        context.ReportDiagnostic(Diagnostic.Create(Descriptor, methodDeclaration.GetLocation()));
+    }
 }
 ```
 

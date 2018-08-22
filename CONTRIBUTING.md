@@ -9,4 +9,4 @@
   - Unit tests.
   - An HTML description of the analyzer, including what it checks for, why it does it, and examples on how to fix any problems it finds ([examples](https://github.com/agoda-com/AgodaAnalyzers/tree/master/src/Agoda.Analyzers/RuleContent])).
   - A corresponding automatic Code Fix, if you are feeling adventurous. 
-- Your PR should includes changes only for a single issue.
+- Your PR should include changes only for a single issue.
