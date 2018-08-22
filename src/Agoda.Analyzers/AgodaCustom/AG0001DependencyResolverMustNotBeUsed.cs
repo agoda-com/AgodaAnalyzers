@@ -20,8 +20,6 @@ namespace Agoda.Analyzers.AgodaCustom
             new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, AnalyzerCategory.CustomQualityRules,
                 DiagnosticSeverity.Warning, AnalyzerConstants.EnabledByDefault, Description, null, WellKnownDiagnosticTags.EditAndContinue);
 
-        private static readonly Action<SyntaxNodeAnalysisContext> DependencyResolverUsageAction = HandleDependencyResolverUsage;
-
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Descriptor);
 
         private static void HandleDependencyResolverUsage(SyntaxNodeAnalysisContext context)
@@ -43,7 +41,7 @@ namespace Agoda.Analyzers.AgodaCustom
             context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
             context.EnableConcurrentExecution();
 
-            context.RegisterSyntaxNodeAction(DependencyResolverUsageAction, SyntaxKind.IdentifierName);
+            context.RegisterSyntaxNodeAction(HandleDependencyResolverUsage, SyntaxKind.IdentifierName);
         }
     }
 }
