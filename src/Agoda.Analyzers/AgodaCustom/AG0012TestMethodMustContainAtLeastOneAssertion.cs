@@ -40,12 +40,6 @@ namespace Agoda.Analyzers.AgodaCustom
         private static void AnalyzeNode(SyntaxNodeAnalysisContext context)
         {
             var methodDeclaration = context.Node as MethodDeclarationSyntax;
-            if (!methodDeclaration.Modifiers.Any(SyntaxKind.PublicKeyword)
-                || methodDeclaration.IsKind(SyntaxKind.InterfaceDeclaration)
-                || methodDeclaration.IsKind(SyntaxKind.ExplicitInterfaceSpecifier))
-            {
-                return;
-            }
 
             if (!MethodHelper.IsTestCase(methodDeclaration, context)) return;
 
