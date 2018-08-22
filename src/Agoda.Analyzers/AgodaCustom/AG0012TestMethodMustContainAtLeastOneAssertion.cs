@@ -49,16 +49,6 @@ namespace Agoda.Analyzers.AgodaCustom
             context.ReportDiagnostic(Diagnostic.Create(Descriptor, context.Node.GetLocation()));
         }
 
-        private static bool IsTestMethod(MethodDeclarationSyntax methodDeclaration)
-        {
-            return methodDeclaration.AttributeLists
-                .SelectMany(al => al.Attributes)
-                .Select(a => a.Name as IdentifierNameSyntax)
-                .Where(name => name != null)
-                .Select(name => name.Identifier.ValueText)
-                .Any(MatchTestAttributeName.IsMatch);
-        }
-
         private static bool HasInvokedAssertStaticMethod(MethodDeclarationSyntax methodDeclaration, SyntaxNodeAnalysisContext context)
         {
             return methodDeclaration.Body.Statements
