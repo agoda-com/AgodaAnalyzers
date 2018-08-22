@@ -14,13 +14,29 @@ namespace Agoda.Analyzers.AgodaCustom
     {
         public const string DiagnosticId = "AG0005";
 
-        private static readonly LocalizableString Title = new LocalizableResourceString(nameof(CustomRulesResources.AG0005Title), CustomRulesResources.ResourceManager, typeof(CustomRulesResources));
-        private static readonly LocalizableString MessageFormat = new LocalizableResourceString(nameof(CustomRulesResources.AG0005Title), CustomRulesResources.ResourceManager, typeof(CustomRulesResources));
-        private static readonly LocalizableString Description = DescriptionContentLoader.GetAnalyzerDescription(nameof(AG0005TestMethodNamesMustFollowConvention));
+        private static readonly LocalizableString Title = new LocalizableResourceString(
+            nameof(CustomRulesResources.AG0005Title), 
+            CustomRulesResources.ResourceManager, 
+            typeof(CustomRulesResources));
+        
+        private static readonly LocalizableString MessageFormat = new LocalizableResourceString(
+            nameof(CustomRulesResources.AG0005Title), 
+            CustomRulesResources.ResourceManager, 
+            typeof(CustomRulesResources));
+        
+        private static readonly LocalizableString Description = DescriptionContentLoader.GetAnalyzerDescription(
+            nameof(AG0005TestMethodNamesMustFollowConvention));
 
-        private static readonly DiagnosticDescriptor Descriptor =
-            new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, AnalyzerCategory.CustomQualityRules,
-                DiagnosticSeverity.Warning, AnalyzerConstants.EnabledByDefault, Description, null, WellKnownDiagnosticTags.EditAndContinue);
+        private static readonly DiagnosticDescriptor Descriptor = new DiagnosticDescriptor(
+            DiagnosticId, 
+            Title, 
+            MessageFormat, 
+            AnalyzerCategory.CustomQualityRules,
+            DiagnosticSeverity.Warning, 
+            AnalyzerConstants.EnabledByDefault, 
+            Description, 
+            null, 
+            WellKnownDiagnosticTags.EditAndContinue);
 
         private static readonly Regex MatchValidTestName = new Regex("^[A-Z][a-zA-Z0-9]*_[A-Z0-9][a-zA-Z0-9]*(_[A-Z0-9][a-zA-Z0-9]*)?$");
 

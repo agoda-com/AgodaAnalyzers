@@ -16,7 +16,7 @@ A property specifying one or more [`DiagnosticDescriptor`](https://docs.microsof
 
 ### [`Initialize`](https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.diagnostics.diagnosticanalyzer.initialize?view=roslyn-dotnet)
 
-Called by the hosting environment (eg. Visual Studio) to bootstrap your analyzer. In this method, we tell to Roslyn:
+Called by the hosting environment (eg. Visual Studio) to bootstrap your analyzer. In this method, we tell the Roslyn compiler:
 - which [`SyntaxKinds`](https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.csharp.syntaxkind?view=roslyn-dotnet) we are interested in analyzing (eg. MethodDeclaration, ClassDeclaration, Parameter)
 - for each of these SyntaxKinds, what method should be called to perform the actual analysis.
 
@@ -25,14 +25,14 @@ Here is an example:
 ```c#
 public override void Initialize(AnalysisContext context)
 {
-    // Each time the compiler encounters a method declaration node, call the AnalyzeNode method. 
+    // Each time the compiler encounters a method declaration, call the AnalyzeNode method. 
     context.RegisterSyntaxNodeAction(AnalyzeNode, SyntaxKind.MethodDeclaration);
 }
 ```
 
 ### The AnalyzeNode method
 
-Each time the Roslyn compiler encounters a node with a registered `SyntaxKind` it will call our AnalyzeNode method with the context. For example:
+This is where the fun begins. Each time the Roslyn compiler encounters a node with a registered `SyntaxKind` it will call our AnalyzeNode method with the context. For example:
 
 ```c#
 private void AnalyzeNode(SyntaxNodeAnalysisContext context)
@@ -46,17 +46,20 @@ private void AnalyzeNode(SyntaxNodeAnalysisContext context)
         // ...
     }
     
-    // We can also do semantic analysis, which gives us far deeper inspection opportunities than just looking at the syntax.
+    // We can also do semantic analysis, which gives us far deeper inspection opportunities than just 
+    // looking at the syntax.
     var methodDeclarationSymbol = context.SemanticModel.GetDeclaredSymbol(methodDeclarationSyntax);
-    // For example check if it's an extension method: 
+    
+    // For example, we can check if it's an extension method: 
     if (methodDeclarationSymbol.IsExtensionMethod)
     {
         // ...
     }
-    // ...or we can get its attributes:
+    
+    // Or we can get its attributes:
     var methodAttributes = methodDeclarationSymbol.GetAttributes();
     
-    // ...or anything else that the compiler can possibly know.
+    // Or anything else that the compiler can possibly know.
 
     // If we find a problem, we report it like this. The Descriptor here refers to one of the descriptors
     // we passed to the SupportedDiagnostics property above.
