@@ -6,6 +6,10 @@ In order to debug this project please select the Agoda.Analyzers.Vsix as the sta
 
 To generate a jar file from this project for use with soarqube we have prepared a fork of the sonar team's project that has been udpated to 1.3 here https://github.com/agoda-com/sonarqube-roslyn-sdk
 
+## Dive straight in?
+
+Take a look at [the analyzer for our test method names](https://github.com/agoda-com/AgodaAnalyzers/blob/master/src/Agoda.Analyzers/AgodaCustom/AG0005TestMethodNamesMustFollowConvention.cs) which is fairly simple but not trivial. 
+
 ## Anatomy of a Roslyn analyzer
 
 An analyzer inherits from the abstract class [`DiagnosticAnalyzer`](https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.diagnostics.diagnosticanalyzer?view=roslyn-dotnet). It requires us to override two members:
@@ -29,10 +33,6 @@ public override void Initialize(AnalysisContext context)
     context.RegisterSyntaxNodeAction(AnalyzeNode, SyntaxKind.MethodDeclaration);
 }
 ```
-
-### Want to dive straight in?
-
-Take a look at our analyzer 
 
 ### The AnalyzeNode method
 
