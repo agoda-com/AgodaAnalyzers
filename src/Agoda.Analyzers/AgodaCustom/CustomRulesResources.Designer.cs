@@ -198,6 +198,15 @@ namespace Agoda.Analyzers.AgodaCustom {
         }
 
         /// <summary>
+        /// Limit number of test method input parameters to 5
+        /// </summary>
+        public static string AG0013Title {
+            get {
+                return ResourceManager.GetString("AG0013Title", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Prevent use of dynamic.
         /// </summary>
         public static string AG0030Title {
