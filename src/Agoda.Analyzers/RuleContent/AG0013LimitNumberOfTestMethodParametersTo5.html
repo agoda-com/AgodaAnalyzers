@@ -1,0 +1,45 @@
+﻿﻿<p>
+    Limit number of test method input parameters to 5
+</p>
+<p>
+    Overuse of [TestCase] can make it difficult to see what is actually being tested, especially when there are many parameters.
+    This can results in a combinatorial explosion of cases as new parameters are added.
+</p>
+
+<h2>Don't</h2>
+<pre>
+    [Test]
+    [TestCase(ProductType.AllRooms, 0, true)]
+    [TestCase(ProductType.Hotels, 0, true)]
+    [TestCase(ProductType.Homes, 0, true)]
+    [TestCase(ProductType.AllRooms, 1, false)]
+    [TestCase(ProductType.Hotels, 1, false)]
+    [TestCase(ProductType.Homes, 1, true)]
+    public void ShouldNot_RequestSecretDealForAgodaHomesTab(ProductType productType, int additionalFilterCount, bool apoRequestShouldBeNull)
+    {
+
+    }
+</pre>
+
+<h2>Do</h2>
+<pre>
+    // By splitting the test into multiple, the test intention becomes more obvious.
+
+    [Test]
+    [TestCase(ProductType.AllRooms)]
+    [TestCase(ProductType.Hotels)]
+    [TestCase(ProductType.Homes)]
+    public void WithoutAdditionalFilters_ShouldNotRequestApo(ProductType productType)
+    {
+
+    }
+
+    [Test]
+    [TestCase(ProductType.AllRooms, false)]
+    [TestCase(ProductType.Hotels, false)]
+    [TestCase(ProductType.Homes, true)]
+    public void WithAdditionalFilters_ShouldRequestApoExceptForHomesProductType(ProductType productType, bool apoRequestShouldBeNull)
+    {
+        
+    }
+</pre>

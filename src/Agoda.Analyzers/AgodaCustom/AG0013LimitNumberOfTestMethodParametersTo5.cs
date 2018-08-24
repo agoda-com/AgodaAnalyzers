@@ -1,7 +1,9 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using System.Linq;
+using Microsoft.CodeAnalysis;
 using Agoda.Analyzers.Helpers;
 using System.Collections.Immutable;
 using Microsoft.CodeAnalysis.CSharp;
+using System.Text.RegularExpressions;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
@@ -10,6 +12,7 @@ namespace Agoda.Analyzers.AgodaCustom
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public class AG0013LimitNumberOfTestMethodParametersTo5 : DiagnosticAnalyzer
     {
+        private const int MAXIMUM_TESTCASE = 5;
         private const string DIAGNOSTIC_ID = "AG0013";
         private readonly DiagnosticDescriptor _diagnosticDescriptor;
 
@@ -36,15 +39,27 @@ namespace Agoda.Analyzers.AgodaCustom
 
         private void AnalyzeNode(SyntaxNodeAnalysisContext context)
         {
-            // filter only test method
             var methodDeclaration = (MethodDeclarationSyntax) context.Node;
+
             if (!MethodHelper.IsTestCase(methodDeclaration, context)) { return; }
                 
-            // validate test method has no parameter more than 5 (todo-moch : check this)
-            if(methodDeclaration.ParameterList.ChildNodes().ToImmutableList().Count < 6) { return; }
-            
-            // report error to visual studio
+            if(!IsTestCaseAttribtuionMoreThanLimit(methodDeclaration)) { return; }
+
             context.ReportDiagnostic(Diagnostic.Create(_diagnosticDescriptor, methodDeclaration.GetLocation()));
         }
+
+        private bool IsTestCaseAttribtuionMoreThanLimit(MethodDeclarationSyntax method)
+        {
+            if (!method.AttributeLists.Any()) { return false; }
+
+            var testCaseCount = method.
+                                AttributeLists.
+                                Select(x => GetNumberOfTestCaseFromAttribute(x.ToString())).
+                                Sum();
+
+            return testCaseCount > MAXIMUM_TESTCASE;
+        }
+
+        private int GetNumberOfTestCaseFromAttribute(string attributeSyntax) => Regex.Matches(attributeSyntax, "TestCase").Count;
     }
 }
