@@ -60,6 +60,6 @@ namespace Agoda.Analyzers.AgodaCustom
             return testCaseCount > MAXIMUM_TESTCASE;
         }
 
-        private int GetNumberOfTestCaseFromEachAttributeLine(AttributeListSyntax eachLine) => eachLine.Attributes.Select(a => a.Name.ToString() == "TestCase").Count();
+        private int GetNumberOfTestCaseFromEachAttributeLine(AttributeListSyntax eachLine) => eachLine.Attributes.Where(a => a.Name.ToString() == "TestCase").Count();
     }
 }
