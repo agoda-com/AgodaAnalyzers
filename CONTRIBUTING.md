@@ -7,6 +7,6 @@
 - Create a PR and tag the original issue number in the description (eg. "Fixes "#31"). Your PR should contain:
   - Your analyzer.
   - Unit tests.
-  - An HTML description of the analyzer, including what it checks for, why it does it, and examples on how to fix any problems it finds ([examples](https://github.com/agoda-com/AgodaAnalyzers/tree/master/src/Agoda.Analyzers/RuleContent])).
+  - An HTML description of the analyzer, including what it checks for, why it does it, and examples on how to fix any problems it finds ([example](https://github.com/agoda-com/AgodaAnalyzers/blob/master/src/Agoda.Analyzers/RuleContent/AG0005TestMethodNamesMustFollowConvention.html])).
   - A corresponding automatic Code Fix, if you are feeling adventurous. 
 - Your PR should include changes only for a single issue.
