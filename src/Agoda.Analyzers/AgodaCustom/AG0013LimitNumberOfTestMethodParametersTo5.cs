@@ -54,7 +54,7 @@ namespace Agoda.Analyzers.AgodaCustom
 
             var testCaseCount = method.
                                 AttributeLists.
-                                Select(al => GetNumberOfTestCaseFromEachAttributeLine(al)).
+                                Select(eachLine => GetNumberOfTestCaseFromEachAttributeLine(eachLine)).
                                 Sum();
 
             return testCaseCount > MAXIMUM_TESTCASE;
