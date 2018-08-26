@@ -13,7 +13,7 @@ namespace Agoda.Analyzers.AgodaCustom
     public class AG0013LimitNumberOfTestMethodParametersTo5 : DiagnosticAnalyzer
     {
         private const int MAXIMUM_TESTCASE = 5;
-        private const string DIAGNOSTIC_ID = "AG0013";
+        public const string DIAGNOSTIC_ID = "AG0013";
         private readonly DiagnosticDescriptor _diagnosticDescriptor;
 
         public AG0013LimitNumberOfTestMethodParametersTo5()
@@ -54,12 +54,12 @@ namespace Agoda.Analyzers.AgodaCustom
 
             var testCaseCount = method.
                                 AttributeLists.
-                                Select(x => GetNumberOfTestCaseFromAttribute(x.ToString())).
+                                Select(x => GetNumberOfTestCaseFromEachAttribute(x)).
                                 Sum();
 
             return testCaseCount > MAXIMUM_TESTCASE;
         }
 
-        private int GetNumberOfTestCaseFromAttribute(string attributeSyntax) => Regex.Matches(attributeSyntax, "TestCase").Count;
+        private int GetNumberOfTestCaseFromEachAttribute(AttributeListSyntax attributeSyntax) => Regex.Matches(attributeSyntax.ToString(), "TestCase").Count;
     }
 }
