@@ -9,15 +9,10 @@
 <h2>Don't</h2>
 <pre>
     [Test]
-    [TestCase(ProductType.AllRooms, 0, true)]
-    [TestCase(ProductType.Hotels, 0, true)]
-    [TestCase(ProductType.Homes, 0, true)]
-    [TestCase(ProductType.AllRooms, 1, false)]
-    [TestCase(ProductType.Hotels, 1, false)]
-    [TestCase(ProductType.Homes, 1, true)]
-    public void ShouldNot_RequestSecretDealForAgodaHomesTab(ProductType productType, int additionalFilterCount, bool apoRequestShouldBeNull)
+    [TestCase(0, 1, 2, 3, 4, 5)]
+    public void This_Is_NotValid(int a, int b, int c, int d, int e, int f)
     {
-
+        // ...
     }
 </pre>
 
@@ -26,20 +21,16 @@
     // By splitting the test into multiple, the test intention becomes more obvious.
 
     [Test]
-    [TestCase(ProductType.AllRooms)]
-    [TestCase(ProductType.Hotels)]
-    [TestCase(ProductType.Homes)]
-    public void WithoutAdditionalFilters_ShouldNotRequestApo(ProductType productType)
+    [TestCase(0, 1, 2)]
+    public void This_Is_Valid1(int a, int b, int c)
     {
-
+        // ...
     }
 
     [Test]
-    [TestCase(ProductType.AllRooms, false)]
-    [TestCase(ProductType.Hotels, false)]
-    [TestCase(ProductType.Homes, true)]
-    public void WithAdditionalFilters_ShouldRequestApoExceptForHomesProductType(ProductType productType, bool apoRequestShouldBeNull)
+    [TestCase(3, 4, 5)]
+    public void This_Is_Valid2(int d, int e, int f)
     {
-        
+        // ...
     }
 </pre>

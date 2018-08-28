@@ -31,22 +31,11 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 {
                     [Test]
                     [TestCase(0, true)]
-                    [TestCase(1, true)]
-                    public void This_Is_Valid(int number, bool expected) { }
+                    public void This_Is_Valid(int a, bool expected) { }
 
                     [Test]
-                    [TestCase(0, true)]
-                    [TestCase(1, true)]
-                    [TestCase(2, true)]
-                    [TestCase(3, true)]
-                    [TestCase(4, true)]
-                    [TestCase(5, true)]
-                    public void This_Is_NotValid(int number, bool expected) { }
-
-                    [Test]
-                    [TestCase(0, true), TestCase(1, true), TestCase(2, true)]
-                    [TestCase(3, true), TestCase(4, true), TestCase(5, true)]
-                    public void This_Is_NotValidAsWell(int number, bool expected) { }
+                    [TestCase(0, 1, 2, 3, 4, true)]
+                    public void This_Is_NotValid(int a, int b, int c, int d, int e, bool expected) { }
                 }
             }";
 
@@ -61,8 +50,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
             var baseResult = CSharpDiagnostic(AG0013LimitNumberOfTestMethodParametersTo5.DIAGNOSTIC_ID);
             VerifyDiagnosticResults(diag, analyzer, new[]
             {
-                baseResult.WithLocation(14, 21),
-                baseResult.WithLocation(23, 21),
+                baseResult.WithLocation(13, 21),
             });
         }
     }

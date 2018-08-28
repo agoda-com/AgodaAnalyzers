@@ -12,7 +12,7 @@ namespace Agoda.Analyzers.AgodaCustom
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public class AG0013LimitNumberOfTestMethodParametersTo5 : DiagnosticAnalyzer
     {
-        private const int MAXIMUM_TESTCASE = 5;
+        private const int MAXIMUM_TEST_PARAMETERS = 5;
         public const string DIAGNOSTIC_ID = "AG0013";
         private readonly DiagnosticDescriptor _diagnosticDescriptor;
 
@@ -43,23 +43,11 @@ namespace Agoda.Analyzers.AgodaCustom
 
             if (!MethodHelper.IsTestCase(methodDeclaration, context)) { return; }
                 
-            if(!IsTestCaseAttribtuionMoreThanLimit(methodDeclaration)) { return; }
+            if(!IsTestPrametersMoreThanLimit(methodDeclaration)) { return; }
 
             context.ReportDiagnostic(Diagnostic.Create(_diagnosticDescriptor, methodDeclaration.GetLocation()));
         }
 
-        private bool IsTestCaseAttribtuionMoreThanLimit(MethodDeclarationSyntax method)
-        {
-            if (!method.AttributeLists.Any()) { return false; }
-
-            var testCaseCount = method.
-                                AttributeLists.
-                                Select(eachLine => GetNumberOfTestCaseFromEachAttributeLine(eachLine)).
-                                Sum();
-
-            return testCaseCount > MAXIMUM_TESTCASE;
-        }
-
-        private int GetNumberOfTestCaseFromEachAttributeLine(AttributeListSyntax eachLine) => eachLine.Attributes.Where(a => a.Name.ToString() == "TestCase").Count();
+        private bool IsTestPrametersMoreThanLimit(MethodDeclarationSyntax method) => (method.ParameterList?.Parameters.Count ?? 0) > MAXIMUM_TEST_PARAMETERS;
     }
 }
