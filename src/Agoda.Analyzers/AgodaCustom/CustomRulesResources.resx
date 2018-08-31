@@ -163,6 +163,6 @@
     <value>Return an empty IEnumerable&lt;T&gt;</value>
   </data>
   <data name="AG0020Title" xml:space="preserve">
-    <value>Do not return null when the retun value is IEnumerable&lt;T&gt;</value>
+    <value>Do not return null when the return value is IEnumerable&lt;T&gt;</value>
   </data>
 </root>

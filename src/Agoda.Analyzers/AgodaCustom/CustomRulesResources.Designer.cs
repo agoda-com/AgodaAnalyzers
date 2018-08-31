@@ -196,7 +196,7 @@ namespace Agoda.Analyzers.AgodaCustom {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Do not return null when the retun value is IEnumerable&lt;T&gt;.
+        ///   Looks up a localized string similar to Do not return null when the return value is IEnumerable&lt;T&gt;.
         /// </summary>
         public static string AG0020Title {
             get {
