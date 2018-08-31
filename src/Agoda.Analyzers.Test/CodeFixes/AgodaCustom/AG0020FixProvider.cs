@@ -27,8 +27,10 @@ namespace Agoda.Analyzers.Test
 {
     public class TestClass
     {
-        public IEnumerable<string> GetValuesForId(int id)
+        public IEnumerable<string> GetValuesForId(int[] ids)
         {
+            if (!ids.Any())
+                return null;
             return null;
         }
     }
@@ -36,12 +38,15 @@ namespace Agoda.Analyzers.Test
             var result = @"
 using System.Collections.Generic;
 using System.Linq;
+
 namespace Agoda.Analyzers.Test
 {
     public class TestClass
     {
-        public IEnumerable<string> GetValuesForId(int id)
+        public IEnumerable<string> GetValuesForId(int[] ids)
         {
+            if (!ids.Any())
+                return Enumerable.Empty<string>();
             return Enumerable.Empty<string>();
         }
     }
@@ -54,7 +59,8 @@ namespace Agoda.Analyzers.Test
                 .ConfigureAwait(false);
             var expected = CSharpDiagnostic(AG0020AvoidReturningNullEnumerables.DiagnosticId);
             VerifyDiagnosticResults(diag, analyzersArray, new[] {
-                expected.WithLocation(11, 20)
+                expected.WithLocation(12, 24),
+                expected.WithLocation(13, 20)
             });
             await VerifyCSharpFixAsync(code, result);
         }
@@ -105,7 +111,6 @@ namespace Agoda.Analyzers.Test
         public async Task TestShouldFixArrayCorrectly()
         {
             var code = @"
-#pragma warning(disable:CS1591)
 using System;
 using System.Collections.Generic;
 
@@ -113,14 +118,13 @@ namespace Agoda.Analyzers.Test
 {
     public class TestClass
     {
-        public string[] GetValuesForId(int id)
+        public Int32[] GetValuesForId(int id)
         {
             return null;
         }
     }
 }";
             var result = @"
-#pragma warning(disable:CS1591)
 using System;
 using System.Collections.Generic;
 
@@ -128,9 +132,9 @@ namespace Agoda.Analyzers.Test
 {
     public class TestClass
     {
-        public string[] GetValuesForId(int id)
+        public Int32[] GetValuesForId(int id)
         {
-            return Array.Empty<string>();
+            return Array.Empty<Int32>();
         }
     }
 }";
@@ -142,7 +146,7 @@ namespace Agoda.Analyzers.Test
                 .ConfigureAwait(false);
             var expected = CSharpDiagnostic(AG0020AvoidReturningNullEnumerables.DiagnosticId);
             VerifyDiagnosticResults(diag, analyzersArray, new[] {
-                expected.WithLocation(12, 20)
+                expected.WithLocation(11, 20)
             });
             await VerifyCSharpFixAsync(code, result);
         }
