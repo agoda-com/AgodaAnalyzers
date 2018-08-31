@@ -42,7 +42,7 @@ namespace Agoda.Analyzers.Test
     {
         public IEnumerable<string> GetValuesForId(int id)
         {
-            return Enumberable.Empty<string>();
+            return Enumerable.Empty<string>();
         }
     }
 }";
