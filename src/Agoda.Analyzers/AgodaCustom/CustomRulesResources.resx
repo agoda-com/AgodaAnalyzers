@@ -162,4 +162,13 @@
   <data name="AG0011Title" xml:space="preserve">
     <value>Controllers should not access HttpRequest.QueryString directly but use ASP.NET model binding instead</value>
   </data>
+  <data name="AG0012Title" xml:space="preserve">
+    <value>Test method should contain at least one assertion</value>
+  </data>
+  <data name="AG0013Title" xml:space="preserve">
+    <value>Limit number of test method parameters to 5</value>
+  </data>  
+  <data name="AG0030Title" xml:space="preserve">
+    <value>Prevent use of dynamic</value>
+  </data>
 </root>

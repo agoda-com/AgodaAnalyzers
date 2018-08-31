@@ -1,5 +1,6 @@
 ﻿using System.Collections.Immutable;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Agoda.Analyzers.Helpers;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -9,11 +10,12 @@ using Microsoft.CodeAnalysis.Diagnostics;
 namespace Agoda.Analyzers.AgodaCustom
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    public class AG0006ClassShouldNotHaveMoreThanOnePublicConstructor : DiagnosticAnalyzer
+    public class AG0006RegisteredComponentShouldHaveExactlyOnePublicConstructor : DiagnosticAnalyzer
     {
         public const string DiagnosticId = "AG0006";
         private const string PUBLIC = "public";
-
+        private static readonly Regex MatchTestAttributeName = new Regex("^Register");
+        
         private static readonly LocalizableString Title = new LocalizableResourceString(
             nameof(CustomRulesResources.AG0006Title), CustomRulesResources.ResourceManager,
             typeof(CustomRulesResources));
@@ -23,7 +25,7 @@ namespace Agoda.Analyzers.AgodaCustom
             typeof(CustomRulesResources));
 
         private static readonly LocalizableString Description =
-            DescriptionContentLoader.GetAnalyzerDescription(nameof(AG0006ClassShouldNotHaveMoreThanOnePublicConstructor));
+            DescriptionContentLoader.GetAnalyzerDescription(nameof(AG0006RegisteredComponentShouldHaveExactlyOnePublicConstructor));
 
         private static readonly DiagnosticDescriptor Descriptor =
             new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, AnalyzerCategory.CustomQualityRules,
@@ -39,14 +41,28 @@ namespace Agoda.Analyzers.AgodaCustom
 
         private void AnalyzeNode(SyntaxNodeAnalysisContext context)
         {
-            ClassDeclarationSyntax classDeclaration = (ClassDeclarationSyntax) context.Node;
-
-            var constructors = classDeclaration.Members.ToList().FindAll(a => a is ConstructorDeclarationSyntax);
-            var publicConstructors = constructors.FindAll(c =>
-                ((ConstructorDeclarationSyntax) c).Modifiers.Any(t => t.Text.ToLower().Equals(PUBLIC)));
+            var classDeclaration = (ClassDeclarationSyntax) context.Node;
             
-            if (publicConstructors.Count < 2)
-                return;
+            var hasRegisterAttribute = classDeclaration.AttributeLists
+                .SelectMany(al => al.Attributes)
+                .Select(a => a.Name as IdentifierNameSyntax)
+                .Where(name => name != null)
+                .Select(name => name.Identifier.ValueText)
+                .Any(MatchTestAttributeName.IsMatch);
+
+            if (!hasRegisterAttribute) return;
+
+            var constructors = classDeclaration.Members
+                .Where(member => member is ConstructorDeclarationSyntax)
+                .Cast<ConstructorDeclarationSyntax>()
+                .ToList();
+            
+            if (constructors.Count == 0) return; 
+
+            var publicConstructorsCount = constructors
+                .Count(constructor => constructor.Modifiers.Any(modifier => modifier.Text == PUBLIC));
+
+            if (publicConstructorsCount == 1) return;
             
             context.ReportDiagnostic(Diagnostic.Create(Descriptor, classDeclaration.GetLocation()));
         }

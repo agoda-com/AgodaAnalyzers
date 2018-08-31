@@ -12,6 +12,7 @@ namespace Agoda.Analyzers.AgodaCustom
     public class AG0001DependencyResolverMustNotBeUsed : DiagnosticAnalyzer
     {
         public const string DiagnosticId = "AG0001";
+        
         private static readonly LocalizableString Title = new LocalizableResourceString(nameof(CustomRulesResources.AG0001Title), CustomRulesResources.ResourceManager, typeof(CustomRulesResources));
         private static readonly LocalizableString MessageFormat = new LocalizableResourceString(nameof(CustomRulesResources.AG0001MessageFormat), CustomRulesResources.ResourceManager, typeof(CustomRulesResources));
         private static readonly LocalizableString Description = DescriptionContentLoader.GetAnalyzerDescription(nameof(AG0001DependencyResolverMustNotBeUsed));
@@ -19,8 +20,6 @@ namespace Agoda.Analyzers.AgodaCustom
         private static readonly DiagnosticDescriptor Descriptor =
             new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, AnalyzerCategory.CustomQualityRules,
                 DiagnosticSeverity.Warning, AnalyzerConstants.EnabledByDefault, Description, null, WellKnownDiagnosticTags.EditAndContinue);
-
-        private static readonly Action<SyntaxNodeAnalysisContext> DependencyResolverUsageAction = HandleDependencyResolverUsage;
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Descriptor);
 
@@ -42,7 +41,7 @@ namespace Agoda.Analyzers.AgodaCustom
             context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
             context.EnableConcurrentExecution();
 
-            context.RegisterSyntaxNodeAction(DependencyResolverUsageAction, SyntaxKind.IdentifierName);
+            context.RegisterSyntaxNodeAction(HandleDependencyResolverUsage, SyntaxKind.IdentifierName);
         }
     }
 }

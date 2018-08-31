@@ -74,7 +74,16 @@
     <None Update="RuleContent\AG0005TestMethodNamesMustFollowConvention.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="RuleContent\AG0006ClassShouldNotHaveMoreThanOnePublicConstructor.html">
+    <None Update="RuleContent\AG0006RegisteredComponentShouldHaveExactlyOnePublicConstructor.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="RuleContent\AG0012TestMethodMustContainAtLeastOneAssertion.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="RuleContent\AG0013LimitNumberOfTestMethodParametersTo5.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="RuleContent\AG0030PreventUseOfDynamics.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="RuleContent\AG0007NoDirectQueryStringAccess.html">
