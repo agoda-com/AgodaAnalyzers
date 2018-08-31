@@ -61,11 +61,26 @@ namespace Agoda.Analyzers.CodeFixes.AgodaCustom
                 returnType = p.ChildNodes().First() as GenericNameSyntax;
             }
 
-            var listType = SyntaxFactory.IdentifierName(SyntaxFactory.Identifier("List")) as TypeSyntax;
-            var listSyntax = SyntaxFactory.GenericName(listType.GetFirstToken(), returnType.TypeArgumentList);
-            var objConstr = SyntaxFactory.ObjectCreationExpression(listSyntax, SyntaxFactory.ArgumentList(), null);
+            string newText;
 
-            var newText = objConstr.NormalizeWhitespace().ToString();
+            if (returnType == null)
+            {
+                var arrayReturnType = (method as MethodDeclarationSyntax).ReturnType as ArrayTypeSyntax;
+
+                newText = $"Array.Empty<{arrayReturnType.ElementType}>()";
+            }
+            else if (returnType.Identifier.Text == "IEnumerable")
+            {
+                newText = $"Enumerable.Empty{returnType.TypeArgumentList}()";
+            }
+            else
+            {
+                var enumerableType = SyntaxFactory.IdentifierName(SyntaxFactory.Identifier(returnType.Identifier.Text)) as TypeSyntax;
+                var listSyntax = SyntaxFactory.GenericName(enumerableType.GetFirstToken(), returnType.TypeArgumentList);
+                var objConstructor = SyntaxFactory.ObjectCreationExpression(listSyntax, SyntaxFactory.ArgumentList(), null);
+
+                newText = objConstructor.NormalizeWhitespace().ToString();
+            }
 
             var spanToRemove = TextSpan.FromBounds(token.Span.Start, token.Span.End);
             

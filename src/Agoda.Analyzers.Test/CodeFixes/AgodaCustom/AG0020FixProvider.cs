@@ -16,12 +16,12 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 {
     internal class AG0020FixProviderUnitTests : CodeFixVerifier
     {
-        [Ignore("does not support fixing this yet")]
         [Test]
         public async Task TestShouldFixIEnumerableCorrectly()
         {
             var code = @"
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Agoda.Analyzers.Test
 {
@@ -35,7 +35,7 @@ namespace Agoda.Analyzers.Test
 }";
             var result = @"
 using System.Collections.Generic;
-
+using System.Linq;
 namespace Agoda.Analyzers.Test
 {
     public class TestClass
@@ -53,8 +53,8 @@ namespace Agoda.Analyzers.Test
             var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzersArray, new[] { doc }, CancellationToken.None)
                 .ConfigureAwait(false);
             var expected = CSharpDiagnostic(AG0020AvoidReturningNullEnumerables.DiagnosticId);
-            VerifyDiagnosticResults(diag, analyzersArray, new DiagnosticResult[] {
-                expected.WithLocation(10, 20)
+            VerifyDiagnosticResults(diag, analyzersArray, new[] {
+                expected.WithLocation(11, 20)
             });
             await VerifyCSharpFixAsync(code, result);
         }
@@ -95,17 +95,18 @@ namespace Agoda.Analyzers.Test
             var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzersArray, new[] { doc }, CancellationToken.None)
                 .ConfigureAwait(false);
             var expected = CSharpDiagnostic(AG0020AvoidReturningNullEnumerables.DiagnosticId);
-            VerifyDiagnosticResults(diag, analyzersArray, new DiagnosticResult[] {
+            VerifyDiagnosticResults(diag, analyzersArray, new[] {
                 expected.WithLocation(10, 20)
             });
             await VerifyCSharpFixAsync(code, result);
         }
 
-        [Ignore("does not support fixing this yet")]
         [Test]
         public async Task TestShouldFixArrayCorrectly()
         {
             var code = @"
+#pragma warning(disable:CS1591)
+using System;
 using System.Collections.Generic;
 
 namespace Agoda.Analyzers.Test
@@ -119,6 +120,8 @@ namespace Agoda.Analyzers.Test
     }
 }";
             var result = @"
+#pragma warning(disable:CS1591)
+using System;
 using System.Collections.Generic;
 
 namespace Agoda.Analyzers.Test
@@ -138,13 +141,12 @@ namespace Agoda.Analyzers.Test
             var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzersArray, new[] { doc }, CancellationToken.None)
                 .ConfigureAwait(false);
             var expected = CSharpDiagnostic(AG0020AvoidReturningNullEnumerables.DiagnosticId);
-            VerifyDiagnosticResults(diag, analyzersArray, new DiagnosticResult[] {
-                expected.WithLocation(10, 20)
+            VerifyDiagnosticResults(diag, analyzersArray, new[] {
+                expected.WithLocation(12, 20)
             });
             await VerifyCSharpFixAsync(code, result);
         }
 
-        [Ignore("does not support fixing this yet")]
         [Test]
         public async Task TestShouldFixLinkedListCorrectly()
         {
@@ -181,7 +183,7 @@ namespace Agoda.Analyzers.Test
             var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzersArray, new[] { doc }, CancellationToken.None)
                 .ConfigureAwait(false);
             var expected = CSharpDiagnostic(AG0020AvoidReturningNullEnumerables.DiagnosticId);
-            VerifyDiagnosticResults(diag, analyzersArray, new DiagnosticResult[] {
+            VerifyDiagnosticResults(diag, analyzersArray, new[] {
                 expected.WithLocation(10, 20)
             });
             await VerifyCSharpFixAsync(code, result);
