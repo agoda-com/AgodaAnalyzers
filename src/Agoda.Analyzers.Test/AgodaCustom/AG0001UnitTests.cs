@@ -17,17 +17,17 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         [Test]
         public async Task TestDependencyResolverUsageAsync()
         {
-            var code = $@"
-				interface ISomething {{
+            var code = @"
+				interface ISomething {
 					void DoSomething();
-				}}
+				}
 			
-				class TestClass {{
-					public void TestMethod() {{
+				class TestClass {
+					public void TestMethod() {
 						var instance = System.Web.Mvc.DependencyResolver.Current.GetService(typeof(ISomething));
 						//instance.DoSomething();
-					}}
-				}}
+					}
+				}
 			";
 
             var reference = MetadataReference.CreateFromFile(typeof(DependencyResolver).Assembly.Location);
@@ -40,7 +40,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
             var analyzersArray = GetCSharpDiagnosticAnalyzers().ToImmutableArray();
 
             var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzersArray, new[] {doc}, CancellationToken.None).ConfigureAwait(false);
-            var expected = CSharpDiagnostic("AG0001").WithLocation(8, 37);
+            var expected = CSharpDiagnostic(AG0001DependencyResolverMustNotBeUsed.DiagnosticId).WithLocation(8, 37);
 
             VerifyDiagnosticResults(diag, analyzersArray, new[] {expected});
         }

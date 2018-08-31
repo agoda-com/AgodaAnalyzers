@@ -11,6 +11,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Agoda.Analyzers.Test", "Ago
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Agoda.Analyzers.Vsix", "Agoda.Analyzers.Vsix\Agoda.Analyzers.Vsix.csproj", "{55E08542-C84B-477C-B739-FC1979EB1D91}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1C629672-E8E6-482D-BB3E-A5FFA386327A}"
+ProjectSection(SolutionItems) = preProject
+	..\README.md = ..\README.md
+	..\CONTRIBUTING.md = ..\CONTRIBUTING.md
+EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

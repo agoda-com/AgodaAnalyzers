@@ -80,5 +80,14 @@
     <None Update="RuleContent\AG0020AvoidReturningNullEnumerables.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="RuleContent\AG0012TestMethodMustContainAtLeastOneAssertion.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="RuleContent\AG0013LimitNumberOfTestMethodParametersTo5.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="RuleContent\AG0030PreventUseOfDynamics.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>

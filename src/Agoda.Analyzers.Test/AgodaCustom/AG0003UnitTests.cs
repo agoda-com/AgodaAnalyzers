@@ -17,23 +17,23 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         [Test]
         public async Task TestHttpContextAsArgument()
         {
-            var code = $@"
+            var code = @"
                 using System.Web;
 
-				interface ISomething {{
+				interface ISomething {
 					void SomeMethod(HttpContext c, string sampleString); // ugly interface method
-				}}
+				}
 			
-				class TestClass: ISomething {{
+				class TestClass: ISomething {
                     
-                    public void SomeMethod(HttpContext context, string sampleString) {{
+                    public void SomeMethod(HttpContext context, string sampleString) {
                         // this method is ugly
-                    }}
+                    }
 
-					public TestClass(System.Web.HttpContext context) {{
+					public TestClass(System.Web.HttpContext context) {
                         // this constructor is uglier
-					}}
-				}}
+					}
+				}
 			";
 
             var reference = MetadataReference.CreateFromFile(typeof(HttpContext).Assembly.Location);
