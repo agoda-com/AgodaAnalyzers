@@ -1,4 +1,5 @@
-# Agoda Analyzers
+![alt text](logo.png)
+
 
 This project is used by Agoda Internally for analysis of our C# projects. We have opened it for community contribution.
 
