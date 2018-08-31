@@ -9,12 +9,12 @@ using System.Collections.Immutable;
 namespace Agoda.Analyzers.AgodaCustom
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    public class AG0007NoDirectQueryStringAccess : DiagnosticAnalyzer
+    public class AG0011NoDirectQueryStringAccess : DiagnosticAnalyzer
     {
-        public const string DiagnosticId = "AG0007";
-        private static readonly LocalizableString Title = new LocalizableResourceString(nameof(CustomRulesResources.AG0007Title), CustomRulesResources.ResourceManager, typeof(CustomRulesResources));
-        private static readonly LocalizableString MessageFormat = new LocalizableResourceString(nameof(CustomRulesResources.AG0007Title), CustomRulesResources.ResourceManager, typeof(CustomRulesResources));
-        private static readonly LocalizableString Description = DescriptionContentLoader.GetAnalyzerDescription(nameof(AG0007NoDirectQueryStringAccess));
+        public const string DiagnosticId = "AG0011";
+        private static readonly LocalizableString Title = new LocalizableResourceString(nameof(CustomRulesResources.AG0011Title), CustomRulesResources.ResourceManager, typeof(CustomRulesResources));
+        private static readonly LocalizableString MessageFormat = new LocalizableResourceString(nameof(CustomRulesResources.AG0011Title), CustomRulesResources.ResourceManager, typeof(CustomRulesResources));
+        private static readonly LocalizableString Description = DescriptionContentLoader.GetAnalyzerDescription(nameof(AG0011NoDirectQueryStringAccess));
 
         private static readonly DiagnosticDescriptor Descriptor =
             new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, AnalyzerCategory.CustomQualityRules,

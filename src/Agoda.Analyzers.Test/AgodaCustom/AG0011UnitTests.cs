@@ -12,7 +12,7 @@ using NUnit.Framework;
 
 namespace Agoda.Analyzers.Test.AgodaCustom
 {
-    class AG0007UnitTests : DiagnosticVerifier
+    class AG0011UnitTests : DiagnosticVerifier
     {
         [Test]
         public async Task TestNoDirectQueryStringAccessAsync()
@@ -35,7 +35,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
             var analyzersArray = GetCSharpDiagnosticAnalyzers().ToImmutableArray();
 
             var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzersArray, new[] { doc }, CancellationToken.None);
-            var expected = CSharpDiagnostic(AG0007NoDirectQueryStringAccess.DiagnosticId).WithLocation(4, 82);
+            var expected = CSharpDiagnostic(AG0011NoDirectQueryStringAccess.DiagnosticId).WithLocation(4, 82);
 
             VerifyDiagnosticResults(diag, analyzersArray, new[] { expected });
         }
@@ -62,14 +62,14 @@ namespace Agoda.Analyzers.Test.AgodaCustom
             var analyzersArray = GetCSharpDiagnosticAnalyzers().ToImmutableArray();
 
             var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzersArray, new[] { doc }, CancellationToken.None);
-            var expected = CSharpDiagnostic(AG0007NoDirectQueryStringAccess.DiagnosticId).WithLocation(5, 55);
+            var expected = CSharpDiagnostic(AG0011NoDirectQueryStringAccess.DiagnosticId).WithLocation(5, 55);
 
             VerifyDiagnosticResults(diag, analyzersArray, new[] { expected });
         }
 
         protected override IEnumerable<DiagnosticAnalyzer> GetCSharpDiagnosticAnalyzers()
         {
-            yield return new AG0007NoDirectQueryStringAccess();
+            yield return new AG0011NoDirectQueryStringAccess();
         }
     }
 }
