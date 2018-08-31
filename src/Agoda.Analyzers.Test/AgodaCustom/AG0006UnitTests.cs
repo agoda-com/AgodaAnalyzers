@@ -40,7 +40,7 @@ namespace Agoda.Analyzers.Test
             var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzersArray, new[] {doc}, CancellationToken.None)
                 .ConfigureAwait(false);
 
-            CSharpDiagnostic(AG0006ClassShouldHaveOnlyOnePublicConstructor.DiagnosticId);
+            CSharpDiagnostic(AG0006ClassShouldNotHaveMoreThanOnePublicConstructor.DiagnosticId);
             VerifyDiagnosticResults(diag, analyzersArray, new DiagnosticResult[0]);
         }
 
@@ -70,7 +70,7 @@ namespace Agoda.Analyzers.Test
             var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzersArray, new[] {doc}, CancellationToken.None)
                 .ConfigureAwait(false);
 
-            CSharpDiagnostic(AG0006ClassShouldHaveOnlyOnePublicConstructor.DiagnosticId);
+            CSharpDiagnostic(AG0006ClassShouldNotHaveMoreThanOnePublicConstructor.DiagnosticId);
             VerifyDiagnosticResults(diag, analyzersArray, new DiagnosticResult[0]);
         }
 
@@ -105,7 +105,7 @@ namespace Agoda.Analyzers.Test
             var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzersArray, new[] {doc}, CancellationToken.None)
                 .ConfigureAwait(false);
 
-            var baseResult = CSharpDiagnostic(AG0006ClassShouldHaveOnlyOnePublicConstructor.DiagnosticId);
+            var baseResult = CSharpDiagnostic(AG0006ClassShouldNotHaveMoreThanOnePublicConstructor.DiagnosticId);
             VerifyDiagnosticResults(diag, analyzersArray, new[]
             {
                 baseResult.WithLocation(4, 5)
@@ -114,7 +114,7 @@ namespace Agoda.Analyzers.Test
 
         protected override IEnumerable<DiagnosticAnalyzer> GetCSharpDiagnosticAnalyzers()
         {
-            yield return new AG0006ClassShouldHaveOnlyOnePublicConstructor();
+            yield return new AG0006ClassShouldNotHaveMoreThanOnePublicConstructor();
         }
     }
 }
