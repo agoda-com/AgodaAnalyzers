@@ -1,10 +1,7 @@
-# Agoda Analyzers
+![alt text](logo.png)
+
 
 This project is used by Agoda Internally for analysis of our C# projects. We have opened it for community contribution.
-
-In order to debug this project please select the Agoda.Analyzers.Vsix as the start up project and it will launch VS2017 in experimental mode and you can test the Analysis rules. You will be debugging Roslyn rules running in the second instance of VS from the first. You'll need to set a breakpoint in the first instance.
-
-To generate a jar file from this project for use with soarqube we have prepared a fork of the sonar team's project that has been udpated to 1.3 here https://github.com/agoda-com/sonarqube-roslyn-sdk
 
 ## Dive straight in?
 
@@ -73,6 +70,19 @@ private void AnalyzeNode(SyntaxNodeAnalysisContext context)
     }
 }
 ```
+
+## Debugging
+
+In order to debug this project:
+- Run the Agoda.Analyzers.Vsix as the start up project. It will open and attach to a second copy of VS2017.
+- Set a breakpoint in your analyzer in the first VS.
+- Edit some code in the second VS that should cause your analyzer to fire. The breakpoint in the first VS should be hit and you can now step through.
+
+## Deploying
+
+Merged rules will be automatically added to our internal Sonqube instance. They must be activated manually, however.
+
+To generate a jar file from this project for use with SonarQube we have prepared a fork of the Sonar team's project that has been udpated to 1.3 [here]( https://github.com/agoda-com/sonarqube-roslyn-sdk)
 
 ## Contributing
 
