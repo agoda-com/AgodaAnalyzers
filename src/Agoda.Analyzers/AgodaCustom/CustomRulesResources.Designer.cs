@@ -187,6 +187,23 @@ namespace Agoda.Analyzers.AgodaCustom {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Return an empty IEnumerable&lt;T&gt;.
+        /// </summary>
+        public static string AG0020FixTitle {
+            get {
+                return ResourceManager.GetString("AG0020FixTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Do not return null when the return value is IEnumerable&lt;T&gt;.
+        /// </summary>
+        public static string AG0020Title {
+            get {
+                return ResourceManager.GetString("AG0020Title", resourceCulture);
+            }
+	    }
+	
         ///   Looks up a localized string similar to Controllers should not access HttpRequest.QueryString directly but use ASP.NET model binding instead.
         /// </summary>
         public static string AG0011Title {
