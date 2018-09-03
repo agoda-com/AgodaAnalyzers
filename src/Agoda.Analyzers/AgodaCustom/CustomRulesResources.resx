@@ -177,6 +177,9 @@
   <data name="AG0021Title" xml:space="preserve">
     <value>Do not use synchronous version of method when async version exists</value>
   </data>
+  <data name="AG0025Title" xml:space="preserve">
+    <value>Prevent use of Task.Continue*</value>
+  </data>
   <data name="AG0030Title" xml:space="preserve">
     <value>Prevent use of dynamic</value>
   </data>

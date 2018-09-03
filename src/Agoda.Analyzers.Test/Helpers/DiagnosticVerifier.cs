@@ -15,6 +15,7 @@ namespace Agoda.Analyzers.Test.Helpers
     /// <summary>
     /// Superclass of all unit tests for <see cref="DiagnosticAnalyzer"/>s.
     /// </summary>
+    [TestFixture]
     public abstract partial class DiagnosticVerifier
     {
         private const int DefaultIndentationSize = 4;

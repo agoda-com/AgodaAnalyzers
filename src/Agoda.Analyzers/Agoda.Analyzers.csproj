@@ -89,6 +89,9 @@
     <None Update="RuleContent\AG0021PreferAsyncMethods.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="RuleContent\AG0025PreventUseOfTaskContinue.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="RuleContent\AG0030PreventUseOfDynamics.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
