@@ -58,7 +58,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         public async Task AG0021_Static_WhenAsyncWithPostfixExists_ShouldShowWarning()
         {
             var code = @"
-                using System.Threading.Tasks;
+				using System.Threading.Tasks;
 
 				class TestClassDeclaration {
 					public static void TestMethod() {
@@ -91,7 +91,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         public async Task AG0021_Instance_WhenAsyncWithPostfixExists_ShouldShowWarning()
         {
             var code = @"
-                using System.Threading.Tasks;
+				using System.Threading.Tasks;
 
 				class TestClassDeclaration {
 					public void TestMethod() {
@@ -125,8 +125,8 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         public async Task AG0021_Static_WhenAsyncWithoutPostfixExists_ShouldShowWarning()
         {
             var code = @"
-                using System.Threading;
-                using System.Threading.Tasks;
+				using System.Threading;
+				using System.Threading.Tasks;
 
 				class TestClassDeclaration {
 					public static void TestMethod() {
@@ -159,8 +159,8 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         public async Task AG0021_Instance_WhenAsyncWithoutPostfixExists_ShouldShowWarning()
         {
             var code = @"
-                using System.Threading;
-                using System.Threading.Tasks;
+				using System.Threading;
+				using System.Threading.Tasks;
 
 				class TestClassDeclaration {
 					public void TestMethod() {
@@ -194,7 +194,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         public async Task AG0021_Static_WhenAsyncWithPostfixIsUsed_ShouldNotShowAnyWarning()
         {
             var code = @"
-                using System.Threading.Tasks;
+				using System.Threading.Tasks;
 
 				class TestClassDeclaration {
 					public static void TestMethod() {
@@ -220,7 +220,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         public async Task AG0021_Instance_WhenAsyncWithPostfixIsUsed_ShouldNotShowAnyWarning()
         {
             var code = @"
-                using System.Threading.Tasks;
+				using System.Threading.Tasks;
 
 				class TestClassDeclaration {
 					public void TestMethod() {
@@ -247,8 +247,8 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         public async Task AG0021_Static_WhenAsyncWithoutPostfixIsUsed_ShouldNotShowAnyWarning()
         {
             var code = @"
-                using System.Threading;
-                using System.Threading.Tasks;
+				using System.Threading;
+				using System.Threading.Tasks;
 
 				class TestClassDeclaration {
 					public static void TestMethod() {
@@ -274,8 +274,8 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         public async Task AG0021_Instance_WhenAsyncWithoutPostfixIsUsed_ShouldNotShowAnyWarning()
         {
             var code = @"
-                using System.Threading;
-                using System.Threading.Tasks;
+				using System.Threading;
+				using System.Threading.Tasks;
 
 				class TestClassDeclaration {
 					public void TestMethod() {
@@ -302,7 +302,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         public async Task AG0021_Static_WhenInstanceAsyncWithPostfixExists_ShouldNotShowAnyWarning()
         {
             var code = @"
-                using System.Threading.Tasks;
+				using System.Threading.Tasks;
 
 				class TestClassDeclaration {
 					public static void TestMethod() {
@@ -328,8 +328,8 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         public async Task AG0021_Static_WhenInstanceAsyncWithoutPostfixExists_ShouldNotShowAnyWarning()
         {
             var code = @"
-                using System.Threading;
-                using System.Threading.Tasks;
+				using System.Threading;
+				using System.Threading.Tasks;
 
 				class TestClassDeclaration {
 					public static void TestMethod() {
@@ -355,7 +355,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         public async Task AG0021_Instance_WhenStaticAsyncWithPostfixExists_ShouldNotShowAnyWarning()
         {
             var code = @"
-                using System.Threading.Tasks;
+				using System.Threading.Tasks;
 
 				class TestClassDeclaration {
 					public void TestMethod() {
@@ -382,8 +382,8 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         public async Task AG0021_Instance_WhenStaticAsyncWithoutPostfixExists_ShouldNotShowAnyWarning()
         {
             var code = @"
-                using System.Threading;
-                using System.Threading.Tasks;
+				using System.Threading;
+				using System.Threading.Tasks;
 
 				class TestClassDeclaration {
 					public void TestMethod() {
@@ -432,8 +432,8 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         public async Task AG0021_Instance_WhenAsyncWithoutPrefixIsExtended_ShouldNotShowWarning()
         {
             var code = @"
-                using System.Threading;
-                using System.Threading.Tasks;
+				using System.Threading;
+				using System.Threading.Tasks;
 
 				class TestClassDeclaration {
 					public void TestMethod() {
@@ -469,8 +469,8 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         public async Task AG0021_Instance_WhenAsyncWithPrefixIsExtended_ShouldNotShowWarning()
         {
             var code = @"
-                using System.Threading;
-                using System.Threading.Tasks;
+				using System.Threading;
+				using System.Threading.Tasks;
 
 				class TestClassDeclaration {
 					public void TestMethod() {
@@ -506,8 +506,8 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         public async Task AG0021_Instance_WhenUsedAndAsyncWithPrefixIsExtended_ShouldShowWarning()
         {
             var code = @"
-                using System.Threading;
-                using System.Threading.Tasks;
+				using System.Threading;
+				using System.Threading.Tasks;
 
 				class TestClassDeclaration {
 				}
@@ -544,8 +544,8 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         public async Task AG0021_Instance_WhenUsedAndAsyncWithoutPrefixIsExtended_ShouldShowWarning()
         {
             var code = @"
-                using System.Threading;
-                using System.Threading.Tasks;
+				using System.Threading;
+				using System.Threading.Tasks;
 
 				class TestClassDeclaration {
 				}
@@ -582,8 +582,8 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         public async Task AG0021_Static_WhenUsedAndAsyncWithPrefixIsExtended_ShouldShowWarning()
         {
             var code = @"
-                using System.Threading;
-                using System.Threading.Tasks;
+				using System.Threading;
+				using System.Threading.Tasks;
 
 				class TestClassDeclaration {
 				}
@@ -620,8 +620,8 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         public async Task AG0021_Static_WhenUsedAndAsyncWithoutPrefixIsExtended_ShouldShowWarning()
         {
             var code = @"
-                using System.Threading;
-                using System.Threading.Tasks;
+				using System.Threading;
+				using System.Threading.Tasks;
 
 				class TestClassDeclaration {
 				}
@@ -658,8 +658,8 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         public async Task AG0021_Instance_WhenUsedIsExtendedAndAsyncWithoutPrefixIsNot_ShouldShowWarning()
         {
             var code = @"
-                using System.Threading;
-                using System.Threading.Tasks;
+				using System.Threading;
+				using System.Threading.Tasks;
 
 				class TestClassDeclaration {
 					public Task TestMethod(CancellationToken cancellationToken) {
@@ -695,8 +695,8 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         public async Task AG0021_Instance_WhenUsedIsExtendedAndAsyncWithPrefixIsNot_ShouldShowWarning()
         {
             var code = @"
-                using System.Threading;
-                using System.Threading.Tasks;
+				using System.Threading;
+				using System.Threading.Tasks;
 
 				class TestClassDeclaration {
 					public Task TestMethodAsync(CancellationToken cancellationToken) {
@@ -732,8 +732,8 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         public async Task AG0021_Static_WhenUsedIsExtendedAndAsyncWithoutPrefixIsNot_ShouldShowWarning()
         {
             var code = @"
-                using System.Threading;
-                using System.Threading.Tasks;
+				using System.Threading;
+				using System.Threading.Tasks;
 
 				class TestClassDeclaration {
 					public Task TestMethod(CancellationToken cancellationToken) {
@@ -769,8 +769,8 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         public async Task AG0021_Static_WhenUsedIsExtendedAndAsyncWithPrefixIsNot_ShouldShowWarning()
         {
             var code = @"
-                using System.Threading;
-                using System.Threading.Tasks;
+				using System.Threading;
+				using System.Threading.Tasks;
 
 				class TestClassDeclaration {
 					public Task TestMethodAsync(CancellationToken cancellationToken) {
