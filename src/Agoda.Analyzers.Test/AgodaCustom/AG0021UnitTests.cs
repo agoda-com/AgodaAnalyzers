@@ -46,7 +46,6 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				class TestClassInvocation {
 					public void InvocationMethod() {
                         var instance = new TestClassDeclaration();
-
 						instance.TestMethod();
 					}
 				}
@@ -67,7 +66,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 					}
 
 					public static Task TestMethodAsync() {
-                        return Task.CompletedTask;
+						return Task.CompletedTask;
 					}
 				}
 
@@ -100,14 +99,13 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 					}
 
 					public Task TestMethodAsync() {
-                        return Task.CompletedTask;
+						return Task.CompletedTask;
 					}
 				}
 
 				class TestClassInvocation {
 					public void InvocationMethod() {
-                        var instance = new TestClassDeclaration();
-
+						var instance = new TestClassDeclaration();
 						instance.TestMethod();
 					}
 				}
@@ -117,7 +115,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 CSharpDiagnostic(AG0021PreferAsyncMethods.DiagnosticId);
             var expected = new[]
             {
-                baseResult.WithLocation(18, 7)
+                baseResult.WithLocation(17, 7)
             };
 
             await TestForResults(code, expected);
@@ -136,7 +134,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 					}
 
 					public static Task TestMethod(CancellationToken cancellationToken) {
-                        return Task.CompletedTask;
+						return Task.CompletedTask;
 					}
 				}
 
@@ -170,14 +168,13 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 					}
 
 					public Task TestMethod(CancellationToken cancellationToken) {
-                        return Task.CompletedTask;
+						return Task.CompletedTask;
 					}
 				}
 
 				class TestClassInvocation {
 					public void InvocationMethod() {
-                        var instance = new TestClassDeclaration();
-
+						var instance = new TestClassDeclaration();
 						instance.TestMethod();
 					}
 				}
@@ -187,7 +184,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 CSharpDiagnostic(AG0021PreferAsyncMethods.DiagnosticId);
             var expected = new[]
             {
-                baseResult.WithLocation(19, 7)
+                baseResult.WithLocation(18, 7)
             };
 
             await TestForResults(code, expected);
@@ -205,7 +202,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 					}
 
 					public static Task TestMethodAsync() {
-                        return Task.CompletedTask;
+						return Task.CompletedTask;
 					}
 				}
 
@@ -231,14 +228,13 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 					}
 
 					public Task TestMethodAsync() {
-                        return Task.CompletedTask;
+						return Task.CompletedTask;
 					}
 				}
 
 				class TestClassInvocation {
 					public void InvocationMethod() {
-                        var instance = new TestClassDeclaration();
-
+						var instance = new TestClassDeclaration();
 						instance.TestMethodAsync();
 					}
 				}
@@ -260,7 +256,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 					}
 
 					public static Task TestMethod(CancellationToken cancellationToken) {
-                        return Task.CompletedTask;
+						return Task.CompletedTask;
 					}
 				}
 
@@ -287,14 +283,13 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 					}
 
 					public Task TestMethod(CancellationToken cancellationToken) {
-                        return Task.CompletedTask;
+						return Task.CompletedTask;
 					}
 				}
 
 				class TestClassInvocation {
 					public void InvocationMethod() {
-                        var instance = new TestClassDeclaration();
-
+						var instance = new TestClassDeclaration();
 						instance.TestMethod(CancellationToken.None);
 					}
 				}
@@ -315,7 +310,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 					}
 
 					public Task TestMethodAsync() {
-                        return Task.CompletedTask;
+						return Task.CompletedTask;
 					}
 				}
 
@@ -342,7 +337,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 					}
 
 					public Task TestMethod(CancellationToken cancellationToken) {
-                        return Task.CompletedTask;
+						return Task.CompletedTask;
 					}
 				}
 
@@ -368,14 +363,13 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 					}
 
 					public static Task TestMethodAsync() {
-                        return Task.CompletedTask;
+						return Task.CompletedTask;
 					}
 				}
 
 				class TestClassInvocation {
 					public void InvocationMethod() {
 						var instance = new TestClassDeclaration();
-
 						instance.TestMethod();
 					}
 				}
@@ -397,14 +391,13 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 					}
 
 					public static Task TestMethod(CancellationToken cancellationToken) {
-                        return Task.CompletedTask;
+						return Task.CompletedTask;
 					}
 				}
 
 				class TestClassInvocation {
 					public void InvocationMethod() {
 						var instance = new TestClassDeclaration();
-
 						instance.TestMethod();
 					}
 				}
@@ -435,10 +428,6 @@ namespace Agoda.Analyzers.Test.AgodaCustom
             await TestForResults(code, expected);
         }
 
-        /// <summary>
-        /// Checking should not report error to reduce if searching time of all extensions type
-        /// Can be changed in the future
-        /// </summary>
         [Test]
         public async Task AG0021_Instance_WhenAsyncWithoutPrefixIsExtended_ShouldNotShowWarning()
         {
@@ -461,19 +450,21 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				class TestClassInvocation {
 					public void InvocationMethod() {
 						var instance = new TestClassDeclaration();
-
 						instance.TestMethod();
 					}
 				}
 			";
 
-            await TestForResults(code);
+            var baseResult =
+                CSharpDiagnostic(AG0021PreferAsyncMethods.DiagnosticId);
+            var expected = new[]
+            {
+                baseResult.WithLocation(20, 7)
+            };
+
+            await TestForResults(code, expected);
         }
 
-        /// <summary>
-        /// Checking should not report error to reduce if searching time of all extensions type
-        /// Can be changed in the future
-        /// </summary>
         [Test]
         public async Task AG0021_Instance_WhenAsyncWithPrefixIsExtended_ShouldNotShowWarning()
         {
@@ -496,13 +487,19 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				class TestClassInvocation {
 					public void InvocationMethod() {
 						var instance = new TestClassDeclaration();
-
 						instance.TestMethod();
 					}
 				}
 			";
 
-            await TestForResults(code);
+            var baseResult =
+                CSharpDiagnostic(AG0021PreferAsyncMethods.DiagnosticId);
+            var expected = new[]
+            {
+                baseResult.WithLocation(20, 7)
+            };
+
+            await TestForResults(code, expected);
         }
 
         [Test]
@@ -528,7 +525,6 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				class TestClassInvocation {
 					public void InvocationMethod() {
 						var instance = new TestClassDeclaration();
-
 						instance.TestMethod();
 					}
 				}
@@ -538,7 +534,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 CSharpDiagnostic(AG0021PreferAsyncMethods.DiagnosticId);
             var expected = new[]
             {
-                baseResult.WithLocation(22, 7)
+                baseResult.WithLocation(21, 7)
             };
 
             await TestForResults(code, expected);
@@ -567,7 +563,6 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				class TestClassInvocation {
 					public void InvocationMethod() {
 						var instance = new TestClassDeclaration();
-
 						instance.TestMethod();
 					}
 				}
@@ -577,7 +572,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 CSharpDiagnostic(AG0021PreferAsyncMethods.DiagnosticId);
             var expected = new[]
             {
-                baseResult.WithLocation(22, 7)
+                baseResult.WithLocation(21, 7)
             };
 
             await TestForResults(code, expected);
@@ -606,7 +601,6 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				class TestClassInvocation {
 					public void InvocationMethod() {
 						var instance = new TestClassDeclaration();
-
 						TestClassExtensions.TestMethod(instance);
 					}
 				}
@@ -616,7 +610,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 CSharpDiagnostic(AG0021PreferAsyncMethods.DiagnosticId);
             var expected = new[]
             {
-                baseResult.WithLocation(22, 7)
+                baseResult.WithLocation(21, 7)
             };
 
             await TestForResults(code, expected);
@@ -645,7 +639,6 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				class TestClassInvocation {
 					public void InvocationMethod() {
 						var instance = new TestClassDeclaration();
-
 						TestClassExtensions.TestMethod(instance);
 					}
 				}
@@ -655,7 +648,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 CSharpDiagnostic(AG0021PreferAsyncMethods.DiagnosticId);
             var expected = new[]
             {
-                baseResult.WithLocation(22, 7)
+                baseResult.WithLocation(21, 7)
             };
 
             await TestForResults(code, expected);
@@ -683,7 +676,6 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				class TestClassInvocation {
 					public void InvocationMethod() {
 						var instance = new TestClassDeclaration();
-
 						instance.TestMethod();
 					}
 				}
@@ -693,7 +685,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 CSharpDiagnostic(AG0021PreferAsyncMethods.DiagnosticId);
             var expected = new[]
             {
-                baseResult.WithLocation(21, 7)
+                baseResult.WithLocation(20, 7)
             };
 
             await TestForResults(code, expected);
@@ -721,7 +713,6 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				class TestClassInvocation {
 					public void InvocationMethod() {
 						var instance = new TestClassDeclaration();
-
 						instance.TestMethod();
 					}
 				}
@@ -731,7 +722,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 CSharpDiagnostic(AG0021PreferAsyncMethods.DiagnosticId);
             var expected = new[]
             {
-                baseResult.WithLocation(21, 7)
+                baseResult.WithLocation(20, 7)
             };
 
             await TestForResults(code, expected);
@@ -759,7 +750,6 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				class TestClassInvocation {
 					public void InvocationMethod() {
 						var instance = new TestClassDeclaration();
-
 						TestClassExtensions.TestMethod(instance);
 					}
 				}
@@ -769,7 +759,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 CSharpDiagnostic(AG0021PreferAsyncMethods.DiagnosticId);
             var expected = new[]
             {
-                baseResult.WithLocation(21, 7)
+                baseResult.WithLocation(20, 7)
             };
 
             await TestForResults(code, expected);
@@ -797,7 +787,6 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				class TestClassInvocation {
 					public void InvocationMethod() {
 						var instance = new TestClassDeclaration();
-
 						TestClassExtensions.TestMethod(instance);
 					}
 				}
@@ -807,7 +796,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 CSharpDiagnostic(AG0021PreferAsyncMethods.DiagnosticId);
             var expected = new[]
             {
-                baseResult.WithLocation(21, 7)
+                baseResult.WithLocation(20, 7)
             };
 
             await TestForResults(code, expected);
@@ -817,31 +806,31 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         public async Task AG0021_Static_WhenAsyncMethodWithoutTaskExists_ShouldShowWarning()
         {
             var code = @"
-                using System.Threading;
-                using System.Threading.Tasks;
-                using System.Runtime.CompilerServices;
+				using System.Threading;
+				using System.Threading.Tasks;
+				using System.Runtime.CompilerServices;
 
-                class TestClassDeclaration
-                {
-                    public TaskAwaiter GetAwaiter()
-                    {
-                        return new TaskAwaiter();
-                    }
+				class TestClassDeclaration
+				{
+					public TaskAwaiter GetAwaiter()
+					{
+						return new TaskAwaiter();
+					}
 
-                    public static void Method()
-                    { }
+					public static void Method()
+					{ }
 
-                    public static TestClassDeclaration MethodAsync()
-                    {
-                        return new TestClassDeclaration();
-                    }
-                }
+					public static TestClassDeclaration MethodAsync()
+					{
+						return new TestClassDeclaration();
+					}
+				}
 
 				class TestClassInvocation {
-                    private static void Test()
-                    {
-                        TestClassDeclaration.Method();
-                    }
+					private static void Test()
+					{
+						TestClassDeclaration.Method();
+					}
 				}
 			";
 
@@ -849,7 +838,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 CSharpDiagnostic(AG0021PreferAsyncMethods.DiagnosticId);
             var expected = new[]
             {
-                baseResult.WithLocation(25, 25)
+                baseResult.WithLocation(25, 7)
             };
 
             await TestForResults(code, expected);
@@ -859,31 +848,31 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         public async Task AG0021_Static_WhenUsedAsyncMethodWithoutTask_ShouldNotShowWarning()
         {
             var code = @"
-                using System.Threading;
-                using System.Threading.Tasks;
-                using System.Runtime.CompilerServices;
+				using System.Threading;
+				using System.Threading.Tasks;
+				using System.Runtime.CompilerServices;
 
-                class TestClassDeclaration
-                {
-                    public TaskAwaiter GetAwaiter()
-                    {
-                        return new TaskAwaiter();
-                    }
+				class TestClassDeclaration
+				{
+					public TaskAwaiter GetAwaiter()
+					{
+						return new TaskAwaiter();
+					}
 
-                    public static void Method()
-                    { }
+					public static void Method()
+					{ }
 
-                    public static TestClassDeclaration MethodAsync()
-                    {
-                        return new TestClassDeclaration();
-                    }
-                }
+					public static TestClassDeclaration MethodAsync()
+					{
+						return new TestClassDeclaration();
+					}
+				}
 
 				class TestClassInvocation {
-                    private static async void Test()
-                    {
-                        await TestClassDeclaration.MethodAsync();
-                    }
+					private static async void Test()
+					{
+						await TestClassDeclaration.MethodAsync();
+					}
 				}
 			";
 
@@ -894,8 +883,8 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         public async Task AG0021_Instance_WhenAsyncWithoutPrefixIsInParent_ShouldShowWarning()
         {
             var code = @"
-                using System.Threading;
-                using System.Threading.Tasks;
+				using System.Threading;
+				using System.Threading.Tasks;
 
 				class TestClassDeclarationBase {
 					public Task TestMethod(CancellationToken cancellationToken) {
@@ -912,7 +901,6 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				class TestClassInvocation {
 					public void InvocationMethod() {
 						var instance = new TestClassDeclaration();
-
 						instance.TestMethod();
 					}
 				}
@@ -922,7 +910,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 CSharpDiagnostic(AG0021PreferAsyncMethods.DiagnosticId);
             var expected = new[]
             {
-                baseResult.WithLocation(21, 7)
+                baseResult.WithLocation(20, 7)
             };
 
             await TestForResults(code, expected);
@@ -932,8 +920,8 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         public async Task AG0021_Instance_WhenAsyncWithoutPrefixIsInChild_ShouldShowWarning()
         {
             var code = @"
-                using System.Threading;
-                using System.Threading.Tasks;
+				using System.Threading;
+				using System.Threading.Tasks;
 
 				class TestClassDeclarationBase {
 					public void TestMethod() {
@@ -950,7 +938,6 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				class TestClassInvocation {
 					public void InvocationMethod() {
 						var instance = new TestClassDeclaration();
-
 						instance.TestMethod();
 					}
 				}
@@ -960,7 +947,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 CSharpDiagnostic(AG0021PreferAsyncMethods.DiagnosticId);
             var expected = new[]
             {
-                baseResult.WithLocation(21, 7)
+                baseResult.WithLocation(20, 7)
             };
 
             await TestForResults(code, expected);
@@ -970,8 +957,8 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         public async Task AG0021_Instance_WhenAsyncWithPrefixIsInParent_ShouldShowWarning()
         {
             var code = @"
-                using System.Threading;
-                using System.Threading.Tasks;
+				using System.Threading;
+				using System.Threading.Tasks;
 
 				class TestClassDeclarationBase {
 					public Task TestMethodAsync(CancellationToken cancellationToken) {
@@ -988,7 +975,6 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				class TestClassInvocation {
 					public void InvocationMethod() {
 						var instance = new TestClassDeclaration();
-
 						instance.TestMethod();
 					}
 				}
@@ -998,7 +984,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 CSharpDiagnostic(AG0021PreferAsyncMethods.DiagnosticId);
             var expected = new[]
             {
-                baseResult.WithLocation(21, 7)
+                baseResult.WithLocation(20, 7)
             };
 
             await TestForResults(code, expected);
@@ -1008,8 +994,8 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         public async Task AG0021_Instance_WhenAsyncWithPrefixIsInChild_ShouldShowWarning()
         {
             var code = @"
-                using System.Threading;
-                using System.Threading.Tasks;
+				using System.Threading;
+				using System.Threading.Tasks;
 
 				class TestClassDeclarationBase {
 					public void TestMethod() {
@@ -1026,7 +1012,6 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				class TestClassInvocation {
 					public void InvocationMethod() {
 						var instance = new TestClassDeclaration();
-
 						instance.TestMethod();
 					}
 				}
@@ -1036,7 +1021,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 CSharpDiagnostic(AG0021PreferAsyncMethods.DiagnosticId);
             var expected = new[]
             {
-                baseResult.WithLocation(21, 7)
+                baseResult.WithLocation(20, 7)
             };
 
             await TestForResults(code, expected);
@@ -1046,15 +1031,15 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         public async Task AG0021_Instance_WhenUsedDomesticMethod_ShouldShowWarning()
         {
             var code = @"
-                using System.Threading;
-                using System.Threading.Tasks;
+				using System.Threading;
+				using System.Threading.Tasks;
 
 				class TestClass {
 					public void TestMethod() {
 						int instance = 1;
 					}
 
-                    public Task TestMethodAsync(CancellationToken cancellationToken) {
+					public Task TestMethodAsync(CancellationToken cancellationToken) {
 						return Task.CompletedTask;
 					}
 
@@ -1078,15 +1063,15 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         public async Task AG0021_Static_WhenUsedDomesticMethod_ShouldShowWarning()
         {
             var code = @"
-                using System.Threading;
-                using System.Threading.Tasks;
+				using System.Threading;
+				using System.Threading.Tasks;
 
 				class TestClass {
 					public static void TestMethod() {
 						int instance = 1;
 					}
 
-                    public static Task TestMethodAsync(CancellationToken cancellationToken) {
+					public static Task TestMethodAsync(CancellationToken cancellationToken) {
 						return Task.CompletedTask;
 					}
 
@@ -1110,8 +1095,8 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         public async Task AG0021_Instance_WhenUsedFromFunctionResult_ShouldShowWarning()
         {
             var code = @"
-                using System.Threading;
-                using System.Threading.Tasks;
+				using System.Threading;
+				using System.Threading.Tasks;
 
 				class TestClassDeclaration {
 					public void TestMethod() {
@@ -1122,9 +1107,9 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 						return Task.CompletedTask;
 					}
 
-                    public static TestClassDeclaration Create() {
-                        return new TestClassDeclaration();
-                    }
+					public static TestClassDeclaration Create() {
+						return new TestClassDeclaration();
+					}
 				}
 
 				class TestClassInvocation {
@@ -1148,9 +1133,9 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         public async Task AG0021_Static_WhenUsedIsLocal_ShouldNotShowWarning()
         {
             var code = @"
-                using System;
-                using System.Threading;
-                using System.Threading.Tasks;
+				using System;
+				using System.Threading;
+				using System.Threading.Tasks;
 
 				class TestClass {
 					public Task TestMethodAsync(CancellationToken cancellationToken) {
@@ -1160,7 +1145,132 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 					public void InvocationMethod() {
 						Action TestMethod = () => {};
 
-                        TestMethod();
+						TestMethod();
+					}
+				}
+			";
+
+            await TestForResults(code);
+        }
+
+        [Test]
+        public async Task AG0021_Instance_WhenAsyncIsNotAccessible_ShouldNotShowWarning()
+        {
+            var code = @"
+				using System;
+				using System.Threading;
+				using System.Threading.Tasks;
+
+				class TestClassDeclaration {
+					public void TestMethod() {
+						int instance = 1;
+					}
+
+					protected Task TestMethodAsync() {
+						return Task.CompletedTask;
+					}
+				}
+
+				class TestClassInvocation {
+					public void InvocationMethod() {
+						var instance = new TestClassDeclaration();
+
+						instance.TestMethod();
+					}
+				}
+			";
+
+            await TestForResults(code);
+        }
+
+        [Test]
+        public async Task AG0021_Static_WhenAsyncIsNotAccessible_ShouldNotShowWarning()
+        {
+            var code = @"
+				using System;
+				using System.Threading;
+				using System.Threading.Tasks;
+
+				class TestClassDeclaration {
+					public static void TestMethod() {
+						int instance = 1;
+					}
+
+					protected static Task TestMethodAsync() {
+						return Task.CompletedTask;
+					}
+				}
+
+				class TestClassInvocation {
+					public void InvocationMethod() {
+						TestClassDeclaration.TestMethod();
+					}
+				}
+			";
+
+            await TestForResults(code);
+        }
+
+        [Test]
+        public async Task AG0021_Instance_WhenUsedOnClassField_ShouldShowWarning()
+        {
+            var code = @"
+				using System;
+				using System.Threading;
+				using System.Threading.Tasks;
+
+				class TestClassDeclaration {
+					public void TestMethod() {
+						int instance = 1;
+					}
+
+					public Task TestMethodAsync() {
+						return Task.CompletedTask;
+					}
+				}
+
+				class TestClassInvocation {
+					public TestClassDeclaration Instance = new TestClassDeclaration();
+
+					public void InvocationMethod() {
+						Instance.TestMethod();
+					}
+				}
+			";
+
+            var baseResult =
+                CSharpDiagnostic(AG0021PreferAsyncMethods.DiagnosticId);
+            var expected = new[]
+            {
+                baseResult.WithLocation(20, 7)
+            };
+
+            await TestForResults(code, expected);
+        }
+
+        [Test]
+        public async Task AG0021_Instance_WhenUsedOnDynamic_ShouldNotShowWarning()
+        {
+            var code = @"
+				using System;
+				using System.Threading;
+				using System.Threading.Tasks;
+
+				class TestClassDeclaration {
+					public void TestMethod() {
+						int instance = 1;
+					}
+
+					public Task TestMethodAsync() {
+						return Task.CompletedTask;
+					}
+				}
+
+				class TestClassInvocation {
+					public void InvocationMethod() {
+						dynamic instance = new TestClassDeclaration();
+
+						instance.TestMethod();
 					}
 				}
 			";

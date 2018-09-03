@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using Agoda.Analyzers.Helpers;
@@ -32,6 +33,8 @@ namespace Agoda.Analyzers.AgodaCustom
 
         public override void Initialize(AnalysisContext context)
         {
+            context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
+
             context.RegisterSyntaxNodeAction(AnalyzeNode, SyntaxKind.InvocationExpression);
         }
 
@@ -40,96 +43,134 @@ namespace Agoda.Analyzers.AgodaCustom
         private void AnalyzeNode(SyntaxNodeAnalysisContext context)
         {
             var invocation = (InvocationExpressionSyntax) context.Node;
-            
-            MethodDescriptor? descriptor = GetMethodDescriptor(context.SemanticModel, invocation);
 
-            if (!descriptor.HasValue || 
-                descriptor.Value.UsedMethod.IsAwaitableNonDynamic(context.SemanticModel, invocation.Expression.SpanStart))
+            if (!(GetMethodDescriptor(context.SemanticModel, invocation) is MethodDescriptor descriptor))
             {
                 return;
             }
 
-            MethodDescriptor d = descriptor.Value;
-
-            if (d.UsedMethod.IsExtensionMethod && d.UsedMethod.ContainingType.Equals(d.CallingType))
+            if (descriptor.UsedMethod.IsAwaitableNonDynamic(context.SemanticModel, context.Node.SpanStart))
             {
-                d.CallingType = descriptor.Value.UsedMethod.Parameters[0].Type;
+                return;
             }
 
-            var asyncAlternativeMethods = GetAlternativeMethods(context.SemanticModel, d);
+            IEnumerable<IMethodSymbol> alternativeAsyncMethods =
+                GetAlternativeAsyncMethods(context.SemanticModel, context.Node.SpanStart, descriptor);
 
-            if (asyncAlternativeMethods.Any())
+            if (alternativeAsyncMethods.Any())
             {
-                context.ReportDiagnostic(Diagnostic.Create(Descriptor, invocation.GetLocation()));
+                context.ReportDiagnostic(Diagnostic.Create(Descriptor, context.Node.GetLocation()));
             }
         }
 
         private MethodDescriptor? GetMethodDescriptor(SemanticModel semanticModel, InvocationExpressionSyntax invocation)
         {
-            if (invocation.Expression is MemberAccessExpressionSyntax memberAccess)
+            MethodDescriptor? GetDescriptor()
             {
-                var callingSymbol = semanticModel.GetSymbolInfo(memberAccess.Expression).Symbol;
-                var usedMethod = (IMethodSymbol) semanticModel.GetSymbolInfo(memberAccess).Symbol;
-                
-                if (callingSymbol is IMethodSymbol methodSymbol)
+                if (invocation.Expression is MemberAccessExpressionSyntax memberAccess)
                 {
-                    return new MethodDescriptor
+                    var usedMethod = (IMethodSymbol) semanticModel.GetSymbolInfo(memberAccess).Symbol;
+
+                    // method called on non dynamic object
+                    if (usedMethod != null)
                     {
-                        CallingType = methodSymbol.ReturnType,
-                        UsedMethod = usedMethod,
-                    };
+                        var callingSymbol = semanticModel.GetSymbolInfo(memberAccess.Expression).Symbol;
+
+                        // Method called on a result from another method
+                        if (callingSymbol is IMethodSymbol methodSymbol)
+                        {
+                            return new MethodDescriptor
+                            {
+                                CallingType = methodSymbol.ReturnType,
+                                UsedMethod = usedMethod,
+                            };
+                        }
+
+                        // Method called on a local variable, static class, property, field, etc.
+                        return new MethodDescriptor
+                        {
+                            CallingType = semanticModel.GetTypeInfo(memberAccess.Expression).Type,
+                            UsedMethod = usedMethod,
+                        };
+                    }
                 }
 
-                return new MethodDescriptor
+                if (invocation.Expression is IdentifierNameSyntax identifierName)
                 {
-                    CallingType = semanticModel.GetTypeInfo(memberAccess.Expression).Type,
-                    UsedMethod = usedMethod,
-                };
-            }
+                    var usedMethod = semanticModel.GetSymbolInfo(identifierName).Symbol;
 
-            if (invocation.Expression is IdentifierNameSyntax identifierName)
-            {
-                var callingSymbol = semanticModel.GetSymbolInfo(identifierName).Symbol;
-
-                if (callingSymbol is IMethodSymbol methodSymbol)
-                {
-                    return new MethodDescriptor
+                    // Method called without explicit context (a class own method is inside the class)
+                    if (usedMethod is IMethodSymbol methodSymbol)
                     {
-                        CallingType = methodSymbol.ContainingType,
-                        UsedMethod = methodSymbol,
-                    };
+                        return new MethodDescriptor
+                        {
+                            CallingType = methodSymbol.ContainingType,
+                            UsedMethod = methodSymbol,
+                        };
+                    }
                 }
+
+                return null;
             }
 
-            return null;
+            if (!(GetDescriptor() is MethodDescriptor descriptor))
+            {
+                return null;
+            }
+
+            // if method is extension but used in static mode, replace calling type thr real one.
+            if (descriptor.UsedMethod.IsExtensionMethod && descriptor.UsedMethod.ContainingType.Equals(descriptor.CallingType))
+            {
+                descriptor.CallingType = descriptor.UsedMethod.Parameters[0].Type;
+            }
+
+            return descriptor;
         }
 
-        internal struct MethodDescriptor
+        private IEnumerable<IMethodSymbol> GetAlternativeAsyncMethods(SemanticModel semanticModel, int position, MethodDescriptor descriptor)
         {
-            public IMethodSymbol UsedMethod { get; set; }
+            // searching methods by name
+            var methods = semanticModel.LookupSymbols(
+                position,
+                container: descriptor.CallingType,
+                name: descriptor.UsedMethod.Name,
+                includeReducedExtensionMethods: true).OfType<IMethodSymbol>();
 
-            public ITypeSymbol CallingType { get; set; }
-        }
+            // searching methods by name with the postfix
+            if (!descriptor.UsedMethod.Name.EndsWith("Async", StringComparison.Ordinal))
+            {
+                methods = methods.Concat(semanticModel.LookupSymbols(
+                    position,
+                    container: descriptor.CallingType,
+                    name: descriptor.UsedMethod.Name + "Async",
+                    includeReducedExtensionMethods: true).OfType<IMethodSymbol>());
+            }
 
-        private IEnumerable<ISymbol> GetAlternativeMethods(SemanticModel semanticModel, MethodDescriptor descriptor)
-        {
-            string postfixName = descriptor.UsedMethod.Name + "Async";
+            // should we look at static method
+            bool isStatic = descriptor.UsedMethod.IsStatic && !descriptor.UsedMethod.IsExtensionMethod;
 
-            var methods = descriptor.CallingType.GetMembersInThisAndBaseTypes<IMethodSymbol>()
-                .Concat(descriptor.UsedMethod.ContainingType.GetMembersInThisAndBaseTypes<IMethodSymbol>());
-
-            var isStatic = descriptor.UsedMethod.IsStatic && !descriptor.UsedMethod.IsExtensionMethod;
-
-            foreach (var member in methods)
+            foreach (IMethodSymbol member in methods)
             {
                 if (!member.Equals(descriptor.UsedMethod)
                     && (member.IsStatic == isStatic || member.IsExtensionMethod)
-                    && member.IsAwaitableNonDynamic(semanticModel, 0)
-                    && (member.Name == descriptor.UsedMethod.Name || member.Name == postfixName))
+                    && member.IsAwaitableNonDynamic(semanticModel, position: 0))
                 {
                     yield return member;
                 }
             }
+        }
+
+        private struct MethodDescriptor
+        {
+            /// <summary>
+            /// Symbol of used method
+            /// </summary>
+            public IMethodSymbol UsedMethod { get; set; }
+
+            /// <summary>
+            /// Symbol of a type which is used for calling the used method
+            /// </summary>
+            public ITypeSymbol CallingType { get; set; }
         }
     }
 }

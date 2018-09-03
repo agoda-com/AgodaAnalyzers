@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Linq;
+﻿using System.Linq;
 using Microsoft.CodeAnalysis;
 
 namespace Agoda.Analyzers.Helpers
@@ -80,32 +78,6 @@ namespace Agoda.Analyzers.Helpers
 
             // void GetResult() || T GetResult()
             return methods.Any(m => m.Name == WellKnownMemberNames.GetResult && !m.Parameters.Any());
-        }
-
-        /// <summary>
-        /// Enumerate all members of the type and its parents
-        /// </summary>
-        public static IEnumerable<T> GetMembersInThisAndBaseTypes<T>(this ITypeSymbol containingType) where T : class, ISymbol
-        {
-            if (containingType == null)
-            {
-                return ImmutableArray<T>.Empty;
-            }
-
-            return containingType.GetBaseTypesAndThis().SelectMany(t => t.GetMembers()).OfType<T>();
-        }
-
-        /// <summary>
-        /// Return type and its parents enumeration 
-        /// </summary>
-        public static IEnumerable<ITypeSymbol> GetBaseTypesAndThis(this ITypeSymbol type)
-        {
-            var current = type;
-            while (current != null)
-            {
-                yield return current;
-                current = current.BaseType;
-            }
         }
     }
 }
