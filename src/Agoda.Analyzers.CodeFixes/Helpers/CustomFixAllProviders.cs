@@ -1,5 +1,4 @@
-﻿using Microsoft.CodeAnalysis.CodeActions;
-using Microsoft.CodeAnalysis.CodeFixes;
+﻿using Microsoft.CodeAnalysis.CodeFixes;
 
 namespace Agoda.Analyzers.CodeFixes.Helpers
 {
