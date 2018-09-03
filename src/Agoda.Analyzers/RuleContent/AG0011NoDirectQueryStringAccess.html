@@ -1,0 +1,20 @@
+﻿<p>
+    The <code>QueryString</code> collection should not be used directly in the codebase, and ASP.NET model binding should be used instead.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+    public ActionResult Index()
+    {
+        var id = HttpContext.Current.Request.QueryString["id"];
+        // Use id here
+    }
+</pre>
+
+<h2>Compliant Code Example</h2>
+<pre>
+    public ActionResult Index([FromQuery] int id)
+    {
+        // Use id here
+    }
+</pre>

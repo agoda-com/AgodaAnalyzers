@@ -201,8 +201,16 @@ namespace Agoda.Analyzers.AgodaCustom {
         public static string AG0020Title {
             get {
                 return ResourceManager.GetString("AG0020Title", resourceCulture);
+            }
 	    }
-	}
+	
+        ///   Looks up a localized string similar to Controllers should not access HttpRequest.QueryString directly but use ASP.NET model binding instead.
+        /// </summary>
+        public static string AG0011Title {
+            get {
+                return ResourceManager.GetString("AG0011Title", resourceCulture);
+            }
+        }
 
         /// <summary>
         /// Ensure test method contains at least one assertion
