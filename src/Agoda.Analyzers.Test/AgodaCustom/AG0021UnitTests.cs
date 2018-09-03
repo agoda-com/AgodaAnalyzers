@@ -45,7 +45,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 
 				class TestClassInvocation {
 					public void InvocationMethod() {
-                        var instance = new TestClassDeclaration();
+						var instance = new TestClassDeclaration();
 						instance.TestMethod();
 					}
 				}
