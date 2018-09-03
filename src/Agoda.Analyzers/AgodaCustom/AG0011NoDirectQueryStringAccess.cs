@@ -28,10 +28,21 @@ namespace Agoda.Analyzers.AgodaCustom
         {
             var identifier = context.Node as IdentifierNameSyntax;
 
-            if (identifier?.Identifier.Text != "QueryString")
-                return;
+            var memberAccess = identifier?.Identifier.Parent?.Parent as MemberAccessExpressionSyntax;
 
-            if (context.SemanticModel.GetTypeInfo(identifier).Type.ToDisplayString() == "System.Collections.Specialized.NameValueCollection")
+            if (memberAccess == null)
+            {
+                return;
+            }
+            
+            var memberType = context.SemanticModel.GetTypeInfo(memberAccess.Expression);
+
+            if (memberType.Type?.ToDisplayString() != "System.Web.HttpRequest")
+            {
+                return;
+            }
+            
+            if (identifier.Identifier.Text == "QueryString")
             {
                 context.ReportDiagnostic(Diagnostic.Create(Descriptor, context.Node.GetLocation()));
             }
