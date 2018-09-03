@@ -4,45 +4,45 @@
 
 <h2>Noncompliant Code Example</h2>
 <pre>
-public IEnumerable<int> GetPropertyIds(int hostId)
+public IEnumerable<int> GetProductIds(int brandId)
 {
-    var properties = propertyService.GetPropertiesForHost(hostId);
+    var products = productService.GetProductsForBrand(brandId);
     
-    if (properties == null || !properties.Any()) 
+    if (products == null || !products.Any())
     {
         return null; 
         // Now the caller has to somehow know to deal with this special case.
         // You are asking for a NullReferenceException in prod.
     }
     
-    return properties.Select(p => p.Id);
+    return products.Select(p => p.Id);
 }
 </pre>
 
 <h2>Compliant Code Example</h2>
 <pre>
-public IEnumerable<int> GetPropertyIds(int hostId)
+public IEnumerable<int> GetProductIds(int brandId)
 {
-    var properties = propertyService.GetPropertiesForHost(hostId);
+    var products = productService.GetProductsForBrand(brandId);
     
-    if (properties == null) 
+    if (products == null)
     {
         // Just return an empty enumerable and everything should just work.
         return Enumerable.Empty<int>();
     }
     
-    return properties.Select(p => p.Id);
+    return products.Select(p => p.Id);
 }
 </pre>
 
 <h2>Even better</h2>
 <pre>
-public IEnumerable<int> GetPropertyIds(int hostId)
+public IEnumerable<int> GetProductIds(int brandId)
 {
-    // Fix propertyService.GetProperties() to never return null itself, and we
+    // Fix productService.GetProducts() to never return null itself, and we
     // can skip the null check entirely.
-    return propertyService
-        .GetPropertiesForHost(hostId)
+    return productService
+        .GetProductsForBrand(brandId)
         .Select(p => p.Id);
 }
 </pre>

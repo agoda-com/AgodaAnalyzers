@@ -18,8 +18,7 @@ namespace Agoda.Analyzers.CodeFixes.AgodaCustom
     [Shared]
     public class AG0020FixProvider : CodeFixProvider
     {
-        // this isn't very nice, we need to move IDs to a shared const class
-        public override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create("AG0020");
+        public override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(AG0020AvoidReturningNullEnumerables.DiagnosticId);
 
         public override Task RegisterCodeFixesAsync(CodeFixContext context)
         {
@@ -57,7 +56,7 @@ namespace Agoda.Analyzers.CodeFixes.AgodaCustom
             }
             else
             {
-                var p = statement.Ancestors().OfType<PropertyDeclarationSyntax>().FirstOrDefault();
+                var p = statement.Ancestors().OfType<PropertyDeclarationSyntax>().First();
                 returnType = p.ChildNodes().First() as GenericNameSyntax;
             }
 
