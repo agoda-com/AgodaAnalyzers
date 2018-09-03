@@ -187,6 +187,33 @@ namespace Agoda.Analyzers.AgodaCustom {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Controllers should not access HttpRequest.QueryString directly but use ASP.NET model binding instead.
+        /// </summary>
+        public static string AG0011Title {
+            get {
+                return ResourceManager.GetString("AG0011Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Test method should contain at least one assertion.
+        /// </summary>
+        public static string AG0012Title {
+            get {
+                return ResourceManager.GetString("AG0012Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Limit number of test method parameters to 5.
+        /// </summary>
+        public static string AG0013Title {
+            get {
+                return ResourceManager.GetString("AG0013Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Return an empty IEnumerable&lt;T&gt;.
         /// </summary>
         public static string AG0020FixTitle {
@@ -202,33 +229,14 @@ namespace Agoda.Analyzers.AgodaCustom {
             get {
                 return ResourceManager.GetString("AG0020Title", resourceCulture);
             }
-	    }
-	
-        ///   Looks up a localized string similar to Controllers should not access HttpRequest.QueryString directly but use ASP.NET model binding instead.
-        /// </summary>
-        public static string AG0011Title {
-            get {
-                return ResourceManager.GetString("AG0011Title", resourceCulture);
-            }
         }
-
+        
         /// <summary>
-        /// Ensure test method contains at least one assertion
+        ///   Looks up a localized string similar to Do not use synchronous version of method when async version exists.
         /// </summary>
-        public static string AG0012Title
-        {
-            get
-            {
-                return ResourceManager.GetString("AG0012Title", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        /// Limit number of test method input parameters to 5
-        /// </summary>
-        public static string AG0013Title {
+        public static string AG0021Title {
             get {
-                return ResourceManager.GetString("AG0013Title", resourceCulture);
+                return ResourceManager.GetString("AG0021Title", resourceCulture);
             }
         }
         

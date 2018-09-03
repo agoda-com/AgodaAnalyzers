@@ -86,6 +86,9 @@
     <None Update="RuleContent\AG0013LimitNumberOfTestMethodParametersTo5.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="RuleContent\AG0021PreferAsyncMethods.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="RuleContent\AG0025PreventUseOfTaskContinue.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
