@@ -183,4 +183,7 @@
   <data name="AG0030Title" xml:space="preserve">
     <value>Prevent use of dynamic</value>
   </data>
+  <data name="AG0019Title" xml:space="preserve">
+    <value>Prevent use of System.Runtime.CompilerServices.InternalsVisibleTo attribute</value>
+  </data>
 </root>
