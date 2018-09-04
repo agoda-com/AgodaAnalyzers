@@ -101,7 +101,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         }
 
         [Test]
-        public async Task AG0026_WhenUsedMethodNotFromBanList_ThenNoWarning()
+        public async Task AG0026_WhenMethodFromParent_ThenNoWarning()
         {
             var testCode = @"
             using System;
@@ -116,7 +116,9 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 
                     private readonly string FooterSelector2 = ""[data-selenium=\""footer2\""]"";
 
-                    public bool IsEqualSelectors => By.Equals(FooterSelector1, FooterSelector2);
+                    public bool IsEqualSelectors1 => By.Equals(FooterSelector1, FooterSelector2);
+
+                    public bool IsEqualSelectors2 => By.ReferenceEquals(FooterSelector1, FooterSelector2);
                 }
             }";
 
@@ -133,7 +135,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         }
 
         [Test]
-        public async Task AG0026_WhenFoundInvocationOfByXPathNotFromOpenQASeleniumNamespace_ThenNoWarning()
+        public async Task AG0026_WhenMethodNotFromOpenQASeleniumNamespace_ThenNoWarning()
         {
             var testCode = @"
             using System;

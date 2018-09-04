@@ -15,10 +15,6 @@ namespace Agoda.Analyzers.AgodaCustom
         private static readonly LocalizableResourceString _msg = new LocalizableResourceString(
                 nameof(CustomRulesResources.AG0026Title), CustomRulesResources.ResourceManager, typeof(CustomRulesResources));
               
-        protected override bool IsStatic => true;
-        protected override string NamespaceAndType => "OpenQA.Selenium.By";
-        protected override ImmutableArray<string> Methods => ImmutableArray.Create("CssSelector");
-        protected override InvocationExpressionMode Mode => InvocationExpressionMode.Allowed;
         protected override DiagnosticDescriptor Descriptor => new DiagnosticDescriptor(
                 DIAGNOSTIC_ID,
                 _msg,
@@ -30,6 +26,11 @@ namespace Agoda.Analyzers.AgodaCustom
                 "https://github.agodadev.io/pages/standards-c-sharp/code-standards/gui-testing/css-selectors.html",
                 WellKnownDiagnosticTags.EditAndContinue
             );
+
+        protected override bool IsStatic => true;
+        protected override string NamespaceAndType => "OpenQA.Selenium.By";
+        protected override ImmutableArray<string> Methods => ImmutableArray.Create("CssSelector");
+        protected override InvocationExpressionMode Mode => InvocationExpressionMode.Allowed;
     }
     
     public abstract class InvocationExpressionAnalyzer : DiagnosticAnalyzer
