@@ -16,7 +16,7 @@ namespace Agoda.Analyzers.AgodaCustom
     {
         public const string DIAGNOSTIC_ID = "AG0019";
 
-        private const string _helpLinkUrl = "https://github.agodadev.io/pages/standards-c-sharp/code-standards/unit-testing/use-test-cases-appropriately.html";
+        private const string _helpLinkUrl = "https://github.agodadev.io/pages/standards-c-sharp/code-standards/unit-testing/only-test-the-public-interface.html";
         private readonly DiagnosticDescriptor _diagnosticDescriptor;
 
         public AG0019PreventUseOfInternalsVisibleToAttribute()
