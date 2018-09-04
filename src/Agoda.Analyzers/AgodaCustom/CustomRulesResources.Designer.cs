@@ -250,6 +250,15 @@ namespace Agoda.Analyzers.AgodaCustom {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Use CssSelector instead of XPath to access elements.
+        /// </summary>
+        public static string AG0026FixTitle {
+            get {
+                return ResourceManager.GetString("AG0026FixTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Ensure elements are not selected by XPath in Selenium tests.
         /// </summary>
         public static string AG0026Title {

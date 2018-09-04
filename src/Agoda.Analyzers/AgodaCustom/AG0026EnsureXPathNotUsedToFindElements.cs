@@ -33,14 +33,22 @@ namespace Agoda.Analyzers.AgodaCustom
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(_descriptor);
 
-        public override void Initialize(AnalysisContext context) => context.RegisterSyntaxNodeAction(AnalyzeNode, SyntaxKind.InvocationExpression);
+        public override void Initialize(AnalysisContext context)
+        {
+            context.RegisterSyntaxNodeAction(AnalyzeNode, SyntaxKind.InvocationExpression);
+        }
 
         private void AnalyzeNode(SyntaxNodeAnalysisContext context)
         {
             var invocationExpressionSyntax = (InvocationExpressionSyntax)context.Node;
             var model = context.SemanticModel;
             var symbol = model.GetSymbolInfo(invocationExpressionSyntax).Symbol;
-            if (symbol != null && symbol.ToDisplayString() == "OpenQA.Selenium.By.XPath(string)")
+            if (symbol != null
+                && symbol.IsStatic
+                && symbol.ContainingNamespace.ContainingNamespace.Name == "OpenQA"
+                && symbol.ContainingNamespace.Name == "Selenium"
+                && symbol.ContainingType.Name == "By"
+                && symbol.Name == "XPath")
             {
                 context.ReportDiagnostic(Diagnostic.Create(_descriptor, invocationExpressionSyntax.GetLocation()));
             }

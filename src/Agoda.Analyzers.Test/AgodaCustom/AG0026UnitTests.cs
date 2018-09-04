@@ -81,5 +81,38 @@ namespace Agoda.Analyzers.Test.AgodaCustom
             var baseResult = CSharpDiagnostic(AG0026EnsureXPathNotUsedToFindElements.DIAGNOSTIC_ID);
             VerifyDiagnosticResults(diag, analyzers, new DiagnosticResult[0]);
         }
+
+        [Test]
+        public async Task AG0026_WhenByXPathNotFromSelenium_ThenNoWarning()
+        {
+            var testCode = @"
+            using System;
+
+            namespace Selenium.Tests.Utils
+            {
+                public class By {
+                    public static object XPath(string name) {
+                        return null;
+                    }
+                }
+
+                public class FooterUtils
+                {
+                    private readonly string FooterSelector = ""[data-selenium=\""footer\""]"";
+
+                    public object Footer => By.XPath(FooterSelector);
+                }
+            }";
+
+            var analyzers = GetCSharpDiagnosticAnalyzers().ToImmutableArray();
+            var documents = CreateProject(new[] { testCode })
+                           .Documents
+                           .ToArray();
+
+            var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzers, documents, CancellationToken.None).ConfigureAwait(false);
+
+            var baseResult = CSharpDiagnostic(AG0026EnsureXPathNotUsedToFindElements.DIAGNOSTIC_ID);
+            VerifyDiagnosticResults(diag, analyzers, new DiagnosticResult[0]);
+        }
     }
 }
