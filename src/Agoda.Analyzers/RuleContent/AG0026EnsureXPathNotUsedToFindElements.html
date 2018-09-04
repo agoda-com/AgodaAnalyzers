@@ -1,0 +1,20 @@
+﻿﻿<p>
+    Use CSS-selectors instead of XPath to access elements
+</p>
+<p>
+    <ul>
+        <li>We are all familiar with CSS selectors, but many of us are not comfortable with XPath.</li>
+        <li>XPath just adds noise and confusion, so should not be used.</li>
+    </ul>
+</p>
+
+<h2>Don't</h2>
+<pre>
+    // What do all those characters even mean? I don't even want to have to know.
+    Driver.FindElements(By.XPath(".//*[@data-selenium='hotel-item']")) 
+</pre>
+
+<h2>Do</h2>
+<pre>
+    Driver.FindElements(By.CssSelector("[data-selenium=hotel-item]"))
+</pre>

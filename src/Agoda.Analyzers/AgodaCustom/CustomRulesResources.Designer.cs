@@ -250,6 +250,15 @@ namespace Agoda.Analyzers.AgodaCustom {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ensure elements are not selected by XPath in Selenium tests.
+        /// </summary>
+        public static string AG0026Title {
+            get {
+                return ResourceManager.GetString("AG0026Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Prevent use of dynamic.
         /// </summary>
         public static string AG0030Title {

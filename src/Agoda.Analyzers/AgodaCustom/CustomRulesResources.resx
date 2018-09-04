@@ -183,4 +183,7 @@
   <data name="AG0030Title" xml:space="preserve">
     <value>Prevent use of dynamic</value>
   </data>
+  <data name="AG0026Title" xml:space="preserve">
+    <value>Ensure elements are not selected by XPath in Selenium tests</value>
+  </data>
 </root>
