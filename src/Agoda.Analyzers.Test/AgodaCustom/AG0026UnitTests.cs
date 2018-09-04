@@ -16,11 +16,11 @@ namespace Agoda.Analyzers.Test.AgodaCustom
     {
         protected override IEnumerable<DiagnosticAnalyzer> GetCSharpDiagnosticAnalyzers()
         {
-            yield return new AG0026EnsureXPathNotUsedToFindElements();
+            yield return new AG0026EnsureOnlyCssSelectorIsUsedToFindElements();
         }
         
         [Test]
-        public async Task AG0026_WhenUsedXPath_ThenShowWarning()
+        public async Task AG0026_WhenUsedAnyAccessorButNotCssSelector_ThenShowWarning()
         {
             var testCode = @"
             using System;
@@ -33,7 +33,19 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 {
                     private readonly string FooterSelector = ""[data-selenium=\""footer\""]"";
 
-                    public IWebElement Footer => new ChromeDriver().FindElement(By.XPath(FooterSelector));
+                    public IWebElement Footer1 => new ChromeDriver().FindElement(By.ClassName(FooterSelector));
+
+                    public IWebElement Footer2 => new ChromeDriver().FindElement(By.Id(FooterSelector));
+
+                    public IWebElement Footer3 => new ChromeDriver().FindElement(By.LinkText(FooterSelector));
+
+                    public IWebElement Footer4 => new ChromeDriver().FindElement(By.Name(FooterSelector));
+
+                    public IWebElement Footer5 => new ChromeDriver().FindElement(By.PartialLinkText(FooterSelector));
+
+                    public IWebElement Footer6 => new ChromeDriver().FindElement(By.TagName(FooterSelector));
+
+                    public IWebElement Footer7 => new ChromeDriver().FindElement(By.XPath(FooterSelector));
                 }
             }";
 
@@ -45,10 +57,16 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 
             var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzers, documents, CancellationToken.None).ConfigureAwait(false);
 
-            var baseResult = CSharpDiagnostic(AG0026EnsureXPathNotUsedToFindElements.DIAGNOSTIC_ID);
+            var baseResult = CSharpDiagnostic(AG0026EnsureOnlyCssSelectorIsUsedToFindElements.DIAGNOSTIC_ID);
             VerifyDiagnosticResults(diag, analyzers, new[]
             {
-                baseResult.WithLocation(12, 81)
+                baseResult.WithLocation(12, 82),
+                baseResult.WithLocation(14, 82),
+                baseResult.WithLocation(16, 82),
+                baseResult.WithLocation(18, 82),
+                baseResult.WithLocation(20, 82),
+                baseResult.WithLocation(22, 82),
+                baseResult.WithLocation(24, 82)
             });
         }
 
@@ -78,12 +96,44 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 
             var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzers, documents, CancellationToken.None).ConfigureAwait(false);
 
-            var baseResult = CSharpDiagnostic(AG0026EnsureXPathNotUsedToFindElements.DIAGNOSTIC_ID);
+            var baseResult = CSharpDiagnostic(AG0026EnsureOnlyCssSelectorIsUsedToFindElements.DIAGNOSTIC_ID);
             VerifyDiagnosticResults(diag, analyzers, new DiagnosticResult[0]);
         }
 
         [Test]
-        public async Task AG0026_WhenByXPathNotFromSelenium_ThenNoWarning()
+        public async Task AG0026_WhenUsedMethodNotFromBanList_ThenNoWarning()
+        {
+            var testCode = @"
+            using System;
+            using OpenQA.Selenium;
+            using OpenQA.Selenium.Chrome;
+
+            namespace Selenium.Tests.Utils
+            {
+                public class FooterUtils
+                {
+                    private readonly string FooterSelector1 = ""[data-selenium=\""footer1\""]"";
+
+                    private readonly string FooterSelector2 = ""[data-selenium=\""footer2\""]"";
+
+                    public bool IsEqualSelectors => By.Equals(FooterSelector1, FooterSelector2);
+                }
+            }";
+
+            var analyzers = GetCSharpDiagnosticAnalyzers().ToImmutableArray();
+            var documents = CreateProject(new[] { testCode })
+                           .AddMetadataReference(MetadataReference.CreateFromFile(typeof(IWebElement).Assembly.Location))
+                           .Documents
+                           .ToArray();
+
+            var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzers, documents, CancellationToken.None).ConfigureAwait(false);
+
+            var baseResult = CSharpDiagnostic(AG0026EnsureOnlyCssSelectorIsUsedToFindElements.DIAGNOSTIC_ID);
+            VerifyDiagnosticResults(diag, analyzers, new DiagnosticResult[0]);
+        }
+
+        [Test]
+        public async Task AG0026_WhenFoundInvocationOfByXPathNotFromOpenQASeleniumNamespace_ThenNoWarning()
         {
             var testCode = @"
             using System;
@@ -111,7 +161,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 
             var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzers, documents, CancellationToken.None).ConfigureAwait(false);
 
-            var baseResult = CSharpDiagnostic(AG0026EnsureXPathNotUsedToFindElements.DIAGNOSTIC_ID);
+            var baseResult = CSharpDiagnostic(AG0026EnsureOnlyCssSelectorIsUsedToFindElements.DIAGNOSTIC_ID);
             VerifyDiagnosticResults(diag, analyzers, new DiagnosticResult[0]);
         }
     }

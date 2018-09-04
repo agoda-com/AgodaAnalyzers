@@ -184,9 +184,6 @@
     <value>Prevent use of dynamic</value>
   </data>
   <data name="AG0026Title" xml:space="preserve">
-    <value>Ensure elements are not selected by XPath in Selenium tests</value>
-  </data>
-  <data name="AG0026FixTitle" xml:space="preserve">
-    <value>Use CssSelector instead of XPath to access elements</value>
+    <value>Use only By.CssSelector to find elements in Selenium tests</value>
   </data>
 </root>

@@ -77,7 +77,7 @@
     <None Update="RuleContent\AG0006RegisteredComponentShouldHaveExactlyOnePublicConstructor.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="RuleContent\AG0026EnsureXPathNotUsedToFindElements.html">
+    <None Update="RuleContent\AG0026EnsureOnlyCssSelectorIsUsedToFindElements.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="RuleContent\AG0020AvoidReturningNullEnumerables.html">
