@@ -48,7 +48,6 @@ namespace Agoda.Analyzers.AgodaCustom
         {
             var invocationExpressionSyntax = (InvocationExpressionSyntax)context.Node;
             var methodSymbol = (IMethodSymbol)context.SemanticModel.GetSymbolInfo(invocationExpressionSyntax).Symbol;
-            var t = methodSymbol.ContainingType.ConstructedFrom.ToString();
             if (methodSymbol != null
                 && methodSymbol.ContainingType.ConstructedFrom.ToString() == NamespaceAndType
                 && Regex.IsMatch(methodSymbol.Name))
