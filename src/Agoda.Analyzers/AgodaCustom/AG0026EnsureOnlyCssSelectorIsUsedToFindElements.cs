@@ -4,6 +4,7 @@ using System.Collections.Immutable;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Linq;
 
 namespace Agoda.Analyzers.AgodaCustom
 {
@@ -27,20 +28,18 @@ namespace Agoda.Analyzers.AgodaCustom
                 WellKnownDiagnosticTags.EditAndContinue
             );
 
-        protected override bool IsStatic => true;
         protected override string NamespaceAndType => "OpenQA.Selenium.By";
-        protected override ImmutableArray<string> Methods => ImmutableArray.Create("CssSelector");
-        protected override InvocationExpressionMode Mode => InvocationExpressionMode.Allowed;
+        protected override ImmutableArray<string> MethodNames => ImmutableArray.Create("CssSelector");
+        protected override MethodInvocationAnalyzerType Type => MethodInvocationAnalyzerType.WhiteListEquals;
     }
     
     public abstract class InvocationExpressionAnalyzer : DiagnosticAnalyzer
     {
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Descriptor);
         protected abstract DiagnosticDescriptor Descriptor { get; }
-        protected abstract bool IsStatic { get; }
         protected abstract string NamespaceAndType { get; }
-        protected abstract ImmutableArray<string> Methods { get; }
-        protected abstract InvocationExpressionMode Mode { get; }
+        protected abstract ImmutableArray<string> MethodNames { get; }
+        protected abstract MethodInvocationAnalyzerType Type { get; }
 
         public override void Initialize(AnalysisContext context)
         {
@@ -49,23 +48,36 @@ namespace Agoda.Analyzers.AgodaCustom
 
         private void AnalyzeNode(SyntaxNodeAnalysisContext context)
         {
-            bool mode(bool x) => Mode == InvocationExpressionMode.Forbidden ? x : !x;
-
             var invocationExpressionSyntax = (InvocationExpressionSyntax)context.Node;
-            var symbol = context.SemanticModel?.GetSymbolInfo(invocationExpressionSyntax).Symbol;
-            if (symbol != null
-                && (!IsStatic || symbol.IsStatic)
-                && symbol.ContainingType.ConstructedFrom.ToString() == NamespaceAndType
-                && mode(Methods.Contains(symbol.Name)))
+            var methodSymbol = (IMethodSymbol)context.SemanticModel.GetSymbolInfo(invocationExpressionSyntax).Symbol;
+            var t = methodSymbol.ContainingType.ConstructedFrom.ToString();
+            if (methodSymbol != null
+                && methodSymbol.ContainingType.ConstructedFrom.ToString() == NamespaceAndType
+                && IsMatch(Type, methodSymbol.Name))
             {
                 context.ReportDiagnostic(Diagnostic.Create(Descriptor, invocationExpressionSyntax.GetLocation()));
             }
         }
+
+        private bool IsMatch(MethodInvocationAnalyzerType mode, string methodName)
+        {
+            switch (mode)
+            {
+                case MethodInvocationAnalyzerType.WhiteListEquals:
+                    return !MethodNames.Contains(methodName);
+                case MethodInvocationAnalyzerType.BlackListEquals:
+                    return MethodNames.Contains(methodName);
+                case MethodInvocationAnalyzerType.BlackListStartsWith:
+                    return MethodNames.Any(y => methodName.StartsWith(y));
+            }
+            return false;
+        }
     }
 
-    public enum InvocationExpressionMode
+    public enum MethodInvocationAnalyzerType
     {
-        Allowed = 1,
-        Forbidden = 2
+        WhiteListEquals = 1,
+        BlackListEquals = 2,
+        BlackListStartsWith = 3
     }
 }
