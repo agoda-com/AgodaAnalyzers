@@ -4,7 +4,7 @@ using System.Collections.Immutable;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace Agoda.Analyzers.AgodaCustom
 {
@@ -29,8 +29,7 @@ namespace Agoda.Analyzers.AgodaCustom
             );
 
         protected override string NamespaceAndType => "OpenQA.Selenium.By";
-        protected override ImmutableArray<string> MethodNames => ImmutableArray.Create("CssSelector");
-        protected override MethodInvocationAnalyzerType Type => MethodInvocationAnalyzerType.WhiteListEquals;
+        protected override Regex Regex => new Regex("^((?!CssSelector).)*$");
     }
     
     public abstract class InvocationExpressionAnalyzer : DiagnosticAnalyzer
@@ -38,9 +37,8 @@ namespace Agoda.Analyzers.AgodaCustom
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Descriptor);
         protected abstract DiagnosticDescriptor Descriptor { get; }
         protected abstract string NamespaceAndType { get; }
-        protected abstract ImmutableArray<string> MethodNames { get; }
-        protected abstract MethodInvocationAnalyzerType Type { get; }
-
+        protected abstract Regex Regex { get; }
+        
         public override void Initialize(AnalysisContext context)
         {
             context.RegisterSyntaxNodeAction(AnalyzeNode, SyntaxKind.InvocationExpression);
@@ -53,31 +51,10 @@ namespace Agoda.Analyzers.AgodaCustom
             var t = methodSymbol.ContainingType.ConstructedFrom.ToString();
             if (methodSymbol != null
                 && methodSymbol.ContainingType.ConstructedFrom.ToString() == NamespaceAndType
-                && IsMatch(Type, methodSymbol.Name))
+                && Regex.IsMatch(methodSymbol.Name))
             {
                 context.ReportDiagnostic(Diagnostic.Create(Descriptor, invocationExpressionSyntax.GetLocation()));
             }
         }
-
-        private bool IsMatch(MethodInvocationAnalyzerType mode, string methodName)
-        {
-            switch (mode)
-            {
-                case MethodInvocationAnalyzerType.WhiteListEquals:
-                    return !MethodNames.Contains(methodName);
-                case MethodInvocationAnalyzerType.BlackListEquals:
-                    return MethodNames.Contains(methodName);
-                case MethodInvocationAnalyzerType.BlackListStartsWith:
-                    return MethodNames.Any(y => methodName.StartsWith(y));
-            }
-            return false;
-        }
-    }
-
-    public enum MethodInvocationAnalyzerType
-    {
-        WhiteListEquals = 1,
-        BlackListEquals = 2,
-        BlackListStartsWith = 3
     }
 }
