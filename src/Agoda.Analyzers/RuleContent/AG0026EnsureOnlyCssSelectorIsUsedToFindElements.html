@@ -1,5 +1,5 @@
 ﻿﻿<p>
-    Use CSS-selectors instead of XPath to access elements
+    Use only CSS Selectors to find elements in Selenium tests
 </p>
 <p>
     <ul>
@@ -17,4 +17,9 @@
 <h2>Do</h2>
 <pre>
     Driver.FindElements(By.CssSelector("[data-selenium=hotel-item]"))
+</pre>
+
+<h2>Do</h2>
+<pre>
+    Driver.FindElementsByCssSelector("[data-selenium=hotel-item]")
 </pre>
