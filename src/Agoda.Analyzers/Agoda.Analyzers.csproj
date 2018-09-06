@@ -36,6 +36,9 @@
     <PackageReference Include="System.Reflection.Metadata" Version="1.3.0" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="AgodaCustom\AG0018EnsureThatPubliclyExposedIEnumerableTypes .cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="AgodaCustom\CustomRulesResources.Designer.cs">
       <DependentUpon>CustomRulesResources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
@@ -75,6 +78,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="RuleContent\AG0006RegisteredComponentShouldHaveExactlyOnePublicConstructor.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="RuleContent\AG0018EnsureThatPubliclyExposedIEnumerableTypes.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="RuleContent\AG0020AvoidReturningNullEnumerables.html">
