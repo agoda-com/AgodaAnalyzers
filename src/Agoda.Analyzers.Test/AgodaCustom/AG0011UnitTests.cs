@@ -35,7 +35,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
             var analyzersArray = GetCSharpDiagnosticAnalyzers().ToImmutableArray();
 
             var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzersArray, new[] { doc }, CancellationToken.None);
-            var expected = CSharpDiagnostic(AG0011NoDirectQueryStringAccess.DiagnosticId).WithLocation(4, 82);
+            var expected = CSharpDiagnostic(AG0011NoDirectQueryStringAccess.DIAGNOSTIC_ID).WithLocation(4, 82);
 
             VerifyDiagnosticResults(diag, analyzersArray, new[] { expected });
         }
@@ -62,7 +62,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
             var analyzersArray = GetCSharpDiagnosticAnalyzers().ToImmutableArray();
 
             var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzersArray, new[] { doc }, CancellationToken.None);
-            var expected = CSharpDiagnostic(AG0011NoDirectQueryStringAccess.DiagnosticId).WithLocation(5, 55);
+            var expected = CSharpDiagnostic(AG0011NoDirectQueryStringAccess.DIAGNOSTIC_ID).WithLocation(5, 55);
 
             VerifyDiagnosticResults(diag, analyzersArray, new[] { expected });
         }

@@ -183,13 +183,15 @@
   <data name="AG0030Title" xml:space="preserve">
     <value>Prevent use of dynamic</value>
   </data>
-  <data name="AG0026Title" xml:space="preserve">
-    <value>Use only CSS Selectors to find elements in Selenium tests</value>
-  </data>
+<<<<<<< HEAD
   <data name="AG0019Title" xml:space="preserve">
     <value>Prevent use of System.Runtime.CompilerServices.InternalsVisibleTo attribute</value>
   </data>
   <data name="AG0019FixTitle" xml:space="preserve">
     <value>Remove InternalsVisibleTo attribute</value>
+=======
+  <data name="AG0026Title" xml:space="preserve">
+    <value>Use only CSS Selectors to find elements in Selenium tests</value>
+>>>>>>> 31e29f9e5492d27861da025b616f65c97e0de933
   </data>
 </root>

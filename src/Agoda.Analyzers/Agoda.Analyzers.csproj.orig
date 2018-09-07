@@ -77,10 +77,11 @@
     <None Update="RuleContent\AG0006RegisteredComponentShouldHaveExactlyOnePublicConstructor.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+<<<<<<< HEAD
     <None Update="RuleContent\AG0019PreventUseOfInternalsVisibleToAttribute.html">
-          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+=======
     <None Update="RuleContent\AG0026EnsureOnlyCssSelectorIsUsedToFindElements.html">
+>>>>>>> 31e29f9e5492d27861da025b616f65c97e0de933
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="RuleContent\AG0020AvoidReturningNullEnumerables.html">
