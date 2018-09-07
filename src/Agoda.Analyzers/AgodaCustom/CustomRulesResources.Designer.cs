@@ -214,6 +214,15 @@ namespace Agoda.Analyzers.AgodaCustom {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Remove InternalsVisibleTo attribute.
+        /// </summary>
+        public static string AG0019FixTitle {
+            get {
+                return ResourceManager.GetString("AG0019FixTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Prevent use of System.Runtime.CompilerServices.InternalsVisibleTo attribute.
         /// </summary>
         public static string AG0019Title {
