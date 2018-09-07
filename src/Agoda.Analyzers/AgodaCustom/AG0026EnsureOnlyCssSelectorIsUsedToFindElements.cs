@@ -33,8 +33,7 @@ namespace Agoda.Analyzers.AgodaCustom
                     new Regex("^(?!CssSelector).*$")),
                 ForbiddenMethodRule.Create(
                     "OpenQA.Selenium.Remote.RemoteWebDriver",
-                    new Regex(
-                            "^(FindElement[s]?((?!ByCssSelector)[B]+)(.+))$"))
+                    new Regex("^(FindElement[s]?((?!ByCssSelector)[B]+)(.+))$"))
                 );
     }
 }

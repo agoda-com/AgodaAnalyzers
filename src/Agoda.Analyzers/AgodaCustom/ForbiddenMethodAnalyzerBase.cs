@@ -31,23 +31,25 @@ namespace Agoda.Analyzers.AgodaCustom
         }
 
         private static bool Filter(IMethodSymbol methodSymbol, ForbiddenMethodRule rule)
-                => methodSymbol.ContainingType.ConstructedFrom.ToString() == rule.NamespaceAndType
-                        && rule.MethodNameRegex.IsMatch(methodSymbol.Name);
-    }
-
-    public class ForbiddenMethodRule
-    {
-        public string NamespaceAndType { get; }
-
-        public Regex MethodNameRegex { get; }
-
-        private ForbiddenMethodRule(string namespaceAndType, Regex methodNameRegex)
         {
-            NamespaceAndType = namespaceAndType;
-            MethodNameRegex = methodNameRegex;
+            return methodSymbol.ContainingType.ConstructedFrom.ToString() == rule.NamespaceAndType
+                   && rule.MethodNameRegex.IsMatch(methodSymbol.Name);
         }
 
-        public static ForbiddenMethodRule Create(string namespaceAndType, Regex methodNameRegex)
-            => new ForbiddenMethodRule(namespaceAndType, methodNameRegex);
+        protected class ForbiddenMethodRule
+        {
+            public string NamespaceAndType { get; }
+
+            public Regex MethodNameRegex { get; }
+
+            private ForbiddenMethodRule(string namespaceAndType, Regex methodNameRegex)
+            {
+                NamespaceAndType = namespaceAndType;
+                MethodNameRegex = methodNameRegex;
+            }
+
+            public static ForbiddenMethodRule Create(string namespaceAndType, Regex methodNameRegex)
+                => new ForbiddenMethodRule(namespaceAndType, methodNameRegex);
+        }
     }
 }
