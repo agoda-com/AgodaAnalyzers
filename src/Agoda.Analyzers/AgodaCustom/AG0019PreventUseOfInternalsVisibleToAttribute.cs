@@ -47,7 +47,7 @@ namespace Agoda.Analyzers.AgodaCustom
            
             foreach (var attribute in attributeNode.Attributes)
             {
-                if (attribute.Name != null && (attribute.Name as IdentifierNameSyntax).Identifier.Text == "InternalsVisibleTo")
+                if (attribute.Name is IdentifierNameSyntax name && name.Identifier.Text == "InternalsVisibleTo")
                 {
                     context.ReportDiagnostic(Diagnostic.Create(_diagnosticDescriptor, attribute.GetLocation()));
                 }
