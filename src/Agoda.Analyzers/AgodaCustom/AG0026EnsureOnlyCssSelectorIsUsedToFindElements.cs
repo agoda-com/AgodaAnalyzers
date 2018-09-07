@@ -30,17 +30,11 @@ namespace Agoda.Analyzers.AgodaCustom
             ImmutableArray.Create(
                 ForbiddenMethodRule.Create(
                     "OpenQA.Selenium.By",
-                    new Regex("^(ClassName|Id|LinkText|Name|PartialLinkText|TagName|XPath)$")),
+                    new Regex("^(?!CssSelector).*$")),
                 ForbiddenMethodRule.Create(
                     "OpenQA.Selenium.Remote.RemoteWebDriver",
                     new Regex(
-                            "^(FindElementByClassName|FindElementsByClassName" +
-                            "|FindElementById|FindElementsById" +
-                            "|FindElementByLinkText|FindElementsByLinkText" +
-                            "|FindElementByName|FindElementsByName" +
-                            "|FindElementByPartialLinkText|FindElementsByPartialLinkText" +
-                            "|FindElementByTagName|FindElementsByTagName" +
-                            "|FindElementByXPath|FindElementsByXPath)$"))
+                            "^(FindElement[s]?((?!ByCssSelector)[B]+)(.+))$"))
                 );
     }
 }
