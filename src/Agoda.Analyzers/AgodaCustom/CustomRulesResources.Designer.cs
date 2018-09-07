@@ -223,7 +223,7 @@ namespace Agoda.Analyzers.AgodaCustom {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Prevent use of System.Runtime.CompilerServices.InternalsVisibleTo attribute.
+        ///   Looks up a localized string similar to Do not use System.Runtime.CompilerServices.InternalsVisibleTo attribute.
         /// </summary>
         public static string AG0019Title {
             get {
