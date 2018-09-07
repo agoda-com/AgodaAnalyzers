@@ -3,6 +3,7 @@ using Agoda.Analyzers.Helpers;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeFixes;
+using Microsoft.CodeAnalysis.Text;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -24,9 +25,9 @@ namespace Agoda.Analyzers.CodeFixes.AgodaCustom
             {
                 context.RegisterCodeFix(
                     CodeAction.Create(
-                        CustomRulesResources.AG0019FixTitle,
-                        cancellationToken => GetTransformedDocumentAsync(context.Document, diagnostic, cancellationToken),
-                        nameof(AG0019FixProvider)),
+                        title: CustomRulesResources.AG0019FixTitle,
+                        createChangedDocument: cancellationToken => GetTransformedDocumentAsync(context.Document, diagnostic, cancellationToken),
+                        equivalenceKey: nameof(AG0019FixProvider)),
                     diagnostic);
             }
 
@@ -43,7 +44,11 @@ namespace Agoda.Analyzers.CodeFixes.AgodaCustom
 
         private async static Task<Document> ConvertToEmptyEnumerableAsync(Document document, SyntaxToken token, CancellationToken cancellationToken)
         {
-            return null;
+            var sourceText = await document.GetTextAsync(cancellationToken).ConfigureAwait(false);
+            var attributeList = token.Parent.Parent.Parent;
+            var spanToRemove = TextSpan.FromBounds(attributeList.Span.Start, attributeList.Span.End);
+            var change = new TextChange(spanToRemove, string.Empty);
+            return document.WithText(sourceText.WithChanges(change));
         }
     }
 }
