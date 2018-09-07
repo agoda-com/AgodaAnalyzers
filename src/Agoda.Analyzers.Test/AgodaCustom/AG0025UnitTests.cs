@@ -18,14 +18,16 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         public async Task AG0025_WhenInvokeStart_ShouldNotShowWarning()
         {
             var code = @"
-                using System.Threading.Tasks;
+using System.Threading.Tasks;
 
-				class TestClass {
-					public void TestMethod1() {
-						new Task(() => {}).Start();
-					}
-				}
-			";
+class TestClass 
+{
+    public void TestMethod1() 
+    {
+        new Task(() => {}).Start();
+    }
+}
+";
             
             await TestForResults(code);
         }
@@ -34,16 +36,19 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         public async Task AG0025_WhenInvokeCustomTaskContinue_ShouldNotShowWarning()
         {
             var code = @"
-                class Task {
-                    public void Continue() {}
-                }
+class Task 
+{
+    public void Continue() {}
+}
 
-				class TestClass {
-					public void TestMethod1() {
-						new Task().Continue();
-					}
-				}
-			";
+class TestClass 
+{
+    public void TestMethod1() 
+    {
+        new Task().Continue();
+    }
+}
+";
 
             await TestForResults(code);
         }
@@ -52,19 +57,21 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         public async Task AG0025_WhenInvokeContinueWith_ShouldShowWarning()
         {
             var code = @"
-                using System.Threading.Tasks;
+using System.Threading.Tasks;
 
-				class TestClass {
-					public void TestMethod1() {
-						new Task(() => {}).ContinueWith(null);
-					}
-				}
-			";
+class TestClass 
+{
+    public void TestMethod1() 
+    {
+        new Task(() => {}).ContinueWith(null);
+    }
+}
+";
 
-            var baseResult = CSharpDiagnostic(AG0025PreventUseOfTaskContinue.DiagnosticId);
+            var baseResult = CSharpDiagnostic(AG0025PreventUseOfTaskContinue.DIAGNOSTIC_ID);
             var expected = new[]
             {
-                baseResult.WithLocation(6, 26)
+                baseResult.WithLocation(8, 9)
             };
 
             await TestForResults(code, expected);
@@ -74,19 +81,22 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         public async Task AG0025_WhenInvokeContinueGeneric_ShouldShowWarning()
         {
             var code = @"
-                using System.Threading.Tasks;
+using System.Threading.Tasks;
 
-				class TestClass {
-					public void TestMethod1() {
-						new Task(() => {}).ContinueWith<string>(null);
-					}
-				}
-			";
+class TestClass 
+{
+    public void TestMethod1() 
+    {
+        var task = Task.CompletedTask;
+        task.ContinueWith<string>(null);
+    }
+}
+";
             
-            var baseResult = CSharpDiagnostic(AG0025PreventUseOfTaskContinue.DiagnosticId);
+            var baseResult = CSharpDiagnostic(AG0025PreventUseOfTaskContinue.DIAGNOSTIC_ID);
             var expected = new[]
             {
-                baseResult.WithLocation(6, 26)
+                baseResult.WithLocation(9, 9)
             };
 
             await TestForResults(code, expected);
