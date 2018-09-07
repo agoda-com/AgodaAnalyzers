@@ -4,11 +4,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Text;
-using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -39,10 +35,10 @@ namespace Agoda.Analyzers.CodeFixes.AgodaCustom
             var root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
             var token = root.FindToken(diagnostic.Location.SourceSpan.Start);
 
-            return await ConvertToEmptyEnumerableAsync(document, token, cancellationToken).ConfigureAwait(false);
+            return await RemoveInternalsVisibleToAttribute(document, token, cancellationToken).ConfigureAwait(false);
         }
 
-        private async static Task<Document> ConvertToEmptyEnumerableAsync(Document document, SyntaxToken token, CancellationToken cancellationToken)
+        private async static Task<Document> RemoveInternalsVisibleToAttribute(Document document, SyntaxToken token, CancellationToken cancellationToken)
         {
             var sourceText = await document.GetTextAsync(cancellationToken).ConfigureAwait(false);
             var attributeList = token.Parent.Parent.Parent;

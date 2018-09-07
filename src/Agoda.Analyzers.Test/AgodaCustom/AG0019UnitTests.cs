@@ -2,11 +2,9 @@
 using Agoda.Analyzers.Test.Helpers;
 using Microsoft.CodeAnalysis.Diagnostics;
 using NUnit.Framework;
-using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -18,27 +16,27 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         public async Task RemoveInternalsVisibleToAttributeShouldReportCorrectly()
         {
             var code = @"
-                        using System;
-                        using System.Diagnostics;
-                        using System.Reflection;
-                        using System.Runtime.CompilerServices;
+                    using System;
+                    using System.Diagnostics;
+                    using System.Reflection;
+                    using System.Runtime.CompilerServices;
 
-                        [assembly: AssemblyTitle(""MyApplication"")]
-                        [assembly: InternalsVisibleTo(""Agoda.Website.UnitTestFramework"")]
-                        [assembly: AssemblyDescription(""Description""), InternalsVisibleTo(""Agoda.Website.UnitTestFramework"")]
+                    [assembly: AssemblyTitle(""MyApplication"")]
+                    [assembly: InternalsVisibleTo(""Agoda.Website.UnitTestFramework"")]
+                    [assembly: AssemblyDescription(""Description""), InternalsVisibleTo(""Agoda.Website.UnitTestFramework"")]
 
-                        namespace RoslynTest
+                    namespace RoslynTest
+                        {
+                            [Serializable]
+                            public class Program
                             {
-                                [Serializable]
-                                public class Program
+                                [Conditional(""DEBUG""), Conditional(""TEST1"")]
+                                static void Main(string[] args)
                                 {
-                                    [Conditional(""DEBUG""), Conditional(""TEST1"")]
-                                    static void Main(string[] args)
-                                    {
-                                        Console.WriteLine(""Hello World!"");
-                                    }
+                                    Console.WriteLine(""Hello World!"");
                                 }
                             }
+                        }
                     ";
 
             var doc = CreateProject(new[] { code }).Documents.First();
