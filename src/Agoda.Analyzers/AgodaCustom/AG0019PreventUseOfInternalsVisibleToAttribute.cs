@@ -17,8 +17,6 @@ namespace Agoda.Analyzers.AgodaCustom
     public class AG0019PreventUseOfInternalsVisibleToAttribute : DiagnosticAnalyzer
     {
         public const string DiagnosticId = "AG0019";
-
-        private const string _helpLinkUrl = "https://github.agodadev.io/pages/standards-c-sharp/code-standards/unit-testing/only-test-the-public-interface.html";
         private readonly DiagnosticDescriptor _diagnosticDescriptor;
 
         public AG0019PreventUseOfInternalsVisibleToAttribute()
@@ -33,7 +31,7 @@ namespace Agoda.Analyzers.AgodaCustom
                 DiagnosticSeverity.Error,
                 AnalyzerConstants.EnabledByDefault,
                 DescriptionContentLoader.GetAnalyzerDescription(nameof(AG0019PreventUseOfInternalsVisibleToAttribute)),
-                _helpLinkUrl,
+                "https://github.agodadev.io/pages/standards-c-sharp/code-standards/unit-testing/only-test-the-public-interface.html",
                 WellKnownDiagnosticTags.EditAndContinue);
         }
 
@@ -45,11 +43,11 @@ namespace Agoda.Analyzers.AgodaCustom
         {
             var attributeNode = (AttributeListSyntax)context.Node;
 
-           if (attributeNode.Target?.Identifier.Text != "assembly" || attributeNode.Attributes.Count == 0) return;
+           if (attributeNode.Target?.Identifier.Text != "assembly") return;
            
             foreach (var attribute in attributeNode.Attributes)
             {
-                if (attribute.Name != null && ((IdentifierNameSyntax)attribute.Name).Identifier.Text == "InternalsVisibleTo")
+                if (attribute.Name != null && (attribute.Name as IdentifierNameSyntax).Identifier.Text == "InternalsVisibleTo")
                 {
                     context.ReportDiagnostic(Diagnostic.Create(_diagnosticDescriptor, attribute.GetLocation()));
                 }
