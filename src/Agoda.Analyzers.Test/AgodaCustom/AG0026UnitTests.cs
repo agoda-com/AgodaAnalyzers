@@ -10,7 +10,6 @@ using Microsoft.CodeAnalysis;
 using OpenQA.Selenium;
 using Agoda.Analyzers.AgodaCustom;
 using System.Collections.ObjectModel;
-using OpenQA.Selenium.Chrome;
 
 namespace Agoda.Analyzers.Test.AgodaCustom
 {
