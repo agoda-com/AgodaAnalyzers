@@ -1,7 +1,9 @@
 ﻿using Agoda.Analyzers.Helpers;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
+using Microsoft.CodeAnalysis.Text;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -37,11 +39,22 @@ namespace Agoda.Analyzers.AgodaCustom
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(_diagnosticDescriptor);
 
-        public override void Initialize(AnalysisContext context) => context.RegisterSyntaxNodeAction(AnalyzeNode, SyntaxKind.AttributeArgumentList);
+        public override void Initialize(AnalysisContext context) => context.RegisterSyntaxNodeAction(AnalyzeNode, SyntaxKind.AttributeList);
 
         private void AnalyzeNode(SyntaxNodeAnalysisContext context)
         {
-            
+            var attributeNode = (AttributeListSyntax)context.Node;
+
+            if (attributeNode.Target?.Identifier.Text != "assembly") return;
+
+            var attributes = attributeNode.Attributes;
+
+            foreach (var attribute in attributes)
+            {
+                return;
+            }
+
+            return;
         }
     }
 }
