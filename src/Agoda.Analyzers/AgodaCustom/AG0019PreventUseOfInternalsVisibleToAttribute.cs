@@ -45,16 +45,15 @@ namespace Agoda.Analyzers.AgodaCustom
         {
             var attributeNode = (AttributeListSyntax)context.Node;
 
-            if (attributeNode.Target?.Identifier.Text != "assembly") return;
-
-            var attributes = attributeNode.Attributes;
-
-            foreach (var attribute in attributes)
+           if (attributeNode.Target?.Identifier.Text != "assembly" || attributeNode.Attributes.Count == 0) return;
+           
+            foreach (var attribute in attributeNode.Attributes)
             {
-                return;
+                if (attribute.Name != null && ((IdentifierNameSyntax)attribute.Name).Identifier.Text == "InternalsVisibleTo")
+                {
+                    context.ReportDiagnostic(Diagnostic.Create(_diagnosticDescriptor, attribute.GetLocation()));
+                }
             }
-
-            return;
         }
     }
 }
