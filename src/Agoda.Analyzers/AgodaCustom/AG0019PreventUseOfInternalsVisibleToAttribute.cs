@@ -10,7 +10,7 @@ namespace Agoda.Analyzers.AgodaCustom
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public class AG0019PreventUseOfInternalsVisibleToAttribute : DiagnosticAnalyzer
     {
-        public const string DiagnosticId = "AG0019";
+        public const string DIAGNOSTIC_ID = "AG0019";
         private readonly DiagnosticDescriptor _diagnosticDescriptor;
 
         public AG0019PreventUseOfInternalsVisibleToAttribute()
@@ -18,7 +18,7 @@ namespace Agoda.Analyzers.AgodaCustom
             var info = new LocalizableResourceString(nameof(CustomRulesResources.AG0019Title), CustomRulesResources.ResourceManager, typeof(CustomRulesResources));
 
             _diagnosticDescriptor = new DiagnosticDescriptor(
-                DiagnosticId,
+                DIAGNOSTIC_ID,
                 info,
                 info,
                 AnalyzerCategory.MaintainabilityRules,

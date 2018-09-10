@@ -13,7 +13,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
     internal class AG0019UnitTests : DiagnosticVerifier
     {
         [Test]
-        public async Task RemoveInternalsVisibleToAttributeShouldReportCorrectly()
+        public async Task AG0019_RemoveInternalsVisibleToAttributeShouldReportCorrectly()
         {
             var code = @"
                     using System;
@@ -44,11 +44,11 @@ namespace Agoda.Analyzers.Test.AgodaCustom
             var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzersArray, new[] { doc }, CancellationToken.None)
                 .ConfigureAwait(false);
 
-            var expected = CSharpDiagnostic(AG0019PreventUseOfInternalsVisibleToAttribute.DiagnosticId);
+            var expected = CSharpDiagnostic(AG0019PreventUseOfInternalsVisibleToAttribute.DIAGNOSTIC_ID);
 
             VerifyDiagnosticResults(diag, analyzersArray, new[] {
-                expected.WithLocation(8, 36),
-                expected.WithLocation(9, 72)
+                expected.WithLocation(8, 32),
+                expected.WithLocation(9, 68)
             });
         }
 
