@@ -5,55 +5,39 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System;
 using System.Collections.Immutable;
+using System.Text.RegularExpressions;
 
 namespace Agoda.Analyzers.AgodaCustom
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    public class AG0011NoDirectQueryStringAccess : DiagnosticAnalyzer
+    public class AG0011NoDirectQueryStringAccess : ForbiddenPropertyInvocationAnalyzerBase
     {
-        public const string DiagnosticId = "AG0011";
-        private static readonly LocalizableString Title = new LocalizableResourceString(nameof(CustomRulesResources.AG0011Title), CustomRulesResources.ResourceManager, typeof(CustomRulesResources));
-        private static readonly LocalizableString MessageFormat = new LocalizableResourceString(nameof(CustomRulesResources.AG0011Title), CustomRulesResources.ResourceManager, typeof(CustomRulesResources));
-        private static readonly LocalizableString Description = DescriptionContentLoader.GetAnalyzerDescription(nameof(AG0011NoDirectQueryStringAccess));
-
-        private static readonly DiagnosticDescriptor Descriptor =
-            new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, AnalyzerCategory.CustomQualityRules,
-                DiagnosticSeverity.Error, AnalyzerConstants.EnabledByDefault, Description, null, WellKnownDiagnosticTags.EditAndContinue);
-
-        private static readonly Action<SyntaxNodeAnalysisContext> NoDirectQueryStringAccess = HandleNoDirectQueryStringAccess;
-
-        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Descriptor);
-
-        private static void HandleNoDirectQueryStringAccess(SyntaxNodeAnalysisContext context)
-        {
-            var identifier = context.Node as IdentifierNameSyntax;
-
-            var memberAccess = identifier?.Identifier.Parent?.Parent as MemberAccessExpressionSyntax;
-
-            if (memberAccess == null)
-            {
-                return;
-            }
-            
-            var memberType = context.SemanticModel.GetTypeInfo(memberAccess.Expression);
-
-            if (memberType.Type?.ToDisplayString() != "System.Web.HttpRequest")
-            {
-                return;
-            }
-            
-            if (identifier.Identifier.Text == "QueryString")
-            {
-                context.ReportDiagnostic(Diagnostic.Create(Descriptor, context.Node.GetLocation()));
-            }
-        }
+        public const string DIAGNOSTIC_ID = "AG0011";
         
-        public override void Initialize(AnalysisContext context)
-        {
-            context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
-            context.EnableConcurrentExecution();
+        private static readonly LocalizableString Title = new LocalizableResourceString(
+            nameof(CustomRulesResources.AG0011Title), 
+            CustomRulesResources.ResourceManager, 
+            typeof(CustomRulesResources));
+        
+        private static readonly LocalizableString MessageFormat = new LocalizableResourceString(
+            nameof(CustomRulesResources.AG0011Title), 
+            CustomRulesResources.ResourceManager, 
+            typeof(CustomRulesResources));
+        
+        protected override DiagnosticDescriptor Descriptor => new DiagnosticDescriptor(
+            DIAGNOSTIC_ID, 
+            Title, 
+            MessageFormat, 
+            AnalyzerCategory.CustomQualityRules,
+            DiagnosticSeverity.Error, 
+            AnalyzerConstants.EnabledByDefault, 
+            DescriptionContentLoader.GetAnalyzerDescription(nameof(AG0011NoDirectQueryStringAccess)),
+            null, 
+            WellKnownDiagnosticTags.EditAndContinue);
 
-            context.RegisterSyntaxNodeAction(NoDirectQueryStringAccess, SyntaxKind.IdentifierName);
-        }
+        protected override ImmutableArray<ForbiddenInvocationRule> Rules =>
+            ImmutableArray.Create(ForbiddenInvocationRule.Create("System.Web.HttpRequest", new Regex("^QueryString$")));
+
+
     }
 }

@@ -83,6 +83,9 @@
     <None Update="RuleContent\AG0018EnsureThatPubliclyExposedIEnumerableTypes.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="RuleContent\AG0026EnsureOnlyCssSelectorIsUsedToFindElements.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="RuleContent\AG0020AvoidReturningNullEnumerables.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
