@@ -11,14 +11,15 @@
      - `string` (which happens to implement `IEnumerable<char>`)
  </p>
 
- <h2>Compliant Code Example</h2>
-<pre>
-    public List<string> GetStrings() { ... }
-    public List<string> GetStringsV2 { get; set; }
-</pre>
 
 <h2>Noncompliant Code Example</h2>
 <pre>
     public IList<string> GetStrings() { ... }
     public IList<string> GetStringsV2 { get; set; }
+</pre>
+
+ <h2>Compliant Code Example</h2>
+<pre>
+    public List<string> GetStrings() { ... }
+    public List<string> GetStringsV2 { get; set; }
 </pre>
