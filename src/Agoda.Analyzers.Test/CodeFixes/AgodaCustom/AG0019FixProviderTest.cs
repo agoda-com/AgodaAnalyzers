@@ -79,7 +79,7 @@ namespace Agoda.Analyzers.Test.CodeFixes.AgodaCustom
                 expected.WithLocation(8, 32),
                 expected.WithLocation(9, 68)
             });
-            await VerifyCSharpFixAsync(code, result);
+            await VerifyCSharpFixAsync(code, result, allowNewCompilerDiagnostics: true);
         }
 
         protected override CodeFixProvider GetCSharpCodeFixProvider() => new AG0019FixProvider();
