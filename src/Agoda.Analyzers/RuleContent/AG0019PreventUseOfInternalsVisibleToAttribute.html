@@ -1,106 +1,51 @@
-﻿<div class="container-lg px-3 my-5 markdown-body">
+﻿﻿<p>
+    Prevent use of InternalsVisibleTo Attribute.
+</p>
 
-    <h1><a href="https://github.agodadev.io/pages/standards-c-sharp/code-standards/">code-standards</a></h1>
+<h2>Noncompliant Code Example</h2>
+<pre>
+using System;
+using System.Diagnostics;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 
+[assembly: AssemblyTitle("MyApplication")]
+[assembly: InternalsVisibleTo("Agoda.Website.UnitTestFramework")]
+[assembly: AssemblyDescription("Description"), InternalsVisibleTo("Agoda.Website.UnitTestFramework")]
 
-    <h2 id="only-test-the-public-interface">Only test the public interface<a class="anchorjs-link " href="#only-test-the-public-interface" aria-label="Anchor link for: only test the public interface" data-anchorjs-icon="" style="font: 1em/1 anchorjs-icons; padding-left: 0.375em;"></a></h2>
+namespace RoslynTest
+{
+    [Serializable]
+    public class Program
+    {
+        [Conditional("DEBUG"), Conditional("TEST1")]
+        static void Main(string[] args)
+        {
+            Console.WriteLine("Hello World!");
+        }
+    }
+}
+</pre>
 
-    <ul>
-        <li>This relates to <a href="/pages/standards-c-sharp/code-standards/unit-testing/prefer-black-box-over-white-box-testing.html">Prefer black box over white box testing</a>. By testing the internals of a class, your tests become brittle as you are not only testing the <em>result</em> but also the <em>implementation</em>.</li>
-        <li>When testing implementation, in becomes set in stone, so your class becomes more difficult to refactor without also changing tests. This is the opposite of what we want to achieve.</li>
-        <li>When refactoring, the best case scenario is: make changes -&gt; run tests -&gt; everything still passes. This becomes much less likely if internals are being tested.</li>
-        <li>If a class is difficult to test through its public interface, then this may be a code smell that the class is poorly designed. If <em>you</em> as the author are having trouble using your class, think about your poor consumers.</li>
-        <li><strong>Never</strong> make a method public just so it can be tested. Each time you do this <strong>multiple</strong> kittens die.</li>
-        <li>Do not use the <a href="https://docs.microsoft.com/en-us/dotnet/api/system.runtime.compilerservices.internalsvisibletoattribute?view=netframework-4.7.1"><code class="highlighter-rouge">InternalsVisibleToAttribute</code></a> for the aforementioned reasons. Won’t someone think of the kittens?</li>
-    </ul>
+<h2>Compliant Code Example</h2>
+<pre>
+using System;
+using System.Diagnostics;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 
-    <p>Consider the following interface:</p>
+[assembly: AssemblyTitle("MyApplication")]
 
-    <div class="language-c# highlighter-rouge">
-        <div class="highlight">
-            <pre class="highlight"><code><span class="k">public</span> <span class="k">interface</span> <span class="nc">IDogTranslator</span>
-<span class="p">{</span>
-            <span class="kt">string</span> <span class="nf">ToDog</span><span class="p">(</span><span class="kt">string</span> <span class="n">input</span><span class="p">);</span>
-<span class="p">}</span>
-</code></pre>
-        </div>
-    </div>
-
-    <h3 id="dont">Don’t<a class="anchorjs-link " href="#dont" aria-label="Anchor link for: dont" data-anchorjs-icon="" style="font: 1em/1 anchorjs-icons; padding-left: 0.375em;"></a></h3>
-
-    <p>Here, we see the <code class="highlighter-rouge">RepeatWord</code> function has been made public and tested separately.</p>
-
-    <div class="language-c# highlighter-rouge">
-        <div class="highlight">
-            <pre class="highlight"><code><span class="k">public</span> <span class="k">class</span> <span class="nc">DogTranslator</span> <span class="p">:</span> <span class="n">IDogTranslator</span>
-<span class="p">{</span>
-            <span class="k">public</span> <span class="kt">string</span> <span class="nf">ToDog</span><span class="p">(</span><span class="kt">string</span> <span class="n">input</span><span class="p">)</span>
-            <span class="p">{</span>
-            <span class="k">return</span> <span class="s">$"</span><span class="p">{</span><span class="n">input</span><span class="p">}</span><span class="s"> </span><span class="p">{</span><span class="nf">RepeatWord</span><span class="p">(</span><span class="s">"woof"</span><span class="p">,</span> <span class="m">3</span><span class="p">)}</span><span class="s">"</span><span class="p">;</span>
-            <span class="p">}</span>
-    
-            <span class="k">public</span> <span class="k">static</span> <span class="kt">string</span> <span class="nf">RepeatWord</span><span class="p">(</span><span class="kt">string</span> <span class="n">word</span><span class="p">,</span> <span class="kt">int</span> <span class="n">times</span><span class="p">)</span>
-            <span class="p">{</span>
-            <span class="k">return</span> <span class="n">String</span><span class="p">.</span><span class="nf">Join</span><span class="p">(</span><span class="s">" "</span><span class="p">,</span> <span class="n">Enumerable</span><span class="p">.</span><span class="nf">Repeat</span><span class="p">(</span><span class="n">word</span><span class="p">,</span> <span class="n">times</span><span class="p">));</span>
-            <span class="p">}</span>
-<span class="p">}</span>
-
-<span class="na">[TestFixture]</span>
-<span class="k">public</span> <span class="k">class</span> <span class="nc">DogTranslatorTest</span>
-<span class="p">{</span>
-            <span class="p">[</span><span class="n">Test</span><span class="p">]</span>
-            <span class="k">public</span> <span class="k">void</span> <span class="nf">TranslateToDog_Woofs</span><span class="p">()</span>
-            <span class="p">{</span>
-            <span class="kt">var</span> <span class="n">translator</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">DogTranslator</span><span class="p">();</span>
-            <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">translator</span><span class="p">.</span><span class="nf">ToDog</span><span class="p">(</span><span class="s">"I'm a dog"</span><span class="p">);</span>
-            <span class="n">Assert</span><span class="p">.</span><span class="nf">AreEqual</span><span class="p">(</span><span class="s">"I'm a dog woof woof woof"</span><span class="p">,</span> <span class="n">result</span><span class="p">);</span>
-            <span class="p">}</span>
-    
-            <span class="p">[</span><span class="n">Test</span><span class="p">]</span>
-            <span class="k">public</span> <span class="k">void</span> <span class="nf">RepeatWord_Repeats</span><span class="p">()</span>
-            <span class="p">{</span>
-            <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">DogTranslator</span><span class="p">.</span><span class="nf">RepeatWord</span><span class="p">(</span><span class="s">"meow"</span><span class="p">,</span> <span class="m">3</span><span class="p">);</span>
-            <span class="n">Assert</span><span class="p">.</span><span class="nf">AreEqual</span><span class="p">(</span><span class="s">"meow meow meow"</span><span class="p">,</span> <span class="n">result</span><span class="p">);</span>
-            <span class="p">}</span>
-<span class="p">}</span>
-</code></pre>
-        </div>
-    </div>
-
-    <h3 id="do">Do<a class="anchorjs-link " href="#do" aria-label="Anchor link for: do" data-anchorjs-icon="" style="font: 1em/1 anchorjs-icons; padding-left: 0.375em;"></a></h3>
-
-    <p><code class="highlighter-rouge">RepeatWord</code> is not part of the <code class="highlighter-rouge">IDogTranslator</code> interface. It exists only as an implementation detail. We should make it private it and remove its test. It will still be tested, but by calling through the public interface. We are now free to change the implementation without breaking the test.</p>
-
-    <div class="language-c# highlighter-rouge">
-        <div class="highlight">
-            <pre class="highlight"><code><span class="k">public</span> <span class="k">class</span> <span class="nc">DogTranslator</span> <span class="p">:</span> <span class="n">IDogTranslator</span>
-<span class="p">{</span>
-            <span class="k">public</span> <span class="kt">string</span> <span class="nf">ToDog</span><span class="p">(</span><span class="kt">string</span> <span class="n">input</span><span class="p">)</span>
-            <span class="p">{</span>
-            <span class="k">return</span> <span class="s">$"</span><span class="p">{</span><span class="n">input</span><span class="p">}</span><span class="s"> </span><span class="p">{</span><span class="nf">RepeatWord</span><span class="p">(</span><span class="s">"woof"</span><span class="p">,</span> <span class="m">3</span><span class="p">)}</span><span class="s">"</span><span class="p">;</span>
-            <span class="p">}</span>
-    
-            <span class="k">private</span> <span class="k">static</span> <span class="kt">string</span> <span class="nf">RepeatWord</span><span class="p">(</span><span class="kt">string</span> <span class="n">word</span><span class="p">,</span> <span class="kt">int</span> <span class="n">times</span><span class="p">)</span>
-            <span class="p">{</span>
-            <span class="k">return</span> <span class="n">String</span><span class="p">.</span><span class="nf">Join</span><span class="p">(</span><span class="s">" "</span><span class="p">,</span> <span class="n">Enumerable</span><span class="p">.</span><span class="nf">Repeat</span><span class="p">(</span><span class="n">word</span><span class="p">,</span> <span class="n">times</span><span class="p">));</span>
-            <span class="p">}</span>
-<span class="p">}</span>
-
-<span class="na">[TestFixture]</span>
-<span class="k">public</span> <span class="k">class</span> <span class="nc">DogTranslatorTest</span>
-<span class="p">{</span>
-            <span class="p">[</span><span class="n">Test</span><span class="p">]</span>
-            <span class="k">public</span> <span class="k">void</span> <span class="nf">TranslateToDog_Woofs</span><span class="p">()</span>
-            <span class="p">{</span>
-            <span class="kt">var</span> <span class="n">translator</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">DogTranslator</span><span class="p">();</span>
-            <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">translator</span><span class="p">.</span><span class="nf">ToDog</span><span class="p">(</span><span class="s">"I'm a dog"</span><span class="p">);</span>
-            <span class="n">Assert</span><span class="p">.</span><span class="nf">AreEqual</span><span class="p">(</span><span class="s">"I'm a dog woof woof woof"</span><span class="p">,</span> <span class="n">result</span><span class="p">);</span>
-            <span class="p">}</span>
-<span class="p">}</span>
-</code></pre>
-        </div>
-    </div>
-
-
-
-</div>
+namespace RoslynTest
+{
+    [Serializable]
+    public class Program
+    {
+        [Conditional("DEBUG"), Conditional("TEST1")]
+        static void Main(string[] args)
+        {
+            Console.WriteLine("Hello World!");
+        }
+    }
+}
+</pre>
