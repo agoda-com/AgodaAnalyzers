@@ -230,6 +230,14 @@ namespace Agoda.Analyzers.AgodaCustom {
                 return ResourceManager.GetString("AG0019Title", resourceCulture);
             }
         }
+
+        ///   Looks up a localized string similar to Ensure that publicly exposed IEnumerable types.
+        /// </summary>
+        public static string AG0018Title {
+            get {
+                return ResourceManager.GetString("AG0018Title", resourceCulture);
+            }
+        }
         
         /// <summary>
         ///   Looks up a localized string similar to Return an empty IEnumerable&lt;T&gt;.
