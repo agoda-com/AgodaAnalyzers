@@ -182,6 +182,7 @@
   </data>
   <data name="AG0022Title" xml:space="preserve">
     <value>Do not expose both sync and async versions of methods</value>
+  </data>
   <data name="AG0021Title" xml:space="preserve">
     <value>Do not use synchronous version of method when async version exists</value>
   </data>

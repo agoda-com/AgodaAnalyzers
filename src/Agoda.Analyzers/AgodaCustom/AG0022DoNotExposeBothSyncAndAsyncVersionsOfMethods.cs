@@ -33,9 +33,9 @@ namespace Agoda.Analyzers.AgodaCustom
 
         private void AnalyzeNode(SyntaxNodeAnalysisContext context)
         {
-            IEnumerable<MethodDeclarationSyntax> methods = context.Node.
-            .DescendentNodes()
-            .OfType<MethodDeclarationSyntax>().ToList();
+            IEnumerable<MethodDeclarationSyntax> methods = context.Node
+                .DescendantNodes()
+                .OfType<MethodDeclarationSyntax>().ToList();
 
             var methodDeclaration = (MethodDeclarationSyntax)context.Node;
 
@@ -43,7 +43,7 @@ namespace Agoda.Analyzers.AgodaCustom
 
             // ensure valid name
             var methodName = methodDeclaration.Identifier.ValueText;
-            if (MatchValidTestName.IsMatch(methodName)) return;
+            //if (MatchValidTestName.IsMatch(methodName)) return;
 
             context.ReportDiagnostic(Diagnostic.Create(Descriptor, methodDeclaration.GetLocation()));
         }

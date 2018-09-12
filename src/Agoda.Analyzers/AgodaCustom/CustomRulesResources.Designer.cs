@@ -214,14 +214,6 @@ namespace Agoda.Analyzers.AgodaCustom {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Do not expose both sync and async versions of methods.
-        /// </summary>
-        public static string AG0022Description {
-            get {
-                return ResourceManager.GetString("AG0022Description", resourceCulture);
-            }
-        }
-        
         ///   Looks up a localized string similar to Ensure that publicly exposed IEnumerable types.
         /// </summary>
         public static string AG0018Title {
@@ -231,14 +223,6 @@ namespace Agoda.Analyzers.AgodaCustom {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Do not expose both sync and async versions of methods.
-        /// </summary>
-        public static string AG0022MessageFormat {
-            get {
-                return ResourceManager.GetString("AG0022MessageFormat", resourceCulture);
-            }
-        }
-
         ///   Looks up a localized string similar to Return an empty IEnumerable&lt;T&gt;.
         /// </summary>
         public static string AG0020FixTitle {
@@ -248,14 +232,6 @@ namespace Agoda.Analyzers.AgodaCustom {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Do not expose both sync and async versions of methods.
-        /// </summary>
-        public static string AG0022Title {
-            get {
-                return ResourceManager.GetString("AG0022Title", resourceCulture);
-            }
-        }
-
         ///   Looks up a localized string similar to Do not return null when the return value is IEnumerable&lt;T&gt;.
         /// </summary>
         public static string AG0020Title {
@@ -270,6 +246,33 @@ namespace Agoda.Analyzers.AgodaCustom {
         public static string AG0021Title {
             get {
                 return ResourceManager.GetString("AG0021Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Do not expose both sync and async versions of methods.
+        /// </summary>
+        public static string AG0022Description {
+            get {
+                return ResourceManager.GetString("AG0022Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Do not expose both sync and async versions of methods.
+        /// </summary>
+        public static string AG0022MessageFormat {
+            get {
+                return ResourceManager.GetString("AG0022MessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Do not expose both sync and async versions of methods.
+        /// </summary>
+        public static string AG0022Title {
+            get {
+                return ResourceManager.GetString("AG0022Title", resourceCulture);
             }
         }
         
