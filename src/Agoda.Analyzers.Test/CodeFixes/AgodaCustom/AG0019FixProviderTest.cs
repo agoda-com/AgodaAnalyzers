@@ -26,6 +26,8 @@ namespace Agoda.Analyzers.Test.CodeFixes.AgodaCustom
                     [assembly: AssemblyTitle(""MyApplication"")]
                     [assembly: InternalsVisibleTo(""Agoda.Website.UnitTestFramework"")]
                     [assembly: AssemblyDescription(""Description""), InternalsVisibleTo(""Agoda.Website.UnitTestFramework"")]
+                    [assembly: InternalsVisibleTo(""Agoda.Website.UnitTestFramework""), AssemblyDefaultAlias(""alias"")]
+                    [assembly: AssemblyCopyright(""CopyRight""), InternalsVisibleTo(""Agoda.Website.UnitTestFramework""), InternalsVisibleTo(""Agoda.Website.UnitTestFramework""), AssemblyFileVersion(""0.0.0.0"")]
 
                     namespace RoslynTest
                         {
@@ -48,8 +50,10 @@ namespace Agoda.Analyzers.Test.CodeFixes.AgodaCustom
                     using System.Runtime.CompilerServices;
 
                     [assembly: AssemblyTitle(""MyApplication"")]
-                    [assembly: ]
-                    [assembly: AssemblyDescription(""Description""), ]
+                    
+                    [assembly: AssemblyDescription(""Description"")]
+                    [assembly: AssemblyDefaultAlias(""alias"")]
+                    [assembly: AssemblyCopyright(""CopyRight""),AssemblyFileVersion(""0.0.0.0"")]
 
                     namespace RoslynTest
                         {
@@ -72,10 +76,12 @@ namespace Agoda.Analyzers.Test.CodeFixes.AgodaCustom
             var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzerArray, new[] { doc }, CancellationToken.None)
                 .ConfigureAwait(false);
             var expected = CSharpDiagnostic(AG0019PreventUseOfInternalsVisibleToAttribute.DIAGNOSTIC_ID);
-            VerifyDiagnosticResults(diag, analyzerArray, new[]
-            {
+            VerifyDiagnosticResults(diag, analyzerArray, new[] {
                 expected.WithLocation(8, 32),
-                expected.WithLocation(9, 68)
+                expected.WithLocation(9, 68),
+                expected.WithLocation(10, 32),
+                expected.WithLocation(11, 64),
+                expected.WithLocation(11, 119)
             });
             await VerifyCSharpFixAsync(code, result, allowNewCompilerDiagnostics: true);
         }

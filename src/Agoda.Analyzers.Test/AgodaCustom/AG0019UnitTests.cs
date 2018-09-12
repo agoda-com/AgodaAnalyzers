@@ -24,6 +24,8 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                     [assembly: AssemblyTitle(""MyApplication"")]
                     [assembly: InternalsVisibleTo(""Agoda.Website.UnitTestFramework"")]
                     [assembly: AssemblyDescription(""Description""), InternalsVisibleTo(""Agoda.Website.UnitTestFramework"")]
+                    [assembly: InternalsVisibleTo(""Agoda.Website.UnitTestFramework""), AssemblyDefaultAlias(""alias"")]
+                    [assembly: AssemblyCopyright(""CopyRight""), InternalsVisibleTo(""Agoda.Website.UnitTestFramework""), InternalsVisibleTo(""Agoda.Website.UnitTestFramework""), AssemblyFileVersion(""0.0.0.0"")]
 
                     namespace RoslynTest
                         {
@@ -48,7 +50,10 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 
             VerifyDiagnosticResults(diag, analyzersArray, new[] {
                 expected.WithLocation(8, 32),
-                expected.WithLocation(9, 68)
+                expected.WithLocation(9, 68),
+                expected.WithLocation(10, 32),
+                expected.WithLocation(11, 64),
+                expected.WithLocation(11, 119)
             });
         }
 

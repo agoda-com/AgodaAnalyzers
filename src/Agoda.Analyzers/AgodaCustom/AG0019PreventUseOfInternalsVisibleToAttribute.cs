@@ -37,8 +37,8 @@ namespace Agoda.Analyzers.AgodaCustom
         {
             var attributeNode = (AttributeListSyntax)context.Node;
 
-           if (attributeNode.Target?.Identifier.Text != "assembly") return;
-           
+            if (attributeNode.Target?.Identifier.Text != "assembly") return;
+
             foreach (var attribute in attributeNode.Attributes)
             {
                 if (attribute.Name is IdentifierNameSyntax name && name.Identifier.Text == "InternalsVisibleTo")
