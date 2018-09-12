@@ -186,4 +186,7 @@
   <data name="AG0026Title" xml:space="preserve">
     <value>Use only CSS Selectors to find elements in Selenium tests</value>
   </data>
+  <data name="AG0023Title" xml:space="preserve">
+    <value>Prevent the use of Thread.Sleep</value>
+  </data>
 </root>

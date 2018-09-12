@@ -241,6 +241,15 @@ namespace Agoda.Analyzers.AgodaCustom {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Prevent the use of Thread.Sleep.
+        /// </summary>
+        public static string AG0023Title {
+            get {
+                return ResourceManager.GetString("AG0023Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Prevent use of Task.Continue*.
         /// </summary>
         public static string AG0025Title {
