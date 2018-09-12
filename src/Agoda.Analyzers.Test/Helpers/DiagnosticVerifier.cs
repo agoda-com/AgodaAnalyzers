@@ -7,7 +7,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
-using Microsoft.CodeAnalysis.Formatting;
 using Microsoft.CodeAnalysis.Text;
 using NUnit.Framework;
 
@@ -16,6 +15,7 @@ namespace Agoda.Analyzers.Test.Helpers
     /// <summary>
     /// Superclass of all unit tests for <see cref="DiagnosticAnalyzer"/>s.
     /// </summary>
+    [TestFixture]
     public abstract partial class DiagnosticVerifier
     {
         private const int DefaultIndentationSize = 4;
@@ -165,7 +165,7 @@ namespace Agoda.Analyzers.Test.Helpers
                     {
                         var message =
                             string.Format(
-                                "Expected:\nA project diagnostic with No location\nActual:\n{0}",
+                                "Expected:\r\nA project diagnostic with No location\r\nActual:\r\n{0}",
                                 FormatDiagnostics(analyzers, actual));
                         Assert.True(false, message);
                     }

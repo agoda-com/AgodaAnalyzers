@@ -187,6 +187,15 @@ namespace Agoda.Analyzers.AgodaCustom {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Controllers should not access HttpRequest.QueryString directly but use ASP.NET model binding instead.
+        /// </summary>
+        public static string AG0011Title {
+            get {
+                return ResourceManager.GetString("AG0011Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Test method should contain at least one assertion.
         /// </summary>
         public static string AG0012Title {
@@ -213,12 +222,28 @@ namespace Agoda.Analyzers.AgodaCustom {
             }
         }
         
+        ///   Looks up a localized string similar to Ensure that publicly exposed IEnumerable types.
+        /// </summary>
+        public static string AG0018Title {
+            get {
+                return ResourceManager.GetString("AG0018Title", resourceCulture);
+            }
+        }
+        
         /// <summary>
         ///   Looks up a localized string similar to Do not expose both sync and async versions of methods.
         /// </summary>
         public static string AG0022MessageFormat {
             get {
                 return ResourceManager.GetString("AG0022MessageFormat", resourceCulture);
+            }
+        }
+
+        ///   Looks up a localized string similar to Return an empty IEnumerable&lt;T&gt;.
+        /// </summary>
+        public static string AG0020FixTitle {
+            get {
+                return ResourceManager.GetString("AG0020FixTitle", resourceCulture);
             }
         }
         
@@ -228,6 +253,41 @@ namespace Agoda.Analyzers.AgodaCustom {
         public static string AG0022Title {
             get {
                 return ResourceManager.GetString("AG0022Title", resourceCulture);
+            }
+        }
+
+        ///   Looks up a localized string similar to Do not return null when the return value is IEnumerable&lt;T&gt;.
+        /// </summary>
+        public static string AG0020Title {
+            get {
+                return ResourceManager.GetString("AG0020Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Do not use synchronous version of method when async version exists.
+        /// </summary>
+        public static string AG0021Title {
+            get {
+                return ResourceManager.GetString("AG0021Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Prevent use of Task.Continue*.
+        /// </summary>
+        public static string AG0025Title {
+            get {
+                return ResourceManager.GetString("AG0025Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use only CSS Selectors to find elements in Selenium tests.
+        /// </summary>
+        public static string AG0026Title {
+            get {
+                return ResourceManager.GetString("AG0026Title", resourceCulture);
             }
         }
         
