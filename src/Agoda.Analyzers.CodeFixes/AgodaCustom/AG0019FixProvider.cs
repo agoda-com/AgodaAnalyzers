@@ -41,7 +41,7 @@ namespace Agoda.Analyzers.CodeFixes.AgodaCustom
         private async static Task<Document> RemoveInternalsVisibleToAttribute(Document document, SyntaxToken token, CancellationToken cancellationToken)
         {
             var sourceText = await document.GetTextAsync(cancellationToken).ConfigureAwait(false);
-            var attributeList = token.Parent.Parent.Parent;
+            var attributeList = token.Parent.Parent;
             var spanToRemove = TextSpan.FromBounds(attributeList.Span.Start, attributeList.Span.End);
             var change = new TextChange(spanToRemove, string.Empty);
             return document.WithText(sourceText.WithChanges(change));

@@ -48,8 +48,8 @@ namespace Agoda.Analyzers.Test.CodeFixes.AgodaCustom
                     using System.Runtime.CompilerServices;
 
                     [assembly: AssemblyTitle(""MyApplication"")]
-                    
-                    
+                    [assembly: ]
+                    [assembly: AssemblyDescription(""Description""), ]
 
                     namespace RoslynTest
                         {
