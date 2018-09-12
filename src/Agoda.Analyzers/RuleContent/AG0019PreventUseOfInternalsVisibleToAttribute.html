@@ -1,0 +1,51 @@
+﻿﻿<p>
+    Prevent use of InternalsVisibleTo Attribute.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+using System;
+using System.Diagnostics;
+using System.Reflection;
+using System.Runtime.CompilerServices;
+
+[assembly: AssemblyTitle("MyApplication")]
+[assembly: InternalsVisibleTo("Agoda.Website.UnitTestFramework")]
+[assembly: AssemblyDescription("Description"), InternalsVisibleTo("Agoda.Website.UnitTestFramework")]
+
+namespace RoslynTest
+{
+    [Serializable]
+    public class Program
+    {
+        [Conditional("DEBUG"), Conditional("TEST1")]
+        static void Main(string[] args)
+        {
+            Console.WriteLine("Hello World!");
+        }
+    }
+}
+</pre>
+
+<h2>Compliant Code Example</h2>
+<pre>
+using System;
+using System.Diagnostics;
+using System.Reflection;
+using System.Runtime.CompilerServices;
+
+[assembly: AssemblyTitle("MyApplication")]
+
+namespace RoslynTest
+{
+    [Serializable]
+    public class Program
+    {
+        [Conditional("DEBUG"), Conditional("TEST1")]
+        static void Main(string[] args)
+        {
+            Console.WriteLine("Hello World!");
+        }
+    }
+}
+</pre>

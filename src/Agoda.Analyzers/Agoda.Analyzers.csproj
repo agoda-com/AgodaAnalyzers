@@ -81,7 +81,10 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="RuleContent\AG0018PermitOnlyCertainPubliclyExposedEnumerables.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="RuleContent\AG0019PreventUseOfInternalsVisibleToAttribute.html">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="RuleContent\AG0026EnsureOnlyCssSelectorIsUsedToFindElements.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
