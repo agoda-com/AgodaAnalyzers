@@ -3,12 +3,9 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
-using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Agoda.Analyzers.AgodaCustom
 {
@@ -33,19 +30,28 @@ namespace Agoda.Analyzers.AgodaCustom
 
         private void AnalyzeNode(SyntaxNodeAnalysisContext context)
         {
-            IEnumerable<MethodDeclarationSyntax> methods = context.Node
-                .DescendantNodes()
-                .OfType<MethodDeclarationSyntax>().ToList();
+            var currentMethodDeclaration = (MethodDeclarationSyntax)context.Node;
+            var currentMethodName = currentMethodDeclaration.Identifier.ValueText;
 
-            var methodDeclaration = (MethodDeclarationSyntax)context.Node;
+            if (!context.Node.Parent.ChildNodes().Any() || "Async".Equals(currentMethodName)) return;
 
-            if (!MethodHelper.IsTestCase(methodDeclaration, context)) return;
+            IEnumerable<string> methodNames = context.Node.Parent.ChildNodes()
+                .Where(node => ((MethodDeclarationSyntax)node).Identifier.ValueText != currentMethodName)
+                .Select(node => ((MethodDeclarationSyntax)node).Identifier.ValueText).ToList();
 
             // ensure valid name
-            var methodName = methodDeclaration.Identifier.ValueText;
-            //if (MatchValidTestName.IsMatch(methodName)) return;
+            if (!ExistsBothSyncAndAsyncVersionsOfMethods(currentMethodName, methodNames)) return;
 
-            context.ReportDiagnostic(Diagnostic.Create(Descriptor, methodDeclaration.GetLocation()));
+            context.ReportDiagnostic(Diagnostic.Create(Descriptor, currentMethodDeclaration.GetLocation()));
+        }
+
+        private bool ExistsBothSyncAndAsyncVersionsOfMethods(string currentMethodName, IEnumerable<string> methodNames)
+        {
+            var compareToMethodName = currentMethodName.EndsWith("Async") ?
+                currentMethodName.Remove(currentMethodName.Length - 6, currentMethodName.Length - 1) :
+                currentMethodName + "Async";
+
+            return methodNames.Any(methodName => methodName.Equals(compareToMethodName));
         }
     }
 }
