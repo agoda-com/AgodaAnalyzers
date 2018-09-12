@@ -12,6 +12,8 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyTitle("MyApplication")]
 [assembly: InternalsVisibleTo("Agoda.Website.UnitTestFramework")]
 [assembly: AssemblyDescription("Description"), InternalsVisibleTo("Agoda.Website.UnitTestFramework")]
+[assembly: InternalsVisibleTo("Agoda.Website.UnitTestFramework"), AssemblyDefaultAlias("alias")]
+[assembly: AssemblyCopyright("CopyRight"), InternalsVisibleTo("Agoda.Website.UnitTestFramework"), InternalsVisibleTo("Agoda.Website.UnitTestFramework"), AssemblyFileVersion("0.0.0.0")]
 
 namespace RoslynTest
 {
@@ -25,6 +27,7 @@ namespace RoslynTest
         }
     }
 }
+
 </pre>
 
 <h2>Compliant Code Example</h2>
@@ -35,6 +38,9 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 
 [assembly: AssemblyTitle("MyApplication")]
+[assembly: AssemblyDescription("Description")]
+[assembly: AssemblyDefaultAlias("alias")]
+[assembly: AssemblyCopyright("CopyRight"), AssemblyFileVersion("0.0.0.0")]
 
 namespace RoslynTest
 {
@@ -48,4 +54,5 @@ namespace RoslynTest
         }
     }
 }
+
 </pre>
