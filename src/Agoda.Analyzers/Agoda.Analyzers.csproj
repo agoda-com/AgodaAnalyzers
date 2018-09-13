@@ -104,6 +104,9 @@
     <None Update="RuleContent\AG0025PreventUseOfTaskContinue.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="RuleContent\AG0023PreventTheUseOfThreadSleep.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="RuleContent\AG0030PreventUseOfDynamics.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
