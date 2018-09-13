@@ -10,7 +10,7 @@ using System.Linq;
 namespace Agoda.Analyzers.AgodaCustom
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    class AG0022DoNotExposeBothSyncAndAsyncVersionsOfMethods : DiagnosticAnalyzer
+    public class AG0022DoNotExposeBothSyncAndAsyncVersionsOfMethods : DiagnosticAnalyzer
     {
         public const string DiagnosticId = "AG0022";
 
@@ -25,6 +25,7 @@ namespace Agoda.Analyzers.AgodaCustom
 
         public override void Initialize(AnalysisContext context)
         {
+            context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
             context.RegisterSyntaxNodeAction(AnalyzeNode, SyntaxKind.MethodDeclaration);
         }
 
@@ -35,9 +36,9 @@ namespace Agoda.Analyzers.AgodaCustom
 
             if (!context.Node.Parent.ChildNodes().Any() || "Async".Equals(currentMethodName)) return;
 
-            IEnumerable<string> methodNames = context.Node.Parent.ChildNodes()
-                .Where(node => ((MethodDeclarationSyntax)node).Identifier.ValueText != currentMethodName)
-                .Select(node => ((MethodDeclarationSyntax)node).Identifier.ValueText).ToList();
+            IEnumerable<string> methodNames = context.Node.Parent.ChildNodes().OfType<MethodDeclarationSyntax>()
+                .Where(node => node.Identifier.ValueText != currentMethodName)
+                .Select(node => node.Identifier.ValueText).ToList();
 
             // ensure valid name
             if (!ExistsBothSyncAndAsyncVersionsOfMethods(currentMethodName, methodNames)) return;
