@@ -16,39 +16,40 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         [Test]
         public async Task AG0022_WhenNotExistBothSyncAndAsyncVersionsOfMethods_ShouldNotShowWarning()
         {
-            var code = @"
-				using System.Threading.Tasks;
+            const string code = @"
+using System.Threading.Tasks;
 
-                interface Interface1
-                {
-                    bool TestMethod(string url);
-                    Task<bool> TestMethod2Async(string url);
-                }
+interface TestInterface
+{
+    bool TestMethod(string url);
+    Task<bool> NotTestMethodAsync(string url);
+}
 			";
 
             await TestForResults(code);
         }
+        
+        [Test]
+        public async Task AG0022_WhenExistBothSyncAndAsyncVersionsOfMethods_ShouldShowWarning()
+        {
+            const string code = @"
+using System.Threading.Tasks;
 
-   //     [Test]
-   //     public async Task AG0022_WhenExistBothSyncAndAsyncVersionsOfMethods_ShouldShowWarning()
-   //     {
-   //         var code = @"
-			//	interface Interface
-   //             {
-   //                 bool TestMethod(string url);
-   //                 Task<bool> TestMethodAsync(string url);
-   //             }
-			//";
+interface Interface
+{
+    bool TestMethod(string url);
+    Task<bool> TestMethodAsync(string url);
+}
+			";
 
-   //         var baseResult =
-   //             CSharpDiagnostic(AG0022DoNotExposeBothSyncAndAsyncVersionsOfMethods.DiagnosticId);
-   //         var expected = new[]
-   //         {
-   //             baseResult.WithLocation(4, 3)
-   //         };
+            var expected = new []
+            {
+                CSharpDiagnostic(AG0022DoNotExposeBothSyncAndAsyncVersionsOfMethods.DiagnosticId).WithLocation(6, 5),
+                CSharpDiagnostic(AG0022DoNotExposeBothSyncAndAsyncVersionsOfMethods.DiagnosticId).WithLocation(7, 5)
+            };
 
-   //         await TestForResults(code, expected);
-   //     }
+            await TestForResults(code, expected);
+        }
 
         private async Task TestForResults(string code, DiagnosticResult[] expected = null)
         {
