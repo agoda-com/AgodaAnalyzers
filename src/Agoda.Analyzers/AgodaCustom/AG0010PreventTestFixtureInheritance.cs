@@ -49,25 +49,16 @@ namespace Agoda.Analyzers.AgodaCustom
         private void AnalyzeNode(SyntaxNodeAnalysisContext context)
         {
             var classDeclaration = (ClassDeclarationSyntax)context.Node;
-            var hasTestMethod = false;
 
-            foreach (var node in classDeclaration.ChildNodes())
-            {
-                if (node.IsKind(SyntaxKind.MethodDeclaration) && MethodHelper.IsTestCase((MethodDeclarationSyntax)node, context))
-                {
-                    hasTestMethod = true;
-                    break;
-                }
-            }
-
+            var hasTestMethod = classDeclaration.ChildNodes().Any(x => x.IsKind(SyntaxKind.MethodDeclaration) && MethodHelper.IsTestCase((MethodDeclarationSyntax)x, context));
             var hasTestFixtureAttribute = classDeclaration.AttributeLists
                     .SelectMany(al => al.Attributes)
                     .Select(a => a.Name as IdentifierNameSyntax)
                     .Where(name => name != null)
                     .Select(name => name.Identifier.ValueText)
-                    .Any(MatchTestAttributeName.IsMatch)|| hasTestMethod;
+                    .Any(MatchTestAttributeName.IsMatch);
 
-            if (!hasTestFixtureAttribute) return;
+            if (!(hasTestFixtureAttribute || hasTestMethod)) return;
 
             if (classDeclaration.BaseList == null) return;
 
