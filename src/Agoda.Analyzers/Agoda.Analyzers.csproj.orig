@@ -80,16 +80,18 @@
     <None Update="RuleContent\AG0006RegisteredComponentShouldHaveExactlyOnePublicConstructor.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+<<<<<<< HEAD
+    <None Update="RuleContent\AG0027EnsureOnlyDataSeleniumIsUsedToFindElements.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+=======
     <None Update="RuleContent\AG0018PermitOnlyCertainPubliclyExposedEnumerables.html">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="RuleContent\AG0019PreventUseOfInternalsVisibleToAttribute.html">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+>>>>>>> origin/master
     </None>
     <None Update="RuleContent\AG0026EnsureOnlyCssSelectorIsUsedToFindElements.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="RuleContent\AG0027EnsureOnlyDataSeleniumIsUsedToFindElements.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="RuleContent\AG0020AvoidReturningNullEnumerables.html">
