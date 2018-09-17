@@ -1,0 +1,31 @@
+﻿﻿<p>
+    Prevent use of InternalsVisibleTo Attribute.
+</p>
+
+<p>
+    Only test the public surface of your class. Making internals visible violates this principle. The attribute is 
+    usually added to test internal methods that are not part of the public API. This tightly couples the
+    tests to the implementation, making the tests brittle and refactoring harder.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+using System;
+using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo("Agoda.Website.UnitTestFramework")]
+namespace RoslynTest
+{
+  ...
+}
+</pre>
+
+<h2>Compliant Code Example</h2>
+<pre>
+using System;
+
+namespace RoslynTest
+{
+  ...
+}
+</pre>
