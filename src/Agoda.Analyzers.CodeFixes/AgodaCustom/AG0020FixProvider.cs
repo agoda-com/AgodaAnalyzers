@@ -15,7 +15,6 @@ using Microsoft.CodeAnalysis.Text;
 namespace Agoda.Analyzers.CodeFixes.AgodaCustom
 {
     [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(AG0020FixProvider))]
-    [Shared]
     public class AG0020FixProvider : CodeFixProvider
     {
         public override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(AG0020AvoidReturningNullEnumerables.DiagnosticId);
