@@ -59,10 +59,58 @@ namespace Agoda.Analyzers.Test.AgodaCustom
             await TestWarnings(code, expected);
         }
 
+        [Test]
+        public async Task AG0010_WhenNoTestFixtureAttribute_ButHasTestMethod_WithoutInheritance_ShouldntShowWarning()
+        {
+            var code = @"
+using NUnit.Framework;
+
+namespace Tests
+{
+    public class TestClass
+    {
+        [Test]
+        public void This_IsValid(){}
+    }
+}
+";
+
+            await TestWarnings(code);
+        }
+
+        [Test]
+        public async Task AG0010_WhenNoTestFixtureAttribute_ButHasTestMethod_WithInheritance_ShouldShowWarning()
+        {
+            var code = @"
+using NUnit.Framework;
+
+namespace Tests
+{
+    public class TestClass : BaseTest
+    {
+        [Test]
+        public void This_IsValid(){}
+    }
+
+    public class BaseTest{
+
+    }
+}
+";
+            var baseResult =
+    CSharpDiagnostic(AG0010PreventTestFixtureInheritance.DiagnosticId);
+            var expected = new[]
+            {
+                baseResult.WithLocation(6, 5)
+            };
+            await TestWarnings(code, expected);
+        }
         private async Task TestWarnings(string code, DiagnosticResult[] expected = null)
         {
             expected = expected ?? new DiagnosticResult[0];
+            var nUnit = MetadataReference.CreateFromFile(typeof(TestFixtureAttribute).Assembly.Location);
             var doc = CreateProject(new[] { code })
+                .AddMetadataReference(nUnit)
                 .Documents
                 .First();
 
