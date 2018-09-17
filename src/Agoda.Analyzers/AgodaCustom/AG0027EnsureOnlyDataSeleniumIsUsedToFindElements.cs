@@ -63,12 +63,9 @@ namespace Agoda.Analyzers.AgodaCustom
                 .Where(rule => methodSymbol.ContainingType.ConstructedFrom.ToString() == rule.NamespaceAndType)
                 .Any(rule => !rule.ForbiddenIdentifierNameRegex.IsMatch(methodSymbol.Name))) return;
 
-            foreach (var argument in invocationExpressionSyntax.ArgumentList.Arguments)
-            {
-                if (MatchDataSelenium.IsMatch(argument.ToString())) return;
+            if (MatchDataSelenium.IsMatch(invocationExpressionSyntax.ArgumentList.Arguments.FirstOrDefault().ToString())) return;
 
-                context.ReportDiagnostic(Diagnostic.Create(Descriptor, context.Node.GetLocation()));
-            }
+            context.ReportDiagnostic(Diagnostic.Create(Descriptor, context.Node.GetLocation()));
         }
     }
 }
