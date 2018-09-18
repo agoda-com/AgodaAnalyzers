@@ -18,7 +18,7 @@ namespace Agoda.Analyzers.CodeFixes.AgodaCustom
     [Shared]
     public class AG0020FixProvider : CodeFixProvider
     {
-        public override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(AG0020AvoidReturningNullEnumerables.DiagnosticId);
+        public override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(AG0020AvoidReturningNullEnumerables.DIAGNOSTIC_ID);
 
         public override Task RegisterCodeFixesAsync(CodeFixContext context)
         {

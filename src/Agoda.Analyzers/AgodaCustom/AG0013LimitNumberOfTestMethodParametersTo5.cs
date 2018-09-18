@@ -41,7 +41,7 @@ namespace Agoda.Analyzers.AgodaCustom
         {
             var methodDeclaration = (MethodDeclarationSyntax) context.Node;
 
-            if (!MethodHelper.IsTestCase(methodDeclaration, context)) { return; }
+            if (!TestMethodHelpers.IsTestCase(methodDeclaration, context)) { return; }
                 
             if(!IsTestPrametersMoreThanLimit(methodDeclaration)) { return; }
 

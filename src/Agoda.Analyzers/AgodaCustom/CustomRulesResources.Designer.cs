@@ -292,7 +292,18 @@ namespace Agoda.Analyzers.AgodaCustom {
                 return ResourceManager.GetString("AG0026Title", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Looks up a localized string similar to only use data-selenium to find elements in Selenium tests.
+        /// </summary>
+        public static string AG0027Title
+        {
+            get
+            {
+                return ResourceManager.GetString("AG0027Title", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to Prevent use of dynamic.
         /// </summary>

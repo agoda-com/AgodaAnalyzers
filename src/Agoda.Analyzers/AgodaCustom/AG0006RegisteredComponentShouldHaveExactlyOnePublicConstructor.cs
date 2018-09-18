@@ -12,7 +12,7 @@ namespace Agoda.Analyzers.AgodaCustom
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public class AG0006RegisteredComponentShouldHaveExactlyOnePublicConstructor : DiagnosticAnalyzer
     {
-        public const string DiagnosticId = "AG0006";
+        public const string DIAGNOSTIC_ID = "AG0006";
         private const string PUBLIC = "public";
         private static readonly Regex MatchTestAttributeName = new Regex("^Register");
         
@@ -28,7 +28,7 @@ namespace Agoda.Analyzers.AgodaCustom
             DescriptionContentLoader.GetAnalyzerDescription(nameof(AG0006RegisteredComponentShouldHaveExactlyOnePublicConstructor));
 
         private static readonly DiagnosticDescriptor Descriptor =
-            new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, AnalyzerCategory.CustomQualityRules,
+            new DiagnosticDescriptor(DIAGNOSTIC_ID, Title, MessageFormat, AnalyzerCategory.CustomQualityRules,
                 DiagnosticSeverity.Warning, AnalyzerConstants.EnabledByDefault, Description, null,
                 WellKnownDiagnosticTags.EditAndContinue);
 

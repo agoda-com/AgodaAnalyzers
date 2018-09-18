@@ -1,0 +1,30 @@
+﻿<h2>Use the <code>data-selenium</code> attribute to identify your elements</h2>
+<p> 
+     <ul>
+        <li>Make it simple to change HTML structure and CSS classes by identifying elements under test with the data-selenium HTML attribute, </li>
+        <li>rather than HTML tags, classes or IDs. The addition of data-selenium attributes may slightly increase the size of the page, but when</li>
+        <li>gzipped the difference will probably be negligable. We believe the trade off in developer productivity is worth it.</li>
+     </ul>
+</p>
+
+
+<h2>Don't</h2>
+<pre>
+        <![CDATA[ 
+        <form>
+            <button class="login-button">Log in</button>
+        </form>
+        ]]>
+
+    Driver.FindElement(By.CssSelector("form button.login-button"));
+</pre>
+
+<h2>Do</h2>
+<pre>
+         <![CDATA[ 
+        <form>
+            <button class="login-button" data-selenium="login-button">Log in</button>
+        </form>
+        ]]>
+    Driver.FindElement(By.CssSelector("[data-selenium=login-button]"));
+</pre>

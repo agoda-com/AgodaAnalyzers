@@ -78,7 +78,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 			";
 
             var baseResult =
-                CSharpDiagnostic(AG0021PreferAsyncMethods.DiagnosticId);
+                CSharpDiagnostic(AG0021PreferAsyncMethods.DIAGNOSTIC_ID);
             var expected = new[]
             {
                 baseResult.WithLocation(16, 7)
@@ -112,7 +112,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 			";
 
             var baseResult =
-                CSharpDiagnostic(AG0021PreferAsyncMethods.DiagnosticId);
+                CSharpDiagnostic(AG0021PreferAsyncMethods.DIAGNOSTIC_ID);
             var expected = new[]
             {
                 baseResult.WithLocation(17, 7)
@@ -146,7 +146,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 			";
 
             var baseResult =
-                CSharpDiagnostic(AG0021PreferAsyncMethods.DiagnosticId);
+                CSharpDiagnostic(AG0021PreferAsyncMethods.DIAGNOSTIC_ID);
             var expected = new[]
             {
                 baseResult.WithLocation(17, 7)
@@ -181,7 +181,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 			";
 
             var baseResult =
-                CSharpDiagnostic(AG0021PreferAsyncMethods.DiagnosticId);
+                CSharpDiagnostic(AG0021PreferAsyncMethods.DIAGNOSTIC_ID);
             var expected = new[]
             {
                 baseResult.WithLocation(18, 7)
@@ -419,7 +419,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 			";
 
             var baseResult =
-                CSharpDiagnostic(AG0021PreferAsyncMethods.DiagnosticId);
+                CSharpDiagnostic(AG0021PreferAsyncMethods.DIAGNOSTIC_ID);
             var expected = new[]
             {
                 baseResult.WithLocation(5, 7)
@@ -456,7 +456,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 			";
 
             var baseResult =
-                CSharpDiagnostic(AG0021PreferAsyncMethods.DiagnosticId);
+                CSharpDiagnostic(AG0021PreferAsyncMethods.DIAGNOSTIC_ID);
             var expected = new[]
             {
                 baseResult.WithLocation(20, 7)
@@ -493,7 +493,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 			";
 
             var baseResult =
-                CSharpDiagnostic(AG0021PreferAsyncMethods.DiagnosticId);
+                CSharpDiagnostic(AG0021PreferAsyncMethods.DIAGNOSTIC_ID);
             var expected = new[]
             {
                 baseResult.WithLocation(20, 7)
@@ -531,7 +531,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 			";
 
             var baseResult =
-                CSharpDiagnostic(AG0021PreferAsyncMethods.DiagnosticId);
+                CSharpDiagnostic(AG0021PreferAsyncMethods.DIAGNOSTIC_ID);
             var expected = new[]
             {
                 baseResult.WithLocation(21, 7)
@@ -569,7 +569,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 			";
 
             var baseResult =
-                CSharpDiagnostic(AG0021PreferAsyncMethods.DiagnosticId);
+                CSharpDiagnostic(AG0021PreferAsyncMethods.DIAGNOSTIC_ID);
             var expected = new[]
             {
                 baseResult.WithLocation(21, 7)
@@ -607,7 +607,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 			";
 
             var baseResult =
-                CSharpDiagnostic(AG0021PreferAsyncMethods.DiagnosticId);
+                CSharpDiagnostic(AG0021PreferAsyncMethods.DIAGNOSTIC_ID);
             var expected = new[]
             {
                 baseResult.WithLocation(21, 7)
@@ -645,7 +645,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 			";
 
             var baseResult =
-                CSharpDiagnostic(AG0021PreferAsyncMethods.DiagnosticId);
+                CSharpDiagnostic(AG0021PreferAsyncMethods.DIAGNOSTIC_ID);
             var expected = new[]
             {
                 baseResult.WithLocation(21, 7)
@@ -682,7 +682,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 			";
 
             var baseResult =
-                CSharpDiagnostic(AG0021PreferAsyncMethods.DiagnosticId);
+                CSharpDiagnostic(AG0021PreferAsyncMethods.DIAGNOSTIC_ID);
             var expected = new[]
             {
                 baseResult.WithLocation(20, 7)
@@ -719,7 +719,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 			";
 
             var baseResult =
-                CSharpDiagnostic(AG0021PreferAsyncMethods.DiagnosticId);
+                CSharpDiagnostic(AG0021PreferAsyncMethods.DIAGNOSTIC_ID);
             var expected = new[]
             {
                 baseResult.WithLocation(20, 7)
@@ -756,7 +756,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 			";
 
             var baseResult =
-                CSharpDiagnostic(AG0021PreferAsyncMethods.DiagnosticId);
+                CSharpDiagnostic(AG0021PreferAsyncMethods.DIAGNOSTIC_ID);
             var expected = new[]
             {
                 baseResult.WithLocation(20, 7)
@@ -793,7 +793,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 			";
 
             var baseResult =
-                CSharpDiagnostic(AG0021PreferAsyncMethods.DiagnosticId);
+                CSharpDiagnostic(AG0021PreferAsyncMethods.DIAGNOSTIC_ID);
             var expected = new[]
             {
                 baseResult.WithLocation(20, 7)
@@ -835,7 +835,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 			";
 
             var baseResult =
-                CSharpDiagnostic(AG0021PreferAsyncMethods.DiagnosticId);
+                CSharpDiagnostic(AG0021PreferAsyncMethods.DIAGNOSTIC_ID);
             var expected = new[]
             {
                 baseResult.WithLocation(25, 7)
@@ -907,7 +907,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 			";
 
             var baseResult =
-                CSharpDiagnostic(AG0021PreferAsyncMethods.DiagnosticId);
+                CSharpDiagnostic(AG0021PreferAsyncMethods.DIAGNOSTIC_ID);
             var expected = new[]
             {
                 baseResult.WithLocation(20, 7)
@@ -944,7 +944,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 			";
 
             var baseResult =
-                CSharpDiagnostic(AG0021PreferAsyncMethods.DiagnosticId);
+                CSharpDiagnostic(AG0021PreferAsyncMethods.DIAGNOSTIC_ID);
             var expected = new[]
             {
                 baseResult.WithLocation(20, 7)
@@ -981,7 +981,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 			";
 
             var baseResult =
-                CSharpDiagnostic(AG0021PreferAsyncMethods.DiagnosticId);
+                CSharpDiagnostic(AG0021PreferAsyncMethods.DIAGNOSTIC_ID);
             var expected = new[]
             {
                 baseResult.WithLocation(20, 7)
@@ -1018,7 +1018,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 			";
 
             var baseResult =
-                CSharpDiagnostic(AG0021PreferAsyncMethods.DiagnosticId);
+                CSharpDiagnostic(AG0021PreferAsyncMethods.DIAGNOSTIC_ID);
             var expected = new[]
             {
                 baseResult.WithLocation(20, 7)
@@ -1050,7 +1050,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 			";
 
             var baseResult =
-                CSharpDiagnostic(AG0021PreferAsyncMethods.DiagnosticId);
+                CSharpDiagnostic(AG0021PreferAsyncMethods.DIAGNOSTIC_ID);
             var expected = new[]
             {
                 baseResult.WithLocation(15, 7)
@@ -1082,7 +1082,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 			";
 
             var baseResult =
-                CSharpDiagnostic(AG0021PreferAsyncMethods.DiagnosticId);
+                CSharpDiagnostic(AG0021PreferAsyncMethods.DIAGNOSTIC_ID);
             var expected = new[]
             {
                 baseResult.WithLocation(15, 7)
@@ -1120,7 +1120,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 			";
 
             var baseResult =
-                CSharpDiagnostic(AG0021PreferAsyncMethods.DiagnosticId);
+                CSharpDiagnostic(AG0021PreferAsyncMethods.DIAGNOSTIC_ID);
             var expected = new[]
             {
                 baseResult.WithLocation(21, 7)
@@ -1239,7 +1239,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 			";
 
             var baseResult =
-                CSharpDiagnostic(AG0021PreferAsyncMethods.DiagnosticId);
+                CSharpDiagnostic(AG0021PreferAsyncMethods.DIAGNOSTIC_ID);
             var expected = new[]
             {
                 baseResult.WithLocation(20, 7)

@@ -63,7 +63,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 .Build();
 
             var baseResult =
-                CSharpDiagnostic(AG0006RegisteredComponentShouldHaveExactlyOnePublicConstructor.DiagnosticId);
+                CSharpDiagnostic(AG0006RegisteredComponentShouldHaveExactlyOnePublicConstructor.DIAGNOSTIC_ID);
             var expected = new[]
             {
                 baseResult.WithLocation(4, 2)
@@ -81,7 +81,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 .Build();
 
             var baseResult =
-                CSharpDiagnostic(AG0006RegisteredComponentShouldHaveExactlyOnePublicConstructor.DiagnosticId);
+                CSharpDiagnostic(AG0006RegisteredComponentShouldHaveExactlyOnePublicConstructor.DIAGNOSTIC_ID);
             var expected = new[]
             {
                 baseResult.WithLocation(4, 2)

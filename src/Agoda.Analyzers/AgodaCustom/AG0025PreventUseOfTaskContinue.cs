@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Collections.Immutable;
 using System.Text.RegularExpressions;
 using Microsoft.CodeAnalysis;
@@ -39,9 +40,9 @@ namespace Agoda.Analyzers.AgodaCustom
             null, 
             WellKnownDiagnosticTags.EditAndContinue);
 
-        protected override ImmutableArray<ForbiddenInvocationRule> Rules =>
-            ImmutableArray.Create(ForbiddenInvocationRule.Create("System.Threading.Tasks.Task", new Regex("^Continue")));
-
-
+        protected override IEnumerable<PermittedInvocationRule> Rules => new[]
+        {
+            new BlacklistedInvocationRule("System.Threading.Tasks.Task", new Regex("^Continue")),
+        };
     }
 }

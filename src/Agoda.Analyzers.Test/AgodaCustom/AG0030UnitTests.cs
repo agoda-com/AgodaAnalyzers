@@ -44,7 +44,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 			";
 
             var baseResult =
-                CSharpDiagnostic(AG0030PreventUseOfDynamics.DiagnosticId);
+                CSharpDiagnostic(AG0030PreventUseOfDynamics.DIAGNOSTIC_ID);
             var expected = new[]
             {
                 baseResult.WithLocation(3, 6)
@@ -64,7 +64,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 			";
 
             var baseResult =
-                CSharpDiagnostic(AG0030PreventUseOfDynamics.DiagnosticId);
+                CSharpDiagnostic(AG0030PreventUseOfDynamics.DIAGNOSTIC_ID);
             var expected = new[]
             {
                 baseResult.WithLocation(4, 7)
@@ -88,7 +88,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 			";
 
             var baseResult =
-                CSharpDiagnostic(AG0030PreventUseOfDynamics.DiagnosticId);
+                CSharpDiagnostic(AG0030PreventUseOfDynamics.DIAGNOSTIC_ID);
             var expected = new[]
             {
                 baseResult.WithLocation(3, 6),
@@ -123,7 +123,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 			";
 
             var baseResult =
-                CSharpDiagnostic(AG0030PreventUseOfDynamics.DiagnosticId);
+                CSharpDiagnostic(AG0030PreventUseOfDynamics.DIAGNOSTIC_ID);
             var expected = new[]
             {
                 baseResult.WithLocation(3, 6)
