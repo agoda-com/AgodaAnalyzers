@@ -28,7 +28,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         [TestCase("FindElementByPartialLinkText")]
         [TestCase("FindElementByTagName")]
         [TestCase("FindElementByXPath")]
-        public async Task AG0026_WithForbiddenFindElementMethod_ThenShowWarning(string methodName)
+        public async Task AG0026_WithForbiddenFindElementsAsProperty_ThenShowWarning(string methodName)
         {
             var testCode = $@"
             using System;
@@ -68,7 +68,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         [TestCase("FindElementsByPartialLinkText")]
         [TestCase("FindElementsByTagName")]
         [TestCase("FindElementsByXPath")]
-        public async Task AG0026_WithFindElementsMethod_ThenShowWarning(string methodName)
+        public async Task AG0026_WithForbiddenFindElementsInMethod_ThenShowWarning(string methodName)
         {
             var testCode = $@"
             using System;
@@ -110,7 +110,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         [TestCase("PartialLinkText")]
         [TestCase("TagName")]
         [TestCase("XPath")]
-        public async Task AG0026_WithForbiddenAccessor_ThenShowWarning(string methodName)
+        public async Task AG0026_WithForbiddenByAccessor_ThenShowWarning(string methodName)
         {
             var testCode = $@"
             using System;
@@ -145,7 +145,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         }
 
         [Test]
-        public async Task AG0026_WithPermittedMethod_ThenNoWarning()
+        public async Task AG0026_WithPermittedFindElementAccessor_ThenNoWarning()
         {
             var testCode = @"
             using System;
@@ -181,7 +181,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         }
 
         [Test]
-        public async Task AG0026_WithPermittedAccessor_ThenNoWarning()
+        public async Task AG0026_WithPermittedByAccessor_ThenNoWarning()
         {
             var testCode = @"
             using System;
@@ -244,7 +244,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         }
 
         [Test]
-        public async Task AG0026_WithForbiddenNameInDifferentNamespaceType_ThenNoWarning()
+        public async Task AG0026_WithForbiddenNameInDifferentNamespace_ThenNoWarning()
         {
             var testCode = @"
             using System;
