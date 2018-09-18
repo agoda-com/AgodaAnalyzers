@@ -1,4 +1,5 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using System.Collections.Generic;
+using Microsoft.CodeAnalysis;
 using Agoda.Analyzers.Helpers;
 using System.Collections.Immutable;
 using Microsoft.CodeAnalysis.Diagnostics;
@@ -26,15 +27,7 @@ namespace Agoda.Analyzers.AgodaCustom
             DescriptionContentLoader.GetAnalyzerDescription(nameof(AG0026EnsureOnlyCssSelectorIsUsedToFindElements)),
             "https://github.agodadev.io/pages/standards-c-sharp/code-standards/gui-testing/css-selectors.html",
             WellKnownDiagnosticTags.EditAndContinue);
-
-        protected override ImmutableArray<ForbiddenInvocationRule> Rules =>
-            ImmutableArray.Create(
-                ForbiddenInvocationRule.Create(
-                    "OpenQA.Selenium.By",
-                    new Regex("^(?!CssSelector).*$")),
-                ForbiddenInvocationRule.Create(
-                    "OpenQA.Selenium.Remote.RemoteWebDriver",
-                    new Regex("^(FindElement[s]?((?!ByCssSelector)[B]+)(.+))$"))
-                );
+        
+        protected override IEnumerable<PermittedInvocationRule> Rules => TestMethodHelpers.PermittedSeleniumSelectorRules;
     }
 }

@@ -57,7 +57,7 @@ namespace Agoda.Analyzers.Test
             var analyzersArray = GetCSharpDiagnosticAnalyzers().ToImmutableArray();
             var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzersArray, new[] { doc }, CancellationToken.None)
                 .ConfigureAwait(false);
-            var expected = CSharpDiagnostic(AG0020AvoidReturningNullEnumerables.DiagnosticId);
+            var expected = CSharpDiagnostic(AG0020AvoidReturningNullEnumerables.DIAGNOSTIC_ID);
             VerifyDiagnosticResults(diag, analyzersArray, new[] {
                 expected.WithLocation(12, 24),
                 expected.WithLocation(13, 20)
@@ -100,7 +100,7 @@ namespace Agoda.Analyzers.Test
             var analyzersArray = GetCSharpDiagnosticAnalyzers().ToImmutableArray();
             var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzersArray, new[] { doc }, CancellationToken.None)
                 .ConfigureAwait(false);
-            var expected = CSharpDiagnostic(AG0020AvoidReturningNullEnumerables.DiagnosticId);
+            var expected = CSharpDiagnostic(AG0020AvoidReturningNullEnumerables.DIAGNOSTIC_ID);
             VerifyDiagnosticResults(diag, analyzersArray, new[] {
                 expected.WithLocation(10, 20)
             });
@@ -144,7 +144,7 @@ namespace Agoda.Analyzers.Test
             var analyzersArray = GetCSharpDiagnosticAnalyzers().ToImmutableArray();
             var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzersArray, new[] { doc }, CancellationToken.None)
                 .ConfigureAwait(false);
-            var expected = CSharpDiagnostic(AG0020AvoidReturningNullEnumerables.DiagnosticId);
+            var expected = CSharpDiagnostic(AG0020AvoidReturningNullEnumerables.DIAGNOSTIC_ID);
             VerifyDiagnosticResults(diag, analyzersArray, new[] {
                 expected.WithLocation(11, 20)
             });
@@ -186,7 +186,7 @@ namespace Agoda.Analyzers.Test
             var analyzersArray = GetCSharpDiagnosticAnalyzers().ToImmutableArray();
             var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzersArray, new[] { doc }, CancellationToken.None)
                 .ConfigureAwait(false);
-            var expected = CSharpDiagnostic(AG0020AvoidReturningNullEnumerables.DiagnosticId);
+            var expected = CSharpDiagnostic(AG0020AvoidReturningNullEnumerables.DIAGNOSTIC_ID);
             VerifyDiagnosticResults(diag, analyzersArray, new[] {
                 expected.WithLocation(10, 20)
             });

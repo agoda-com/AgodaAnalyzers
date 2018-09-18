@@ -80,7 +80,7 @@ namespace Tests
 
             var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzersArray, new[] { doc }, CancellationToken.None).ConfigureAwait(false);
 
-            var baseResult = CSharpDiagnostic(AG0005TestMethodNamesMustFollowConvention.DiagnosticId);
+            var baseResult = CSharpDiagnostic(AG0005TestMethodNamesMustFollowConvention.DIAGNOSTIC_ID);
             VerifyDiagnosticResults(diag, analyzersArray, new[]
             {
                 baseResult.WithLocation(21, 9),

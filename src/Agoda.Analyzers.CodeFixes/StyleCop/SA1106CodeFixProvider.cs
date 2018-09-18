@@ -23,7 +23,7 @@ namespace Agoda.Analyzers.CodeFixes.StyleCop
     {
         /// <inheritdoc/>
         public override ImmutableArray<string> FixableDiagnosticIds { get; }
-            = ImmutableArray.Create(SA1106CodeMustNotContainEmptyStatements.DiagnosticId);
+            = ImmutableArray.Create(SA1106CodeMustNotContainEmptyStatements.DIAGNOSTIC_ID);
 
         /// <inheritdoc/>
         public override FixAllProvider GetFixAllProvider()

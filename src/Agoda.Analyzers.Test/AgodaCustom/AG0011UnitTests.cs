@@ -41,7 +41,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         }
 
         [Test]
-        public async Task TestNoDirectQUeryStringAccessViaLocalVariableAsync()
+        public async Task TestNoDirectQueryStringAccessViaLocalVariableAsync()
         {
             var code = @"
 				class TestClass {

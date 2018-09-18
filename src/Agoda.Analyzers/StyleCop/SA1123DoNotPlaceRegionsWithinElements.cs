@@ -23,7 +23,7 @@ namespace Agoda.Analyzers.StyleCop
         /// <summary>
         /// The ID for diagnostics produced by the <see cref="SA1123DoNotPlaceRegionsWithinElements"/> analyzer.
         /// </summary>
-        public const string DiagnosticId = "SA1123";
+        public const string DIAGNOSTIC_ID = "SA1123";
 
         private static readonly LocalizableString Title = new LocalizableResourceString(nameof(ReadabilityResources.SA1123Title), ReadabilityResources.ResourceManager, typeof(ReadabilityResources));
         private static readonly LocalizableString MessageFormat = new LocalizableResourceString(nameof(ReadabilityResources.SA1123MessageFormat), ReadabilityResources.ResourceManager, typeof(ReadabilityResources));
@@ -31,7 +31,7 @@ namespace Agoda.Analyzers.StyleCop
         private static readonly string HelpLink = "https://github.com/DotNetAnalyzers/StyleCopAnalyzers/blob/master/documentation/SA1123.md";
 
         private static readonly DiagnosticDescriptor Descriptor =
-            new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, AnalyzerCategory.ReadabilityRules, DiagnosticSeverity.Warning, AnalyzerConstants.EnabledByDefault, Description, HelpLink);
+            new DiagnosticDescriptor(DIAGNOSTIC_ID, Title, MessageFormat, AnalyzerCategory.ReadabilityRules, DiagnosticSeverity.Warning, AnalyzerConstants.EnabledByDefault, Description, HelpLink);
 
         private static readonly Action<SyntaxNodeAnalysisContext> RegionDirectiveTriviaAction = HandleRegionDirectiveTrivia;
 
