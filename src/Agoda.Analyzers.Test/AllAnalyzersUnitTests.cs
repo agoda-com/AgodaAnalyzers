@@ -17,15 +17,17 @@ namespace Agoda.Analyzers.Test
             var types = typeof(TestMethodHelpers).Assembly.GetTypes()
                 .Where(t => typeof(DiagnosticAnalyzer).IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract);
 
-            foreach (var type in types)
+            Assert.Multiple(() =>
             {
-                var analyzer = (DiagnosticAnalyzer) Activator.CreateInstance(type);
-                if (analyzer.SupportedDiagnostics.Any(d => string.IsNullOrEmpty(d.Title.ToString())))
+                foreach (var type in types)
                 {
-                    Assert.Fail($"Analyzer {type} must define Descriptor.Title");
-                }
-            }
-
+                    var analyzer = (DiagnosticAnalyzer) Activator.CreateInstance(type);
+                    if (analyzer.SupportedDiagnostics.Any(d => string.IsNullOrEmpty(d.Title.ToString())))
+                    {
+                        Assert.Fail($"Analyzer {type} must define Descriptor.Title");
+                    }
+                }    
+            });
         }
     }
 }
