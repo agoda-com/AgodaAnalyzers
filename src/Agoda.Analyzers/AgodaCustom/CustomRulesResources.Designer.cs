@@ -19,7 +19,7 @@ namespace Agoda.Analyzers.AgodaCustom {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class CustomRulesResources {
@@ -214,6 +214,15 @@ namespace Agoda.Analyzers.AgodaCustom {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ensure that publicly exposed IEnumerable types.
+        /// </summary>
+        public static string AG0018Title {
+            get {
+                return ResourceManager.GetString("AG0018Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Remove InternalsVisibleTo attribute.
         /// </summary>
         public static string AG0019FixTitle {
@@ -228,14 +237,6 @@ namespace Agoda.Analyzers.AgodaCustom {
         public static string AG0019Title {
             get {
                 return ResourceManager.GetString("AG0019Title", resourceCulture);
-            }
-        }
-
-        ///   Looks up a localized string similar to Ensure that publicly exposed IEnumerable types.
-        /// </summary>
-        public static string AG0018Title {
-            get {
-                return ResourceManager.GetString("AG0018Title", resourceCulture);
             }
         }
         
@@ -303,7 +304,7 @@ namespace Agoda.Analyzers.AgodaCustom {
                 return ResourceManager.GetString("AG0027Title", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Prevent use of dynamic.
         /// </summary>
