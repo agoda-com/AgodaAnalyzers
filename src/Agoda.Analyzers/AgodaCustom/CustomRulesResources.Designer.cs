@@ -277,6 +277,15 @@ namespace Agoda.Analyzers.AgodaCustom {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Do not expose both sync and async versions of methods.
+        /// </summary>
+        public static string AG0022Description {
+            get {
+                return ResourceManager.GetString("AG0022Description", resourceCulture);
+                }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Prevent the use of Thread.Sleep.
         /// </summary>
         public static string AG0023Title {
@@ -285,6 +294,33 @@ namespace Agoda.Analyzers.AgodaCustom {
             }
         }
         
+        /// <summary>
+        ///   Looks up a localized string similar to Remove sync version of this method.
+        /// </summary>
+        public static string AG0022FixTitle {
+            get {
+                return ResourceManager.GetString("AG0022FixTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Do not expose both sync and async versions of methods.
+        /// </summary>
+        public static string AG0022MessageFormat {
+            get {
+                return ResourceManager.GetString("AG0022MessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Do not expose both sync and async versions of methods.
+        /// </summary>
+        public static string AG0022Title {
+            get {
+                return ResourceManager.GetString("AG0022Title", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to Prevent use of Task.Continue*.
         /// </summary>
