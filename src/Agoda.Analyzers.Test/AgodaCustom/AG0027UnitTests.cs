@@ -19,6 +19,41 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         {
             yield return new AG0027EnsureOnlyDataSeleniumIsUsedToFindElements();
         }
+        
+        [Test]
+        [TestCase("[data-selenium='hotel-item']")]
+        [TestCase("[data-selenium=hotel-item]")]
+        public async Task AG0027_WithPermittedSelectors_ThenPass(string selectBy)
+        {
+            var testCode = $@"
+            using System;
+            using OpenQA.Selenium;
+            using OpenQA.Selenium.Chrome;
+            using System.Collections.ObjectModel;
+
+            namespace Selenium.Tests.Utils
+            {{
+                public class Utils
+                {{
+                    public ReadOnlyCollection<IWebElement> elements1 = new ChromeDriver().FindElements(By.CssSelector(""{selectBy}""));
+                    public IWebElement element1 = new ChromeDriver().FindElement(By.CssSelector(""{selectBy}""));
+                    public ReadOnlyCollection<IWebElement> elements2 = new ChromeDriver().FindElementsByCssSelector(""{selectBy}"");
+                    public IWebElement element2 = new ChromeDriver().FindElementByCssSelector(""{selectBy}"");
+                }}
+            }}";
+
+            var analyzers = GetCSharpDiagnosticAnalyzers().ToImmutableArray();
+            var documents = CreateProject(new[] { testCode })
+                .AddMetadataReference(MetadataReference.CreateFromFile(typeof(IWebElement).Assembly.Location))
+                .AddMetadataReference(MetadataReference.CreateFromFile(typeof(ReadOnlyCollection<>).Assembly.Location))
+                .Documents
+                .ToArray();
+
+            var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzers, documents, CancellationToken.None).ConfigureAwait(false);
+
+            CSharpDiagnostic(AG0027EnsureOnlyDataSeleniumIsUsedToFindElements.DIAGNOSTIC_ID);
+            VerifyDiagnosticResults(diag, analyzers, new DiagnosticResult[0]);
+        }
 
         [Test]
         [TestCase("link[rel='link']")]
@@ -27,7 +62,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         [TestCase(".class")]
         [TestCase("#id")]
         [TestCase("[data-selenium=unterminated")]
-        public async Task AG0027_WithByMethodAndForbiddenSelector_ThenShowWarning(string selectBy)
+        public async Task AG0027_WithForbiddenSelectorsInByMethod_ThenShowWarning(string selectBy)
         {
             var testCode = $@"
             using System;
@@ -72,7 +107,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         [TestCase(".class")]
         [TestCase("#id")]
         [TestCase("[data-selenium=unterminated")]
-        public async Task AG0027_WithFindElementsMethodAndForbiddenSelector_ThenShowWarning(string selectBy)
+        public async Task AG0027_WithForbiddenFindElementsSelectorsInMethod_ThenShowWarning(string selectBy)
         {
             var testCode = $@"
             using System;
@@ -110,39 +145,6 @@ namespace Agoda.Analyzers.Test.AgodaCustom
             });
         }
 
-        [Test]
-        [TestCase("[data-selenium='hotel-item']")]
-        [TestCase("[data-selenium=hotel-item]")]
-        public async Task AG0027_WithPermittedSelector_ThenPass(string selectBy)
-        {
-            var testCode = $@"
-            using System;
-            using OpenQA.Selenium;
-            using OpenQA.Selenium.Chrome;
-            using System.Collections.ObjectModel;
-
-            namespace Selenium.Tests.Utils
-            {{
-                public class Utils
-                {{
-                    public ReadOnlyCollection<IWebElement> elements1 = new ChromeDriver().FindElements(By.CssSelector(""{selectBy}""));
-                    public IWebElement element1 = new ChromeDriver().FindElement(By.CssSelector(""{selectBy}""));
-                    public ReadOnlyCollection<IWebElement> elements2 = new ChromeDriver().FindElementsByCssSelector(""{selectBy}"");
-                    public IWebElement element2 = new ChromeDriver().FindElementByCssSelector(""{selectBy}"");
-                }}
-            }}";
-
-            var analyzers = GetCSharpDiagnosticAnalyzers().ToImmutableArray();
-            var documents = CreateProject(new[] { testCode })
-                .AddMetadataReference(MetadataReference.CreateFromFile(typeof(IWebElement).Assembly.Location))
-                .AddMetadataReference(MetadataReference.CreateFromFile(typeof(ReadOnlyCollection<>).Assembly.Location))
-                .Documents
-                .ToArray();
-
-            var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzers, documents, CancellationToken.None).ConfigureAwait(false);
-
-            CSharpDiagnostic(AG0027EnsureOnlyDataSeleniumIsUsedToFindElements.DIAGNOSTIC_ID);
-            VerifyDiagnosticResults(diag, analyzers, new DiagnosticResult[0]);
-        }   
+      
     }
 }
