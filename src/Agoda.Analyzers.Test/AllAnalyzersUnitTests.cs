@@ -12,7 +12,7 @@ namespace Agoda.Analyzers.Test
         /// Descriptor.Title is required by SonarQube.
         /// </summary>
         [Test]
-        public void Analyzer_MustHaveDescriptorName()
+        public void Analyzer_MustHaveDescriptorTitle()
         {
             var types = typeof(TestMethodHelpers).Assembly.GetTypes()
                 .Where(t => typeof(DiagnosticAnalyzer).IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract);
