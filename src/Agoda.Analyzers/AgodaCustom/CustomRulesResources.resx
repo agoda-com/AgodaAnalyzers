@@ -201,4 +201,7 @@
   <data name="AG0023Title" xml:space="preserve">
     <value>Prevent the use of Thread.Sleep</value>
   </data>
+  <data name="AG0027Title" xml:space="preserve">
+    <value>Elements must be selected by a data-selenium HTML attribute in Selenium tests</value>
+  </data>
 </root>

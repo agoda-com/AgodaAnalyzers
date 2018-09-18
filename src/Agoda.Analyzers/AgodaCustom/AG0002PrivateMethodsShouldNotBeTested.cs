@@ -10,14 +10,14 @@ namespace Agoda.Analyzers.AgodaCustom
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public class AG0002PrivateMethodsShouldNotBeTested : DiagnosticAnalyzer
     {
-        public const string DiagnosticId = "AG0002";
+        public const string DIAGNOSTIC_ID = "AG0002";
         private static readonly LocalizableString Title = new LocalizableResourceString(nameof(CustomRulesResources.AG0002Title), CustomRulesResources.ResourceManager, typeof(CustomRulesResources));
         private static readonly LocalizableString MessageFormat = new LocalizableResourceString(nameof(CustomRulesResources.AG0002MessageFormat), CustomRulesResources.ResourceManager, typeof(CustomRulesResources));
         private static readonly LocalizableString Description = DescriptionContentLoader.GetAnalyzerDescription(nameof(AG0002PrivateMethodsShouldNotBeTested));
         private const string Category = "Usage";
 
         private static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(
-            DiagnosticId,
+            DIAGNOSTIC_ID,
             Title,
             MessageFormat,
             Category, DiagnosticSeverity.Warning,

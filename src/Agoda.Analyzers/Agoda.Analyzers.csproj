@@ -92,6 +92,9 @@
     <None Update="RuleContent\AG0026EnsureOnlyCssSelectorIsUsedToFindElements.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="RuleContent\AG0027EnsureOnlyDataSeleniumIsUsedToFindElements.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="RuleContent\AG0020AvoidReturningNullEnumerables.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

@@ -40,7 +40,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
             var analyzersArray = GetCSharpDiagnosticAnalyzers().ToImmutableArray();
 
             var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzersArray, new[] {doc}, CancellationToken.None).ConfigureAwait(false);
-            var expected = CSharpDiagnostic(AG0001DependencyResolverMustNotBeUsed.DiagnosticId).WithLocation(8, 37);
+            var expected = CSharpDiagnostic(AG0001DependencyResolverMustNotBeUsed.DIAGNOSTIC_ID).WithLocation(8, 37);
 
             VerifyDiagnosticResults(diag, analyzersArray, new[] {expected});
         }

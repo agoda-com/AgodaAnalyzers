@@ -12,7 +12,7 @@ namespace Agoda.Analyzers.AgodaCustom
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public class AG0005TestMethodNamesMustFollowConvention : DiagnosticAnalyzer
     {
-        public const string DiagnosticId = "AG0005";
+        public const string DIAGNOSTIC_ID = "AG0005";
 
         private static readonly LocalizableString Title = new LocalizableResourceString(
             nameof(CustomRulesResources.AG0005Title), 
@@ -28,7 +28,7 @@ namespace Agoda.Analyzers.AgodaCustom
             nameof(AG0005TestMethodNamesMustFollowConvention));
 
         private static readonly DiagnosticDescriptor Descriptor = new DiagnosticDescriptor(
-            DiagnosticId, 
+            DIAGNOSTIC_ID, 
             Title, 
             MessageFormat, 
             AnalyzerCategory.CustomQualityRules,
@@ -52,7 +52,7 @@ namespace Agoda.Analyzers.AgodaCustom
         {
             var methodDeclaration = (MethodDeclarationSyntax) context.Node;
 
-            if (!MethodHelper.IsTestCase(methodDeclaration, context)) return;
+            if (!TestMethodHelpers.IsTestCase(methodDeclaration, context)) return;
                 
             // ensure valid name
             var methodName = methodDeclaration.Identifier.ValueText;
