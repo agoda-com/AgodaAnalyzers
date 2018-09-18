@@ -39,7 +39,9 @@ namespace Agoda.Analyzers.AgodaCustom
             WellKnownDiagnosticTags.EditAndContinue);
 
 
-        protected override ImmutableArray<ForbiddenInvocationRule> Rules => 
-            ImmutableArray.Create(ForbiddenInvocationRule.Create("System.Threading.Thread", new Regex("^Sleep")));
+        protected override IEnumerable<PermittedInvocationRule> Rules => new[]
+        {
+            new BlacklistedInvocationRule("System.Threading.Thread", "Sleep"),
+        };
     }
 }

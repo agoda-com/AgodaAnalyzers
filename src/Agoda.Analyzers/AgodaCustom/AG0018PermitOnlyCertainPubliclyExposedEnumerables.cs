@@ -15,7 +15,7 @@ namespace Agoda.Analyzers.AgodaCustom
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public class AG0018PermitOnlyCertainPubliclyExposedEnumerables : DiagnosticAnalyzer
     {
-        public const string DiagnosticId = "AG0018";
+        public const string DIAGNOSTIC_ID = "AG0018";
 
         private static readonly string[] AllowedTypes = new string[]
         {
@@ -31,7 +31,7 @@ namespace Agoda.Analyzers.AgodaCustom
         private static readonly LocalizableString Description = DescriptionContentLoader.GetAnalyzerDescription(nameof(AG0018PermitOnlyCertainPubliclyExposedEnumerables));
 
         private static readonly DiagnosticDescriptor Descriptor =
-          new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, AnalyzerCategory.CustomQualityRules,
+          new DiagnosticDescriptor(DIAGNOSTIC_ID, Title, MessageFormat, AnalyzerCategory.CustomQualityRules,
               DiagnosticSeverity.Warning, AnalyzerConstants.EnabledByDefault, Description, null, WellKnownDiagnosticTags.EditAndContinue);
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = ImmutableArray.Create(Descriptor);

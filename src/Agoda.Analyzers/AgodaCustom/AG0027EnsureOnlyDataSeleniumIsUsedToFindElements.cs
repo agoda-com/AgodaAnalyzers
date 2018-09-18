@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.CodeAnalysis;
 using Agoda.Analyzers.Helpers;
 using System.Collections.Immutable;
+using System.ComponentModel;
 using System.Linq;
+using System.Linq.Expressions;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System.Text.RegularExpressions;
 using Microsoft.CodeAnalysis.CSharp;
@@ -13,18 +16,16 @@ namespace Agoda.Analyzers.AgodaCustom
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public class AG0027EnsureOnlyDataSeleniumIsUsedToFindElements : DiagnosticAnalyzer
     {
-        public const string DiagnosticId = "AG0027";
-        private static readonly Regex MatchDataSelenium = new Regex("^[\\]?[\"]?\\[data-selenium=*");
+        public const string DIAGNOSTIC_ID = "AG0027";
+        private static readonly Regex MatchDataSelenium = new Regex(@"^""\[data-selenium=.*?[^\\]]""");
 
         private static readonly LocalizableResourceString Msg = new LocalizableResourceString(
             nameof(CustomRulesResources.AG0027Title),
             CustomRulesResources.ResourceManager,
             typeof(CustomRulesResources));
 
-        private static readonly Action<SyntaxNodeAnalysisContext> AnalyzeSeleniumGetElement = HandleDependencyResolverUsage;
-
-        protected static readonly DiagnosticDescriptor Descriptor = new DiagnosticDescriptor(
-            DiagnosticId,
+        private static readonly DiagnosticDescriptor Descriptor = new DiagnosticDescriptor(
+            DIAGNOSTIC_ID,
             Msg,
             Msg,
             AnalyzerCategory.CustomQualityRules,
@@ -36,36 +37,36 @@ namespace Agoda.Analyzers.AgodaCustom
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Descriptor);
 
-        protected static ImmutableArray<ForbiddenInvocationRule> Rules =>
-            ImmutableArray.Create(
-                ForbiddenInvocationRule.Create(
-                    "OpenQA.Selenium.By",
-                    new Regex("^(CssSelector).*$")),
-                ForbiddenInvocationRule.Create(
-                    "OpenQA.Selenium.Remote.RemoteWebDriver",
-                    new Regex("^(FindElement[s]?ByCssSelector)$"))
-            );
-
         public override void Initialize(AnalysisContext context)
         {
-            context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
-            context.EnableConcurrentExecution();
-            context.RegisterSyntaxNodeAction(AnalyzeSeleniumGetElement, SyntaxKind.InvocationExpression);
+            //context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
+            //context.EnableConcurrentExecution();
+            context.RegisterSyntaxNodeAction(AnalyzeNode, SyntaxKind.InvocationExpression);
         }
 
-        private static void HandleDependencyResolverUsage(SyntaxNodeAnalysisContext context)
+        private static void AnalyzeNode(SyntaxNodeAnalysisContext context)
         {
-            var invocationExpressionSyntax = (InvocationExpressionSyntax)context.Node;
+            var invocationExpressionSyntax = (InvocationExpressionSyntax) context.Node;
 
-            if (!(context.SemanticModel.GetSymbolInfo(invocationExpressionSyntax).Symbol is IMethodSymbol methodSymbol)) return;
+            if (!(context.SemanticModel.GetSymbolInfo(invocationExpressionSyntax).Symbol is IMethodSymbol methodSymbol))
+            {
+                return;
+            }
 
-            if (Rules
-                .Where(rule => methodSymbol.ContainingType.ConstructedFrom.ToString() == rule.NamespaceAndType)
-                .Any(rule => !rule.ForbiddenIdentifierNameRegex.IsMatch(methodSymbol.Name))) return;
+            if (!TestMethodHelpers.PermittedSeleniumSelectorRules.Any(r => r.Verify(context)))
+            {
+                return;
+            }
 
-            if (MatchDataSelenium.IsMatch(invocationExpressionSyntax.ArgumentList.Arguments.FirstOrDefault().ToString())) return;
-
-            context.ReportDiagnostic(Diagnostic.Create(Descriptor, context.Node.GetLocation()));
+            var firstArgument = invocationExpressionSyntax.ArgumentList.Arguments.FirstOrDefault();
+            if (firstArgument?.Expression is LiteralExpressionSyntax && !MatchDataSelenium.IsMatch(firstArgument.ToString()))
+            {
+                context.ReportDiagnostic(Diagnostic.Create(Descriptor, firstArgument.GetLocation()));
+            }
+            else
+            {
+                return;
+            }
         }
     }
 }
