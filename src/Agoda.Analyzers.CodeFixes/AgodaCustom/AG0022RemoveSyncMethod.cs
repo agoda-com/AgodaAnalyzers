@@ -17,32 +17,29 @@ namespace Agoda.Analyzers.CodeFixes.AgodaCustom
     [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(AG0022RemoveSyncMethod)), Shared]
     public class AG0022RemoveSyncMethod : CodeFixProvider
     {
-        public override async Task RegisterCodeFixesAsync(CodeFixContext context)
-        {
-            var root = await context.Document.GetSyntaxRootAsync(context.CancellationToken)
-                .ConfigureAwait(false);
+        public override Task RegisterCodeFixesAsync(CodeFixContext context)
+        {            
+            foreach (var diagnostic in context.Diagnostics)
+            {
+                context.RegisterCodeFix(
+                    CodeAction.Create(
+                        CustomRulesResources.AG0022FixTitle,
+                        cancellationToken => GetTransformedDocumentAsync(context.Document, diagnostic, cancellationToken),
+                        nameof(AG0022RemoveSyncMethod)),
+                    diagnostic);
+            }
 
-            var diagnostic = context.Diagnostics.First();
-
-            // Register a code action that will invoke the fix.
-            context.RegisterCodeFix(
-              CodeAction.Create(
-                  CustomRulesResources.AG0022FixTitle,
-                  cancellationToken => GetTransformedDocumentAsync(context.Document, diagnostic, cancellationToken),
-                  nameof(AG0022RemoveSyncMethod)),
-              diagnostic);
+            return SpecializedTasks.CompletedTask;
         }
 
         private async Task<Document> GetTransformedDocumentAsync(Document document, Diagnostic diagnostic, CancellationToken cancellationToken)
         {
             var root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
-            var newRoot = root;
-            if (root.FindNode(diagnostic.Location.SourceSpan) is MethodDeclarationSyntax node && !node.Identifier.ValueText.EndsWith("Async"))
-            {               
-                newRoot = newRoot.RemoveNode(node, SyntaxRemoveOptions.KeepNoTrivia);                                 
             
-                var updatedDocument =  document.WithSyntaxRoot(newRoot);                
-                                          
+            if (root.FindNode(diagnostic.Location.SourceSpan) is MethodDeclarationSyntax node)
+            {
+                var newRoot = root.RemoveNode(node, SyntaxRemoveOptions.KeepNoTrivia);                                                
+                var updatedDocument =  document.WithSyntaxRoot(newRoot);                                                              
                 return updatedDocument;
             }
             

@@ -45,7 +45,7 @@ interface Interface
             var expected = new []
             {
                 CSharpDiagnostic(AG0022DoNotExposeBothSyncAndAsyncVersionsOfMethods.DiagnosticId).WithLocation(6, 5),
-                CSharpDiagnostic(AG0022DoNotExposeBothSyncAndAsyncVersionsOfMethods.DiagnosticId).WithLocation(7, 5)
+                CSharpDiagnostic(AG0022DoNotExposeBothSyncAndAsyncVersionsOfMethods.DiagnosticId).WithLocation(6, 5)
             };
 
             await TestForResults(code, expected);

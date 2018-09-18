@@ -40,7 +40,7 @@ interface TestInterface
             var diagnosticResults = new[]
             {
                 expected.WithLocation(6, 5),
-                expected.WithLocation(7, 5)
+                expected.WithLocation(6, 5)
             };
             
             await RunTest(code, result, diagnosticResults);
@@ -81,7 +81,7 @@ interface TestInterface
             var diagnosticResults = new[]
             {
                 expected.WithLocation(9, 5),
-                expected.WithLocation(14, 5)
+                expected.WithLocation(9, 5)
             };
             
             await RunTest(code, result, diagnosticResults);

@@ -37,33 +37,45 @@ namespace Agoda.Analyzers.AgodaCustom
         {
             context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
 
-            context.RegisterSyntaxNodeAction(AnalyzeNode, SyntaxKind.MethodDeclaration);
+            context.RegisterSyntaxNodeAction(AnalyzeNodeInAction, SyntaxKind.MethodDeclaration);
         }
 
-        private void AnalyzeNode(SyntaxNodeAnalysisContext context)
+        private void AnalyzeNodeInAction(SyntaxNodeAnalysisContext context)
         {
-            var currentMethodDeclaration = (MethodDeclarationSyntax) context.Node;
-            var currentMethodName = currentMethodDeclaration.Identifier.ValueText;
+            var currentMethod = context.Node as MethodDeclarationSyntax;
+            
+            if (currentMethod == null &&
+                !currentMethod.Parent.ChildNodes().Any()) return;
 
-            if (!context.Node.Parent.ChildNodes().Any() || "Async".Equals(currentMethodName)) return;
+            IEnumerable<MethodDeclarationSyntax> slibingNodes = currentMethod.Parent.ChildNodes().OfType<MethodDeclarationSyntax>()
+                .Where(n => n.Identifier.ValueText != currentMethod.Identifier.ValueText)
+                .Select(n => n).ToList();
 
-            IEnumerable<string> methodNames = context.Node.Parent.ChildNodes().OfType<MethodDeclarationSyntax>()
-                .Where(node => node.Identifier.ValueText != currentMethodName)
-                .Select(node => node.Identifier.ValueText).ToList();
+            var matchMethods = FindSyncMethodThatMatchAsyncMethod(currentMethod, slibingNodes);
 
-            // ensure valid name
-            if (!CheckSyncAndAsyncMethodNamimg(currentMethodName, methodNames)) return;
+            foreach(var matchMethod in matchMethods)
+            {
+                context.ReportDiagnostic(Diagnostic.Create(Descriptor, matchMethod.GetLocation()));
+            }            
+        }        
 
-            context.ReportDiagnostic(Diagnostic.Create(Descriptor, currentMethodDeclaration.GetLocation()));
-        }
-
-        private static bool CheckSyncAndAsyncMethodNamimg(string currentMethodName, IEnumerable<string> methodNames)
-        { 
-            var compareToMethodName = currentMethodName.EndsWith("Async") ?
-                currentMethodName.Remove(currentMethodName.IndexOf("Async", StringComparison.Ordinal)) :
-                $"{currentMethodName}Async";
-
-            return methodNames.Any(methodName => methodName.Equals(compareToMethodName));
+        private static IEnumerable<MethodDeclarationSyntax> FindSyncMethodThatMatchAsyncMethod(MethodDeclarationSyntax node, IEnumerable<MethodDeclarationSyntax> slibingNodes)
+        {
+            var nodeMethodName = node.Identifier.ValueText;
+            if (nodeMethodName.EndsWith("Async"))
+            {
+                var targetSyncMatchMethod = nodeMethodName.Remove(nodeMethodName.IndexOf("Async", StringComparison.Ordinal));
+                return from s in slibingNodes
+                       where s.Identifier.ValueText == targetSyncMatchMethod
+                       select s;
+            }
+            else
+            {
+                var targetAsyncMatchMethod = nodeMethodName + "Async";
+                return slibingNodes.Any(s => s.Identifier.ValueText == targetAsyncMatchMethod) ?
+                    new List<MethodDeclarationSyntax> { node } :
+                    new List<MethodDeclarationSyntax>();
+            }     
         }
     }
 }
