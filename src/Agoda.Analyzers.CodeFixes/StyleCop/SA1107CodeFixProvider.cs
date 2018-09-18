@@ -26,7 +26,7 @@ namespace Agoda.Analyzers.CodeFixes.StyleCop
 
         /// <inheritdoc/>
         public override ImmutableArray<string> FixableDiagnosticIds { get; } =
-            ImmutableArray.Create(SA1107CodeMustNotContainMultipleStatementsOnOneLine.DiagnosticId);
+            ImmutableArray.Create(SA1107CodeMustNotContainMultipleStatementsOnOneLine.DIAGNOSTIC_ID);
 
         /// <inheritdoc/>
         public override FixAllProvider GetFixAllProvider()

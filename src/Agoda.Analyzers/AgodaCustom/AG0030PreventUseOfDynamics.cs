@@ -11,7 +11,7 @@ namespace Agoda.Analyzers.AgodaCustom
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public class AG0030PreventUseOfDynamics : DiagnosticAnalyzer
     {
-        public const string DiagnosticId = "AG0030";
+        public const string DIAGNOSTIC_ID = "AG0030";
 
         private static readonly LocalizableString Title = new LocalizableResourceString(
             nameof(CustomRulesResources.AG0030Title), CustomRulesResources.ResourceManager,
@@ -25,7 +25,7 @@ namespace Agoda.Analyzers.AgodaCustom
             DescriptionContentLoader.GetAnalyzerDescription(nameof(AG0030PreventUseOfDynamics));
 
         private static readonly DiagnosticDescriptor Descriptor =
-            new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, AnalyzerCategory.CustomQualityRules,
+            new DiagnosticDescriptor(DIAGNOSTIC_ID, Title, MessageFormat, AnalyzerCategory.CustomQualityRules,
                 DiagnosticSeverity.Warning, AnalyzerConstants.EnabledByDefault, Description, null,
                 WellKnownDiagnosticTags.EditAndContinue);
 

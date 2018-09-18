@@ -28,7 +28,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         [TestCase("FindElementByPartialLinkText")]
         [TestCase("FindElementByTagName")]
         [TestCase("FindElementByXPath")]
-        public async Task AG0026_WhenUsedForbiddenFindElementMethod_ThenShowWarning(string methodName)
+        public async Task AG0026_WithForbiddenFindElementMethod_ThenShowWarning(string methodName)
         {
             var testCode = $@"
             using System;
@@ -64,11 +64,11 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         [TestCase("FindElementsByClassName")]
         [TestCase("FindElementsById")]
         [TestCase("FindElementsByLinkText")]
-        [TestCase("FindElementsByName")]
+        [TestCase("FindElementByName")]
         [TestCase("FindElementsByPartialLinkText")]
         [TestCase("FindElementsByTagName")]
         [TestCase("FindElementsByXPath")]
-        public async Task AG0026_WhenUsedForbiddenFindElementsMethod_ThenShowWarning(string methodName)
+        public async Task AG0026_WithFindElementsMethod_ThenShowWarning(string methodName)
         {
             var testCode = $@"
             using System;
@@ -80,14 +80,16 @@ namespace Agoda.Analyzers.Test.AgodaCustom
             {{
                 public class Utils
                 {{
-                    public ReadOnlyCollection<IWebElement> elements => new ChromeDriver().{methodName}(""abc"");
+                    public void Test()
+                    {{
+                        var element = new ChromeDriver().{methodName}(""abc"");
+                    }}
                 }}
             }}";
 
             var analyzers = GetCSharpDiagnosticAnalyzers().ToImmutableArray();
             var documents = CreateProject(new[] { testCode })
                            .AddMetadataReference(MetadataReference.CreateFromFile(typeof(IWebElement).Assembly.Location))
-                           .AddMetadataReference(MetadataReference.CreateFromFile(typeof(ReadOnlyCollection<>).Assembly.Location))
                            .Documents
                            .ToArray();
 
@@ -96,7 +98,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
             var baseResult = CSharpDiagnostic(AG0026EnsureOnlyCssSelectorIsUsedToFindElements.DIAGNOSTIC_ID);
             VerifyDiagnosticResults(diag, analyzers, new[]
             {
-                baseResult.WithLocation(11, 72)
+                baseResult.WithLocation(13, 39),
             });
         }
         
@@ -108,7 +110,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         [TestCase("PartialLinkText")]
         [TestCase("TagName")]
         [TestCase("XPath")]
-        public async Task AG0026_WhenUsedForbiddenAccessor_ThenShowWarning(string methodName)
+        public async Task AG0026_WithForbiddenAccessor_ThenShowWarning(string methodName)
         {
             var testCode = $@"
             using System;
@@ -119,7 +121,11 @@ namespace Agoda.Analyzers.Test.AgodaCustom
             {{
                 public class Utils
                 {{
-                    public IWebElement element11 => new ChromeDriver().FindElement(By.{methodName}(""abc""));
+                    public void Test()
+                    {{
+                        var driver = new ChromeDriver();
+                        var elements1 = driver.FindElement(By.{methodName}(""abc""));
+                    }}
                 }}
             }}";
 
@@ -134,12 +140,12 @@ namespace Agoda.Analyzers.Test.AgodaCustom
             var baseResult = CSharpDiagnostic(AG0026EnsureOnlyCssSelectorIsUsedToFindElements.DIAGNOSTIC_ID);
             VerifyDiagnosticResults(diag, analyzers, new[]
             {
-                baseResult.WithLocation(10, 84)
+                baseResult.WithLocation(13, 60)
             });
         }
 
         [Test]
-        public async Task AG0026_WhenUsedNotForbiddenMethod_ThenNoWarning()
+        public async Task AG0026_WithPermittedMethod_ThenNoWarning()
         {
             var testCode = @"
             using System;
@@ -151,9 +157,13 @@ namespace Agoda.Analyzers.Test.AgodaCustom
             {
                 public class Utils
                 {
-                    public IWebElement element1 => new ChromeDriver().FindElementByCssSelector(""selector"");
-                    public ReadOnlyCollection<IWebElement> element12 => new ChromeDriver().FindElementsByCssSelector(""selector"");
-                    public object obj => new ChromeDriver().ExecuteScript(""scrpt"");
+                    public void Test()
+                    {
+                        var driver = new ChromeDriver();
+                        var elements1 = driver.FindElementByCssSelector(""selector"");
+                        var elements2 = driver.FindElementsByCssSelector(""selector"");
+                        driver.ExecuteScript(""script"");
+                    }
                 }
             }";
 
@@ -171,7 +181,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         }
 
         [Test]
-        public async Task AG0026_WhenUsedNotForbiddenAccessor_ThenNoWarning()
+        public async Task AG0026_WithPermittedAccessor_ThenNoWarning()
         {
             var testCode = @"
             using System;
@@ -182,7 +192,11 @@ namespace Agoda.Analyzers.Test.AgodaCustom
             {
                 public class Utils
                 {
-                    public IWebElement element1 => new ChromeDriver().FindElement(By.CssSelector(""selector""));
+                    public void Test()
+                    {
+                        var driver = new ChromeDriver();
+                        var elements1 = driver.FindElement(By.CssSelector(""selector""));
+                    }
                 }
             }";
 
@@ -199,7 +213,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         }
 
         [Test]
-        public async Task AG0026_WhenUsedParentMethod_ThenNoWarning()
+        public async Task AG0026_WithByEqualsMethod_ThenNoWarning()
         {
             var testCode = @"
             using System;
@@ -210,7 +224,10 @@ namespace Agoda.Analyzers.Test.AgodaCustom
             {
                 public class Utils
                 {
-                    public bool isEqual1 => By.Equals(""selector1"", ""selector2"");
+                    public void Test()
+                    {
+                        var elements1 = By.Equals(""selector1"", ""selector2"");
+                    }
                 }
             }";
 
@@ -227,7 +244,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         }
 
         [Test]
-        public async Task AG0026_WhenUsedMethodMatchForbiddenNameButDifferentNamespaceType_ThenNoWarning()
+        public async Task AG0026_WithForbiddenNameInDifferentNamespaceType_ThenNoWarning()
         {
             var testCode = @"
             using System;

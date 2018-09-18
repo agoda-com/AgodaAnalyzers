@@ -13,7 +13,7 @@ namespace Agoda.Analyzers.AgodaCustom
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public class AG0021PreferAsyncMethods : DiagnosticAnalyzer
     {
-        public const string DiagnosticId = "AG0021";
+        public const string DIAGNOSTIC_ID = "AG0021";
 
         private static readonly LocalizableString Title = new LocalizableResourceString(
             nameof(CustomRulesResources.AG0021Title), CustomRulesResources.ResourceManager,
@@ -27,7 +27,7 @@ namespace Agoda.Analyzers.AgodaCustom
             DescriptionContentLoader.GetAnalyzerDescription(nameof(AG0021PreferAsyncMethods));
 
         private static readonly DiagnosticDescriptor Descriptor =
-            new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, AnalyzerCategory.CustomQualityRules,
+            new DiagnosticDescriptor(DIAGNOSTIC_ID, Title, MessageFormat, AnalyzerCategory.CustomQualityRules,
                 DiagnosticSeverity.Info, AnalyzerConstants.EnabledByDefault, Description, null,
                 WellKnownDiagnosticTags.EditAndContinue);
 

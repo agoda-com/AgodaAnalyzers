@@ -48,7 +48,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
             var analyzersArray = GetCSharpDiagnosticAnalyzers().ToImmutableArray();
 
             var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzersArray, new[] { doc }, CancellationToken.None).ConfigureAwait(false);
-            var baseResult = CSharpDiagnostic(AG0018PermitOnlyCertainPubliclyExposedEnumerables.DiagnosticId);
+            var baseResult = CSharpDiagnostic(AG0018PermitOnlyCertainPubliclyExposedEnumerables.DIAGNOSTIC_ID);
 
             VerifyDiagnosticResults(diag, analyzersArray, new DiagnosticResult[] { });
         }
@@ -81,7 +81,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
             var analyzersArray = GetCSharpDiagnosticAnalyzers().ToImmutableArray();
 
             var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzersArray, new[] { doc }, CancellationToken.None).ConfigureAwait(false);
-            var baseResult = CSharpDiagnostic(AG0018PermitOnlyCertainPubliclyExposedEnumerables.DiagnosticId);
+            var baseResult = CSharpDiagnostic(AG0018PermitOnlyCertainPubliclyExposedEnumerables.DIAGNOSTIC_ID);
 
             VerifyDiagnosticResults(diag, analyzersArray, new[]
             {
@@ -125,7 +125,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
             var analyzersArray = GetCSharpDiagnosticAnalyzers().ToImmutableArray();
 
             var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzersArray, new[] { doc }, CancellationToken.None).ConfigureAwait(false);
-            var baseResult = CSharpDiagnostic(AG0018PermitOnlyCertainPubliclyExposedEnumerables.DiagnosticId);
+            var baseResult = CSharpDiagnostic(AG0018PermitOnlyCertainPubliclyExposedEnumerables.DIAGNOSTIC_ID);
 
             VerifyDiagnosticResults(diag, analyzersArray, new[]
             {
@@ -162,7 +162,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
             var analyzersArray = GetCSharpDiagnosticAnalyzers().ToImmutableArray();
 
             var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzersArray, new[] { doc }, CancellationToken.None).ConfigureAwait(false);
-            var baseResult = CSharpDiagnostic(AG0018PermitOnlyCertainPubliclyExposedEnumerables.DiagnosticId);
+            var baseResult = CSharpDiagnostic(AG0018PermitOnlyCertainPubliclyExposedEnumerables.DIAGNOSTIC_ID);
 
             VerifyDiagnosticResults(diag, analyzersArray, new[]
             {

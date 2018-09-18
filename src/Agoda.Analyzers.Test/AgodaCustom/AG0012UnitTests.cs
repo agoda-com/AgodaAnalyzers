@@ -48,7 +48,7 @@ namespace Tests
             var analyzersArray = GetCSharpDiagnosticAnalyzers().ToImmutableArray();
 
             var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzersArray, new[] { doc }, CancellationToken.None).ConfigureAwait(false);            
-            var baseResult = CSharpDiagnostic(AG0012TestMethodMustContainAtLeastOneAssertion.DiagnosticId);
+            var baseResult = CSharpDiagnostic(AG0012TestMethodMustContainAtLeastOneAssertion.DIAGNOSTIC_ID);
 
             VerifyDiagnosticResults(diag, analyzersArray, new[]
             {
@@ -103,7 +103,7 @@ namespace Tests
             var analyzersArray = GetCSharpDiagnosticAnalyzers().ToImmutableArray();
 
             var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzersArray, new[] { doc }, CancellationToken.None).ConfigureAwait(false);
-            var baseResult = CSharpDiagnostic(AG0012TestMethodMustContainAtLeastOneAssertion.DiagnosticId);
+            var baseResult = CSharpDiagnostic(AG0012TestMethodMustContainAtLeastOneAssertion.DIAGNOSTIC_ID);
 
             VerifyDiagnosticResults(diag, analyzersArray, new[]
             {

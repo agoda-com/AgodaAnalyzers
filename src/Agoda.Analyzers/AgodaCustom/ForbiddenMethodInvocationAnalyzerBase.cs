@@ -1,10 +1,11 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using System.Collections.Generic;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System.Collections.Immutable;
 using System.Linq;
-using System.Text.RegularExpressions;
+using Agoda.Analyzers.Helpers;
 
 namespace Agoda.Analyzers.AgodaCustom
 {
@@ -16,7 +17,7 @@ namespace Agoda.Analyzers.AgodaCustom
     {
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Descriptor);
         protected abstract DiagnosticDescriptor Descriptor { get; }
-        protected abstract ImmutableArray<ForbiddenInvocationRule> Rules { get; }
+        protected abstract IEnumerable<PermittedInvocationRule> Rules { get; }
 
         public override void Initialize(AnalysisContext context)
         {
@@ -26,14 +27,12 @@ namespace Agoda.Analyzers.AgodaCustom
         private void AnalyzeInvocation(SyntaxNodeAnalysisContext context)
         {
             var invocationExpressionSyntax = (InvocationExpressionSyntax)context.Node;
-            var methodSymbol = context.SemanticModel.GetSymbolInfo(invocationExpressionSyntax).Symbol as IMethodSymbol;
-            if (methodSymbol == null) return;
+            if (!(context.SemanticModel.GetSymbolInfo(invocationExpressionSyntax).Symbol is IMethodSymbol methodSymbol)) return;
 
-            Rules
-                .Where(rule => methodSymbol.ContainingType.ConstructedFrom.ToString() == rule.NamespaceAndType)
-                .Where(rule => rule.ForbiddenIdentifierNameRegex.IsMatch(methodSymbol.Name))
-                .ToList()
-                .ForEach(_ => context.ReportDiagnostic(Diagnostic.Create(Descriptor, context.Node.GetLocation())));
+            if (Rules.Any(r => !r.Verify(context)))
+            {
+                context.ReportDiagnostic(Diagnostic.Create(Descriptor, context.Node.GetLocation()));
+            }
         }
     }
 }

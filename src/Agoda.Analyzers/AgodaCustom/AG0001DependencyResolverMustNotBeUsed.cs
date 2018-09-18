@@ -11,14 +11,14 @@ namespace Agoda.Analyzers.AgodaCustom
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public class AG0001DependencyResolverMustNotBeUsed : DiagnosticAnalyzer
     {
-        public const string DiagnosticId = "AG0001";
+        public const string DIAGNOSTIC_ID = "AG0001";
         
         private static readonly LocalizableString Title = new LocalizableResourceString(nameof(CustomRulesResources.AG0001Title), CustomRulesResources.ResourceManager, typeof(CustomRulesResources));
         private static readonly LocalizableString MessageFormat = new LocalizableResourceString(nameof(CustomRulesResources.AG0001MessageFormat), CustomRulesResources.ResourceManager, typeof(CustomRulesResources));
         private static readonly LocalizableString Description = DescriptionContentLoader.GetAnalyzerDescription(nameof(AG0001DependencyResolverMustNotBeUsed));
 
         private static readonly DiagnosticDescriptor Descriptor =
-            new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, AnalyzerCategory.CustomQualityRules,
+            new DiagnosticDescriptor(DIAGNOSTIC_ID, Title, MessageFormat, AnalyzerCategory.CustomQualityRules,
                 DiagnosticSeverity.Warning, AnalyzerConstants.EnabledByDefault, Description, null, WellKnownDiagnosticTags.EditAndContinue);
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Descriptor);
