@@ -101,6 +101,9 @@
     <None Update="RuleContent\AG0013LimitNumberOfTestMethodParametersTo5.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="RuleContent\AG0022DoNotExposeBothSyncAndAsyncVersionsOfMethods.html">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="RuleContent\AG0021PreferAsyncMethods.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
