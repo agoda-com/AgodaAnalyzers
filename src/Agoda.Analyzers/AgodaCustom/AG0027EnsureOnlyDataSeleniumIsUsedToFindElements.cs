@@ -17,7 +17,8 @@ namespace Agoda.Analyzers.AgodaCustom
     public class AG0027EnsureOnlyDataSeleniumIsUsedToFindElements : DiagnosticAnalyzer
     {
         public const string DIAGNOSTIC_ID = "AG0027";
-        private static readonly Regex MatchDataSelenium = new Regex(@"^""\[data-selenium=.*?[^\\]]""");
+        
+        private static readonly Regex MatchDataSelenium = new Regex(@"^""\[data-selenium=.*?[^\\]\]""");
 
         private static readonly LocalizableResourceString Msg = new LocalizableResourceString(
             nameof(CustomRulesResources.AG0027Title),
@@ -39,8 +40,6 @@ namespace Agoda.Analyzers.AgodaCustom
 
         public override void Initialize(AnalysisContext context)
         {
-            //context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
-            //context.EnableConcurrentExecution();
             context.RegisterSyntaxNodeAction(AnalyzeNode, SyntaxKind.InvocationExpression);
         }
 
@@ -48,7 +47,7 @@ namespace Agoda.Analyzers.AgodaCustom
         {
             var invocationExpressionSyntax = (InvocationExpressionSyntax) context.Node;
 
-            if (!(context.SemanticModel.GetSymbolInfo(invocationExpressionSyntax).Symbol is IMethodSymbol methodSymbol))
+            if (!(context.SemanticModel.GetSymbolInfo(invocationExpressionSyntax).Symbol is IMethodSymbol))
             {
                 return;
             }
@@ -62,10 +61,6 @@ namespace Agoda.Analyzers.AgodaCustom
             if (firstArgument?.Expression is LiteralExpressionSyntax && !MatchDataSelenium.IsMatch(firstArgument.ToString()))
             {
                 context.ReportDiagnostic(Diagnostic.Create(Descriptor, firstArgument.GetLocation()));
-            }
-            else
-            {
-                return;
             }
         }
     }
