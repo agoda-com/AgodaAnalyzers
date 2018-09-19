@@ -12,7 +12,7 @@ namespace Agoda.Analyzers.AgodaCustom
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public class AG0010PreventTestFixtureInheritance : DiagnosticAnalyzer
     {
-        public const string DiagnosticId = "AG0010";
+        public const string DIAGNOSTIC_ID = "AG0010";
         private static readonly Regex MatchTestAttributeName = new Regex("^TestFixture$");
 
         private static readonly LocalizableString Title = new LocalizableResourceString(
@@ -29,7 +29,7 @@ namespace Agoda.Analyzers.AgodaCustom
             nameof(AG0010PreventTestFixtureInheritance));
 
         private static readonly DiagnosticDescriptor Descriptor = new DiagnosticDescriptor(
-            DiagnosticId,
+            DIAGNOSTIC_ID,
             Title,
             MessageFormat,
             AnalyzerCategory.CustomQualityRules,
@@ -48,19 +48,14 @@ namespace Agoda.Analyzers.AgodaCustom
 
         private void AnalyzeNode(SyntaxNodeAnalysisContext context)
         {
-            var classDeclaration = (ClassDeclarationSyntax)context.Node;
-
-            var hasTestMethod = classDeclaration.ChildNodes().Any(x => x.IsKind(SyntaxKind.MethodDeclaration) && MethodHelper.IsTestCase((MethodDeclarationSyntax)x, context));
-            var hasTestFixtureAttribute = classDeclaration.AttributeLists
-                    .SelectMany(al => al.Attributes)
-                    .Select(a => a.Name as IdentifierNameSyntax)
-                    .Where(name => name != null)
-                    .Select(name => name.Identifier.ValueText)
-                    .Any(MatchTestAttributeName.IsMatch);
-
-            if (!(hasTestFixtureAttribute || hasTestMethod)) return;
-
+            var classDeclaration = (ClassDeclarationSyntax) context.Node;
             if (classDeclaration.BaseList == null) return;
+
+            var hasTestMethod = classDeclaration
+                .ChildNodes()
+                .OfType<MethodDeclarationSyntax>()
+                .Any(x => TestMethodHelpers.IsTestCase(x, context));
+            if (!hasTestMethod) return;
 
             context.ReportDiagnostic(Diagnostic.Create(Descriptor, classDeclaration.GetLocation()));
         }

@@ -14,7 +14,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
     internal class AG0022UnitTests : DiagnosticVerifier
     {
         [Test]
-        public async Task AG0022_WhenNotExistBothSyncAndAsyncVersionsOfMethods_ShouldNotShowWarning()
+        public async Task AG0022_WhenNotExistBothSyncAndAsyncVersionsOnInterface_ShouldNotShowWarning()
         {
             const string code = @"
 using System.Threading.Tasks;
@@ -24,13 +24,35 @@ interface TestInterface
     bool TestMethod(string url);
     Task<bool> NotTestMethodAsync(string url);
 }
-			";
+";
 
             await TestForResults(code);
         }
         
         [Test]
-        public async Task AG0022_WhenExistBothSyncAndAsyncVersionsOfMethods_ShouldShowWarning()
+        public async Task AG0022_WhenNotExistBothSyncAndAsyncVersionsOnClass_ShouldNotShowWarning()
+        {
+            const string code = @"
+using System.Threading.Tasks;
+
+class TestClass
+{
+    public bool TestMethod(string url)
+    {
+        return true;
+    }
+    public Task<bool> NotTestMethodAsync(string url) 
+    { 
+        return Task.FromResult(true);
+    }
+}
+";
+
+            await TestForResults(code);
+        }
+        
+        [Test]
+        public async Task AG0022_WhenExistBothSyncAndAsyncVersionsOfMethodsOnInterface_ShouldShowWarning()
         {
             const string code = @"
 using System.Threading.Tasks;
@@ -42,13 +64,118 @@ interface Interface
 }
 			";
 
+            var baseResult = CSharpDiagnostic(AG0022DoNotExposeBothSyncAndAsyncVersionsOfMethods.DIAGNOSTIC_ID);
             var expected = new []
             {
-                CSharpDiagnostic(AG0022DoNotExposeBothSyncAndAsyncVersionsOfMethods.DiagnosticId).WithLocation(6, 5),
-                CSharpDiagnostic(AG0022DoNotExposeBothSyncAndAsyncVersionsOfMethods.DiagnosticId).WithLocation(6, 5)
+                baseResult.WithLocation(6, 5)
             };
 
             await TestForResults(code, expected);
+        }
+
+        [Test]
+        public async Task AG0022_WhenExistBothSyncAndAsyncVersionsOnClass_ShouldShowWarning()
+        {
+            const string code = @"
+using System.Threading.Tasks;
+
+class TestClass
+{
+    public bool TestMethod(string url)
+    {
+        return true;
+    }
+    public Task<bool> TestMethodAsync(string url) 
+    { 
+        return Task.FromResult(true); 
+    }
+}
+";
+
+            var baseResult = CSharpDiagnostic(AG0022DoNotExposeBothSyncAndAsyncVersionsOfMethods.DIAGNOSTIC_ID);
+            var expected = new[]
+            {
+                baseResult.WithLocation(6, 5),
+            };
+
+            await TestForResults(code, expected);
+        }
+        
+        [Test]
+        public async Task AG0022_WhenExistBothSyncAndAsyncVoidVersions_ShouldShowWarning()
+        {
+            const string code = @"
+using System.Threading.Tasks;
+
+class TestClass
+{
+    public void TestMethod(string url)
+    {
+        return;
+    }
+    public async void TestMethodAsync(string url) 
+    { 
+        
+    }
+}
+";
+
+            var baseResult = CSharpDiagnostic(AG0022DoNotExposeBothSyncAndAsyncVersionsOfMethods.DIAGNOSTIC_ID);
+            var expected = new[]
+            {
+                baseResult.WithLocation(6, 5),
+            };
+
+            await TestForResults(code, expected);
+        }
+        
+        [Test]
+        public async Task AG0022_WhenExistBothSyncAndAsyncMethodsNamedSame_ShouldShowWarning()
+        {
+            const string code = @"
+using System.Threading.Tasks;
+
+class TestClass
+{
+    public bool TestMethod(string url)
+    {
+        return true;
+    }
+    public Task<bool> TestMethod(int something) 
+    { 
+        return Task.FromResult(true); 
+    }
+}
+";
+
+            var baseResult = CSharpDiagnostic(AG0022DoNotExposeBothSyncAndAsyncVersionsOfMethods.DIAGNOSTIC_ID);
+            var expected = new[]
+            {
+                baseResult.WithLocation(6, 5),
+            };
+
+            await TestForResults(code, expected);
+        }
+        
+        [Test]
+        public async Task AG0022_WhenExistBothSyncAndAsyncVersionsOfInternalMethods_ShouldNotShowWarning()
+        {
+            const string code = @"
+using System.Threading.Tasks;
+
+class TestClass
+{
+    internal bool TestMethod(string url)
+    {
+        return true;
+    }
+    internal Task<bool> TestMethodAsync(string url) 
+    { 
+        return Task.FromResult(true); 
+    }
+}
+";
+            await TestForResults(code);
         }
 
         private async Task TestForResults(string code, DiagnosticResult[] expected = null)

@@ -7,13 +7,17 @@ using Microsoft.CodeAnalysis.Diagnostics;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace Agoda.Analyzers.AgodaCustom
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public class AG0022DoNotExposeBothSyncAndAsyncVersionsOfMethods : DiagnosticAnalyzer
     {
-        public const string DiagnosticId = "AG0022";
+        public const string DIAGNOSTIC_ID = "AG0022";
+        
+        private static readonly Regex MatchAsyncMethod = new Regex("Async$"); 
 
         private static readonly LocalizableString Title = new LocalizableResourceString(
             nameof(CustomRulesResources.AG0022Title), CustomRulesResources.ResourceManager,
@@ -27,7 +31,7 @@ namespace Agoda.Analyzers.AgodaCustom
             DescriptionContentLoader.GetAnalyzerDescription(nameof(AG0022DoNotExposeBothSyncAndAsyncVersionsOfMethods));
 
         private static readonly DiagnosticDescriptor Descriptor =
-            new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, AnalyzerCategory.CustomQualityRules,
+            new DiagnosticDescriptor(DIAGNOSTIC_ID, Title, MessageFormat, AnalyzerCategory.CustomQualityRules,
                 DiagnosticSeverity.Warning, AnalyzerConstants.EnabledByDefault, Description, null,
                 WellKnownDiagnosticTags.EditAndContinue);
 
@@ -37,45 +41,47 @@ namespace Agoda.Analyzers.AgodaCustom
         {
             context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
 
-            context.RegisterSyntaxNodeAction(AnalyzeNodeInAction, SyntaxKind.MethodDeclaration);
+            context.RegisterSyntaxNodeAction(AnalyzeNode, SyntaxKind.MethodDeclaration);
         }
 
-        private void AnalyzeNodeInAction(SyntaxNodeAnalysisContext context)
+        private static void AnalyzeNode(SyntaxNodeAnalysisContext context)
         {
-            var currentMethod = context.Node as MethodDeclarationSyntax;
-            
-            if (currentMethod == null &&
-                !currentMethod.Parent.ChildNodes().Any()) return;
-
-            IEnumerable<MethodDeclarationSyntax> slibingNodes = currentMethod.Parent.ChildNodes().OfType<MethodDeclarationSyntax>()
-                .Where(n => n.Identifier.ValueText != currentMethod.Identifier.ValueText)
-                .Select(n => n).ToList();
-
-            var matchMethods = FindSyncMethodThatMatchAsyncMethod(currentMethod, slibingNodes);
-
-            foreach(var matchMethod in matchMethods)
+            if (!(context.Node is MethodDeclarationSyntax methodDeclarationSyntax))
             {
-                context.ReportDiagnostic(Diagnostic.Create(Descriptor, matchMethod.GetLocation()));
-            }            
-        }        
-
-        private static IEnumerable<MethodDeclarationSyntax> FindSyncMethodThatMatchAsyncMethod(MethodDeclarationSyntax node, IEnumerable<MethodDeclarationSyntax> slibingNodes)
-        {
-            var nodeMethodName = node.Identifier.ValueText;
-            if (nodeMethodName.EndsWith("Async"))
-            {
-                var targetSyncMatchMethod = nodeMethodName.Remove(nodeMethodName.IndexOf("Async", StringComparison.Ordinal));
-                return from s in slibingNodes
-                       where s.Identifier.ValueText == targetSyncMatchMethod
-                       select s;
+                return;
             }
-            else
+            
+            // ensure public method or interface specification
+            if (!(methodDeclarationSyntax.Modifiers.Any(SyntaxKind.PublicKeyword)
+                || methodDeclarationSyntax.Parent.IsKind(SyntaxKind.InterfaceDeclaration)))
             {
-                var targetAsyncMatchMethod = nodeMethodName + "Async";
-                return slibingNodes.Any(s => s.Identifier.ValueText == targetAsyncMatchMethod) ?
-                    new List<MethodDeclarationSyntax> { node } :
-                    new List<MethodDeclarationSyntax>();
-            }     
-        }
+                return;
+            }
+            
+            // ensure method is async in intent
+            var methodDeclaration = (IMethodSymbol) context.SemanticModel.GetDeclaredSymbol(context.Node);
+            if (!AsyncHelpers.IsAsyncIntent(methodDeclaration))
+            {
+                return;
+            }
+
+            // find other methods with matching names
+            var targetName = MatchAsyncMethod.Replace(methodDeclarationSyntax.Identifier.Text, "");
+            var matchingMethods = methodDeclarationSyntax.Parent.ChildNodes()
+                .OfType<MethodDeclarationSyntax>()
+                .Where(methodSyntax => methodSyntax != context.Node)
+                .Where(methodSyntax => methodSyntax.Identifier.Text == targetName);
+            
+            // if any of these methods are sync then report
+            foreach (var methodSyntax in matchingMethods)
+            {
+                var methodSymbol = context.SemanticModel.GetDeclaredSymbol(methodSyntax);
+                if (!AsyncHelpers.IsAsyncIntent(methodSymbol))
+                {
+                    context.ReportDiagnostic(Diagnostic.Create(Descriptor, methodSyntax.GetLocation()));    
+                }
+            }
+                         
+        }        
     }
 }

@@ -14,53 +14,26 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 {
     internal class AG0010UnitTests : DiagnosticVerifier
     {
-        private const string TEST_FIXTURE_ATTRIBUTE = "TestFixture";
-        private const string TEST_INHERITANCE_CLASSNAME = "BaseTest";
-
         [Test]
-        public async Task AG0010_WhenNoTestFixtureAttribute_ShouldntShowAnyWarning()
+        public async Task AG0010_WhenNoTestCases_ShouldntShowWarning()
         {
-            var code = ClassBuilder.New()
-                .WithNamespace()
-                .WithClass()
-                .Build();
+            var code = @"
+using NUnit.Framework;
+
+namespace Tests
+{
+    public class TestClass
+    {
+        public void This_IsValid(){}
+    }
+}
+";
 
             await TestWarnings(code);
         }
 
         [Test]
-        public async Task AG0010_WhenPutTestFixtureAttribute_ButNoInheritance_ShouldntShowWarning()
-        {
-            var code = ClassBuilder.New()
-                .WithNamespace()
-                .WithClass(className: "test", attribute: TEST_FIXTURE_ATTRIBUTE)
-                .WithAttributeClass(TEST_FIXTURE_ATTRIBUTE)
-                .Build();
-
-            await TestWarnings(code);
-        }
-
-        [Test]
-        public async Task AG0010_WhenPutTestFixtureAttribute_ButHasInheritance_ShouldShowWarning()
-        {
-            var code = ClassBuilder.New()
-                .WithNamespace()
-                .WithClass(className:"test",attribute: TEST_FIXTURE_ATTRIBUTE,inheritanceClassName:TEST_INHERITANCE_CLASSNAME)
-                .WithAttributeClass(TEST_FIXTURE_ATTRIBUTE)
-                .WithInheritanceClass(TEST_INHERITANCE_CLASSNAME)
-                .Build();
-
-            var baseResult =
-                CSharpDiagnostic(AG0010PreventTestFixtureInheritance.DiagnosticId);
-            var expected = new[]
-            {
-                baseResult.WithLocation(4, 2)
-            };
-            await TestWarnings(code, expected);
-        }
-
-        [Test]
-        public async Task AG0010_WhenNoTestFixtureAttribute_ButHasTestMethod_WithoutInheritance_ShouldntShowWarning()
+        public async Task AG0010_WhenNoInheritance_ShouldntShowWarning()
         {
             var code = @"
 using NUnit.Framework;
@@ -79,7 +52,7 @@ namespace Tests
         }
 
         [Test]
-        public async Task AG0010_WhenNoTestFixtureAttribute_ButHasTestMethod_WithInheritance_ShouldShowWarning()
+        public async Task AG0010_WhenInheritance_ShouldShowWarning()
         {
             var code = @"
 using NUnit.Framework;
@@ -98,7 +71,7 @@ namespace Tests
 }
 ";
             var baseResult =
-    CSharpDiagnostic(AG0010PreventTestFixtureInheritance.DiagnosticId);
+    CSharpDiagnostic(AG0010PreventTestFixtureInheritance.DIAGNOSTIC_ID);
             var expected = new[]
             {
                 baseResult.WithLocation(6, 5)
