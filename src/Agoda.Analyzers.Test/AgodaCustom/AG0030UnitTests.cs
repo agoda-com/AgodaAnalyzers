@@ -20,7 +20,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 	    protected override string DiagnosticId => AG0030PreventUseOfDynamics.DIAGNOSTIC_ID;
         
         [Test]
-        public async Task AG0030_WhenNoDynamic_ShouldntShowAnyWarning()
+        public async Task AG0030_WhenNoDynamic_ShouldntShowWarning()
         {
             var code = @"
 				class TestClass {
@@ -34,7 +34,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-	        await VerifyDiagnosticsAsync(code);
+	        await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
         }
         
         [Test]
@@ -103,7 +103,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 }
                 ";
 
-            await VerifyDiagnosticsAsync(code);
+            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
         }
 
         [Test]

@@ -21,30 +21,36 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         [Test]
         public async Task AG0011_WithDirectAccess_ShowsWarning()
         {
-            var code = @"
-				class TestClass {
-					public void TestMethod() {
-                        var queryString = System.Web.HttpContext.Current.Request.QueryString;
-					}
-				}
-			";
+	        var code = new CodeDescriptor
+	        {
+		        References = new[] {typeof(HttpContext).Assembly},
+		        Code = @"
+					class TestClass {
+						public void TestMethod() {
+							var queryString = System.Web.HttpContext.Current.Request.QueryString;
+						}
+					}"
+	        };
 
-            await VerifyDiagnosticsAsync(code, typeof(HttpContext).Assembly, new DiagnosticLocation(4, 82));
+            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(4, 65));
         }
 
         [Test]
         public async Task AG0011_ThroughLocalVariable_ShowsWarning()
         {
-            var code = @"
-				class TestClass {
-					public void TestMethod() {
-                        var request = System.Web.HttpContext.Current.Request;
-                        var queryParamValue = request.QueryString[""queryParam""];
-					}
-				}
-			";
+	        var code = new CodeDescriptor
+	        {
+		        References = new[] {typeof(HttpContext).Assembly},
+		        Code = @"
+					class TestClass {
+						public void TestMethod() {
+							var request = System.Web.HttpContext.Current.Request;
+							var queryParamValue = request.QueryString[""queryParam""];
+						}
+					}"
+	        };
 
-	        await VerifyDiagnosticsAsync(code, typeof(HttpContext).Assembly, new DiagnosticLocation(5, 55));
+	        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(5, 38));
         }
     }
 }

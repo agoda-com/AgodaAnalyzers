@@ -30,7 +30,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 .WithAttributeClass(CUSTOM_ATTRIBUTE)
                 .Build();
 
-            await VerifyDiagnosticsAsync(code);
+            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
         }
 
         [Test]
@@ -42,7 +42,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 .WithAttributeClass(REGISTER_SINGLETON)
                 .Build();
 
-            await VerifyDiagnosticsAsync(code);
+            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
         }
 
         [Test]
@@ -54,7 +54,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 .WithAttributeClass(REGISTER_SINGLETON)
                 .Build();
 
-            await VerifyDiagnosticsAsync(code);
+            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
         }
 
         [Test]

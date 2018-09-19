@@ -66,8 +66,7 @@ namespace Agoda.Analyzers.Test.Helpers
         [Test]
         public async Task TestEmptySourceAsync()
         {
-            var testCode = string.Empty;
-            await VerifyDiagnosticsAsync(testCode, EmptyDiagnosticResults).ConfigureAwait(false);
+            await VerifyDiagnosticsAsync(new CodeDescriptor(), EmptyDiagnosticResults).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -86,24 +85,28 @@ namespace Agoda.Analyzers.Test.Helpers
         /// </returns>
         protected abstract string DiagnosticId { get; }
         
-        protected async Task VerifyDiagnosticsAsync(string code, params DiagnosticLocation[] expectedLocations)
+        protected async Task VerifyDiagnosticsAsync(string code, DiagnosticLocation expectedLocations)
         {
-            await VerifyDiagnosticsAsync(code, Enumerable.Empty<Assembly>(), expectedLocations);
+            await VerifyDiagnosticsAsync(new CodeDescriptor(code), new [] { expectedLocations});
         }
 
-        protected async Task VerifyDiagnosticsAsync(string code, Assembly referencedAssemblies,
-            params DiagnosticLocation[] expectedLocations)
+        protected async Task VerifyDiagnosticsAsync(string code, DiagnosticLocation[] expectedLocations)
         {
-            await VerifyDiagnosticsAsync(code, new[] {referencedAssemblies}, expectedLocations);
+            await VerifyDiagnosticsAsync(new CodeDescriptor(code), expectedLocations);
+        }
+
+        protected async Task VerifyDiagnosticsAsync(CodeDescriptor descriptor, DiagnosticLocation expectedLocations)
+        {
+            await VerifyDiagnosticsAsync(descriptor, new [] { expectedLocations});
         }
         
-        protected async Task VerifyDiagnosticsAsync(string code, IEnumerable<Assembly> referencedAssemblies, params DiagnosticLocation[] expectedLocations)
+        protected async Task VerifyDiagnosticsAsync(CodeDescriptor descriptor, DiagnosticLocation[] expectedLocations)
         {
             var baseResult = CSharpDiagnostic(DiagnosticId);
             var expected = expectedLocations.Select(l => baseResult.WithLocation(l.Line, l.Col)).ToArray();
             
-            var doc = CreateProject(new[] {code})
-                .AddMetadataReferences(referencedAssemblies.Select(assembly => MetadataReference.CreateFromFile(assembly.Location)))
+            var doc = CreateProject(new[] {descriptor.Code})
+                .AddMetadataReferences(descriptor.References.Select(assembly => MetadataReference.CreateFromFile(assembly.Location)))
                 .Documents
                 .First();
 

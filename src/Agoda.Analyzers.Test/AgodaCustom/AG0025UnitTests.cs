@@ -27,7 +27,7 @@ class TestClass
 }
 ";
             
-            await VerifyDiagnosticsAsync(code);
+            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
         }
 
         [Test]
@@ -48,7 +48,7 @@ class TestClass
 }
 ";
 
-            await VerifyDiagnosticsAsync(code);
+            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
         }
 
         [Test]

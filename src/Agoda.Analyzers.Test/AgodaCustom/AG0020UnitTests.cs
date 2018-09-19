@@ -14,9 +14,14 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 {
     internal class AG0020UnitTests : DiagnosticVerifier
     {
+        protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0020AvoidReturningNullEnumerables();
+        
+        protected override string DiagnosticId => AG0020AvoidReturningNullEnumerables.DIAGNOSTIC_ID;
+
         [Test]
         public async Task PreventReturningNullForReturnValueOfIEnumerable_ShouldReportCorrectly()
         {
+        
             var code = @"
 using System.Collections.Generic;
 
@@ -31,19 +36,7 @@ namespace Agoda.Analyzers.Test
     }
 }";
 
-            var doc = CreateProject(new[] {code})
-                .Documents
-                .First();
-
-            var analyzersArray = GetCSharpDiagnosticAnalyzers().ToImmutableArray();
-
-            var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzersArray, new[] {doc}, CancellationToken.None)
-                .ConfigureAwait(false);
-
-            var expected = CSharpDiagnostic(AG0020AvoidReturningNullEnumerables.DIAGNOSTIC_ID);
-            VerifyDiagnosticResults(diag, analyzersArray, new DiagnosticResult[] {
-                expected.WithLocation(10, 20)
-            });
+            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(10, 20));
         }
 
         [Test]
@@ -63,19 +56,7 @@ namespace Agoda.Analyzers.Test
     }
 }";
 
-            var doc = CreateProject(new[] {code})
-                .Documents
-                .First();
-
-            var analyzersArray = GetCSharpDiagnosticAnalyzers().ToImmutableArray();
-
-            var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzersArray, new[] {doc}, CancellationToken.None)
-                .ConfigureAwait(false);
-
-            var expected = CSharpDiagnostic(AG0020AvoidReturningNullEnumerables.DIAGNOSTIC_ID);
-            VerifyDiagnosticResults(diag, analyzersArray, new DiagnosticResult[] {
-                expected.WithLocation(10, 20)
-            });
+            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(10, 20));
         }
 
         [Test]
@@ -104,7 +85,7 @@ namespace Agoda.Analyzers.Test
             var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzersArray, new[] {doc}, CancellationToken.None)
                 .ConfigureAwait(false);
 
-            VerifyDiagnosticResults(diag, analyzersArray, new DiagnosticResult[]{ });
+            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
         }
 
         [Test]
@@ -124,16 +105,7 @@ namespace Agoda.Analyzers.Test
     }
 }";
 
-            var doc = CreateProject(new[] { code })
-                .Documents
-                .First();
-
-            var analyzersArray = GetCSharpDiagnosticAnalyzers().ToImmutableArray();
-
-            var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzersArray, new[] { doc }, CancellationToken.None)
-                .ConfigureAwait(false);
-
-            VerifyDiagnosticResults(diag, analyzersArray, new DiagnosticResult[] { });
+            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
         }
 
         [Test]
@@ -155,19 +127,9 @@ namespace Agoda.Analyzers.Test
     }
 }";
 
-            var doc = CreateProject(new[] { code })
-                .Documents
-                .First();
-
-            var analyzersArray = GetCSharpDiagnosticAnalyzers().ToImmutableArray();
-
-            var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzersArray, new[] { doc }, CancellationToken.None)
-                .ConfigureAwait(false);
-
-            var expected = CSharpDiagnostic(AG0020AvoidReturningNullEnumerables.DIAGNOSTIC_ID);
-            VerifyDiagnosticResults(diag, analyzersArray, new DiagnosticResult[] {
-                expected.WithLocation(10, 24),
-                expected.WithLocation(13, 54)
+            await VerifyDiagnosticsAsync(code, new[] {
+                new DiagnosticLocation(10, 24),
+                new DiagnosticLocation(13, 54)
             });
         }
 
@@ -186,16 +148,7 @@ namespace Agoda.Analyzers.Test
     }
 }";
 
-            var doc = CreateProject(new[] { code })
-                .Documents
-                .First();
-
-            var analyzersArray = GetCSharpDiagnosticAnalyzers().ToImmutableArray();
-
-            var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzersArray, new[] { doc }, CancellationToken.None)
-                .ConfigureAwait(false);
-
-            VerifyDiagnosticResults(diag, analyzersArray, new DiagnosticResult[] {});
+            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
         }
 
         [Test]
@@ -213,22 +166,9 @@ namespace Agoda.Analyzers.Test
     }
 }";
 
-            var doc = CreateProject(new[] { code })
-                .Documents
-                .First();
-
-            var analyzersArray = GetCSharpDiagnosticAnalyzers().ToImmutableArray();
-
-            var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzersArray, new[] { doc }, CancellationToken.None)
-                .ConfigureAwait(false);
-
-            var expected = CSharpDiagnostic(AG0020AvoidReturningNullEnumerables.DIAGNOSTIC_ID);
-            VerifyDiagnosticResults(diag, analyzersArray, new DiagnosticResult[] { expected.WithLocation(8, 20) });
+            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(8, 20));
         }
 
-        protected override IEnumerable<DiagnosticAnalyzer> GetCSharpDiagnosticAnalyzers()
-        {
-            yield return new AG0020AvoidReturningNullEnumerables();
-        }
+        
     }
 }

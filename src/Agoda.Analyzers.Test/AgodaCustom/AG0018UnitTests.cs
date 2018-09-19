@@ -24,105 +24,99 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         [Test]
         public async Task AG0018_ShouldBeAllowedWhenCreateAMethodWhichReturnInterfaces()
         {
-            var code = @"namespace Tests
+            var code = new CodeDescriptor
+            {
+                References = new[] {typeof(TestFixtureAttribute).Assembly},
+                Code = @"
+                    namespace Tests
+                    {
+                        using System.Collections.Generic;
+                        using System.Collections.ObjectModel;
+                        public class ServerNamesProvider
                         {
-                            using System.Collections.Generic;
-                            using System.Collections.ObjectModel;
-                            public class ServerNamesProvider
-                            {
-                                public IList<double> LocalServerV2 { get; set; }
-                                public ISet<int> GetServerSetV2() { return null; }
-                                public IList<string> GetServerFullNames() { return null; }        
-                                public IDictionary<string, string> GetServerDnsV2() { return null; }
-                                public IReadOnlyDictionary<string, int> GetNumberOfServerV2() { return null; }
-                                public KeyedCollection<string, string> GetServerDnsV3() { return null; }
-                                public int NumberOfServer { get; set; }
-                                public byte[] RawData { get; set; }
-                                public string DNSName { get; set; }
-                            }
-                        }";
-
-            await VerifyDiagnosticsAsync(code, typeof(TestFixtureAttribute).Assembly);
+                            public IList<double> LocalServerV2 { get; set; }
+                            public ISet<int> GetServerSetV2() { return null; }
+                            public IList<string> GetServerFullNames() { return null; }        
+                            public IDictionary<string, string> GetServerDnsV2() { return null; }
+                            public IReadOnlyDictionary<string, int> GetNumberOfServerV2() { return null; }
+                            public KeyedCollection<string, string> GetServerDnsV3() { return null; }
+                            public int NumberOfServer { get; set; }
+                            public byte[] RawData { get; set; }
+                            public string DNSName { get; set; }
+                        }
+                    }"
+            };
+            
+            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
         }
 
-        [Test]
-        public async Task AG0018_ShouldNotBeAllowedWhenCreateAMethodWhichReturnImplementedClass()
+        [TestCase("List<double>")]
+        [TestCase("HashSet<int>")]
+        [TestCase("Dictionary<string, string>")]
+        [TestCase("ReadOnlyDictionary<string, int>")]
+        [TestCase("int[]")]
+        public async Task AG0018_WithForbiddenCollection_ShowShowWarning(string type)
         {
-            var code = @"namespace Tests
-                        {
-                            using System.Collections.Generic;
-                            using System.Collections.ObjectModel;
-                            public class ServerNamesProvider
-                            {
-                                public List<double> LocalServer { get; set; }
-                                public HashSet<int> GetServerSet() { return null; }
-                                public List<int> GetServerCounts() { return null; }
-                                public Dictionary<string, string> GetServerDns() { return null; }
-                                public ReadOnlyDictionary<string, int> GetNumberOfServer() { return null; }  
-                                public int[] ServerPerCluster { get; set; }
-                            }
-                        }";
+            var code = $@"
+                using System.Collections.Generic;
+                using System.Collections.ObjectModel;
+                namespace Tests
+                {{  
+                    public class TestClass
+                    {{
+                        public {type} Type {{ get; set; }}
+                    }}
+                }}";
 
-            var expected = new[]
-            {
-                new DiagnosticLocation(7, 33),
-                new DiagnosticLocation(8, 33),
-                new DiagnosticLocation(9, 33),
-                new DiagnosticLocation(10, 33),
-                new DiagnosticLocation(11, 33),
-                new DiagnosticLocation(12, 33),
-            };
-            await VerifyDiagnosticsAsync(code, expected);
+            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(8, 25));
         }
 
-        [Test]
-        public async Task AG0018_WhenCreateAMethodInAnInterfaceWhichReturnList_ShouldReturnAsAnInterface()
+        [TestCase("ISet<int>")]
+        [TestCase("IList<int>")]
+        [TestCase("IDictionary<int, int>")]
+        [TestCase("byte[]")]
+        [TestCase("string")]
+        [TestCase("IReadOnlyDictionary<string, int>")]
+        [TestCase("KeyedCollection<string, string>")]
+        [TestCase("IEnumerable<string>")]
+        public async Task AG0018_WithPermittedCollection_ShouldNotShowWarning(string type)
         {
-            var code = @"namespace Tests
-                        {
-                            using System.Collections.Generic;
-                            using System.Collections.ObjectModel;
-                            public interface IServerNamesProvider
-                            {
-                                HashSet<int> GetServerSet();
-                                ISet<int> GetServerSetV2();
-                                List<int> GetServerCounts();
-                                IList<string> GetServerFullNames();      
-                                Dictionary<string, string> GetServerDns();
-                                IDictionary<string, string> GetServerDnsV2();
-                                ReadOnlyDictionary<string, int> GetNumberOfServer();
-                                IReadOnlyDictionary<string, int> GetNumberOfServerV2();
-                                KeyedCollection<string, string> GetServerDnsV3();
-                            }
-                        }";
+            var code = $@"
+                namespace Tests
+                {{
+                    using System.Collections.Generic;
+                    using System.Collections.ObjectModel;
+                    public interface IServerNamesProvider
+                    {{
+                        {type} Type {{ get; set; }}
+                    }}
+                }}";
 
-            var expected = new[]
-            {
-                new DiagnosticLocation(7, 33),
-                new DiagnosticLocation(9, 33),
-                new DiagnosticLocation(11, 33),
-                new DiagnosticLocation(13, 33),
-            };
-            await VerifyDiagnosticsAsync(code, expected);
+            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
         }
 
         [Test]
         public async Task AG0018_WhenCreateAMethodWhichReturnList_ShouldNotEffectOtherCases()
         {
-            var code = @"namespace Tests
+            var code = new CodeDescriptor
+            {
+                References = new[] {typeof(TestFixtureAttribute).Assembly},
+                Code = @"
+                    namespace Tests
+                    {
+                        using System.Collections.Generic;
+                        using System.Collections.ObjectModel;
+                        public class ServerNamesProvider
                         {
-                            using System.Collections.Generic;
-                            using System.Collections.ObjectModel;
-                            public class ServerNamesProvider
-                            {
-                                public List<double> LocalServer { get; set; }
-                                private List<int> GetIPFromFile() { return null; }
-                                protected List<int> GetIPFromLocalFile() { return null; }
-                                internal List<int> GetIPFromLocalDisk() { return null; }
-                            }
-                        }";
+                            public List<double> LocalServer { get; set; }
+                            private List<int> GetIPFromFile() { return null; }
+                            protected List<int> GetIPFromLocalFile() { return null; }
+                            internal List<int> GetIPFromLocalDisk() { return null; }
+                        }
+                    }"
+            };
 
-            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(7, 33));
+            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(8, 29));
         }
     }
 }

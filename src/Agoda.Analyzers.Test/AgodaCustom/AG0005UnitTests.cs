@@ -22,45 +22,51 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         [TestCase("This_IsAlso_QuiteValid555")]
         public async Task AG0005_WithValidTestNames_ShouldNotShowWarning(string methodName)
         {
-            var code = $@"
-                using System.Collections;
-                using NUnit.Framework;
-                
-                namespace Tests
-                {{
-                    public class TestClass
+            var code = new CodeDescriptor
+            {
+                References = new[] {typeof(TestFixtureAttribute).Assembly},
+                Code = $@"
+                    using System.Collections;
+                    using NUnit.Framework;
+                    
+                    namespace Tests
                     {{
-                        [Test]
-                        public void {methodName}(){{ }}
-                    }}
-                
-                }}
-            ";
+                        public class TestClass
+                        {{
+                            [Test]
+                            public void {methodName}(){{ }}
+                        }}
+                    
+                    }}"
+            };
             
-            await VerifyDiagnosticsAsync(code, typeof(TestFixtureAttribute).Assembly);
+            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
         }
 
         [TestCase("ThisIsInvalid")]    // no underscores
-        [TestCase("This_Is_In_Valid")] // to many underscores
+        [TestCase("This_Is_In_Valid")] // too many underscores
         [TestCase("This_Is_invalid")]  // invalid casing
         public async Task AG0005_WithInvalidValidTestNames_ShouldShowWarning(string methodName)
         {
-            var code = $@"
-                using System.Collections;
-                using NUnit.Framework;
-                
-                namespace Tests
-                {{
-                    public class TestClass
+            var code = new CodeDescriptor
+            {
+                References = new[] {typeof(TestFixtureAttribute).Assembly},
+                Code = $@"
+                    using System.Collections;
+                    using NUnit.Framework;
+                    
+                    namespace Tests
                     {{
-                        [TestCase]
-                        public void {methodName}(){{ }}
-                    }}
-                
-                }}
-            ";
+                        public class TestClass
+                        {{
+                            [TestCase]
+                            public void {methodName}(){{ }}
+                        }}
+                    
+                    }}"
+            };
             
-            await VerifyDiagnosticsAsync(code, typeof(TestFixtureAttribute).Assembly, new DiagnosticLocation(0, 0));
+            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(9, 29));
         }
         
         [TestCase("internal")]
@@ -68,29 +74,33 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         [TestCase("private")]
         public async Task AG0005_WhenMethodNotPublic_ShouldNotShowWarning(string modifier)
         {
-            var code = $@"
-                using System.Collections;
-                using NUnit.Framework;
-                
-                namespace Tests
-                {{
-                    public class TestClass
+            var code = new CodeDescriptor
+            {
+                References = new[] {typeof(TestFixtureAttribute).Assembly},
+                Code = $@"
+                    using System.Collections;
+                    using NUnit.Framework;
+                    
+                    namespace Tests
                     {{
-                        [Test]
-                        {modifier} void PrivateMethod(){{}}
-                
-                    }}
-                
-                    public class MyTestDataClass
-                    {{
-                        public static IEnumerable TestCases
+                        public class TestClass
                         {{
-                            get {{ yield return null; }}
+                            [Test]
+                            {modifier} void PrivateMethod(){{}}
+                    
                         }}
-                    }}
-                }}";
+                    
+                        public class MyTestDataClass
+                        {{
+                            public static IEnumerable TestCases
+                            {{
+                                get {{ yield return null; }}
+                            }}
+                        }}
+                    }}"
+            };
 
-            await VerifyDiagnosticsAsync(code, typeof(TestFixtureAttribute).Assembly);
+            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
         }
         
         [Test]
@@ -108,7 +118,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 }
             ";
             
-            await VerifyDiagnosticsAsync(code);
+            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
         }
     }
 }

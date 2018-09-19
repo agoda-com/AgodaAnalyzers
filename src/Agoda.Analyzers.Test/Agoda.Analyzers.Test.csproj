@@ -143,7 +143,4 @@
       <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
     </Reference>
   </ItemGroup>
-  <ItemGroup>
-    <Compile Remove="AgodaCustom\AG0020UnitTests.cs" />
-  </ItemGroup>
 </Project>
