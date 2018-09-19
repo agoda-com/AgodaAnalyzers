@@ -12,6 +12,10 @@ namespace Agoda.Analyzers.Test.StyleCop
 {
     public class SA1106UnitTests : CodeFixVerifier
     {
+        protected override DiagnosticAnalyzer DiagnosticAnalyzer => new SA1106CodeMustNotContainEmptyStatements();
+        
+        protected override string DiagnosticId => SA1106CodeMustNotContainEmptyStatements.DIAGNOSTIC_ID;
+        
         [Test]
         [TestCase("if (true)")]
         [TestCase("if (true) { } else")]
@@ -413,12 +417,6 @@ class TestClass
             await VerifyCSharpDiagnosticAsync(testCode, expected, CancellationToken.None).ConfigureAwait(false);
             await VerifyCSharpDiagnosticAsync(fixedCode, EmptyDiagnosticResults, CancellationToken.None).ConfigureAwait(false);
             await VerifyCSharpFixAsync(testCode, fixedCode).ConfigureAwait(false);
-        }
-
-        /// <inheritdoc/>
-        protected override IEnumerable<DiagnosticAnalyzer> GetCSharpDiagnosticAnalyzers()
-        {
-            yield return new SA1106CodeMustNotContainEmptyStatements();
         }
 
         /// <inheritdoc/>

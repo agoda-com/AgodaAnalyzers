@@ -16,20 +16,28 @@ namespace Agoda.Analyzers.AgodaCustom
         public const string DIAGNOSTIC_ID = "AG0021";
 
         private static readonly LocalizableString Title = new LocalizableResourceString(
-            nameof(CustomRulesResources.AG0021Title), CustomRulesResources.ResourceManager,
+            nameof(CustomRulesResources.AG0021Title), 
+            CustomRulesResources.ResourceManager,
             typeof(CustomRulesResources));
 
         private static readonly LocalizableString MessageFormat = new LocalizableResourceString(
-            nameof(CustomRulesResources.AG0021Title), CustomRulesResources.ResourceManager,
+            nameof(CustomRulesResources.AG0021Title), 
+            CustomRulesResources.ResourceManager,
             typeof(CustomRulesResources));
 
         private static readonly LocalizableString Description =
             DescriptionContentLoader.GetAnalyzerDescription(nameof(AG0021PreferAsyncMethods));
 
-        private static readonly DiagnosticDescriptor Descriptor =
-            new DiagnosticDescriptor(DIAGNOSTIC_ID, Title, MessageFormat, AnalyzerCategory.CustomQualityRules,
-                DiagnosticSeverity.Info, AnalyzerConstants.EnabledByDefault, Description, null,
-                WellKnownDiagnosticTags.EditAndContinue);
+        private static readonly DiagnosticDescriptor Descriptor = new DiagnosticDescriptor(
+            DIAGNOSTIC_ID, 
+            Title, 
+            MessageFormat, 
+            AnalyzerCategory.CustomQualityRules,
+            DiagnosticSeverity.Info, 
+            AnalyzerConstants.EnabledByDefault, 
+            Description, 
+            null,
+            WellKnownDiagnosticTags.EditAndContinue);
 
         public override void Initialize(AnalysisContext context)
         {

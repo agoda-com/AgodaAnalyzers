@@ -17,7 +17,7 @@ namespace Agoda.Analyzers.AgodaCustom
     {
         public const string DIAGNOSTIC_ID = "AG0018";
 
-        private static readonly string[] AllowedTypes = new string[]
+        private static readonly string[] AllowedTypes = 
         {
             "System.Collections.Generic.ISet<T>",
             "System.Collections.Generic.IList<T>",
@@ -26,28 +26,44 @@ namespace Agoda.Analyzers.AgodaCustom
             "System.Collections.Generic.KeyedCollection<TKey, TValue>",
         };
 
-        private static readonly LocalizableString Title = new LocalizableResourceString(nameof(CustomRulesResources.AG0018Title), CustomRulesResources.ResourceManager, typeof(CustomRulesResources));
-        private static readonly LocalizableString MessageFormat = new LocalizableResourceString(nameof(CustomRulesResources.AG0018Title), CustomRulesResources.ResourceManager, typeof(CustomRulesResources));
-        private static readonly LocalizableString Description = DescriptionContentLoader.GetAnalyzerDescription(nameof(AG0018PermitOnlyCertainPubliclyExposedEnumerables));
+        private static readonly LocalizableString Title = new LocalizableResourceString(
+            nameof(CustomRulesResources.AG0018Title), 
+            CustomRulesResources.ResourceManager, 
+            typeof(CustomRulesResources));
+        
+        private static readonly LocalizableString MessageFormat = new LocalizableResourceString(
+            nameof(CustomRulesResources.AG0018Title), 
+            CustomRulesResources.ResourceManager, 
+            typeof(CustomRulesResources));
+        
+        private static readonly LocalizableString Description 
+            = DescriptionContentLoader.GetAnalyzerDescription(nameof(AG0018PermitOnlyCertainPubliclyExposedEnumerables));
 
-        private static readonly DiagnosticDescriptor Descriptor =
-          new DiagnosticDescriptor(DIAGNOSTIC_ID, Title, MessageFormat, AnalyzerCategory.CustomQualityRules,
-              DiagnosticSeverity.Warning, AnalyzerConstants.EnabledByDefault, Description, null, WellKnownDiagnosticTags.EditAndContinue);
+        private static readonly DiagnosticDescriptor Descriptor = new DiagnosticDescriptor(
+            DIAGNOSTIC_ID, 
+            Title, 
+            MessageFormat, 
+            AnalyzerCategory.CustomQualityRules,
+            DiagnosticSeverity.Warning, 
+            AnalyzerConstants.EnabledByDefault, 
+            Description, 
+            null, 
+            WellKnownDiagnosticTags.EditAndContinue);
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = ImmutableArray.Create(Descriptor);
 
         public override void Initialize(AnalysisContext context)
         {
-            context.RegisterSyntaxNodeAction(Analyze, new[] { SyntaxKind.PropertyDeclaration, SyntaxKind.MethodDeclaration });
+            context.RegisterSyntaxNodeAction(Analyze, SyntaxKind.PropertyDeclaration, SyntaxKind.MethodDeclaration);
         }
 
-        private void Analyze(SyntaxNodeAnalysisContext context)
+        private static void Analyze(SyntaxNodeAnalysisContext context)
         {
             if (context.ContainingSymbol.DeclaredAccessibility != Accessibility.Public || IsPubliclyExposedIEnumerableTypes(context.ContainingSymbol)) { return; }
             context.ReportDiagnostic(Diagnostic.Create(Descriptor, context.Node.GetLocation()));
         }
 
-        private bool IsPubliclyExposedIEnumerableTypes(ISymbol symbol)
+        private static bool IsPubliclyExposedIEnumerableTypes(ISymbol symbol)
         {
             INamedTypeSymbol namedTypeSymbol = null;
             

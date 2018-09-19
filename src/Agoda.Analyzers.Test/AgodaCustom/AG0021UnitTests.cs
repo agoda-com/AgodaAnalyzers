@@ -13,6 +13,10 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 {
     internal class AG0021UnitTests : DiagnosticVerifier
     {
+	    protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0021PreferAsyncMethods();
+        
+	    protected override string DiagnosticId => AG0021PreferAsyncMethods.DIAGNOSTIC_ID;
+	    
         [Test]
         public async Task AG0021_Static_WhenAsyncDoesNotExist_ShouldNotShowWarning()
         {
@@ -30,7 +34,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-            await TestForResults(code);
+            await VerifyDiagnosticResults(code);
         }
 
         [Test]
@@ -51,8 +55,9 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-            await TestForResults(code);
+            await VerifyDiagnosticResults(code);
         }
+	   
 
         [Test]
         public async Task AG0021_Static_WhenAsyncWithPostfixExists_ShouldShowWarning()
@@ -77,14 +82,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-            var baseResult =
-                CSharpDiagnostic(AG0021PreferAsyncMethods.DIAGNOSTIC_ID);
-            var expected = new[]
-            {
-                baseResult.WithLocation(16, 7)
-            };
-
-            await TestForResults(code, expected);
+	        await VerifyDiagnosticResults(code, new DiagnosticLocation(16, 7));
         }
 
         [Test]
@@ -111,14 +109,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-            var baseResult =
-                CSharpDiagnostic(AG0021PreferAsyncMethods.DIAGNOSTIC_ID);
-            var expected = new[]
-            {
-                baseResult.WithLocation(17, 7)
-            };
-
-            await TestForResults(code, expected);
+	        await VerifyDiagnosticResults(code, new DiagnosticLocation(17, 7));
         }
 
         [Test]
@@ -145,14 +136,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-            var baseResult =
-                CSharpDiagnostic(AG0021PreferAsyncMethods.DIAGNOSTIC_ID);
-            var expected = new[]
-            {
-                baseResult.WithLocation(17, 7)
-            };
-
-            await TestForResults(code, expected);
+	        await VerifyDiagnosticResults(code, new DiagnosticLocation(17, 7));
         }
 
         [Test]
@@ -180,14 +164,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-            var baseResult =
-                CSharpDiagnostic(AG0021PreferAsyncMethods.DIAGNOSTIC_ID);
-            var expected = new[]
-            {
-                baseResult.WithLocation(18, 7)
-            };
-
-            await TestForResults(code, expected);
+	        await VerifyDiagnosticResults(code, new DiagnosticLocation(18, 7));
         }
 
         [Test]
@@ -213,7 +190,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-            await TestForResults(code);
+            await VerifyDiagnosticResults(code);
         }
 
         [Test]
@@ -240,7 +217,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-            await TestForResults(code);
+            await VerifyDiagnosticResults(code);
         }
 
         [Test]
@@ -267,7 +244,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-            await TestForResults(code);
+            await VerifyDiagnosticResults(code);
         }
 
         [Test]
@@ -295,7 +272,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-            await TestForResults(code);
+            await VerifyDiagnosticResults(code);
         }
 
         [Test]
@@ -321,7 +298,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-            await TestForResults(code);
+            await VerifyDiagnosticResults(code);
         }
 
         [Test]
@@ -348,7 +325,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-            await TestForResults(code);
+            await VerifyDiagnosticResults(code);
         }
 
         [Test]
@@ -375,7 +352,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-            await TestForResults(code);
+            await VerifyDiagnosticResults(code);
         }
 
         [Test]
@@ -403,7 +380,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-            await TestForResults(code);
+            await VerifyDiagnosticResults(code);
         }
 
         [Test]
@@ -418,14 +395,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-            var baseResult =
-                CSharpDiagnostic(AG0021PreferAsyncMethods.DIAGNOSTIC_ID);
-            var expected = new[]
-            {
-                baseResult.WithLocation(5, 7)
-            };
-
-            await TestForResults(code, expected);
+	        await VerifyDiagnosticResults(code, new DiagnosticLocation(5, 7));
         }
 
         [Test]
@@ -454,15 +424,8 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 					}
 				}
 			";
-
-            var baseResult =
-                CSharpDiagnostic(AG0021PreferAsyncMethods.DIAGNOSTIC_ID);
-            var expected = new[]
-            {
-                baseResult.WithLocation(20, 7)
-            };
-
-            await TestForResults(code, expected);
+	        
+	        await VerifyDiagnosticResults(code, new DiagnosticLocation(20, 7));
         }
 
         [Test]
@@ -492,14 +455,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-            var baseResult =
-                CSharpDiagnostic(AG0021PreferAsyncMethods.DIAGNOSTIC_ID);
-            var expected = new[]
-            {
-                baseResult.WithLocation(20, 7)
-            };
-
-            await TestForResults(code, expected);
+	        await VerifyDiagnosticResults(code, new DiagnosticLocation(20, 7));
         }
 
         [Test]
@@ -530,14 +486,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-            var baseResult =
-                CSharpDiagnostic(AG0021PreferAsyncMethods.DIAGNOSTIC_ID);
-            var expected = new[]
-            {
-                baseResult.WithLocation(21, 7)
-            };
-
-            await TestForResults(code, expected);
+	        await VerifyDiagnosticResults(code, new DiagnosticLocation(21, 7));
         }
 
         [Test]
@@ -568,14 +517,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-            var baseResult =
-                CSharpDiagnostic(AG0021PreferAsyncMethods.DIAGNOSTIC_ID);
-            var expected = new[]
-            {
-                baseResult.WithLocation(21, 7)
-            };
-
-            await TestForResults(code, expected);
+	        await VerifyDiagnosticResults(code, new DiagnosticLocation(21, 7));
         }
 
         [Test]
@@ -606,14 +548,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-            var baseResult =
-                CSharpDiagnostic(AG0021PreferAsyncMethods.DIAGNOSTIC_ID);
-            var expected = new[]
-            {
-                baseResult.WithLocation(21, 7)
-            };
-
-            await TestForResults(code, expected);
+	        await VerifyDiagnosticResults(code, new DiagnosticLocation(21, 7));
         }
 
         [Test]
@@ -644,14 +579,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-            var baseResult =
-                CSharpDiagnostic(AG0021PreferAsyncMethods.DIAGNOSTIC_ID);
-            var expected = new[]
-            {
-                baseResult.WithLocation(21, 7)
-            };
-
-            await TestForResults(code, expected);
+	        await VerifyDiagnosticResults(code, new DiagnosticLocation(21, 7));
         }
         
         [Test]
@@ -681,14 +609,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-            var baseResult =
-                CSharpDiagnostic(AG0021PreferAsyncMethods.DIAGNOSTIC_ID);
-            var expected = new[]
-            {
-                baseResult.WithLocation(20, 7)
-            };
-
-            await TestForResults(code, expected);
+	        await VerifyDiagnosticResults(code, new DiagnosticLocation(20, 7));
         }
 
         [Test]
@@ -718,14 +639,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-            var baseResult =
-                CSharpDiagnostic(AG0021PreferAsyncMethods.DIAGNOSTIC_ID);
-            var expected = new[]
-            {
-                baseResult.WithLocation(20, 7)
-            };
-
-            await TestForResults(code, expected);
+	        await VerifyDiagnosticResults(code, new DiagnosticLocation(20, 7));
         }
 
         [Test]
@@ -754,15 +668,8 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 					}
 				}
 			";
-
-            var baseResult =
-                CSharpDiagnostic(AG0021PreferAsyncMethods.DIAGNOSTIC_ID);
-            var expected = new[]
-            {
-                baseResult.WithLocation(20, 7)
-            };
-
-            await TestForResults(code, expected);
+	        
+	        await VerifyDiagnosticResults(code, new DiagnosticLocation(20, 7));
         }
 
         [Test]
@@ -792,14 +699,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-            var baseResult =
-                CSharpDiagnostic(AG0021PreferAsyncMethods.DIAGNOSTIC_ID);
-            var expected = new[]
-            {
-                baseResult.WithLocation(20, 7)
-            };
-
-            await TestForResults(code, expected);
+	        await VerifyDiagnosticResults(code, new DiagnosticLocation(20, 7));
         }
 
         [Test]
@@ -834,14 +734,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-            var baseResult =
-                CSharpDiagnostic(AG0021PreferAsyncMethods.DIAGNOSTIC_ID);
-            var expected = new[]
-            {
-                baseResult.WithLocation(25, 7)
-            };
-
-            await TestForResults(code, expected);
+	        await VerifyDiagnosticResults(code, new DiagnosticLocation(25, 7));
         }
 
         [Test]
@@ -876,7 +769,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-            await TestForResults(code);
+            await VerifyDiagnosticResults(code);
         }
 
         [Test]
@@ -906,14 +799,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-            var baseResult =
-                CSharpDiagnostic(AG0021PreferAsyncMethods.DIAGNOSTIC_ID);
-            var expected = new[]
-            {
-                baseResult.WithLocation(20, 7)
-            };
-
-            await TestForResults(code, expected);
+	        await VerifyDiagnosticResults(code, new DiagnosticLocation(20, 7));
         }
 
         [Test]
@@ -943,14 +829,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-            var baseResult =
-                CSharpDiagnostic(AG0021PreferAsyncMethods.DIAGNOSTIC_ID);
-            var expected = new[]
-            {
-                baseResult.WithLocation(20, 7)
-            };
-
-            await TestForResults(code, expected);
+	        await VerifyDiagnosticResults(code, new DiagnosticLocation(20, 7));
         }
 
         [Test]
@@ -979,15 +858,8 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 					}
 				}
 			";
-
-            var baseResult =
-                CSharpDiagnostic(AG0021PreferAsyncMethods.DIAGNOSTIC_ID);
-            var expected = new[]
-            {
-                baseResult.WithLocation(20, 7)
-            };
-
-            await TestForResults(code, expected);
+	        
+	        await VerifyDiagnosticResults(code, new DiagnosticLocation(20, 7));
         }
 
         [Test]
@@ -1017,14 +889,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-            var baseResult =
-                CSharpDiagnostic(AG0021PreferAsyncMethods.DIAGNOSTIC_ID);
-            var expected = new[]
-            {
-                baseResult.WithLocation(20, 7)
-            };
-
-            await TestForResults(code, expected);
+	        await VerifyDiagnosticResults(code, new DiagnosticLocation(20, 7));
         }
 
         [Test]
@@ -1049,14 +914,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-            var baseResult =
-                CSharpDiagnostic(AG0021PreferAsyncMethods.DIAGNOSTIC_ID);
-            var expected = new[]
-            {
-                baseResult.WithLocation(15, 7)
-            };
-
-            await TestForResults(code, expected);
+            await VerifyDiagnosticResults(code, new DiagnosticLocation(15, 7));
         }
 
         [Test]
@@ -1081,14 +939,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-            var baseResult =
-                CSharpDiagnostic(AG0021PreferAsyncMethods.DIAGNOSTIC_ID);
-            var expected = new[]
-            {
-                baseResult.WithLocation(15, 7)
-            };
-
-            await TestForResults(code, expected);
+            await VerifyDiagnosticResults(code, new DiagnosticLocation(15, 7));
         }
 
         [Test]
@@ -1119,14 +970,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-            var baseResult =
-                CSharpDiagnostic(AG0021PreferAsyncMethods.DIAGNOSTIC_ID);
-            var expected = new[]
-            {
-                baseResult.WithLocation(21, 7)
-            };
-
-            await TestForResults(code, expected);
+            await VerifyDiagnosticResults(code, new DiagnosticLocation(21, 7));
         }
 
         [Test]
@@ -1150,7 +994,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-            await TestForResults(code);
+            await VerifyDiagnosticResults(code);
         }
 
         [Test]
@@ -1180,7 +1024,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-            await TestForResults(code);
+            await VerifyDiagnosticResults(code);
         }
 
         [Test]
@@ -1208,7 +1052,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-            await TestForResults(code);
+            await VerifyDiagnosticResults(code);
         }
 
         [Test]
@@ -1238,14 +1082,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-            var baseResult =
-                CSharpDiagnostic(AG0021PreferAsyncMethods.DIAGNOSTIC_ID);
-            var expected = new[]
-            {
-                baseResult.WithLocation(20, 7)
-            };
-
-            await TestForResults(code, expected);
+            await VerifyDiagnosticResults(code, new DiagnosticLocation(20, 7));
         }
 
         [Test]
@@ -1275,28 +1112,8 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-            await TestForResults(code);
+            await VerifyDiagnosticResults(code);
         }
 
-        private async Task TestForResults(string code, DiagnosticResult[] expected = null)
-        {
-            expected = expected ?? new DiagnosticResult[0];
-            Document doc = CreateProject(new[] {code})
-                .Documents
-                .First();
-
-            ImmutableArray<DiagnosticAnalyzer> analyzersArray = GetCSharpDiagnosticAnalyzers().ToImmutableArray();
-
-            ImmutableArray<Diagnostic> diagnostics = 
-                await GetSortedDiagnosticsFromDocumentsAsync(analyzersArray, new[] {doc}, CancellationToken.None)
-                     .ConfigureAwait(false);
-
-            VerifyDiagnosticResults(diagnostics, analyzersArray, expected);
-        }
-
-        protected override IEnumerable<DiagnosticAnalyzer> GetCSharpDiagnosticAnalyzers()
-        {
-            yield return new AG0021PreferAsyncMethods();
-        }
     }
 }

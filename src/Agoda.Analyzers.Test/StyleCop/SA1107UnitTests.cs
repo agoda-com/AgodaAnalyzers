@@ -17,6 +17,10 @@ namespace Agoda.Analyzers.Test.StyleCop
     /// </summary>
     public class SA1107UnitTests : CodeFixVerifier
     {
+        protected override DiagnosticAnalyzer DiagnosticAnalyzer => new SA1107CodeMustNotContainMultipleStatementsOnOneLine();
+        
+        protected override string DiagnosticId => SA1107CodeMustNotContainMultipleStatementsOnOneLine.DIAGNOSTIC_ID;
+        
         [Test]
         public async Task TestCorrectCodeAsync()
         {
@@ -148,11 +152,6 @@ class ClassName
             expected = expected.WithLocation(7, 14);
 
             await VerifyCSharpDiagnosticAsync(testCode, expected, CancellationToken.None).ConfigureAwait(false);
-        }
-
-        protected override IEnumerable<DiagnosticAnalyzer> GetCSharpDiagnosticAnalyzers()
-        {
-            yield return new SA1107CodeMustNotContainMultipleStatementsOnOneLine();
         }
 
         protected override CodeFixProvider GetCSharpCodeFixProvider()

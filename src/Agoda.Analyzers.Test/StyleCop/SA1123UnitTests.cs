@@ -16,6 +16,10 @@ namespace Agoda.Analyzers.Test.StyleCop
     /// </summary>
     public class SA1123UnitTests : CodeFixVerifier
     {
+        protected override DiagnosticAnalyzer DiagnosticAnalyzer => new SA1123DoNotPlaceRegionsWithinElements();
+        
+        protected override string DiagnosticId => SA1123DoNotPlaceRegionsWithinElements.DIAGNOSTIC_ID;
+        
         [Test]
         public async Task TestRegionInMethodAsync()
         {
@@ -179,11 +183,6 @@ class ClassName
 ";
             await VerifyCSharpFixAsync(testCode, fixedCode, cancellationToken: CancellationToken.None).ConfigureAwait(false);
             await VerifyCSharpFixAllFixAsync(testCode, fixedCode, cancellationToken: CancellationToken.None).ConfigureAwait(false);
-        }
-
-        protected override IEnumerable<DiagnosticAnalyzer> GetCSharpDiagnosticAnalyzers()
-        {
-            yield return new SA1123DoNotPlaceRegionsWithinElements();
         }
 
         protected override CodeFixProvider GetCSharpCodeFixProvider()

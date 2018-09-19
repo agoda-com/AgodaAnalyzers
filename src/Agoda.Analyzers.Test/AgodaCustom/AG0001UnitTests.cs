@@ -1,12 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System.Web.Mvc;
 using Agoda.Analyzers.AgodaCustom;
 using Agoda.Analyzers.Test.Helpers;
-using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using NUnit.Framework;
 
@@ -14,6 +9,10 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 {
     class AG0001UnitTests : DiagnosticVerifier
     {
+	    protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0001DependencyResolverMustNotBeUsed();
+        
+	    protected override string DiagnosticId => AG0001DependencyResolverMustNotBeUsed.DIAGNOSTIC_ID;
+	    
         [Test]
         public async Task TestDependencyResolverUsageAsync()
         {
@@ -30,24 +29,8 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-            var reference = MetadataReference.CreateFromFile(typeof(DependencyResolver).Assembly.Location);
-
-            var doc = CreateProject(new[] {code})
-                .AddMetadataReference(reference)
-                .Documents
-                .First();
-
-            var analyzersArray = GetCSharpDiagnosticAnalyzers().ToImmutableArray();
-
-            var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzersArray, new[] {doc}, CancellationToken.None).ConfigureAwait(false);
-            var expected = CSharpDiagnostic(AG0001DependencyResolverMustNotBeUsed.DIAGNOSTIC_ID).WithLocation(8, 37);
-
-            VerifyDiagnosticResults(diag, analyzersArray, new[] {expected});
+            await VerifyDiagnosticResults(code, typeof(DependencyResolver).Assembly, new DiagnosticLocation(8, 37));
         }
 
-        protected override IEnumerable<DiagnosticAnalyzer> GetCSharpDiagnosticAnalyzers()
-        {
-            yield return new AG0001DependencyResolverMustNotBeUsed();
-        }
     }
 }

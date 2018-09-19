@@ -13,6 +13,10 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 {
     internal class AG0022UnitTests : DiagnosticVerifier
     {
+        protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0022DoNotExposeBothSyncAndAsyncVersionsOfMethods();
+        
+        protected override string DiagnosticId => AG0022DoNotExposeBothSyncAndAsyncVersionsOfMethods.DIAGNOSTIC_ID;
+        
         [Test]
         public async Task AG0022_WhenNotExistBothSyncAndAsyncVersionsOnInterface_ShouldNotShowWarning()
         {
@@ -26,7 +30,7 @@ interface TestInterface
 }
 ";
 
-            await TestForResults(code);
+            await VerifyDiagnosticResults(code);
         }
         
         [Test]
@@ -48,7 +52,7 @@ class TestClass
 }
 ";
 
-            await TestForResults(code);
+            await VerifyDiagnosticResults(code);
         }
         
         [Test]
@@ -64,13 +68,7 @@ interface Interface
 }
 			";
 
-            var baseResult = CSharpDiagnostic(AG0022DoNotExposeBothSyncAndAsyncVersionsOfMethods.DIAGNOSTIC_ID);
-            var expected = new []
-            {
-                baseResult.WithLocation(6, 5)
-            };
-
-            await TestForResults(code, expected);
+            await VerifyDiagnosticResults(code, new DiagnosticLocation(6, 5));
         }
 
         [Test]
@@ -92,13 +90,7 @@ class TestClass
 }
 ";
 
-            var baseResult = CSharpDiagnostic(AG0022DoNotExposeBothSyncAndAsyncVersionsOfMethods.DIAGNOSTIC_ID);
-            var expected = new[]
-            {
-                baseResult.WithLocation(6, 5),
-            };
-
-            await TestForResults(code, expected);
+            await VerifyDiagnosticResults(code, new DiagnosticLocation(6, 5));
         }
         
         [Test]
@@ -120,13 +112,7 @@ class TestClass
 }
 ";
 
-            var baseResult = CSharpDiagnostic(AG0022DoNotExposeBothSyncAndAsyncVersionsOfMethods.DIAGNOSTIC_ID);
-            var expected = new[]
-            {
-                baseResult.WithLocation(6, 5),
-            };
-
-            await TestForResults(code, expected);
+            await VerifyDiagnosticResults(code, new DiagnosticLocation(6, 5));
         }
         
         [Test]
@@ -148,13 +134,7 @@ class TestClass
 }
 ";
 
-            var baseResult = CSharpDiagnostic(AG0022DoNotExposeBothSyncAndAsyncVersionsOfMethods.DIAGNOSTIC_ID);
-            var expected = new[]
-            {
-                baseResult.WithLocation(6, 5),
-            };
-
-            await TestForResults(code, expected);
+            await VerifyDiagnosticResults(code, new DiagnosticLocation(6, 5));
         }
         
         [Test]
@@ -175,31 +155,7 @@ class TestClass
     }
 }
 ";
-            await TestForResults(code);
-        }
-
-        private async Task TestForResults(string code, DiagnosticResult[] expected = null)
-        {
-            expected = expected ?? new DiagnosticResult[0];
-            var reference = MetadataReference.CreateFromFile(typeof(Task).Assembly.Location);
-
-            var doc = CreateProject(new[] {code})
-                .AddMetadataReference(reference)
-                .Documents
-                .First();
-
-            var analyzersArray = GetCSharpDiagnosticAnalyzers().ToImmutableArray();
-
-            var diagnostics = 
-                await GetSortedDiagnosticsFromDocumentsAsync(analyzersArray, new[] {doc}, CancellationToken.None)
-                     .ConfigureAwait(false);
-
-            VerifyDiagnosticResults(diagnostics, analyzersArray, expected);
-        }
-
-        protected override IEnumerable<DiagnosticAnalyzer> GetCSharpDiagnosticAnalyzers()
-        {
-            yield return new AG0022DoNotExposeBothSyncAndAsyncVersionsOfMethods();
+            await VerifyDiagnosticResults(code);
         }
     }
 }

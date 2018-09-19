@@ -144,8 +144,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Update="AgodaCustom\AG0018UnitTest.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Remove="AgodaCustom\AG0020UnitTests.cs" />
   </ItemGroup>
 </Project>

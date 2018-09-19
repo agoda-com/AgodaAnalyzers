@@ -15,7 +15,10 @@ namespace Agoda.Analyzers.AgodaCustom
 
         public AG0019PreventUseOfInternalsVisibleToAttribute()
         {
-            var info = new LocalizableResourceString(nameof(CustomRulesResources.AG0019Title), CustomRulesResources.ResourceManager, typeof(CustomRulesResources));
+            var info = new LocalizableResourceString(
+                nameof(CustomRulesResources.AG0019Title), 
+                CustomRulesResources.ResourceManager, 
+                typeof(CustomRulesResources));
 
             _diagnosticDescriptor = new DiagnosticDescriptor(
                 DIAGNOSTIC_ID,

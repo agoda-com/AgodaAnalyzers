@@ -130,7 +130,7 @@ namespace Agoda.Analyzers.Test.Helpers
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         protected async Task VerifyCSharpFixAllFixAsync(string oldSource, string newSource, int? codeFixIndex = null, bool allowNewCompilerDiagnostics = false, int numberOfIterations = 1, CancellationToken cancellationToken = default(CancellationToken))
         {
-            await VerifyFixInternalAsync(LanguageNames.CSharp, GetCSharpDiagnosticAnalyzers().ToImmutableArray(), GetCSharpCodeFixProvider(), new[] {oldSource}, new[] {newSource}, null, null, codeFixIndex, allowNewCompilerDiagnostics, numberOfIterations, FixAllAnalyzerDiagnosticsInDocumentAsync, cancellationToken).ConfigureAwait(false);
+            await VerifyFixInternalAsync(LanguageNames.CSharp, GetCSharpDiagnosticAnalyzers(), GetCSharpCodeFixProvider(), new[] {oldSource}, new[] {newSource}, null, null, codeFixIndex, allowNewCompilerDiagnostics, numberOfIterations, FixAllAnalyzerDiagnosticsInDocumentAsync, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -142,7 +142,7 @@ namespace Agoda.Analyzers.Test.Helpers
         /// <returns>The collection of offered code actions. This collection may be empty.</returns>
         protected async Task<ImmutableArray<CodeAction>> GetOfferedCSharpFixesAsync(string source, int? diagnosticIndex = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await GetOfferedFixesInternalAsync(LanguageNames.CSharp, source, diagnosticIndex, GetCSharpDiagnosticAnalyzers().ToImmutableArray(), GetCSharpCodeFixProvider(), cancellationToken).ConfigureAwait(false);
+            return await GetOfferedFixesInternalAsync(LanguageNames.CSharp, source, diagnosticIndex, GetCSharpDiagnosticAnalyzers(), GetCSharpCodeFixProvider(), cancellationToken).ConfigureAwait(false);
         }
 
         private static async Task<Project> FixEachAnalyzerDiagnosticAsync(ImmutableArray<DiagnosticAnalyzer> analyzers, CodeFixProvider codeFixProvider, int? codeFixIndex, Project project, int numberOfIterations, CancellationToken cancellationToken)
