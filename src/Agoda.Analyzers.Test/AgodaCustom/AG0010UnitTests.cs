@@ -21,61 +21,70 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         [Test]
         public async Task AG0010_WhenNoTestCases_ShouldntShowWarning()
         {
-            var code = @"
-                using NUnit.Framework;
-                
-                namespace Tests
-                {
-                    public class TestClass
+            var code = new CodeDescriptor
+            {
+                References = new[] {typeof(TestFixtureAttribute).Assembly},
+                Code = @"
+                    using NUnit.Framework;
+                    
+                    namespace Tests
                     {
-                        public void This_IsValid(){}
-                    }
-                }
-            ";
+                        public class TestClass
+                        {
+                            public void This_IsValid(){}
+                        }
+                    }"
+            };
 
-            await VerifyDiagnosticsAsync(code, typeof(TestFixtureAttribute).Assembly);
+            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
         }
 
         [Test]
         public async Task AG0010_WhenNoInheritance_ShouldntShowWarning()
         {
-            var code = @"
-                using NUnit.Framework;
-                
-                namespace Tests
-                {
-                    public class TestClass
+            var code = new CodeDescriptor
+            {
+                References = new[] {typeof(TestFixtureAttribute).Assembly},
+                Code = @"
+                    using NUnit.Framework;
+                    
+                    namespace Tests
                     {
-                        [Test]
-                        public void This_IsValid(){}
-                    }
-                }
-            ";
+                        public class TestClass
+                        {
+                            [Test]
+                            public void This_IsValid(){}
+                        }
+                    }"
+            };
 
-            await VerifyDiagnosticsAsync(code, typeof(TestFixtureAttribute).Assembly);
+            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
         }
 
         [Test]
         public async Task AG0010_WhenInheritance_ShouldShowWarning()
         {
-            var code = @"
-                using NUnit.Framework;
-                
-                namespace Tests
-                {
-                    public class TestClass : BaseTest
+            var code = new CodeDescriptor
+            {
+                References = new[] {typeof(TestFixtureAttribute).Assembly},
+                Code = @"
+                    using NUnit.Framework;
+                    
+                    namespace Tests
                     {
-                        [Test]
-                        public void This_IsValid(){}
-                    }
-                
-                    public class BaseTest{
-                
-                    }
-                }
-            ";
+                        public class TestClass : BaseTest
+                        {
+                            [Test]
+                            public void This_IsValid(){}
+                        }
+                    
+                        public class BaseTest{
+                    
+                        }
+                    }"
+            };
             
-            await VerifyDiagnosticsAsync(code, typeof(TestFixtureAttribute).Assembly, new DiagnosticLocation(6, 21));
+            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(6, 25));
         }
      
     }

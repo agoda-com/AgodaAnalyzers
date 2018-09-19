@@ -16,20 +16,23 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         [Test]
         public async Task TestDependencyResolverUsageAsync()
         {
-            var code = @"
-				interface ISomething {
-					void DoSomething();
-				}
-			
-				class TestClass {
-					public void TestMethod() {
-						var instance = System.Web.Mvc.DependencyResolver.Current.GetService(typeof(ISomething));
-						//instance.DoSomething();
+	        var code = new CodeDescriptor
+	        {
+		        References = new[] {typeof(DependencyResolver).Assembly},
+		        Code = @"
+					interface ISomething {
+						void DoSomething();
 					}
-				}
-			";
+				
+					class TestClass {
+						public void TestMethod() {
+							var instance = System.Web.Mvc.DependencyResolver.Current.GetService(typeof(ISomething));
+							//instance.DoSomething();
+						}
+					}"
+	        };
 
-            await VerifyDiagnosticsAsync(code, typeof(DependencyResolver).Assembly, new DiagnosticLocation(8, 37));
+            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(8, 38));
         }
 
     }

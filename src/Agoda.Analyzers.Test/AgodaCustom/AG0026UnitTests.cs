@@ -29,21 +29,24 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         [TestCase("FindElementByXPath")]
         public async Task AG0026_WithForbiddenFindElementsAsProperty_ThenShowWarning(string methodName)
         {
-            var testCode = $@"
-            using System;
-            using OpenQA.Selenium;
-            using OpenQA.Selenium.Chrome;
+            var code = new CodeDescriptor
+            {
+                References = new[] {typeof(IWebElement).Assembly},
+                Code = $@"
+                    using System;
+                    using OpenQA.Selenium;
+                    using OpenQA.Selenium.Chrome;
+        
+                    namespace Selenium.Tests.Utils
+                    {{
+                        public class Utils
+                        {{
+                            public IWebElement element11 => new ChromeDriver().{methodName}(""abc"");
+                        }}
+                    }}"
+            };
 
-            namespace Selenium.Tests.Utils
-            {{
-                public class Utils
-                {{
-                    public IWebElement element11 => new ChromeDriver().{methodName}(""abc"");
-                }}
-            }}";
-
-            var expected = new DiagnosticLocation(10, 53);
-            await VerifyDiagnosticsAsync(testCode, typeof(IWebElement).Assembly, expected);
+            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(10, 61));
         }
 
         [Test]
@@ -56,25 +59,28 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         [TestCase("FindElementsByXPath")]
         public async Task AG0026_WithForbiddenFindElementsInMethod_ThenShowWarning(string methodName)
         {
-            var testCode = $@"
-            using System;
-            using OpenQA.Selenium;
-            using OpenQA.Selenium.Chrome;
-            using System.Collections.ObjectModel;
-
-            namespace Selenium.Tests.Utils
-            {{
-                public class Utils
-                {{
-                    public void Test()
+            var code = new CodeDescriptor
+            {
+                References = new[] {typeof(IWebElement).Assembly},
+                Code = $@"
+                    using System;
+                    using OpenQA.Selenium;
+                    using OpenQA.Selenium.Chrome;
+                    using System.Collections.ObjectModel;
+        
+                    namespace Selenium.Tests.Utils
                     {{
-                        var element = new ChromeDriver().{methodName}(""abc"");
-                    }}
-                }}
-            }}";
+                        public class Utils
+                        {{
+                            public void Test()
+                            {{
+                                var element = new ChromeDriver().{methodName}(""abc"");
+                            }}
+                        }}
+                    }}"
+            };
 
-            var expected = new DiagnosticLocation(13, 39);
-            await VerifyDiagnosticsAsync(testCode, typeof(IWebElement).Assembly, expected);
+            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(13, 47));
         }
         
         [Test]
@@ -87,103 +93,116 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         [TestCase("XPath")]
         public async Task AG0026_WithForbiddenByAccessor_ThenShowWarning(string methodName)
         {
-            var testCode = $@"
-            using System;
-            using OpenQA.Selenium;
-            using OpenQA.Selenium.Chrome;
-
-            namespace Selenium.Tests.Utils
-            {{
-                public class Utils
-                {{
-                    public void Test()
+            var code = new CodeDescriptor
+            {
+                References = new [] {typeof(IWebElement).Assembly},
+                Code = $@"
+                    using System;
+                    using OpenQA.Selenium;
+                    using OpenQA.Selenium.Chrome;
+        
+                    namespace Selenium.Tests.Utils
                     {{
-                        var driver = new ChromeDriver();
-                        var elements1 = driver.FindElement(By.{methodName}(""abc""));
-                    }}
-                }}
-            }}";
+                        public class Utils
+                        {{
+                            public void Test()
+                            {{
+                                var driver = new ChromeDriver();
+                                var elements1 = driver.FindElement(By.{methodName}(""abc""));
+                            }}
+                        }}
+                    }}"
+             };
 
-            var expected = new DiagnosticLocation(13, 60);
-            await VerifyDiagnosticsAsync(testCode, typeof(IWebElement).Assembly, expected);
+            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(13, 68));
         }
 
         [Test]
         public async Task AG0026_WithPermittedFindElementAccessor_ThenNoWarning()
         {
-            var testCode = @"
-            using System;
-            using OpenQA.Selenium;
-            using OpenQA.Selenium.Chrome;
-            using System.Collections.ObjectModel;
-
-            namespace Selenium.Tests.Utils
+            var code = new CodeDescriptor
             {
-                public class Utils
-                {
-                    public void Test()
+                References = new [] {typeof(IWebElement).Assembly},
+                Code = @"
+                    using System;
+                    using OpenQA.Selenium;
+                    using OpenQA.Selenium.Chrome;
+        
+                    namespace Selenium.Tests.Utils
                     {
-                        var driver = new ChromeDriver();
-                        var elements1 = driver.FindElementByCssSelector(""selector"");
-                        var elements2 = driver.FindElementsByCssSelector(""selector"");
-                        driver.ExecuteScript(""script"");
-                    }
-                }
-            }";
+                        public class Utils
+                        {
+                            public void Test()
+                            {
+                                var driver = new ChromeDriver();
+                                var elements1 = driver.FindElementByCssSelector(""selector"");
+                                var elements2 = driver.FindElementsByCssSelector(""selector"");
+                                driver.ExecuteScript(""script"");
+                            }
+                        }
+                    }"
+            };
 
-            var references = new[] {typeof(IWebElement).Assembly, typeof(ReadOnlyCollection<>).Assembly};
-            await VerifyDiagnosticsAsync(testCode, references);
+            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
         }
 
         [Test]
         public async Task AG0026_WithPermittedByAccessor_ThenNoWarning()
         {
-            var testCode = @"
-            using System;
-            using OpenQA.Selenium;
-            using OpenQA.Selenium.Chrome;
-
-            namespace Selenium.Tests.Utils
+            var code = new CodeDescriptor
             {
-                public class Utils
-                {
-                    public void Test()
+                References = new [] {typeof(IWebElement).Assembly},
+                Code = @"
+                    using System;
+                    using OpenQA.Selenium;
+                    using OpenQA.Selenium.Chrome;
+        
+                    namespace Selenium.Tests.Utils
                     {
-                        var driver = new ChromeDriver();
-                        var elements1 = driver.FindElement(By.CssSelector(""selector""));
-                    }
-                }
-            }";
+                        public class Utils
+                        {
+                            public void Test()
+                            {
+                                var driver = new ChromeDriver();
+                                var elements1 = driver.FindElement(By.CssSelector(""selector""));
+                            }
+                        }
+                    }" 
+            };
 
-            await VerifyDiagnosticsAsync(testCode, typeof(IWebElement).Assembly);
+            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
         }
 
         [Test]
         public async Task AG0026_WithByEqualsMethod_ThenNoWarning()
         {
-            var testCode = @"
-            using System;
-            using OpenQA.Selenium;
-            using OpenQA.Selenium.Chrome;
-
-            namespace Selenium.Tests.Utils
+            var code = new CodeDescriptor
             {
-                public class Utils
-                {
-                    public void Test()
+                References = new [] {typeof(IWebElement).Assembly},
+                Code = @"
+                    using System;
+                    using OpenQA.Selenium;
+                    using OpenQA.Selenium.Chrome;
+        
+                    namespace Selenium.Tests.Utils
                     {
-                        var elements1 = By.Equals(""selector1"", ""selector2"");
-                    }
-                }
-            }";
+                        public class Utils
+                        {
+                            public void Test()
+                            {
+                                var elements1 = By.Equals(""selector1"", ""selector2"");
+                            }
+                        }
+                    }"
+            };
 
-            await VerifyDiagnosticsAsync(testCode, typeof(IWebElement).Assembly);
+            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
         }
 
         [Test]
         public async Task AG0026_WithForbiddenNameInDifferentNamespace_ThenNoWarning()
         {
-            var testCode = @"
+            var code = @"
             using System;
 
             namespace Selenium.Tests.Utils
@@ -208,7 +227,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 }
             }";
 
-            await VerifyDiagnosticsAsync(testCode);
+            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
         }
     }
 }
