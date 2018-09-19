@@ -1,11 +1,6 @@
-﻿using System.Linq;
-using NUnit.Framework;
-using System.Threading;
-using Microsoft.CodeAnalysis;
+﻿using NUnit.Framework;
 using System.Threading.Tasks;
-using System.Collections.Generic;
 using Agoda.Analyzers.AgodaCustom;
-using System.Collections.Immutable;
 using Agoda.Analyzers.Test.Helpers;
 using Microsoft.CodeAnalysis.Diagnostics;
 
@@ -13,10 +8,9 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 {
     class AG0013UnitTests : DiagnosticVerifier
     {
-        protected override IEnumerable<DiagnosticAnalyzer> GetCSharpDiagnosticAnalyzers()
-        {
-            yield return new AG0013LimitNumberOfTestMethodParametersTo5();
-        }
+        protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0013LimitNumberOfTestMethodParametersTo5();
+        
+        protected override string DiagnosticId => AG0013LimitNumberOfTestMethodParametersTo5.DIAGNOSTIC_ID;
 
         [Test]
         public async Task TestMethod_ShouldNotTake_MoreThan5Inputs()
@@ -39,19 +33,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 }
             }";
 
-            var analyzer = GetCSharpDiagnosticAnalyzers().ToImmutableArray();
-            var document = CreateProject(new[] { testCode }).
-                           AddMetadataReference(MetadataReference.CreateFromFile(typeof(TestFixtureAttribute).Assembly.Location)).
-                           Documents.
-                           First();
-
-            var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzer, new[] { document }, CancellationToken.None).ConfigureAwait(false);
-
-            var baseResult = CSharpDiagnostic(AG0013LimitNumberOfTestMethodParametersTo5.DIAGNOSTIC_ID);
-            VerifyDiagnosticResults(diag, analyzer, new[]
-            {
-                baseResult.WithLocation(13, 21),
-            });
+            await VerifyDiagnosticsAsync(testCode, typeof(TestFixtureAttribute).Assembly, new DiagnosticLocation(13, 21));
         }
     }
 }

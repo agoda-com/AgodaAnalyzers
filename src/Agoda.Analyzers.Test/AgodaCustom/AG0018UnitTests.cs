@@ -15,8 +15,12 @@ namespace Agoda.Analyzers.Test.AgodaCustom
     using System.Threading;
     using System.Threading.Tasks;
 
-    public class AG0018UnitTest : DiagnosticVerifier
+    public class AG0018UnitTests : DiagnosticVerifier
     {
+        protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0018PermitOnlyCertainPubliclyExposedEnumerables();
+        
+        protected override string DiagnosticId => AG0018PermitOnlyCertainPubliclyExposedEnumerables.DIAGNOSTIC_ID;
+        
         [Test]
         public async Task AG0018_ShouldBeAllowedWhenCreateAMethodWhichReturnInterfaces()
         {
@@ -38,19 +42,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                             }
                         }";
 
-            var nUnit = MetadataReference.CreateFromFile(typeof(TestFixtureAttribute).Assembly.Location);
-
-            var doc = CreateProject(new[] { code })
-                .AddMetadataReference(nUnit)
-                .Documents
-                .First();
-
-            var analyzersArray = GetCSharpDiagnosticAnalyzers().ToImmutableArray();
-
-            var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzersArray, new[] { doc }, CancellationToken.None).ConfigureAwait(false);
-            var baseResult = CSharpDiagnostic(AG0018PermitOnlyCertainPubliclyExposedEnumerables.DIAGNOSTIC_ID);
-
-            VerifyDiagnosticResults(diag, analyzersArray, new DiagnosticResult[] { });
+            await VerifyDiagnosticsAsync(code, typeof(TestFixtureAttribute).Assembly);
         }
 
         [Test]
@@ -71,27 +63,16 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                             }
                         }";
 
-            var nUnit = MetadataReference.CreateFromFile(typeof(TestFixtureAttribute).Assembly.Location);
-
-            var doc = CreateProject(new[] { code })
-                .AddMetadataReference(nUnit)
-                .Documents
-                .First();
-
-            var analyzersArray = GetCSharpDiagnosticAnalyzers().ToImmutableArray();
-
-            var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzersArray, new[] { doc }, CancellationToken.None).ConfigureAwait(false);
-            var baseResult = CSharpDiagnostic(AG0018PermitOnlyCertainPubliclyExposedEnumerables.DIAGNOSTIC_ID);
-
-            VerifyDiagnosticResults(diag, analyzersArray, new[]
+            var expected = new[]
             {
-                baseResult.WithLocation(7, 33),
-                baseResult.WithLocation(8, 33),
-                baseResult.WithLocation(9, 33),
-                baseResult.WithLocation(10, 33),
-                baseResult.WithLocation(11, 33),
-                baseResult.WithLocation(12, 33),
-            });
+                new DiagnosticLocation(7, 33),
+                new DiagnosticLocation(8, 33),
+                new DiagnosticLocation(9, 33),
+                new DiagnosticLocation(10, 33),
+                new DiagnosticLocation(11, 33),
+                new DiagnosticLocation(12, 33),
+            };
+            await VerifyDiagnosticsAsync(code, expected);
         }
 
         [Test]
@@ -115,25 +96,14 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                             }
                         }";
 
-            var nUnit = MetadataReference.CreateFromFile(typeof(TestFixtureAttribute).Assembly.Location);
-
-            var doc = CreateProject(new[] { code })
-                .AddMetadataReference(nUnit)
-                .Documents
-                .First();
-
-            var analyzersArray = GetCSharpDiagnosticAnalyzers().ToImmutableArray();
-
-            var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzersArray, new[] { doc }, CancellationToken.None).ConfigureAwait(false);
-            var baseResult = CSharpDiagnostic(AG0018PermitOnlyCertainPubliclyExposedEnumerables.DIAGNOSTIC_ID);
-
-            VerifyDiagnosticResults(diag, analyzersArray, new[]
+            var expected = new[]
             {
-                baseResult.WithLocation(7, 33),
-                baseResult.WithLocation(9, 33),
-                baseResult.WithLocation(11, 33),
-                baseResult.WithLocation(13, 33),
-            });
+                new DiagnosticLocation(7, 33),
+                new DiagnosticLocation(9, 33),
+                new DiagnosticLocation(11, 33),
+                new DiagnosticLocation(13, 33),
+            };
+            await VerifyDiagnosticsAsync(code, expected);
         }
 
         [Test]
@@ -152,27 +122,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                             }
                         }";
 
-            var nUnit = MetadataReference.CreateFromFile(typeof(TestFixtureAttribute).Assembly.Location);
-
-            var doc = CreateProject(new[] { code })
-                .AddMetadataReference(nUnit)
-                .Documents
-                .First();
-
-            var analyzersArray = GetCSharpDiagnosticAnalyzers().ToImmutableArray();
-
-            var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzersArray, new[] { doc }, CancellationToken.None).ConfigureAwait(false);
-            var baseResult = CSharpDiagnostic(AG0018PermitOnlyCertainPubliclyExposedEnumerables.DIAGNOSTIC_ID);
-
-            VerifyDiagnosticResults(diag, analyzersArray, new[]
-            {
-                baseResult.WithLocation(7, 33),
-            });
-        }
-
-        protected override IEnumerable<DiagnosticAnalyzer> GetCSharpDiagnosticAnalyzers()
-        {
-            yield return new AG0018PermitOnlyCertainPubliclyExposedEnumerables();
+            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(7, 33));
         }
     }
 }

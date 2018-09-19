@@ -14,8 +14,12 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 {
     class AG0011UnitTests : DiagnosticVerifier
     {
+        protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0011NoDirectQueryStringAccess();
+        
+        protected override string DiagnosticId => AG0011NoDirectQueryStringAccess.DIAGNOSTIC_ID;
+        
         [Test]
-        public async Task TestNoDirectQueryStringAccessAsync()
+        public async Task AG0011_WithDirectAccess_ShowsWarning()
         {
             var code = @"
 				class TestClass {
@@ -25,23 +29,11 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-            var reference = MetadataReference.CreateFromFile(typeof(HttpContext).Assembly.Location);
-
-            var doc = CreateProject(new[] { code })
-                .AddMetadataReference(reference)
-                .Documents
-                .First();
-
-            var analyzersArray = GetCSharpDiagnosticAnalyzers().ToImmutableArray();
-
-            var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzersArray, new[] { doc }, CancellationToken.None);
-            var expected = CSharpDiagnostic(AG0011NoDirectQueryStringAccess.DIAGNOSTIC_ID).WithLocation(4, 82);
-
-            VerifyDiagnosticResults(diag, analyzersArray, new[] { expected });
+            await VerifyDiagnosticsAsync(code, typeof(HttpContext).Assembly, new DiagnosticLocation(4, 82));
         }
 
         [Test]
-        public async Task TestNoDirectQueryStringAccessViaLocalVariableAsync()
+        public async Task AG0011_ThroughLocalVariable_ShowsWarning()
         {
             var code = @"
 				class TestClass {
@@ -52,24 +44,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-            var reference = MetadataReference.CreateFromFile(typeof(HttpContext).Assembly.Location);
-
-            var doc = CreateProject(new[] { code })
-                .AddMetadataReference(reference)
-                .Documents
-                .First();
-
-            var analyzersArray = GetCSharpDiagnosticAnalyzers().ToImmutableArray();
-
-            var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzersArray, new[] { doc }, CancellationToken.None);
-            var expected = CSharpDiagnostic(AG0011NoDirectQueryStringAccess.DIAGNOSTIC_ID).WithLocation(5, 55);
-
-            VerifyDiagnosticResults(diag, analyzersArray, new[] { expected });
-        }
-
-        protected override IEnumerable<DiagnosticAnalyzer> GetCSharpDiagnosticAnalyzers()
-        {
-            yield return new AG0011NoDirectQueryStringAccess();
+	        await VerifyDiagnosticsAsync(code, typeof(HttpContext).Assembly, new DiagnosticLocation(5, 55));
         }
     }
 }

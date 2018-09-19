@@ -15,10 +15,9 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 {
     class AG0026UnitTests : DiagnosticVerifier
     {
-        protected override IEnumerable<DiagnosticAnalyzer> GetCSharpDiagnosticAnalyzers()
-        {
-            yield return new AG0026EnsureOnlyCssSelectorIsUsedToFindElements();
-        }
+        protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0026EnsureOnlyCssSelectorIsUsedToFindElements();
+        
+        protected override string DiagnosticId => AG0026EnsureOnlyCssSelectorIsUsedToFindElements.DIAGNOSTIC_ID;
 
         [Test]
         [TestCase("FindElementByClassName")]
@@ -34,7 +33,6 @@ namespace Agoda.Analyzers.Test.AgodaCustom
             using System;
             using OpenQA.Selenium;
             using OpenQA.Selenium.Chrome;
-            using System.Collections.ObjectModel;
 
             namespace Selenium.Tests.Utils
             {{
@@ -44,20 +42,8 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 }}
             }}";
 
-            var analyzers = GetCSharpDiagnosticAnalyzers().ToImmutableArray();
-            var documents = CreateProject(new[] { testCode })
-                           .AddMetadataReference(MetadataReference.CreateFromFile(typeof(IWebElement).Assembly.Location))
-                           .AddMetadataReference(MetadataReference.CreateFromFile(typeof(ReadOnlyCollection<>).Assembly.Location))
-                           .Documents
-                           .ToArray();
-
-            var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzers, documents, CancellationToken.None).ConfigureAwait(false);
-
-            var baseResult = CSharpDiagnostic(AG0026EnsureOnlyCssSelectorIsUsedToFindElements.DIAGNOSTIC_ID);
-            VerifyDiagnosticResults(diag, analyzers, new[]
-            {
-                baseResult.WithLocation(11, 53)
-            });
+            var expected = new DiagnosticLocation(10, 53);
+            await VerifyDiagnosticsAsync(testCode, typeof(IWebElement).Assembly, expected);
         }
 
         [Test]
@@ -87,19 +73,8 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 }}
             }}";
 
-            var analyzers = GetCSharpDiagnosticAnalyzers().ToImmutableArray();
-            var documents = CreateProject(new[] { testCode })
-                           .AddMetadataReference(MetadataReference.CreateFromFile(typeof(IWebElement).Assembly.Location))
-                           .Documents
-                           .ToArray();
-
-            var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzers, documents, CancellationToken.None).ConfigureAwait(false);
-
-            var baseResult = CSharpDiagnostic(AG0026EnsureOnlyCssSelectorIsUsedToFindElements.DIAGNOSTIC_ID);
-            VerifyDiagnosticResults(diag, analyzers, new[]
-            {
-                baseResult.WithLocation(13, 39),
-            });
+            var expected = new DiagnosticLocation(13, 39);
+            await VerifyDiagnosticsAsync(testCode, typeof(IWebElement).Assembly, expected);
         }
         
         [Test]
@@ -129,19 +104,8 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 }}
             }}";
 
-            var analyzers = GetCSharpDiagnosticAnalyzers().ToImmutableArray();
-            var documents = CreateProject(new[] { testCode })
-                           .AddMetadataReference(MetadataReference.CreateFromFile(typeof(IWebElement).Assembly.Location))
-                           .Documents
-                           .ToArray();
-
-            var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzers, documents, CancellationToken.None).ConfigureAwait(false);
-
-            var baseResult = CSharpDiagnostic(AG0026EnsureOnlyCssSelectorIsUsedToFindElements.DIAGNOSTIC_ID);
-            VerifyDiagnosticResults(diag, analyzers, new[]
-            {
-                baseResult.WithLocation(13, 60)
-            });
+            var expected = new DiagnosticLocation(13, 60);
+            await VerifyDiagnosticsAsync(testCode, typeof(IWebElement).Assembly, expected);
         }
 
         [Test]
@@ -167,17 +131,8 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 }
             }";
 
-            var analyzers = GetCSharpDiagnosticAnalyzers().ToImmutableArray();
-            var documents = CreateProject(new[] { testCode })
-                           .AddMetadataReference(MetadataReference.CreateFromFile(typeof(IWebElement).Assembly.Location))
-                           .AddMetadataReference(MetadataReference.CreateFromFile(typeof(ReadOnlyCollection<>).Assembly.Location))
-                           .Documents
-                           .ToArray();
-
-            var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzers, documents, CancellationToken.None).ConfigureAwait(false);
-
-            var baseResult = CSharpDiagnostic(AG0026EnsureOnlyCssSelectorIsUsedToFindElements.DIAGNOSTIC_ID);
-            VerifyDiagnosticResults(diag, analyzers, new DiagnosticResult[0]);
+            var references = new[] {typeof(IWebElement).Assembly, typeof(ReadOnlyCollection<>).Assembly};
+            await VerifyDiagnosticsAsync(testCode, references);
         }
 
         [Test]
@@ -200,16 +155,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 }
             }";
 
-            var analyzers = GetCSharpDiagnosticAnalyzers().ToImmutableArray();
-            var documents = CreateProject(new[] { testCode })
-                           .AddMetadataReference(MetadataReference.CreateFromFile(typeof(IWebElement).Assembly.Location))
-                           .Documents
-                           .ToArray();
-
-            var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzers, documents, CancellationToken.None).ConfigureAwait(false);
-
-            var baseResult = CSharpDiagnostic(AG0026EnsureOnlyCssSelectorIsUsedToFindElements.DIAGNOSTIC_ID);
-            VerifyDiagnosticResults(diag, analyzers, new DiagnosticResult[0]);
+            await VerifyDiagnosticsAsync(testCode, typeof(IWebElement).Assembly);
         }
 
         [Test]
@@ -231,16 +177,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 }
             }";
 
-            var analyzers = GetCSharpDiagnosticAnalyzers().ToImmutableArray();
-            var documents = CreateProject(new[] { testCode })
-                           .AddMetadataReference(MetadataReference.CreateFromFile(typeof(IWebElement).Assembly.Location))
-                           .Documents
-                           .ToArray();
-
-            var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzers, documents, CancellationToken.None).ConfigureAwait(false);
-
-            var baseResult = CSharpDiagnostic(AG0026EnsureOnlyCssSelectorIsUsedToFindElements.DIAGNOSTIC_ID);
-            VerifyDiagnosticResults(diag, analyzers, new DiagnosticResult[0]);
+            await VerifyDiagnosticsAsync(testCode, typeof(IWebElement).Assembly);
         }
 
         [Test]
@@ -271,15 +208,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 }
             }";
 
-            var analyzers = GetCSharpDiagnosticAnalyzers().ToImmutableArray();
-            var documents = CreateProject(new[] { testCode })
-                           .Documents
-                           .ToArray();
-
-            var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzers, documents, CancellationToken.None).ConfigureAwait(false);
-
-            var baseResult = CSharpDiagnostic(AG0026EnsureOnlyCssSelectorIsUsedToFindElements.DIAGNOSTIC_ID);
-            VerifyDiagnosticResults(diag, analyzers, new DiagnosticResult[0]);
+            await VerifyDiagnosticsAsync(testCode);
         }
     }
 }

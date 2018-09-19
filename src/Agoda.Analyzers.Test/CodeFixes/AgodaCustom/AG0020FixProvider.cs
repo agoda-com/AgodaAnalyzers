@@ -16,191 +16,162 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 {
     internal class AG0020FixProviderUnitTests : CodeFixVerifier
     {
+        protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0020AvoidReturningNullEnumerables();
+        
+        protected override string DiagnosticId => AG0020AvoidReturningNullEnumerables.DIAGNOSTIC_ID;
+        
+        protected override CodeFixProvider CodeFixProvider => new AG0020FixProvider();
+        
         [Test]
         public async Task TestShouldFixIEnumerableCorrectly()
         {
             var code = @"
-using System.Collections.Generic;
-using System.Linq;
-
-namespace Agoda.Analyzers.Test
-{
-    public class TestClass
-    {
-        public IEnumerable<string> GetValuesForId(int[] ids)
-        {
-            if (!ids.Any())
-                return null;
-            return null;
-        }
-    }
-}";
+                using System.Collections.Generic;
+                using System.Linq;
+                
+                namespace Agoda.Analyzers.Test
+                {
+                    public class TestClass
+                    {
+                        public IEnumerable<string> GetValuesForId(int[] ids)
+                        {
+                            if (!ids.Any())
+                                return null;
+                            return null;
+                        }
+                    }
+                }
+            ";
+            
             var result = @"
-using System.Collections.Generic;
-using System.Linq;
+                using System.Collections.Generic;
+                using System.Linq;
+                
+                namespace Agoda.Analyzers.Test
+                {
+                    public class TestClass
+                    {
+                        public IEnumerable<string> GetValuesForId(int[] ids)
+                        {
+                            if (!ids.Any())
+                                return Enumerable.Empty<string>();
+                            return Enumerable.Empty<string>();
+                        }
+                    }
+                }
+            ";
 
-namespace Agoda.Analyzers.Test
-{
-    public class TestClass
-    {
-        public IEnumerable<string> GetValuesForId(int[] ids)
-        {
-            if (!ids.Any())
-                return Enumerable.Empty<string>();
-            return Enumerable.Empty<string>();
-        }
-    }
-}";
-            var doc = CreateProject(new[] { code })
-                .Documents
-                .First();
-            var analyzersArray = GetCSharpDiagnosticAnalyzers().ToImmutableArray();
-            var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzersArray, new[] { doc }, CancellationToken.None)
-                .ConfigureAwait(false);
-            var expected = CSharpDiagnostic(AG0020AvoidReturningNullEnumerables.DIAGNOSTIC_ID);
-            VerifyDiagnosticResults(diag, analyzersArray, new[] {
-                expected.WithLocation(12, 24),
-                expected.WithLocation(13, 20)
-            });
-            await VerifyCSharpFixAsync(code, result);
+            await VerifyCodeFixAsync(code, result);
         }
 
         [Test]
         public async Task TestShouldFixListCorrectly()
         {
             var code = @"
-using System.Collections.Generic;
-
-namespace Agoda.Analyzers.Test
-{
-    public class TestClass
-    {
-        public List<string> GetValuesForId(int id)
-        {
-            return null;
-        }
-    }
-}";
+                using System.Collections.Generic;
+                
+                namespace Agoda.Analyzers.Test
+                {
+                    public class TestClass
+                    {
+                        public List<string> GetValuesForId(int id)
+                        {
+                            return null;
+                        }
+                    }
+                }
+            ";
+            
             var result = @"
-using System.Collections.Generic;
+                using System.Collections.Generic;
+                
+                namespace Agoda.Analyzers.Test
+                {
+                    public class TestClass
+                    {
+                        public List<string> GetValuesForId(int id)
+                        {
+                            return new List<string>();
+                        }
+                    }
+                }
+            ";
 
-namespace Agoda.Analyzers.Test
-{
-    public class TestClass
-    {
-        public List<string> GetValuesForId(int id)
-        {
-            return new List<string>();
-        }
-    }
-}";
-            var doc = CreateProject(new[] { code })
-                .Documents
-                .First();
-            var analyzersArray = GetCSharpDiagnosticAnalyzers().ToImmutableArray();
-            var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzersArray, new[] { doc }, CancellationToken.None)
-                .ConfigureAwait(false);
-            var expected = CSharpDiagnostic(AG0020AvoidReturningNullEnumerables.DIAGNOSTIC_ID);
-            VerifyDiagnosticResults(diag, analyzersArray, new[] {
-                expected.WithLocation(10, 20)
-            });
-            await VerifyCSharpFixAsync(code, result);
+            await VerifyCodeFixAsync(code, result);
         }
 
         [Test]
         public async Task TestShouldFixArrayCorrectly()
         {
             var code = @"
-using System;
-using System.Collections.Generic;
-
-namespace Agoda.Analyzers.Test
-{
-    public class TestClass
-    {
-        public Int32[] GetValuesForId(int id)
-        {
-            return null;
-        }
-    }
-}";
+                using System;
+                using System.Collections.Generic;
+                
+                namespace Agoda.Analyzers.Test
+                {
+                    public class TestClass
+                    {
+                        public Int32[] GetValuesForId(int id)
+                        {
+                            return null;
+                        }
+                    }
+                }
+            ";
+            
             var result = @"
-using System;
-using System.Collections.Generic;
+                using System;
+                using System.Collections.Generic;
+                
+                namespace Agoda.Analyzers.Test
+                {
+                    public class TestClass
+                    {
+                        public Int32[] GetValuesForId(int id)
+                        {
+                            return Array.Empty<Int32>();
+                        }
+                    }
+                }
+            ";
 
-namespace Agoda.Analyzers.Test
-{
-    public class TestClass
-    {
-        public Int32[] GetValuesForId(int id)
-        {
-            return Array.Empty<Int32>();
-        }
-    }
-}";
-            var doc = CreateProject(new[] { code })
-                .Documents
-                .First();
-            var analyzersArray = GetCSharpDiagnosticAnalyzers().ToImmutableArray();
-            var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzersArray, new[] { doc }, CancellationToken.None)
-                .ConfigureAwait(false);
-            var expected = CSharpDiagnostic(AG0020AvoidReturningNullEnumerables.DIAGNOSTIC_ID);
-            VerifyDiagnosticResults(diag, analyzersArray, new[] {
-                expected.WithLocation(11, 20)
-            });
-            await VerifyCSharpFixAsync(code, result);
+            await VerifyCodeFixAsync(code, result);
         }
 
         [Test]
         public async Task TestShouldFixLinkedListCorrectly()
         {
             var code = @"
-using System.Collections.Generic;
-
-namespace Agoda.Analyzers.Test
-{
-    public class TestClass
-    {
-        public LinkedList<string> GetValuesForId(int id)
-        {
-            return null;
-        }
-    }
-}";
+                using System.Collections.Generic;
+                
+                namespace Agoda.Analyzers.Test
+                {
+                    public class TestClass
+                    {
+                        public LinkedList<string> GetValuesForId(int id)
+                        {
+                            return null;
+                        }
+                    }
+                }
+            ";
+            
             var result = @"
-using System.Collections.Generic;
+                using System.Collections.Generic;
+                
+                namespace Agoda.Analyzers.Test
+                {
+                    public class TestClass
+                    {
+                        public LinkedList<string> GetValuesForId(int id)
+                        {
+                            return new LinkedList<string>();
+                        }
+                    }
+                }
+            ";
 
-namespace Agoda.Analyzers.Test
-{
-    public class TestClass
-    {
-        public LinkedList<string> GetValuesForId(int id)
-        {
-            return new LinkedList<string>();
-        }
-    }
-}";
-            var doc = CreateProject(new[] { code })
-                .Documents
-                .First();
-            var analyzersArray = GetCSharpDiagnosticAnalyzers().ToImmutableArray();
-            var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzersArray, new[] { doc }, CancellationToken.None)
-                .ConfigureAwait(false);
-            var expected = CSharpDiagnostic(AG0020AvoidReturningNullEnumerables.DIAGNOSTIC_ID);
-            VerifyDiagnosticResults(diag, analyzersArray, new[] {
-                expected.WithLocation(10, 20)
-            });
-            await VerifyCSharpFixAsync(code, result);
-        }
-
-        protected override CodeFixProvider GetCSharpCodeFixProvider()
-        {
-            return new AG0020FixProvider();
-        }
-
-        protected override IEnumerable<DiagnosticAnalyzer> GetCSharpDiagnosticAnalyzers()
-        {
-            yield return new AG0020AvoidReturningNullEnumerables();
+            await VerifyCodeFixAsync(code, result);
         }
     }
 }

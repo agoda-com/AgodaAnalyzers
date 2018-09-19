@@ -16,143 +16,105 @@ namespace Agoda.Analyzers.Test.CodeFixes.AgodaCustom
 {
     class AG0022RemoveSyncMethodUnitTests : CodeFixVerifier
     {
+        protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0022DoNotExposeBothSyncAndAsyncVersionsOfMethods();
+        
+        protected override string DiagnosticId => AG0022DoNotExposeBothSyncAndAsyncVersionsOfMethods.DIAGNOSTIC_ID;
+        
+        protected override CodeFixProvider CodeFixProvider => new AG0022RemoveSyncMethod();
+
         [Test]
         public async Task AG0022_ForInterface_ShouldRemoveSyncVersion()
         {
             var code = @"
-using System.Threading.Tasks;
-
-interface TestInterface
-{
-    bool TestMethod(string url);
-    Task<bool> TestMethodAsync(string url);
-}";
+                using System.Threading.Tasks;
+                
+                interface TestInterface
+                {
+                    bool TestMethod(string url);
+                    Task<bool> TestMethodAsync(string url);
+                }
+            ";
 
             var result = @"
-using System.Threading.Tasks;
-
-interface TestInterface
-{
-    Task<bool> TestMethodAsync(string url);
-}";
+                using System.Threading.Tasks;
+                
+                interface TestInterface
+                {
+                    Task<bool> TestMethodAsync(string url);
+                }
+            ";
             
-            var expected = CSharpDiagnostic(AG0022DoNotExposeBothSyncAndAsyncVersionsOfMethods.DIAGNOSTIC_ID);
-            var diagnosticResults = new[]
-            {
-                expected.WithLocation(6, 5),
-            };
-            
-            await RunTest(code, result, diagnosticResults);
+            await VerifyCodeFixAsync(code, result);
         }
         
         [Test]
         public async Task AG0022_ForClass_ShouldRemoveSyncVersion()
         {
             var code = @"
-using System.Threading.Tasks;
-
-class TestClass
-{
-    public bool TestMethod(string url)
-    {
-        return true;
-    }
-    public Task<bool> TestMethodAsync(string url) 
-    { 
-        return Task.FromResult(true);
-    }
-}
-";
+                using System.Threading.Tasks;
+                
+                class TestClass
+                {
+                    public bool TestMethod(string url)
+                    {
+                        return true;
+                    }
+                    public Task<bool> TestMethodAsync(string url) 
+                    { 
+                        return Task.FromResult(true);
+                    }
+                }
+            ";
 
             var result = @"
-using System.Threading.Tasks;
-
-class TestClass
-{
-    public Task<bool> TestMethodAsync(string url) 
-    { 
-        return Task.FromResult(true);
-    }
-}
-";
+                using System.Threading.Tasks;
+                
+                class TestClass
+                {
+                    public Task<bool> TestMethodAsync(string url) 
+                    { 
+                        return Task.FromResult(true);
+                    }
+                }
+            ";
             
-            var baseResult = CSharpDiagnostic(AG0022DoNotExposeBothSyncAndAsyncVersionsOfMethods.DIAGNOSTIC_ID);
-            var diagnosticResults = new[]
-            {
-                baseResult.WithLocation(6, 5),
-            };
-            
-            await RunTest(code, result, diagnosticResults);
+            await VerifyCodeFixAsync(code, result);
         }
         
         [Test]
         public async Task AG0022_ForMethodWithComment_ShouldRemoveSyncVersionWithComment()
         {
             var code = @"
-using System.Threading.Tasks;
-
-interface TestInterface
-{
-    /// <summary>
-    /// This is a summary for TestMethod
-    /// </summary>
-    bool TestMethod(string url); // comment
-
-    /// <summary>
-    /// This is a summary for TestMethod
-    /// </summary>
-    Task<bool> TestMethodAsync(string url); // comment
-}";
+                using System.Threading.Tasks;
+                
+                interface TestInterface
+                {
+                    /// <summary>
+                    /// This is a summary for TestMethod
+                    /// </summary>
+                    bool TestMethod(string url); // comment
+                
+                    /// <summary>
+                    /// This is a summary for TestMethod
+                    /// </summary>
+                    Task<bool> TestMethodAsync(string url); // comment
+                }
+            ";
 
             var result = @"
-using System.Threading.Tasks;
-
-interface TestInterface
-{
-
-    /// <summary>
-    /// This is a summary for TestMethod
-    /// </summary>
-    Task<bool> TestMethodAsync(string url); // comment
-}";
+                using System.Threading.Tasks;
+                
+                interface TestInterface
+                {
+                
+                    /// <summary>
+                    /// This is a summary for TestMethod
+                    /// </summary>
+                    Task<bool> TestMethodAsync(string url); // comment
+                }
+            ";
             
-            var expected = CSharpDiagnostic(AG0022DoNotExposeBothSyncAndAsyncVersionsOfMethods.DIAGNOSTIC_ID);
-            var diagnosticResults = new[]
-            {
-                expected.WithLocation(9, 5),
-            };
-            
-            await RunTest(code, result, diagnosticResults);
-        }
-        
-        private async Task RunTest(string code, string result, DiagnosticResult[] diagnosticResults)
-        {
-            var reference = MetadataReference.CreateFromFile(typeof(Task).Assembly.Location);
-            var doc = CreateProject(new[] {code})
-                .AddMetadataReference(reference)
-                .Documents
-                .First();
-            var analyzersArray = GetCSharpDiagnosticAnalyzers().ToImmutableArray();
-            var diag = await GetSortedDiagnosticsFromDocumentsAsync(
-                analyzersArray,
-                new[] {doc},
-                CancellationToken.None
-            ).ConfigureAwait(false);            
-            VerifyDiagnosticResults(
-                diag,
-                analyzersArray,
-                diagnosticResults);
-            await VerifyCSharpFixAsync(code, result);
-        }
-        
-        protected override CodeFixProvider GetCSharpCodeFixProvider()
-        {
-            return new AG0022RemoveSyncMethod();
-        }
-
-        protected override IEnumerable<DiagnosticAnalyzer> GetCSharpDiagnosticAnalyzers()
-        {
-            yield return new AG0022DoNotExposeBothSyncAndAsyncVersionsOfMethods();
+            await VerifyCodeFixAsync(code, result);
         }
     }
 }

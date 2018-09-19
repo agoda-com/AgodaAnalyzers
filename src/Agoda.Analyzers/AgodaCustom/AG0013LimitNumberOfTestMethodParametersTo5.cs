@@ -18,7 +18,10 @@ namespace Agoda.Analyzers.AgodaCustom
 
         public AG0013LimitNumberOfTestMethodParametersTo5()
         {
-            var info = new LocalizableResourceString(nameof(CustomRulesResources.AG0013Title), CustomRulesResources.ResourceManager, typeof(CustomRulesResources));
+            var info = new LocalizableResourceString(
+                nameof(CustomRulesResources.AG0013Title), 
+                CustomRulesResources.ResourceManager, 
+                typeof(CustomRulesResources));
 
             _diagnosticDescriptor = new DiagnosticDescriptor(
                 DIAGNOSTIC_ID, 

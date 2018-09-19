@@ -11,24 +11,31 @@ namespace Agoda.Analyzers.AgodaCustom
     public class AG0002PrivateMethodsShouldNotBeTested : DiagnosticAnalyzer
     {
         public const string DIAGNOSTIC_ID = "AG0002";
-        private static readonly LocalizableString Title = new LocalizableResourceString(nameof(CustomRulesResources.AG0002Title), CustomRulesResources.ResourceManager, typeof(CustomRulesResources));
-        private static readonly LocalizableString MessageFormat = new LocalizableResourceString(nameof(CustomRulesResources.AG0002MessageFormat), CustomRulesResources.ResourceManager, typeof(CustomRulesResources));
-        private static readonly LocalizableString Description = DescriptionContentLoader.GetAnalyzerDescription(nameof(AG0002PrivateMethodsShouldNotBeTested));
-        private const string Category = "Usage";
+        
+        private static readonly LocalizableString Title = new LocalizableResourceString(
+            nameof(CustomRulesResources.AG0002Title), 
+            CustomRulesResources.ResourceManager, 
+            typeof(CustomRulesResources));
+        
+        private static readonly LocalizableString MessageFormat = new LocalizableResourceString(
+            nameof(CustomRulesResources.AG0002MessageFormat), 
+            CustomRulesResources.ResourceManager, 
+            typeof(CustomRulesResources));
+        
+        private static readonly LocalizableString Description 
+            = DescriptionContentLoader.GetAnalyzerDescription(nameof(AG0002PrivateMethodsShouldNotBeTested));
 
         private static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(
             DIAGNOSTIC_ID,
             Title,
             MessageFormat,
-            Category, DiagnosticSeverity.Warning,
+            AnalyzerCategory.CustomQualityRules, 
+            DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
             description: Description
         );
 
-        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics
-        {
-            get { return ImmutableArray.Create(Rule); }
-        }
+        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
 
         public override void Initialize(AnalysisContext context)
         {

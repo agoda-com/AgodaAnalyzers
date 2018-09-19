@@ -14,20 +14,28 @@ namespace Agoda.Analyzers.AgodaCustom
         public const string DIAGNOSTIC_ID = "AG0020";
 
         private static readonly LocalizableString Title = new LocalizableResourceString(
-            nameof(CustomRulesResources.AG0020Title), CustomRulesResources.ResourceManager,
+            nameof(CustomRulesResources.AG0020Title), 
+            CustomRulesResources.ResourceManager,
             typeof(CustomRulesResources));
 
         private static readonly LocalizableString MessageFormat = new LocalizableResourceString(
-            nameof(CustomRulesResources.AG0020Title), CustomRulesResources.ResourceManager,
+            nameof(CustomRulesResources.AG0020Title), 
+            CustomRulesResources.ResourceManager,
             typeof(CustomRulesResources));
 
-        private static readonly LocalizableString Description =
-            DescriptionContentLoader.GetAnalyzerDescription(nameof(AG0020AvoidReturningNullEnumerables));
+        private static readonly LocalizableString Description 
+            = DescriptionContentLoader.GetAnalyzerDescription(nameof(AG0020AvoidReturningNullEnumerables));
 
-        private static readonly DiagnosticDescriptor Descriptor =
-            new DiagnosticDescriptor(DIAGNOSTIC_ID, Title, MessageFormat, AnalyzerCategory.CustomQualityRules,
-                DiagnosticSeverity.Warning, AnalyzerConstants.EnabledByDefault, Description, null,
-                WellKnownDiagnosticTags.EditAndContinue);
+        private static readonly DiagnosticDescriptor Descriptor = new DiagnosticDescriptor(
+            DIAGNOSTIC_ID, 
+            Title,
+            MessageFormat, 
+            AnalyzerCategory.CustomQualityRules,
+            DiagnosticSeverity.Warning, 
+            AnalyzerConstants.EnabledByDefault, 
+            Description, 
+            null,
+            WellKnownDiagnosticTags.EditAndContinue);
 
         public override void Initialize(AnalysisContext context)
         {
@@ -54,19 +62,22 @@ namespace Agoda.Analyzers.AgodaCustom
         {
             if (context.Node.IsKind(SyntaxKind.ReturnStatement))
             {
-                var statement = context.Node as ReturnStatementSyntax;
+                if (!(context.Node is ReturnStatementSyntax statement)) return null;
                 return GetNullLiteralLocation(statement.Expression);
             }
-            else if (context.Node.IsKind(SyntaxKind.ArrowExpressionClause))
+            
+            if (context.Node.IsKind(SyntaxKind.ArrowExpressionClause))
             {
                 var statement = context.Node as ArrowExpressionClauseSyntax;
                 return GetNullLiteralLocation(statement.Expression);
             }
-            else if (context.Node.IsKind(SyntaxKind.ConditionalExpression))
+            
+            if (context.Node.IsKind(SyntaxKind.ConditionalExpression))
             {
                 var statement = context.Node as ConditionalExpressionSyntax;
                 return GetNullLiteralLocation(statement.WhenTrue) ?? GetNullLiteralLocation(statement.WhenFalse);
             }
+            
             return null;
         }
 
