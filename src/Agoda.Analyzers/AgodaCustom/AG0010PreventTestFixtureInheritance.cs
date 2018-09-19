@@ -50,7 +50,7 @@ namespace Agoda.Analyzers.AgodaCustom
         {
             var classDeclaration = (ClassDeclarationSyntax)context.Node;
 
-            var hasTestMethod = classDeclaration.ChildNodes().Any(x => x.IsKind(SyntaxKind.MethodDeclaration) && MethodHelper.IsTestCase((MethodDeclarationSyntax)x, context));
+            var hasTestMethod = classDeclaration.ChildNodes().Any(x => x.IsKind(SyntaxKind.MethodDeclaration) && TestMethodHelpers.IsTestCase((MethodDeclarationSyntax)x, context));
             var hasTestFixtureAttribute = classDeclaration.AttributeLists
                     .SelectMany(al => al.Attributes)
                     .Select(a => a.Name as IdentifierNameSyntax)
