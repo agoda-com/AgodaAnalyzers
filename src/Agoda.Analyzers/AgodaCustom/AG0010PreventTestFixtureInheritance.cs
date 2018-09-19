@@ -13,7 +13,6 @@ namespace Agoda.Analyzers.AgodaCustom
     public class AG0010PreventTestFixtureInheritance : DiagnosticAnalyzer
     {
         public const string DIAGNOSTIC_ID = "AG0010";
-        private static readonly Regex MatchTestAttributeName = new Regex("^TestFixture$");
 
         private static readonly LocalizableString Title = new LocalizableResourceString(
             nameof(CustomRulesResources.AG0010Title),
@@ -46,7 +45,7 @@ namespace Agoda.Analyzers.AgodaCustom
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Descriptor);
 
-        private void AnalyzeNode(SyntaxNodeAnalysisContext context)
+        private static void AnalyzeNode(SyntaxNodeAnalysisContext context)
         {
             var classDeclaration = (ClassDeclarationSyntax) context.Node;
             if (classDeclaration.BaseList == null) return;
