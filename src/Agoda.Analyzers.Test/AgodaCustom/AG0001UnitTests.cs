@@ -29,7 +29,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-            await VerifyDiagnosticResults(code, typeof(DependencyResolver).Assembly, new DiagnosticLocation(8, 37));
+            await VerifyDiagnosticsAsync(code, typeof(DependencyResolver).Assembly, new DiagnosticLocation(8, 37));
         }
 
     }

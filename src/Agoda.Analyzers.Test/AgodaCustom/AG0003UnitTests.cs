@@ -41,7 +41,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 		        new DiagnosticLocation(10, 44),
 		        new DiagnosticLocation(14, 23)
 	        };
-            await VerifyDiagnosticResults(code, typeof(HttpContext).Assembly, expected);
+            await VerifyDiagnosticsAsync(code, typeof(HttpContext).Assembly, expected);
         }
     }
 }

@@ -20,10 +20,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         
         protected override string DiagnosticId => AG0020AvoidReturningNullEnumerables.DIAGNOSTIC_ID;
         
-        protected override CodeFixProvider GetCSharpCodeFixProvider()
-        {
-            return new AG0020FixProvider();
-        }
+        protected override CodeFixProvider CodeFixProvider => new AG0020FixProvider();
         
         [Test]
         public async Task TestShouldFixIEnumerableCorrectly()
@@ -64,7 +61,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 }
             ";
 
-            await VerifyCSharpFixAsync(code, result);
+            await VerifyCodeFixAsync(code, result);
         }
 
         [Test]
@@ -100,7 +97,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 }
             ";
 
-            await VerifyCSharpFixAsync(code, result);
+            await VerifyCodeFixAsync(code, result);
         }
 
         [Test]
@@ -138,7 +135,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 }
             ";
 
-            await VerifyCSharpFixAsync(code, result);
+            await VerifyCodeFixAsync(code, result);
         }
 
         [Test]
@@ -174,7 +171,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 }
             ";
 
-            await VerifyCSharpFixAsync(code, result);
+            await VerifyCodeFixAsync(code, result);
         }
     }
 }

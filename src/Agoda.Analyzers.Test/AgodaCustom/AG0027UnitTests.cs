@@ -87,7 +87,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 new DiagnosticLocation(14, 76),
                 new DiagnosticLocation(15, 75),
             };
-            await VerifyDiagnosticResults(testCode, typeof(IWebElement).Assembly, expected);
+            await VerifyDiagnosticsAsync(testCode, typeof(IWebElement).Assembly, expected);
         }
 
         [Test]
@@ -122,7 +122,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 new DiagnosticLocation(13, 74),
                 new DiagnosticLocation(14, 73),
             };
-            await VerifyDiagnosticResults(testCode, typeof(IWebElement).Assembly, expected);
+            await VerifyDiagnosticsAsync(testCode, typeof(IWebElement).Assembly, expected);
         }
     }
 }

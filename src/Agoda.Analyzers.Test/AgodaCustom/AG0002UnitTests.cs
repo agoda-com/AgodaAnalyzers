@@ -26,7 +26,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-            await VerifyDiagnosticResults(code);
+            await VerifyDiagnosticsAsync(code);
         }
 
         [Test]
@@ -45,7 +45,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}}
 			";
 
-            await VerifyDiagnosticResults(code);
+            await VerifyDiagnosticsAsync(code);
         }
 
 
@@ -63,7 +63,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}}
 			";
 
-	        await VerifyDiagnosticResults(code);
+	        await VerifyDiagnosticsAsync(code);
         }
 
         [Test]
@@ -84,7 +84,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}}
 			";
 
-            await VerifyDiagnosticResults(code , new DiagnosticLocation(10, 21));
+            await VerifyDiagnosticsAsync(code , new DiagnosticLocation(10, 21));
         }
     }
 }

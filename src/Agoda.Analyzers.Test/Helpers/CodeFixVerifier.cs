@@ -26,7 +26,7 @@ namespace Agoda.Analyzers.Test.Helpers
         /// Returns the code fix being tested (C#) - to be implemented in non-abstract class.
         /// </summary>
         /// <returns>The <see cref="CodeFixProvider"/> to be used for C# code.</returns>
-        protected abstract CodeFixProvider GetCSharpCodeFixProvider();
+        protected abstract CodeFixProvider CodeFixProvider { get; }
 
         /// <summary>
         /// Called to test a C# code fix when applied on the input source as a string.
@@ -45,12 +45,12 @@ namespace Agoda.Analyzers.Test.Helpers
         /// value is less than 0, the negated value is treated as an upper limit as opposed to an exact value.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that the task will observe.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        protected Task VerifyCSharpFixAsync(string oldSource, string newSource, string batchNewSource = null, string oldFileName = null, string newFileName = null, int? codeFixIndex = null, bool allowNewCompilerDiagnostics = false, int numberOfIncrementalIterations = DefaultNumberOfIncrementalIterations, int numberOfFixAllIterations = 1, CancellationToken cancellationToken = default(CancellationToken))
+        protected Task VerifyCodeFixAsync(string oldSource, string newSource, string batchNewSource = null, string oldFileName = null, string newFileName = null, int? codeFixIndex = null, bool allowNewCompilerDiagnostics = false, int numberOfIncrementalIterations = DefaultNumberOfIncrementalIterations, int numberOfFixAllIterations = 1, CancellationToken cancellationToken = default(CancellationToken))
         {
             var batchNewSources = batchNewSource == null ? null : new[] {batchNewSource};
             var oldFileNames = oldFileName == null ? null : new[] {oldFileName};
             var newFileNames = newFileName == null ? null : new[] {newFileName};
-            return VerifyCSharpFixAsync(new[] {oldSource}, new[] {newSource}, batchNewSources, oldFileNames, newFileNames, codeFixIndex, allowNewCompilerDiagnostics, numberOfIncrementalIterations, numberOfFixAllIterations, cancellationToken);
+            return VerifyCodeFixAsync(new[] {oldSource}, new[] {newSource}, batchNewSources, oldFileNames, newFileNames, codeFixIndex, allowNewCompilerDiagnostics, numberOfIncrementalIterations, numberOfFixAllIterations, cancellationToken);
         }
 
         /// <summary>
@@ -70,11 +70,11 @@ namespace Agoda.Analyzers.Test.Helpers
         /// value is less than 0, the negated value is treated as an upper limit as opposed to an exact value.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that the task will observe.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        protected async Task VerifyCSharpFixAsync(string[] oldSources, string[] newSources, string[] batchNewSources = null, string[] oldFileNames = null, string[] newFileNames = null, int? codeFixIndex = null, bool allowNewCompilerDiagnostics = false, int numberOfIncrementalIterations = DefaultNumberOfIncrementalIterations, int numberOfFixAllIterations = 1, CancellationToken cancellationToken = default(CancellationToken))
+        private async Task VerifyCodeFixAsync(string[] oldSources, string[] newSources, string[] batchNewSources = null, string[] oldFileNames = null, string[] newFileNames = null, int? codeFixIndex = null, bool allowNewCompilerDiagnostics = false, int numberOfIncrementalIterations = DefaultNumberOfIncrementalIterations, int numberOfFixAllIterations = 1, CancellationToken cancellationToken = default(CancellationToken))
         {
-            var t1 = VerifyFixInternalAsync(LanguageNames.CSharp, GetCSharpDiagnosticAnalyzers().ToImmutableArray(), GetCSharpCodeFixProvider(), oldSources, newSources, oldFileNames, newFileNames, codeFixIndex, allowNewCompilerDiagnostics, numberOfIncrementalIterations, FixEachAnalyzerDiagnosticAsync, cancellationToken).ConfigureAwait(false);
+            var t1 = VerifyFixInternalAsync(LanguageNames.CSharp, GetCSharpDiagnosticAnalyzers().ToImmutableArray(), CodeFixProvider, oldSources, newSources, oldFileNames, newFileNames, codeFixIndex, allowNewCompilerDiagnostics, numberOfIncrementalIterations, FixEachAnalyzerDiagnosticAsync, cancellationToken).ConfigureAwait(false);
 
-            var fixAllProvider = GetCSharpCodeFixProvider().GetFixAllProvider();
+            var fixAllProvider = CodeFixProvider.GetFixAllProvider();
             Assert.AreNotEqual(WellKnownFixAllProviders.BatchFixer, fixAllProvider);
 
             if (fixAllProvider == null)
@@ -88,19 +88,19 @@ namespace Agoda.Analyzers.Test.Helpers
                     await t1;
                 }
 
-                var t2 = VerifyFixInternalAsync(LanguageNames.CSharp, GetCSharpDiagnosticAnalyzers().ToImmutableArray(), GetCSharpCodeFixProvider(), oldSources, batchNewSources ?? newSources, oldFileNames, newFileNames, codeFixIndex, allowNewCompilerDiagnostics, numberOfFixAllIterations, FixAllAnalyzerDiagnosticsInDocumentAsync, cancellationToken).ConfigureAwait(false);
+                var t2 = VerifyFixInternalAsync(LanguageNames.CSharp, GetCSharpDiagnosticAnalyzers().ToImmutableArray(), CodeFixProvider, oldSources, batchNewSources ?? newSources, oldFileNames, newFileNames, codeFixIndex, allowNewCompilerDiagnostics, numberOfFixAllIterations, FixAllAnalyzerDiagnosticsInDocumentAsync, cancellationToken).ConfigureAwait(false);
                 if (Debugger.IsAttached)
                 {
                     await t2;
                 }
 
-                var t3 = VerifyFixInternalAsync(LanguageNames.CSharp, GetCSharpDiagnosticAnalyzers().ToImmutableArray(), GetCSharpCodeFixProvider(), oldSources, batchNewSources ?? newSources, oldFileNames, newFileNames, codeFixIndex, allowNewCompilerDiagnostics, numberOfFixAllIterations, FixAllAnalyzerDiagnosticsInProjectAsync, cancellationToken).ConfigureAwait(false);
+                var t3 = VerifyFixInternalAsync(LanguageNames.CSharp, GetCSharpDiagnosticAnalyzers().ToImmutableArray(), CodeFixProvider, oldSources, batchNewSources ?? newSources, oldFileNames, newFileNames, codeFixIndex, allowNewCompilerDiagnostics, numberOfFixAllIterations, FixAllAnalyzerDiagnosticsInProjectAsync, cancellationToken).ConfigureAwait(false);
                 if (Debugger.IsAttached)
                 {
                     await t3;
                 }
 
-                var t4 = VerifyFixInternalAsync(LanguageNames.CSharp, GetCSharpDiagnosticAnalyzers().ToImmutableArray(), GetCSharpCodeFixProvider(), oldSources, batchNewSources ?? newSources, oldFileNames, newFileNames, codeFixIndex, allowNewCompilerDiagnostics, numberOfFixAllIterations, FixAllAnalyzerDiagnosticsInSolutionAsync, cancellationToken).ConfigureAwait(false);
+                var t4 = VerifyFixInternalAsync(LanguageNames.CSharp, GetCSharpDiagnosticAnalyzers().ToImmutableArray(), CodeFixProvider, oldSources, batchNewSources ?? newSources, oldFileNames, newFileNames, codeFixIndex, allowNewCompilerDiagnostics, numberOfFixAllIterations, FixAllAnalyzerDiagnosticsInSolutionAsync, cancellationToken).ConfigureAwait(false);
                 if (Debugger.IsAttached)
                 {
                     await t4;
@@ -130,7 +130,7 @@ namespace Agoda.Analyzers.Test.Helpers
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         protected async Task VerifyCSharpFixAllFixAsync(string oldSource, string newSource, int? codeFixIndex = null, bool allowNewCompilerDiagnostics = false, int numberOfIterations = 1, CancellationToken cancellationToken = default(CancellationToken))
         {
-            await VerifyFixInternalAsync(LanguageNames.CSharp, GetCSharpDiagnosticAnalyzers(), GetCSharpCodeFixProvider(), new[] {oldSource}, new[] {newSource}, null, null, codeFixIndex, allowNewCompilerDiagnostics, numberOfIterations, FixAllAnalyzerDiagnosticsInDocumentAsync, cancellationToken).ConfigureAwait(false);
+            await VerifyFixInternalAsync(LanguageNames.CSharp, GetCSharpDiagnosticAnalyzers(), CodeFixProvider, new[] {oldSource}, new[] {newSource}, null, null, codeFixIndex, allowNewCompilerDiagnostics, numberOfIterations, FixAllAnalyzerDiagnosticsInDocumentAsync, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -142,7 +142,7 @@ namespace Agoda.Analyzers.Test.Helpers
         /// <returns>The collection of offered code actions. This collection may be empty.</returns>
         protected async Task<ImmutableArray<CodeAction>> GetOfferedCSharpFixesAsync(string source, int? diagnosticIndex = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await GetOfferedFixesInternalAsync(LanguageNames.CSharp, source, diagnosticIndex, GetCSharpDiagnosticAnalyzers(), GetCSharpCodeFixProvider(), cancellationToken).ConfigureAwait(false);
+            return await GetOfferedFixesInternalAsync(LanguageNames.CSharp, source, diagnosticIndex, GetCSharpDiagnosticAnalyzers(), CodeFixProvider, cancellationToken).ConfigureAwait(false);
         }
 
         private static async Task<Project> FixEachAnalyzerDiagnosticAsync(ImmutableArray<DiagnosticAnalyzer> analyzers, CodeFixProvider codeFixProvider, int? codeFixIndex, Project project, int numberOfIterations, CancellationToken cancellationToken)

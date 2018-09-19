@@ -43,7 +43,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
             }}";
 
             var expected = new DiagnosticLocation(10, 53);
-            await VerifyDiagnosticResults(testCode, typeof(IWebElement).Assembly, expected);
+            await VerifyDiagnosticsAsync(testCode, typeof(IWebElement).Assembly, expected);
         }
 
         [Test]
@@ -74,7 +74,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
             }}";
 
             var expected = new DiagnosticLocation(13, 39);
-            await VerifyDiagnosticResults(testCode, typeof(IWebElement).Assembly, expected);
+            await VerifyDiagnosticsAsync(testCode, typeof(IWebElement).Assembly, expected);
         }
         
         [Test]
@@ -105,7 +105,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
             }}";
 
             var expected = new DiagnosticLocation(13, 60);
-            await VerifyDiagnosticResults(testCode, typeof(IWebElement).Assembly, expected);
+            await VerifyDiagnosticsAsync(testCode, typeof(IWebElement).Assembly, expected);
         }
 
         [Test]
@@ -132,7 +132,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
             }";
 
             var references = new[] {typeof(IWebElement).Assembly, typeof(ReadOnlyCollection<>).Assembly};
-            await VerifyDiagnosticResults(testCode, references);
+            await VerifyDiagnosticsAsync(testCode, references);
         }
 
         [Test]
@@ -155,7 +155,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 }
             }";
 
-            await VerifyDiagnosticResults(testCode, typeof(IWebElement).Assembly);
+            await VerifyDiagnosticsAsync(testCode, typeof(IWebElement).Assembly);
         }
 
         [Test]
@@ -177,7 +177,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 }
             }";
 
-            await VerifyDiagnosticResults(testCode, typeof(IWebElement).Assembly);
+            await VerifyDiagnosticsAsync(testCode, typeof(IWebElement).Assembly);
         }
 
         [Test]
@@ -208,7 +208,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 }
             }";
 
-            await VerifyDiagnosticResults(testCode);
+            await VerifyDiagnosticsAsync(testCode);
         }
     }
 }

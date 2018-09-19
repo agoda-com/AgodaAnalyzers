@@ -27,7 +27,7 @@ class TestClass
 }
 ";
             
-            await VerifyDiagnosticResults(code);
+            await VerifyDiagnosticsAsync(code);
         }
 
         [Test]
@@ -48,7 +48,7 @@ class TestClass
 }
 ";
 
-            await VerifyDiagnosticResults(code);
+            await VerifyDiagnosticsAsync(code);
         }
 
         [Test]
@@ -66,7 +66,7 @@ class TestClass
 }
 ";
 
-            await VerifyDiagnosticResults(code, new DiagnosticLocation(8, 9));
+            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(8, 9));
         }
 
         [Test]
@@ -85,7 +85,7 @@ class TestClass
 }
 ";
             
-            await VerifyDiagnosticResults(code, new DiagnosticLocation(9, 9));
+            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(9, 9));
         }
     }
 }

@@ -34,7 +34,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-	        await VerifyDiagnosticResults(code);
+	        await VerifyDiagnosticsAsync(code);
         }
         
         [Test]
@@ -49,7 +49,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 			";
 
             var expected = new DiagnosticLocation(3, 6);
-            await VerifyDiagnosticResults(code, expected);
+            await VerifyDiagnosticsAsync(code, expected);
         }
         
         [Test]
@@ -64,7 +64,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 			";
 
             var expected = new DiagnosticLocation(4, 7);
-            await VerifyDiagnosticResults(code, expected);
+            await VerifyDiagnosticsAsync(code, expected);
         }
         
         [Test]
@@ -87,7 +87,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 new DiagnosticLocation(3, 6),
                 new DiagnosticLocation(8, 7)
             };
-            await VerifyDiagnosticResults(code, expected);
+            await VerifyDiagnosticsAsync(code, expected);
         }
         
         [Test]
@@ -103,7 +103,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 }
                 ";
 
-            await VerifyDiagnosticResults(code);
+            await VerifyDiagnosticsAsync(code);
         }
 
         [Test]
@@ -116,7 +116,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 			";
 
             var expected = new DiagnosticLocation(3, 6);
-            await VerifyDiagnosticResults(code, expected);
+            await VerifyDiagnosticsAsync(code, expected);
         }
 
 

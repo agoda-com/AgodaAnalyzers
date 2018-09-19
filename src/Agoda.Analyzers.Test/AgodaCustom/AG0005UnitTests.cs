@@ -37,7 +37,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 }}
             ";
             
-            await VerifyDiagnosticResults(code, typeof(TestFixtureAttribute).Assembly);
+            await VerifyDiagnosticsAsync(code, typeof(TestFixtureAttribute).Assembly);
         }
 
         [TestCase("ThisIsInvalid")]    // no underscores
@@ -60,7 +60,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 }}
             ";
             
-            await VerifyDiagnosticResults(code, typeof(TestFixtureAttribute).Assembly, new DiagnosticLocation(0, 0));
+            await VerifyDiagnosticsAsync(code, typeof(TestFixtureAttribute).Assembly, new DiagnosticLocation(0, 0));
         }
         
         [TestCase("internal")]
@@ -90,7 +90,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                     }}
                 }}";
 
-            await VerifyDiagnosticResults(code, typeof(TestFixtureAttribute).Assembly);
+            await VerifyDiagnosticsAsync(code, typeof(TestFixtureAttribute).Assembly);
         }
         
         [Test]
@@ -108,7 +108,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 }
             ";
             
-            await VerifyDiagnosticResults(code);
+            await VerifyDiagnosticsAsync(code);
         }
     }
 }

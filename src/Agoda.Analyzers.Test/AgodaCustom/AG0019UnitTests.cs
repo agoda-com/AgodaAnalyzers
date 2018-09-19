@@ -49,7 +49,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 new DiagnosticLocation(11, 64),
                 new DiagnosticLocation(11, 119)
             };
-            await VerifyDiagnosticResults(code, expected);
+            await VerifyDiagnosticsAsync(code, expected);
         }
     }
 }

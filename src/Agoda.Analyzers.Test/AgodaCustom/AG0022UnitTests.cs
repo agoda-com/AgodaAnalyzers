@@ -30,7 +30,7 @@ interface TestInterface
 }
 ";
 
-            await VerifyDiagnosticResults(code);
+            await VerifyDiagnosticsAsync(code);
         }
         
         [Test]
@@ -52,7 +52,7 @@ class TestClass
 }
 ";
 
-            await VerifyDiagnosticResults(code);
+            await VerifyDiagnosticsAsync(code);
         }
         
         [Test]
@@ -68,7 +68,7 @@ interface Interface
 }
 			";
 
-            await VerifyDiagnosticResults(code, new DiagnosticLocation(6, 5));
+            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(6, 5));
         }
 
         [Test]
@@ -90,7 +90,7 @@ class TestClass
 }
 ";
 
-            await VerifyDiagnosticResults(code, new DiagnosticLocation(6, 5));
+            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(6, 5));
         }
         
         [Test]
@@ -112,7 +112,7 @@ class TestClass
 }
 ";
 
-            await VerifyDiagnosticResults(code, new DiagnosticLocation(6, 5));
+            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(6, 5));
         }
         
         [Test]
@@ -134,7 +134,7 @@ class TestClass
 }
 ";
 
-            await VerifyDiagnosticResults(code, new DiagnosticLocation(6, 5));
+            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(6, 5));
         }
         
         [Test]
@@ -155,7 +155,7 @@ class TestClass
     }
 }
 ";
-            await VerifyDiagnosticResults(code);
+            await VerifyDiagnosticsAsync(code);
         }
     }
 }

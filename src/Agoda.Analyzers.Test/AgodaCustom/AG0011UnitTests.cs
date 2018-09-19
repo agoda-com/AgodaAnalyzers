@@ -29,7 +29,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-            await VerifyDiagnosticResults(code, typeof(HttpContext).Assembly, new DiagnosticLocation(4, 82));
+            await VerifyDiagnosticsAsync(code, typeof(HttpContext).Assembly, new DiagnosticLocation(4, 82));
         }
 
         [Test]
@@ -44,7 +44,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-	        await VerifyDiagnosticResults(code, typeof(HttpContext).Assembly, new DiagnosticLocation(5, 55));
+	        await VerifyDiagnosticsAsync(code, typeof(HttpContext).Assembly, new DiagnosticLocation(5, 55));
         }
     }
 }

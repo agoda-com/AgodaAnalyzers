@@ -42,7 +42,7 @@ namespace Tests
 	}
 }";
 
-            await VerifyDiagnosticResults(code, typeof(TestFixtureAttribute).Assembly, new DiagnosticLocation(15, 9));
+            await VerifyDiagnosticsAsync(code, typeof(TestFixtureAttribute).Assembly, new DiagnosticLocation(15, 9));
         }
 
         [Test]
@@ -85,7 +85,7 @@ namespace Tests
                 typeof(TestFixtureAttribute).Assembly, 
                 typeof(Shouldly.Should).Assembly
             };
-            await VerifyDiagnosticResults(code, references, new DiagnosticLocation(17, 9));
+            await VerifyDiagnosticsAsync(code, references, new DiagnosticLocation(17, 9));
         }
     }
 }

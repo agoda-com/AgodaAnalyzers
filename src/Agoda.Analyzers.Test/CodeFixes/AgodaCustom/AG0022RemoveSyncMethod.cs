@@ -20,10 +20,7 @@ namespace Agoda.Analyzers.Test.CodeFixes.AgodaCustom
         
         protected override string DiagnosticId => AG0022DoNotExposeBothSyncAndAsyncVersionsOfMethods.DIAGNOSTIC_ID;
         
-        protected override CodeFixProvider GetCSharpCodeFixProvider()
-        {
-            return new AG0022RemoveSyncMethod();
-        }
+        protected override CodeFixProvider CodeFixProvider => new AG0022RemoveSyncMethod();
 
         [Test]
         public async Task AG0022_ForInterface_ShouldRemoveSyncVersion()
@@ -47,7 +44,7 @@ namespace Agoda.Analyzers.Test.CodeFixes.AgodaCustom
                 }
             ";
             
-            await VerifyCSharpFixAsync(code, result);
+            await VerifyCodeFixAsync(code, result);
         }
         
         [Test]
@@ -81,7 +78,7 @@ namespace Agoda.Analyzers.Test.CodeFixes.AgodaCustom
                 }
             ";
             
-            await VerifyCSharpFixAsync(code, result);
+            await VerifyCodeFixAsync(code, result);
         }
         
         [Test]
@@ -117,7 +114,7 @@ namespace Agoda.Analyzers.Test.CodeFixes.AgodaCustom
                 }
             ";
             
-            await VerifyCSharpFixAsync(code, result);
+            await VerifyCodeFixAsync(code, result);
         }
     }
 }

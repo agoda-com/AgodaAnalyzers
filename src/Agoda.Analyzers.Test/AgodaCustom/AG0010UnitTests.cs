@@ -33,7 +33,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 }
             ";
 
-            await VerifyDiagnosticResults(code, typeof(TestFixtureAttribute).Assembly);
+            await VerifyDiagnosticsAsync(code, typeof(TestFixtureAttribute).Assembly);
         }
 
         [Test]
@@ -52,7 +52,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 }
             ";
 
-            await VerifyDiagnosticResults(code, typeof(TestFixtureAttribute).Assembly);
+            await VerifyDiagnosticsAsync(code, typeof(TestFixtureAttribute).Assembly);
         }
 
         [Test]
@@ -75,7 +75,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 }
             ";
             
-            await VerifyDiagnosticResults(code, typeof(TestFixtureAttribute).Assembly, new DiagnosticLocation(6, 21));
+            await VerifyDiagnosticsAsync(code, typeof(TestFixtureAttribute).Assembly, new DiagnosticLocation(6, 21));
         }
      
     }
