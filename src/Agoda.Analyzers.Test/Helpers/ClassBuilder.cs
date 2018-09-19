@@ -15,13 +15,14 @@
             return that;
         }
         
-        public static string WithClass(this string that, string className = "TestClass", int numberOfPublicConstructors = 0, int numberOfPrivateConstructors = 0, string attribute = null)
+        public static string WithClass(this string that, string className = "TestClass", int numberOfPublicConstructors = 0, int numberOfPrivateConstructors = 0, string attribute = null, string inheritanceClassName = null)
         {
             if (!string.IsNullOrEmpty(attribute))
             {
                 that = $"{that}\t[{attribute}]\n";
             }
-            that = $"{that}\tpublic class {className}\n\t{{ \n";
+
+            that = $"{that}\tpublic class {className}{(!string.IsNullOrEmpty(inheritanceClassName) ? $" : {inheritanceClassName}" : "")}\n\t{{ \n";
 
             for (var i = 0; i < numberOfPrivateConstructors; i++)
             {
@@ -42,7 +43,12 @@
             that = $"{that}\n\tinternal class {attributeName} : Attribute\n\t{{\n\t}}\n";
             return that;
         }
-        
+        public static string WithInheritanceClass(this string that, string inheritanceClassName = "TestInheritance")
+        {
+            that = $"{that}\n\tpublic class {inheritanceClassName}\n\t{{\n\t}}\n";
+            return that;
+        }
+
         public static string Build(this string that, string name = "TestClass")
         {
             that = $"{that} }}";

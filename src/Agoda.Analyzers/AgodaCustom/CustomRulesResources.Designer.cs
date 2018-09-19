@@ -187,6 +187,15 @@ namespace Agoda.Analyzers.AgodaCustom {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Prevent test fixture inheritance.
+        /// </summary>
+        public static string AG0010Title {
+            get {
+                return ResourceManager.GetString("AG0010Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Controllers should not access HttpRequest.QueryString directly but use ASP.NET model binding instead.
         /// </summary>
         public static string AG0011Title {
