@@ -27,10 +27,14 @@ namespace Agoda.Analyzers.Helpers
         public bool Verify(SyntaxNodeAnalysisContext context)
         {
             var invocationExpressionSyntax = (InvocationExpressionSyntax) context.Node;
-            var methodSymbol = context.SemanticModel.GetSymbolInfo(invocationExpressionSyntax).Symbol as IMethodSymbol;
+            if (!(context.SemanticModel.GetSymbolInfo(invocationExpressionSyntax).Symbol is IMethodSymbol methodSymbol))
+            {
+                return true;
+            }
+            
             return Verify(methodSymbol.ContainingType.ConstructedFrom.ToDisplayString(), methodSymbol.Name);
         }
-                
+        
         public bool Verify(string namespaceAndType, string name)
         {
             if (namespaceAndType != _namespaceAndType)
@@ -39,6 +43,22 @@ namespace Agoda.Analyzers.Helpers
             }
             var isPermitted = _names.Any(regex => regex.IsMatch(name));
             return _isBlacklist ? !isPermitted : isPermitted;
+        }
+        
+        public bool IsMatch(SyntaxNodeAnalysisContext context)
+        {
+            var invocationExpressionSyntax = (InvocationExpressionSyntax) context.Node;
+            if (!(context.SemanticModel.GetSymbolInfo(invocationExpressionSyntax).Symbol is IMethodSymbol methodSymbol))
+            {
+                return false;
+            }
+            
+            return IsMatch(methodSymbol.ContainingType.ConstructedFrom.ToDisplayString(), methodSymbol.Name);
+        }
+
+        private bool IsMatch(string namespaceAndType, string name)
+        {
+            return namespaceAndType == _namespaceAndType && _names.Any(regex => regex.IsMatch(name));
         }
     }
 
