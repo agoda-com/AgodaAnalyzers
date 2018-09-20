@@ -7,6 +7,9 @@ using Microsoft.CodeAnalysis.Diagnostics;
 
 namespace Agoda.Analyzers.Helpers
 {
+    /// <summary>
+    /// Base class to represent permitted/forbidden method/property invocations.
+    /// </summary>
     public abstract class PermittedInvocationRule
     {
         private readonly string _namespaceAndType;
@@ -24,6 +27,9 @@ namespace Agoda.Analyzers.Helpers
             _names = names;
         }
 
+        /// <summary>
+        /// Verifies the given context's Node complies with the rule.
+        /// </summary>
         public bool Verify(SyntaxNodeAnalysisContext context)
         {
             var invocationExpressionSyntax = (InvocationExpressionSyntax) context.Node;
@@ -35,6 +41,9 @@ namespace Agoda.Analyzers.Helpers
             return Verify(methodSymbol.ContainingType.ConstructedFrom.ToDisplayString(), methodSymbol.Name);
         }
         
+        /// <summary>
+        /// Verifies the namespace, type and name comply with the rule.
+        /// </summary>
         public bool Verify(string namespaceAndType, string name)
         {
             if (namespaceAndType != _namespaceAndType)
@@ -45,6 +54,11 @@ namespace Agoda.Analyzers.Helpers
             return _isBlacklist ? !isPermitted : isPermitted;
         }
         
+        /// <summary>
+        /// Determines if the context's Node matches the namespace, type and name of the rule. 
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
         public bool IsMatch(SyntaxNodeAnalysisContext context)
         {
             var invocationExpressionSyntax = (InvocationExpressionSyntax) context.Node;
