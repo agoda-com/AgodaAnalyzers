@@ -216,4 +216,7 @@
   <data name="AG0027Title" xml:space="preserve">
     <value>Elements must be selected by a data-selenium HTML attribute in Selenium tests</value>
   </data>
+  <data name="AG0032Title" xml:space="preserve">
+    <value>Prevent use of blocking Task.Wait*</value>
+  </data>
 </root>

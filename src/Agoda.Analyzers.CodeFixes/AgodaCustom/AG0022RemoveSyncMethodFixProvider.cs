@@ -14,9 +14,11 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Agoda.Analyzers.CodeFixes.AgodaCustom
 {
-    [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(AG0022RemoveSyncMethod)), Shared]
-    public class AG0022RemoveSyncMethod : CodeFixProvider
+    [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(AG0022RemoveSyncMethodFixProvider)), Shared]
+    public class AG0022RemoveSyncMethodFixProvider : CodeFixProvider
     {
+        public override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(AG0022DoNotExposeBothSyncAndAsyncVersionsOfMethods.DIAGNOSTIC_ID);
+        
         public override Task RegisterCodeFixesAsync(CodeFixContext context)
         {            
             foreach (var diagnostic in context.Diagnostics)
@@ -25,11 +27,11 @@ namespace Agoda.Analyzers.CodeFixes.AgodaCustom
                     CodeAction.Create(
                         CustomRulesResources.AG0022FixTitle,
                         cancellationToken => GetTransformedDocumentAsync(context.Document, diagnostic, cancellationToken),
-                        nameof(AG0022RemoveSyncMethod)),
+                        nameof(AG0022RemoveSyncMethodFixProvider)),
                     diagnostic);
             }
 
-            return SpecializedTasks.CompletedTask;
+            return Task.CompletedTask;
         }
 
         private async Task<Document> GetTransformedDocumentAsync(Document document, Diagnostic diagnostic, CancellationToken cancellationToken)
@@ -43,9 +45,7 @@ namespace Agoda.Analyzers.CodeFixes.AgodaCustom
                 return updatedDocument;
             }
             
-            return document;            
+            return document;
         }
-
-        public override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(AG0022DoNotExposeBothSyncAndAsyncVersionsOfMethods.DIAGNOSTIC_ID);
     }
 }
