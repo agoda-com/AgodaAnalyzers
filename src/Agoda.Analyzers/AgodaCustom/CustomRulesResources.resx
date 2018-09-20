@@ -219,7 +219,4 @@
   <data name="AG0032Title" xml:space="preserve">
     <value>Prevent use of blocking Task.Wait*</value>
   </data>
-  <data name="AG0032FixTitle" xml:space="preserve">
-    <value>Convert to asynchronous code</value>
-  </data>
 </root>

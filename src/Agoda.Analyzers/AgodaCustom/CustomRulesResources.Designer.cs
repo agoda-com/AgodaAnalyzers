@@ -358,15 +358,6 @@ namespace Agoda.Analyzers.AgodaCustom {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Convert to asynchronous code.
-        /// </summary>
-        public static string AG0032FixTitle {
-            get {
-                return ResourceManager.GetString("AG0032FixTitle", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Prevent use of blocking Task.Wait*.
         /// </summary>
         public static string AG0032Title {
