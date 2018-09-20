@@ -28,7 +28,7 @@ namespace Agoda.Analyzers.Helpers
                 .Any(displayString => displayString == "NUnit.Framework.NUnitAttribute");
         }
 
-        public static readonly IEnumerable<PermittedInvocationRule> PermittedSeleniumSelectorRules = new[]
+        public static readonly IEnumerable<PermittedInvocationRule> PermittedSeleniumAccessors = new[]
         {
             new WhitelistedInvocationRule("OpenQA.Selenium.By", "CssSelector"),
             new WhitelistedInvocationRule("OpenQA.Selenium.Remote.RemoteWebDriver",

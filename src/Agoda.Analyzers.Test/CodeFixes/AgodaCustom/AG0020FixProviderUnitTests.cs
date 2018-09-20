@@ -20,7 +20,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         
         protected override string DiagnosticId => AG0020AvoidReturningNullEnumerables.DIAGNOSTIC_ID;
         
-        protected override CodeFixProvider CodeFixProvider => new AG0020FixProvider();
+        protected override CodeFixProvider CodeFixProvider => new AG0020AvoidReturningNullEnumerablesFixProvider();
         
         [Test]
         public async Task TestShouldFixIEnumerableCorrectly()
