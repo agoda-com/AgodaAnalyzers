@@ -127,5 +127,24 @@ namespace Agoda.Analyzers.Test.AgodaCustom
             };
             await VerifyDiagnosticsAsync(code , expected);
         }
+
+        [Test]
+        public async Task AG0027_WhenNotSeleniumMethod_ShowsNoWarning()
+        {
+            var code = @"
+                public class TestClass
+                {
+                    public void TestMethod(string s)
+                    {
+                    }
+
+                    public void TestMethod2()
+                    {
+                        TestMethod(""test"");
+                    }
+                }";
+
+            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+        }
     }
 }

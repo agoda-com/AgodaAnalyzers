@@ -20,7 +20,7 @@ namespace Agoda.Analyzers.Test.CodeFixes.AgodaCustom
         
         protected override string DiagnosticId => AG0022DoNotExposeBothSyncAndAsyncVersionsOfMethods.DIAGNOSTIC_ID;
         
-        protected override CodeFixProvider CodeFixProvider => new AG0022RemoveSyncMethod();
+        protected override CodeFixProvider CodeFixProvider => new AG0022RemoveSyncMethodFixProvider();
 
         [Test]
         public async Task AG0022_ForInterface_ShouldRemoveSyncVersion()

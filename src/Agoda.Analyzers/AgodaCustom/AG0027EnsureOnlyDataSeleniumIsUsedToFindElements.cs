@@ -52,16 +52,19 @@ namespace Agoda.Analyzers.AgodaCustom
                 return;
             }
 
-            if (!TestMethodHelpers.PermittedSeleniumSelectorRules.Any(r => r.Verify(context)))
+            if (!TestMethodHelpers.PermittedSeleniumAccessors.Any(accessor => accessor.IsMatch(context)))
             {
                 return;
             }
-
+            
             var firstArgument = invocationExpressionSyntax.ArgumentList.Arguments.FirstOrDefault();
             if (firstArgument?.Expression is LiteralExpressionSyntax && !MatchDataSelenium.IsMatch(firstArgument.ToString()))
             {
                 context.ReportDiagnostic(Diagnostic.Create(Descriptor, firstArgument.GetLocation()));
             }
+
+
+
         }
     }
 }

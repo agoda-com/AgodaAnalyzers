@@ -1,0 +1,29 @@
+﻿<p>
+    Do not use blocking task methods such as <code>Task.Wait()</code>, <code>Task.WaitAny()</code>
+    and <code>Task.WaitAll()</code>
+</p>
+<p>
+    By design, the <code>Task.Wait*</code> methods block the current thread until the task(s) complete.
+    This defeats the purpose of writing async code. It also has the potential to cause deadlocks.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<code>
+    task.Wait();
+    var result = task.Result;
+</code>
+
+<h2>Compliant Code Example</h2>
+<code>
+    var result = await task;
+</code>
+
+<h2>Noncompliant Code Example</h2>
+<code>
+    Task.WaitAll(tasks);
+</code>
+
+<h2>Compliant Code Example</h2>
+<code>
+    await Task.WhenAll(tasks);
+</code>
