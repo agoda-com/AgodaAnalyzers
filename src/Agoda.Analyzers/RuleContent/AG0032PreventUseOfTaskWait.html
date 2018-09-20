@@ -23,7 +23,6 @@
     var task1 = DownloadFileAsync("...");
     var task2 = DownloadFileAsync("...");
     Task.WaitAll(task1, task2);
-
 </code>
 
 <h2>Compliant Code Example</h2>
@@ -32,4 +31,3 @@
     var task2 = DownloadFileAsync("...");
     await Task.WhenAll(task1, task2); // does not block
 </code>
- 
