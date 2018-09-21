@@ -322,6 +322,15 @@ namespace Agoda.Analyzers.AgodaCustom {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Prevent use of Task.Factory.StartNew except for Long Running Tasks.
+        /// </summary>
+        public static string AG0024Title {
+            get {
+                return ResourceManager.GetString("AG0024Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Prevent use of Task.Continue*.
         /// </summary>
         public static string AG0025Title {
