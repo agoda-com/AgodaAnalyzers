@@ -89,6 +89,9 @@
     <None Update="RuleContent\AG0019PreventUseOfInternalsVisibleToAttribute.html">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="RuleContent\AG0024PreventUseOfTaskFactoryStartNew.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="RuleContent\AG0026EnsureOnlyCssSelectorIsUsedToFindElements.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
