@@ -19,7 +19,7 @@ namespace Agoda.Analyzers.AgodaCustom {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class CustomRulesResources {
@@ -282,15 +282,6 @@ namespace Agoda.Analyzers.AgodaCustom {
         public static string AG0022Description {
             get {
                 return ResourceManager.GetString("AG0022Description", resourceCulture);
-                }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Prevent the use of Thread.Sleep.
-        /// </summary>
-        public static string AG0023Title {
-            get {
-                return ResourceManager.GetString("AG0023Title", resourceCulture);
             }
         }
         
@@ -320,7 +311,25 @@ namespace Agoda.Analyzers.AgodaCustom {
                 return ResourceManager.GetString("AG0022Title", resourceCulture);
             }
         }
-
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Prevent the use of Thread.Sleep.
+        /// </summary>
+        public static string AG0023Title {
+            get {
+                return ResourceManager.GetString("AG0023Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Prevent use of Task.Factory.StartNew except for Long Running Tasks.
+        /// </summary>
+        public static string AG0024Title {
+            get {
+                return ResourceManager.GetString("AG0024Title", resourceCulture);
+            }
+        }
+        
         /// <summary>
         ///   Looks up a localized string similar to Prevent use of Task.Continue*.
         /// </summary>
@@ -338,14 +347,12 @@ namespace Agoda.Analyzers.AgodaCustom {
                 return ResourceManager.GetString("AG0026Title", resourceCulture);
             }
         }
-
+        
         /// <summary>
-        ///   Looks up a localized string similar to only use data-selenium to find elements in Selenium tests.
+        ///   Looks up a localized string similar to Elements must be selected by a data-selenium HTML attribute in Selenium tests.
         /// </summary>
-        public static string AG0027Title
-        {
-            get
-            {
+        public static string AG0027Title {
+            get {
                 return ResourceManager.GetString("AG0027Title", resourceCulture);
             }
         }
