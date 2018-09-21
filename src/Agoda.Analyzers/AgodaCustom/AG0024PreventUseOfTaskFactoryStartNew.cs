@@ -51,7 +51,7 @@ namespace Agoda.Analyzers.AgodaCustom
             var invocationExpressionSyntax = (InvocationExpressionSyntax)context.Node;
             var methodSymbol = context.SemanticModel.GetSymbolInfo(invocationExpressionSyntax).Symbol as IMethodSymbol;
 
-            //In order to show warning, If has to be a method
+            //In order to show warning, it has to be a method
             if (methodSymbol == null) return;
 
             //It has to be of TaskFactory type
