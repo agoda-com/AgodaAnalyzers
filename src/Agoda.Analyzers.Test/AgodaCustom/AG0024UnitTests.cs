@@ -1,12 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Agoda.Analyzers.AgodaCustom;
 using Agoda.Analyzers.Test.Helpers;
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using NUnit.Framework;
 
@@ -14,6 +8,11 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 {
     internal class AG0024UnitTests : DiagnosticVerifier
     {
+
+        protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0024PreventUseOfTaskFactoryStartNew();
+
+        protected override string DiagnosticId => AG0024PreventUseOfTaskFactoryStartNew.DIAGNOSTIC_ID;
+
         [Test]
         public async Task AG0024_Only_Method_Parameter_Should_Show_Warning()
         {
@@ -34,13 +33,7 @@ class TestClass
 }
 ";
 
-            var baseResult = CSharpDiagnostic(AG0024PreventUseOfTaskFactoryStartNew.DIAGNOSTIC_ID);
-            var expected = new[]
-            {
-                baseResult.WithLocation(9, 9)
-            };
-
-            await TestForResults(code, expected);
+            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(9, 9));
         }
 
         [Test]
@@ -62,13 +55,7 @@ class TestClass
     }
 }
 ";
-            var baseResult = CSharpDiagnostic(AG0024PreventUseOfTaskFactoryStartNew.DIAGNOSTIC_ID);
-            var expected = new[]
-            {
-                baseResult.WithLocation(9, 9)
-            };
-
-            await TestForResults(code, expected);
+            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(9, 9));
         }
 
         [Test]
@@ -90,28 +77,7 @@ class TestClass
     }
 }
 ";
-            await TestForResults(code);
-        }
-
-        private async Task TestForResults(string code, DiagnosticResult[] expected = null)
-        {
-            expected = expected ?? new DiagnosticResult[0];
-            var doc = CreateProject(new[] {code})
-                .Documents
-                .First();
-
-            var analyzersArray = GetCSharpDiagnosticAnalyzers().ToImmutableArray();
-
-            var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzersArray, new[] {doc}, CancellationToken.None)
-                .ConfigureAwait(false);
-
-
-            VerifyDiagnosticResults(diag, analyzersArray, expected);
-        }
-
-        protected override IEnumerable<DiagnosticAnalyzer> GetCSharpDiagnosticAnalyzers()
-        {
-            yield return new AG0024PreventUseOfTaskFactoryStartNew();
+            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
         }
     }
 }
