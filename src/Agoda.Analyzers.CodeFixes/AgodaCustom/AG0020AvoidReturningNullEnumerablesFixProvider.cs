@@ -14,9 +14,9 @@ using Microsoft.CodeAnalysis.Text;
 
 namespace Agoda.Analyzers.CodeFixes.AgodaCustom
 {
-    [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(AG0020FixProvider))]
+    [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(AG0020AvoidReturningNullEnumerablesFixProvider))]
     [Shared]
-    public class AG0020FixProvider : CodeFixProvider
+    public class AG0020AvoidReturningNullEnumerablesFixProvider : CodeFixProvider
     {
         public override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(AG0020AvoidReturningNullEnumerables.DIAGNOSTIC_ID);
 
@@ -28,11 +28,11 @@ namespace Agoda.Analyzers.CodeFixes.AgodaCustom
                     CodeAction.Create(
                         CustomRulesResources.AG0020FixTitle,
                         cancellationToken => GetTransformedDocumentAsync(context.Document, diagnostic, cancellationToken),
-                        nameof(AG0020FixProvider)),
+                        nameof(AG0020AvoidReturningNullEnumerablesFixProvider)),
                     diagnostic);
             }
 
-            return SpecializedTasks.CompletedTask;
+            return Task.CompletedTask;
         }
 
         private static async Task<Document> GetTransformedDocumentAsync(Document document, Diagnostic diagnostic, CancellationToken cancellationToken)

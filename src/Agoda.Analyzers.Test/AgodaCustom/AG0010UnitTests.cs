@@ -14,91 +14,78 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 {
     internal class AG0010UnitTests : DiagnosticVerifier
     {
+        protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0010PreventTestFixtureInheritance();
+        
+        protected override string DiagnosticId => AG0010PreventTestFixtureInheritance.DIAGNOSTIC_ID;
+        
         [Test]
         public async Task AG0010_WhenNoTestCases_ShouldntShowWarning()
         {
-            var code = @"
-using NUnit.Framework;
+            var code = new CodeDescriptor
+            {
+                References = new[] {typeof(TestFixtureAttribute).Assembly},
+                Code = @"
+                    using NUnit.Framework;
+                    
+                    namespace Tests
+                    {
+                        public class TestClass
+                        {
+                            public void This_IsValid(){}
+                        }
+                    }"
+            };
 
-namespace Tests
-{
-    public class TestClass
-    {
-        public void This_IsValid(){}
-    }
-}
-";
-
-            await TestWarnings(code);
+            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
         }
 
         [Test]
         public async Task AG0010_WhenNoInheritance_ShouldntShowWarning()
         {
-            var code = @"
-using NUnit.Framework;
+            var code = new CodeDescriptor
+            {
+                References = new[] {typeof(TestFixtureAttribute).Assembly},
+                Code = @"
+                    using NUnit.Framework;
+                    
+                    namespace Tests
+                    {
+                        public class TestClass
+                        {
+                            [Test]
+                            public void This_IsValid(){}
+                        }
+                    }"
+            };
 
-namespace Tests
-{
-    public class TestClass
-    {
-        [Test]
-        public void This_IsValid(){}
-    }
-}
-";
-
-            await TestWarnings(code);
+            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
         }
 
         [Test]
         public async Task AG0010_WhenInheritance_ShouldShowWarning()
         {
-            var code = @"
-using NUnit.Framework;
-
-namespace Tests
-{
-    public class TestClass : BaseTest
-    {
-        [Test]
-        public void This_IsValid(){}
-    }
-
-    public class BaseTest{
-
-    }
-}
-";
-            var baseResult =
-    CSharpDiagnostic(AG0010PreventTestFixtureInheritance.DIAGNOSTIC_ID);
-            var expected = new[]
+            var code = new CodeDescriptor
             {
-                baseResult.WithLocation(6, 5)
+                References = new[] {typeof(TestFixtureAttribute).Assembly},
+                Code = @"
+                    using NUnit.Framework;
+                    
+                    namespace Tests
+                    {
+                        public class TestClass : BaseTest
+                        {
+                            [Test]
+                            public void This_IsValid(){}
+                        }
+                    
+                        public class BaseTest{
+                    
+                        }
+                    }"
             };
-            await TestWarnings(code, expected);
+            
+            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(6, 25));
         }
-        private async Task TestWarnings(string code, DiagnosticResult[] expected = null)
-        {
-            expected = expected ?? new DiagnosticResult[0];
-            var nUnit = MetadataReference.CreateFromFile(typeof(TestFixtureAttribute).Assembly.Location);
-            var doc = CreateProject(new[] { code })
-                .AddMetadataReference(nUnit)
-                .Documents
-                .First();
-
-            var analyzersArray = GetCSharpDiagnosticAnalyzers().ToImmutableArray();
-
-            var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzersArray, new[] { doc }, CancellationToken.None)
-                .ConfigureAwait(false);
-
-
-            VerifyDiagnosticResults(diag, analyzersArray, expected);
-        }
-
-        protected override IEnumerable<DiagnosticAnalyzer> GetCSharpDiagnosticAnalyzers()
-        {
-            yield return new AG0010PreventTestFixtureInheritance();
-        }
+     
     }
 }

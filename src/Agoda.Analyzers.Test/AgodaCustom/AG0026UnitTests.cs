@@ -15,10 +15,9 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 {
     class AG0026UnitTests : DiagnosticVerifier
     {
-        protected override IEnumerable<DiagnosticAnalyzer> GetCSharpDiagnosticAnalyzers()
-        {
-            yield return new AG0026EnsureOnlyCssSelectorIsUsedToFindElements();
-        }
+        protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0026EnsureOnlyCssSelectorIsUsedToFindElements();
+        
+        protected override string DiagnosticId => AG0026EnsureOnlyCssSelectorIsUsedToFindElements.DIAGNOSTIC_ID;
 
         [Test]
         [TestCase("FindElementByClassName")]
@@ -30,34 +29,24 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         [TestCase("FindElementByXPath")]
         public async Task AG0026_WithForbiddenFindElementsAsProperty_ThenShowWarning(string methodName)
         {
-            var testCode = $@"
-            using System;
-            using OpenQA.Selenium;
-            using OpenQA.Selenium.Chrome;
-            using System.Collections.ObjectModel;
-
-            namespace Selenium.Tests.Utils
-            {{
-                public class Utils
-                {{
-                    public IWebElement element11 => new ChromeDriver().{methodName}(""abc"");
-                }}
-            }}";
-
-            var analyzers = GetCSharpDiagnosticAnalyzers().ToImmutableArray();
-            var documents = CreateProject(new[] { testCode })
-                           .AddMetadataReference(MetadataReference.CreateFromFile(typeof(IWebElement).Assembly.Location))
-                           .AddMetadataReference(MetadataReference.CreateFromFile(typeof(ReadOnlyCollection<>).Assembly.Location))
-                           .Documents
-                           .ToArray();
-
-            var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzers, documents, CancellationToken.None).ConfigureAwait(false);
-
-            var baseResult = CSharpDiagnostic(AG0026EnsureOnlyCssSelectorIsUsedToFindElements.DIAGNOSTIC_ID);
-            VerifyDiagnosticResults(diag, analyzers, new[]
+            var code = new CodeDescriptor
             {
-                baseResult.WithLocation(11, 53)
-            });
+                References = new[] {typeof(IWebElement).Assembly},
+                Code = $@"
+                    using System;
+                    using OpenQA.Selenium;
+                    using OpenQA.Selenium.Chrome;
+        
+                    namespace Selenium.Tests.Utils
+                    {{
+                        public class Utils
+                        {{
+                            public IWebElement element11 => new ChromeDriver().{methodName}(""abc"");
+                        }}
+                    }}"
+            };
+
+            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(10, 61));
         }
 
         [Test]
@@ -70,36 +59,28 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         [TestCase("FindElementsByXPath")]
         public async Task AG0026_WithForbiddenFindElementsInMethod_ThenShowWarning(string methodName)
         {
-            var testCode = $@"
-            using System;
-            using OpenQA.Selenium;
-            using OpenQA.Selenium.Chrome;
-            using System.Collections.ObjectModel;
-
-            namespace Selenium.Tests.Utils
-            {{
-                public class Utils
-                {{
-                    public void Test()
-                    {{
-                        var element = new ChromeDriver().{methodName}(""abc"");
-                    }}
-                }}
-            }}";
-
-            var analyzers = GetCSharpDiagnosticAnalyzers().ToImmutableArray();
-            var documents = CreateProject(new[] { testCode })
-                           .AddMetadataReference(MetadataReference.CreateFromFile(typeof(IWebElement).Assembly.Location))
-                           .Documents
-                           .ToArray();
-
-            var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzers, documents, CancellationToken.None).ConfigureAwait(false);
-
-            var baseResult = CSharpDiagnostic(AG0026EnsureOnlyCssSelectorIsUsedToFindElements.DIAGNOSTIC_ID);
-            VerifyDiagnosticResults(diag, analyzers, new[]
+            var code = new CodeDescriptor
             {
-                baseResult.WithLocation(13, 39),
-            });
+                References = new[] {typeof(IWebElement).Assembly},
+                Code = $@"
+                    using System;
+                    using OpenQA.Selenium;
+                    using OpenQA.Selenium.Chrome;
+                    using System.Collections.ObjectModel;
+        
+                    namespace Selenium.Tests.Utils
+                    {{
+                        public class Utils
+                        {{
+                            public void Test()
+                            {{
+                                var element = new ChromeDriver().{methodName}(""abc"");
+                            }}
+                        }}
+                    }}"
+            };
+
+            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(13, 47));
         }
         
         [Test]
@@ -112,141 +93,116 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         [TestCase("XPath")]
         public async Task AG0026_WithForbiddenByAccessor_ThenShowWarning(string methodName)
         {
-            var testCode = $@"
-            using System;
-            using OpenQA.Selenium;
-            using OpenQA.Selenium.Chrome;
-
-            namespace Selenium.Tests.Utils
-            {{
-                public class Utils
-                {{
-                    public void Test()
-                    {{
-                        var driver = new ChromeDriver();
-                        var elements1 = driver.FindElement(By.{methodName}(""abc""));
-                    }}
-                }}
-            }}";
-
-            var analyzers = GetCSharpDiagnosticAnalyzers().ToImmutableArray();
-            var documents = CreateProject(new[] { testCode })
-                           .AddMetadataReference(MetadataReference.CreateFromFile(typeof(IWebElement).Assembly.Location))
-                           .Documents
-                           .ToArray();
-
-            var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzers, documents, CancellationToken.None).ConfigureAwait(false);
-
-            var baseResult = CSharpDiagnostic(AG0026EnsureOnlyCssSelectorIsUsedToFindElements.DIAGNOSTIC_ID);
-            VerifyDiagnosticResults(diag, analyzers, new[]
+            var code = new CodeDescriptor
             {
-                baseResult.WithLocation(13, 60)
-            });
+                References = new [] {typeof(IWebElement).Assembly},
+                Code = $@"
+                    using System;
+                    using OpenQA.Selenium;
+                    using OpenQA.Selenium.Chrome;
+        
+                    namespace Selenium.Tests.Utils
+                    {{
+                        public class Utils
+                        {{
+                            public void Test()
+                            {{
+                                var driver = new ChromeDriver();
+                                var elements1 = driver.FindElement(By.{methodName}(""abc""));
+                            }}
+                        }}
+                    }}"
+             };
+
+            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(13, 68));
         }
 
         [Test]
         public async Task AG0026_WithPermittedFindElementAccessor_ThenNoWarning()
         {
-            var testCode = @"
-            using System;
-            using OpenQA.Selenium;
-            using OpenQA.Selenium.Chrome;
-            using System.Collections.ObjectModel;
-
-            namespace Selenium.Tests.Utils
+            var code = new CodeDescriptor
             {
-                public class Utils
-                {
-                    public void Test()
+                References = new [] {typeof(IWebElement).Assembly},
+                Code = @"
+                    using System;
+                    using OpenQA.Selenium;
+                    using OpenQA.Selenium.Chrome;
+        
+                    namespace Selenium.Tests.Utils
                     {
-                        var driver = new ChromeDriver();
-                        var elements1 = driver.FindElementByCssSelector(""selector"");
-                        var elements2 = driver.FindElementsByCssSelector(""selector"");
-                        driver.ExecuteScript(""script"");
-                    }
-                }
-            }";
+                        public class Utils
+                        {
+                            public void Test()
+                            {
+                                var driver = new ChromeDriver();
+                                var elements1 = driver.FindElementByCssSelector(""selector"");
+                                var elements2 = driver.FindElementsByCssSelector(""selector"");
+                                driver.ExecuteScript(""script"");
+                            }
+                        }
+                    }"
+            };
 
-            var analyzers = GetCSharpDiagnosticAnalyzers().ToImmutableArray();
-            var documents = CreateProject(new[] { testCode })
-                           .AddMetadataReference(MetadataReference.CreateFromFile(typeof(IWebElement).Assembly.Location))
-                           .AddMetadataReference(MetadataReference.CreateFromFile(typeof(ReadOnlyCollection<>).Assembly.Location))
-                           .Documents
-                           .ToArray();
-
-            var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzers, documents, CancellationToken.None).ConfigureAwait(false);
-
-            var baseResult = CSharpDiagnostic(AG0026EnsureOnlyCssSelectorIsUsedToFindElements.DIAGNOSTIC_ID);
-            VerifyDiagnosticResults(diag, analyzers, new DiagnosticResult[0]);
+            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
         }
 
         [Test]
         public async Task AG0026_WithPermittedByAccessor_ThenNoWarning()
         {
-            var testCode = @"
-            using System;
-            using OpenQA.Selenium;
-            using OpenQA.Selenium.Chrome;
-
-            namespace Selenium.Tests.Utils
+            var code = new CodeDescriptor
             {
-                public class Utils
-                {
-                    public void Test()
+                References = new [] {typeof(IWebElement).Assembly},
+                Code = @"
+                    using System;
+                    using OpenQA.Selenium;
+                    using OpenQA.Selenium.Chrome;
+        
+                    namespace Selenium.Tests.Utils
                     {
-                        var driver = new ChromeDriver();
-                        var elements1 = driver.FindElement(By.CssSelector(""selector""));
-                    }
-                }
-            }";
+                        public class Utils
+                        {
+                            public void Test()
+                            {
+                                var driver = new ChromeDriver();
+                                var elements1 = driver.FindElement(By.CssSelector(""selector""));
+                            }
+                        }
+                    }" 
+            };
 
-            var analyzers = GetCSharpDiagnosticAnalyzers().ToImmutableArray();
-            var documents = CreateProject(new[] { testCode })
-                           .AddMetadataReference(MetadataReference.CreateFromFile(typeof(IWebElement).Assembly.Location))
-                           .Documents
-                           .ToArray();
-
-            var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzers, documents, CancellationToken.None).ConfigureAwait(false);
-
-            var baseResult = CSharpDiagnostic(AG0026EnsureOnlyCssSelectorIsUsedToFindElements.DIAGNOSTIC_ID);
-            VerifyDiagnosticResults(diag, analyzers, new DiagnosticResult[0]);
+            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
         }
 
         [Test]
         public async Task AG0026_WithByEqualsMethod_ThenNoWarning()
         {
-            var testCode = @"
-            using System;
-            using OpenQA.Selenium;
-            using OpenQA.Selenium.Chrome;
-
-            namespace Selenium.Tests.Utils
+            var code = new CodeDescriptor
             {
-                public class Utils
-                {
-                    public void Test()
+                References = new [] {typeof(IWebElement).Assembly},
+                Code = @"
+                    using System;
+                    using OpenQA.Selenium;
+                    using OpenQA.Selenium.Chrome;
+        
+                    namespace Selenium.Tests.Utils
                     {
-                        var elements1 = By.Equals(""selector1"", ""selector2"");
-                    }
-                }
-            }";
+                        public class Utils
+                        {
+                            public void Test()
+                            {
+                                var elements1 = By.Equals(""selector1"", ""selector2"");
+                            }
+                        }
+                    }"
+            };
 
-            var analyzers = GetCSharpDiagnosticAnalyzers().ToImmutableArray();
-            var documents = CreateProject(new[] { testCode })
-                           .AddMetadataReference(MetadataReference.CreateFromFile(typeof(IWebElement).Assembly.Location))
-                           .Documents
-                           .ToArray();
-
-            var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzers, documents, CancellationToken.None).ConfigureAwait(false);
-
-            var baseResult = CSharpDiagnostic(AG0026EnsureOnlyCssSelectorIsUsedToFindElements.DIAGNOSTIC_ID);
-            VerifyDiagnosticResults(diag, analyzers, new DiagnosticResult[0]);
+            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
         }
 
         [Test]
         public async Task AG0026_WithForbiddenNameInDifferentNamespace_ThenNoWarning()
         {
-            var testCode = @"
+            var code = @"
             using System;
 
             namespace Selenium.Tests.Utils
@@ -271,15 +227,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 }
             }";
 
-            var analyzers = GetCSharpDiagnosticAnalyzers().ToImmutableArray();
-            var documents = CreateProject(new[] { testCode })
-                           .Documents
-                           .ToArray();
-
-            var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzers, documents, CancellationToken.None).ConfigureAwait(false);
-
-            var baseResult = CSharpDiagnostic(AG0026EnsureOnlyCssSelectorIsUsedToFindElements.DIAGNOSTIC_ID);
-            VerifyDiagnosticResults(diag, analyzers, new DiagnosticResult[0]);
+            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
         }
     }
 }

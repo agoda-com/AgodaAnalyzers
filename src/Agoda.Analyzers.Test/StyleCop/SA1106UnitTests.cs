@@ -12,6 +12,12 @@ namespace Agoda.Analyzers.Test.StyleCop
 {
     public class SA1106UnitTests : CodeFixVerifier
     {
+        protected override DiagnosticAnalyzer DiagnosticAnalyzer => new SA1106CodeMustNotContainEmptyStatements();
+        
+        protected override string DiagnosticId => SA1106CodeMustNotContainEmptyStatements.DIAGNOSTIC_ID;
+        
+        protected override CodeFixProvider CodeFixProvider => new SA1106CodeFixProvider();
+        
         [Test]
         [TestCase("if (true)")]
         [TestCase("if (true) { } else")]
@@ -28,6 +34,7 @@ class TestClass
             ;
     }}
 }}";
+            
             var fixedCode = $@"
 class TestClass
 {{
@@ -39,11 +46,9 @@ class TestClass
     }}
 }}";
 
-            var expected = CSharpDiagnostic().WithLocation(7, 13);
-
-            await VerifyCSharpDiagnosticAsync(testCode, expected, CancellationToken.None).ConfigureAwait(false);
-            await VerifyCSharpDiagnosticAsync(fixedCode, EmptyDiagnosticResults, CancellationToken.None).ConfigureAwait(false);
-            await VerifyCSharpFixAsync(testCode, fixedCode).ConfigureAwait(false);
+            await VerifyDiagnosticsAsync(testCode, new DiagnosticLocation(7, 13));
+            await VerifyDiagnosticsAsync(fixedCode, EmptyDiagnosticResults);
+            await VerifyCodeFixAsync(testCode, fixedCode);
         }
 
         [Test]
@@ -58,7 +63,9 @@ class TestClass
             ;
         while (false);
     }
-}";
+}
+";
+            
             var fixedCode = @"
 class TestClass
 {
@@ -69,255 +76,264 @@ class TestClass
         }
         while (false);
     }
-}";
+}
+";
 
-            var expected = CSharpDiagnostic().WithLocation(7, 13);
-
-            await VerifyCSharpDiagnosticAsync(testCode, expected, CancellationToken.None).ConfigureAwait(false);
-            await VerifyCSharpDiagnosticAsync(fixedCode, EmptyDiagnosticResults, CancellationToken.None).ConfigureAwait(false);
-            await VerifyCSharpFixAsync(testCode, fixedCode).ConfigureAwait(false);
+            await VerifyDiagnosticsAsync(testCode, new DiagnosticLocation(7, 13));
+            await VerifyDiagnosticsAsync(fixedCode, EmptyDiagnosticResults);
+            await VerifyCodeFixAsync(testCode, fixedCode);
         }
 
         [Test]
         public async Task TestEmptyStatementWithinBlockAsync()
         {
             var testCode = @"
-class TestClass
-{
-    public void TestMethod()
-    {
-        for (int i = 0; i < 10; i++)
-        {
-            var temp = i;
-            ;
-        }
-    }
-}";
+                class TestClass
+                {
+                    public void TestMethod()
+                    {
+                        for (int i = 0; i < 10; i++)
+                        {
+                            var temp = i;
+                            ;
+                        }
+                    }
+                }
+            ";
+            
             var fixedCode = @"
-class TestClass
-{
-    public void TestMethod()
-    {
-        for (int i = 0; i < 10; i++)
-        {
-            var temp = i;
-        }
-    }
-}";
+                class TestClass
+                {
+                    public void TestMethod()
+                    {
+                        for (int i = 0; i < 10; i++)
+                        {
+                            var temp = i;
+                        }
+                    }
+                }
+            ";
 
-            var expected = CSharpDiagnostic().WithLocation(9, 13);
-
-            await VerifyCSharpDiagnosticAsync(testCode, expected, CancellationToken.None).ConfigureAwait(false);
-            await VerifyCSharpDiagnosticAsync(fixedCode, EmptyDiagnosticResults, CancellationToken.None).ConfigureAwait(false);
-            await VerifyCSharpFixAsync(testCode, fixedCode).ConfigureAwait(false);
+            await VerifyDiagnosticsAsync(testCode, new DiagnosticLocation(9, 29));
+            await VerifyDiagnosticsAsync(fixedCode, EmptyDiagnosticResults);
+            await VerifyCodeFixAsync(testCode, fixedCode);
         }
 
         [Test]
         public async Task TestEmptyStatementInForStatementAsync()
         {
             var testCode = @"
-class TestClass
-{
-    public void TestMethod()
-    {
-        for (;;)
-        {
-        }
-    }
-}";
+                class TestClass
+                {
+                    public void TestMethod()
+                    {
+                        for (;;)
+                        {
+                        }
+                    }
+                }
+            ";
 
-            await VerifyCSharpDiagnosticAsync(testCode, EmptyDiagnosticResults, CancellationToken.None).ConfigureAwait(false);
+            await VerifyDiagnosticsAsync(testCode, EmptyDiagnosticResults);
         }
 
         [Test]
         public async Task TestEmptyStatementAsync()
         {
             var testCode = @"
-class TestClass
-{
-    public void TestMethod()
-    {
-        ;
-    }
-}";
+                class TestClass
+                {
+                    public void TestMethod()
+                    {
+                        ;
+                    }
+                }
+            ";
+            
             var fixedCode = @"
-class TestClass
-{
-    public void TestMethod()
-    {
-    }
-}";
+                class TestClass
+                {
+                    public void TestMethod()
+                    {
+                    }
+                }
+            ";
 
-            var expected = CSharpDiagnostic().WithLocation(6, 9);
-
-            await VerifyCSharpDiagnosticAsync(testCode, expected, CancellationToken.None).ConfigureAwait(false);
-            await VerifyCSharpDiagnosticAsync(fixedCode, EmptyDiagnosticResults, CancellationToken.None).ConfigureAwait(false);
-            await VerifyCSharpFixAsync(testCode, fixedCode).ConfigureAwait(false);
+            await VerifyDiagnosticsAsync(testCode, new DiagnosticLocation(6, 25));
+            await VerifyDiagnosticsAsync(fixedCode, EmptyDiagnosticResults);
+            await VerifyCodeFixAsync(testCode, fixedCode);
         }
 
         [Test]
         public async Task TestLabeledEmptyStatementAsync()
         {
             var testCode = @"
-class TestClass
-{
-    public void TestMethod()
-    {
-    label:
-        ;
-    }
-}";
+                class TestClass
+                {
+                    public void TestMethod()
+                    {
+                    label:
+                        ;
+                    }
+                }
+            ";
 
-            await VerifyCSharpDiagnosticAsync(testCode, EmptyDiagnosticResults, CancellationToken.None).ConfigureAwait(false);
+            await VerifyDiagnosticsAsync(testCode, EmptyDiagnosticResults);
         }
 
         [Test]
         public async Task TestLabeledEmptyStatementFollowedByEmptyStatementAsync()
         {
             var testCode = @"
-class TestClass
-{
-    public void TestMethod()
-    {
-    label:
-        ;
-        ;
-    }
-}";
+                class TestClass
+                {
+                    public void TestMethod()
+                    {
+                    label:
+                        ;
+                        ;
+                    }
+                }
+            ";
+            
             var fixedCode = @"
-class TestClass
-{
-    public void TestMethod()
-    {
-    label:
-        ;
-    }
-}";
+                class TestClass
+                {
+                    public void TestMethod()
+                    {
+                    label:
+                        ;
+                    }
+                }
+            ";
 
-            var expected = CSharpDiagnostic().WithLocation(8, 9);
-
-            await VerifyCSharpDiagnosticAsync(testCode, expected, CancellationToken.None).ConfigureAwait(false);
-            await VerifyCSharpDiagnosticAsync(fixedCode, EmptyDiagnosticResults, CancellationToken.None).ConfigureAwait(false);
-            await VerifyCSharpFixAsync(testCode, fixedCode).ConfigureAwait(false);
+            await VerifyDiagnosticsAsync(testCode, new DiagnosticLocation(8, 25));
+            await VerifyDiagnosticsAsync(fixedCode, EmptyDiagnosticResults);
+            await VerifyCodeFixAsync(testCode, fixedCode);
         }
 
         [Test]
         public async Task TestLabeledEmptyStatementFollowedByNonEmptyStatementAsync()
         {
             var testCode = @"
-class TestClass
-{
-    public void TestMethod()
-    {
-    label:
-        ;
-        int x = 3;
-    }
-}";
+                class TestClass
+                {
+                    public void TestMethod()
+                    {
+                    label:
+                        ;
+                        int x = 3;
+                    }
+                }
+            ";
+            
             var fixedCode = @"
-class TestClass
-{
-    public void TestMethod()
-    {
-    label:
-        int x = 3;
-    }
-}";
+                class TestClass
+                {
+                    public void TestMethod()
+                    {
+                    label:
+                        int x = 3;
+                    }
+                }
+            ";
 
-            var expected = CSharpDiagnostic().WithLocation(7, 9);
-
-            await VerifyCSharpDiagnosticAsync(testCode, expected, CancellationToken.None).ConfigureAwait(false);
-            await VerifyCSharpDiagnosticAsync(fixedCode, EmptyDiagnosticResults, CancellationToken.None).ConfigureAwait(false);
-            await VerifyCSharpFixAsync(testCode, fixedCode).ConfigureAwait(false);
+            await VerifyDiagnosticsAsync(testCode, new DiagnosticLocation(7, 25));
+            await VerifyDiagnosticsAsync(fixedCode, EmptyDiagnosticResults);
+            await VerifyCodeFixAsync(testCode, fixedCode);
         }
 
         [Test]
         public async Task TestConsecutiveLabelsAsync()
         {
             var testCode = @"
-class TestClass
-{
-    public void TestMethod()
-    {
-    label1:
-    label2:
-        ;
-        int x = 3;
-    }
-}";
+                class TestClass
+                {
+                    public void TestMethod()
+                    {
+                    label1:
+                    label2:
+                        ;
+                        int x = 3;
+                    }
+                }
+            ";
+            
             var fixedCode = @"
-class TestClass
-{
-    public void TestMethod()
-    {
-    label1:
-    label2:
-        int x = 3;
-    }
-}";
+                class TestClass
+                {
+                    public void TestMethod()
+                    {
+                    label1:
+                    label2:
+                        int x = 3;
+                    }
+                }
+            ";
 
-            var expected = CSharpDiagnostic().WithLocation(8, 9);
-
-            await VerifyCSharpDiagnosticAsync(testCode, expected, CancellationToken.None).ConfigureAwait(false);
-            await VerifyCSharpDiagnosticAsync(fixedCode, EmptyDiagnosticResults, CancellationToken.None).ConfigureAwait(false);
-            await VerifyCSharpFixAsync(testCode, fixedCode).ConfigureAwait(false);
+            await VerifyDiagnosticsAsync(testCode, new DiagnosticLocation(8, 25));
+            await VerifyDiagnosticsAsync(fixedCode, EmptyDiagnosticResults);
+            await VerifyCodeFixAsync(testCode, fixedCode);
         }
 
         [Test]
         public async Task TestSwitchCasesAsync()
         {
             var testCode = @"
-class TestClass
-{
-    public void TestMethod()
-    {
-        switch (default(int))
-        {
-        case 0:
-            ;
-            break;
-
-        case 1:
-        case 2:
-            ;
-            break;
-
-        default:
-            ;
-            break;
-        }
-    }
-}";
+                class TestClass
+                {
+                    public void TestMethod()
+                    {
+                        switch (default(int))
+                        {
+                        case 0:
+                            ;
+                            break;
+                
+                        case 1:
+                        case 2:
+                            ;
+                            break;
+                
+                        default:
+                            ;
+                            break;
+                        }
+                    }
+                }
+            ";
+            
             var fixedCode = @"
-class TestClass
-{
-    public void TestMethod()
-    {
-        switch (default(int))
-        {
-        case 0:
-            break;
+                class TestClass
+                {
+                    public void TestMethod()
+                    {
+                        switch (default(int))
+                        {
+                        case 0:
+                            break;
+                
+                        case 1:
+                        case 2:
+                            break;
+                
+                        default:
+                            break;
+                        }
+                    }
+                }
+            ";
 
-        case 1:
-        case 2:
-            break;
-
-        default:
-            break;
-        }
-    }
-}";
-
-            DiagnosticResult[] expected =
+            var expected = new []
             {
-                CSharpDiagnostic().WithLocation(9, 13),
-                CSharpDiagnostic().WithLocation(14, 13),
-                CSharpDiagnostic().WithLocation(18, 13)
+                new DiagnosticLocation(9, 29),
+                new DiagnosticLocation(14, 29),
+                new DiagnosticLocation(18, 29)
             };
 
-            await VerifyCSharpDiagnosticAsync(testCode, expected, CancellationToken.None).ConfigureAwait(false);
-            await VerifyCSharpDiagnosticAsync(fixedCode, EmptyDiagnosticResults, CancellationToken.None).ConfigureAwait(false);
-            await VerifyCSharpFixAsync(testCode, fixedCode).ConfigureAwait(false);
+            await VerifyDiagnosticsAsync(testCode, expected);
+            await VerifyDiagnosticsAsync(fixedCode, EmptyDiagnosticResults);
+            await VerifyCodeFixAsync(testCode, fixedCode);
         }
 
         [Test]
@@ -331,11 +347,11 @@ class TestClass
             var testCode = declaration + ";";
             var fixedCode = declaration;
 
-            var expected = CSharpDiagnostic().WithLocation(1, declaration.Length + 1);
+            var expected = new DiagnosticLocation(1, declaration.Length + 1);
 
-            await VerifyCSharpDiagnosticAsync(testCode, expected, CancellationToken.None).ConfigureAwait(false);
-            await VerifyCSharpDiagnosticAsync(fixedCode, EmptyDiagnosticResults, CancellationToken.None).ConfigureAwait(false);
-            await VerifyCSharpFixAsync(testCode, fixedCode).ConfigureAwait(false);
+            await VerifyDiagnosticsAsync(testCode, expected);
+            await VerifyDiagnosticsAsync(fixedCode, EmptyDiagnosticResults);
+            await VerifyCodeFixAsync(testCode, fixedCode);
         }
 
         /// <summary>
@@ -347,41 +363,44 @@ class TestClass
         public async Task VerifyCodeFixWillRemoveUnnecessaryWhitespaceAsync()
         {
             var testCode = @"
-class TestClass
-{
-    public void TestMethod1()
-    {
-        throw new System.NotImplementedException(); ;
-    }
-
-    public void TestMethod2()
-    {
-        throw new System.NotImplementedException(); /* c1 */ ;
-    }
-}";
+                class TestClass
+                {
+                    public void TestMethod1()
+                    {
+                        throw new System.NotImplementedException(); ;
+                    }
+                
+                    public void TestMethod2()
+                    {
+                        throw new System.NotImplementedException(); /* c1 */ ;
+                    }
+                }
+            ";
+            
             var fixedCode = @"
-class TestClass
-{
-    public void TestMethod1()
-    {
-        throw new System.NotImplementedException();
-    }
+                class TestClass
+                {
+                    public void TestMethod1()
+                    {
+                        throw new System.NotImplementedException();
+                    }
+                
+                    public void TestMethod2()
+                    {
+                        throw new System.NotImplementedException(); /* c1 */
+                    }
+                }
+            ";
 
-    public void TestMethod2()
-    {
-        throw new System.NotImplementedException(); /* c1 */
-    }
-}";
-
-            DiagnosticResult[] expected =
+            var expected = new []
             {
-                CSharpDiagnostic().WithLocation(6, 53),
-                CSharpDiagnostic().WithLocation(11, 62)
+                new DiagnosticLocation(6, 69),
+                new DiagnosticLocation(11, 78)
             };
 
-            await VerifyCSharpDiagnosticAsync(testCode, expected, CancellationToken.None).ConfigureAwait(false);
-            await VerifyCSharpDiagnosticAsync(fixedCode, EmptyDiagnosticResults, CancellationToken.None).ConfigureAwait(false);
-            await VerifyCSharpFixAsync(testCode, fixedCode).ConfigureAwait(false);
+            await VerifyDiagnosticsAsync(testCode, expected);
+            await VerifyDiagnosticsAsync(fixedCode, EmptyDiagnosticResults);
+            await VerifyCodeFixAsync(testCode, fixedCode);
         }
 
         /// <summary>
@@ -392,39 +411,30 @@ class TestClass
         public async Task VerifyCodeFixWillNotRemoveTriviaAsync()
         {
             var testCode = @"
-class TestClass
-{
-    public void TestMethod()
-    {
-        /* do nothing */ ;
-    }
-}";
+                class TestClass
+                {
+                    public void TestMethod()
+                    {
+                        /* do nothing */ ;
+                    }
+                }
+            ";
+            
             var fixedCode = @"
-class TestClass
-{
-    public void TestMethod()
-    {
-        /* do nothing */
-    }
-}";
+                class TestClass
+                {
+                    public void TestMethod()
+                    {
+                        /* do nothing */
+                    }
+                }
+            ";
 
-            var expected = CSharpDiagnostic().WithLocation(6, 26);
+            var expected = new DiagnosticLocation(6, 42);
 
-            await VerifyCSharpDiagnosticAsync(testCode, expected, CancellationToken.None).ConfigureAwait(false);
-            await VerifyCSharpDiagnosticAsync(fixedCode, EmptyDiagnosticResults, CancellationToken.None).ConfigureAwait(false);
-            await VerifyCSharpFixAsync(testCode, fixedCode).ConfigureAwait(false);
-        }
-
-        /// <inheritdoc/>
-        protected override IEnumerable<DiagnosticAnalyzer> GetCSharpDiagnosticAnalyzers()
-        {
-            yield return new SA1106CodeMustNotContainEmptyStatements();
-        }
-
-        /// <inheritdoc/>
-        protected override CodeFixProvider GetCSharpCodeFixProvider()
-        {
-            return new SA1106CodeFixProvider();
+            await VerifyDiagnosticsAsync(testCode, expected);
+            await VerifyDiagnosticsAsync(fixedCode, EmptyDiagnosticResults);
+            await VerifyCodeFixAsync(testCode, fixedCode);
         }
     }
 }

@@ -28,6 +28,6 @@ namespace Agoda.Analyzers.AgodaCustom
             "https://github.agodadev.io/pages/standards-c-sharp/code-standards/gui-testing/css-selectors.html",
             WellKnownDiagnosticTags.EditAndContinue);
         
-        protected override IEnumerable<PermittedInvocationRule> Rules => TestMethodHelpers.PermittedSeleniumSelectorRules;
+        protected override IEnumerable<PermittedInvocationRule> Rules => TestMethodHelpers.PermittedSeleniumAccessors;
     }
 }

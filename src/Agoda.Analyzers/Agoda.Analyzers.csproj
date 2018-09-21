@@ -122,6 +122,9 @@
     <None Update="RuleContent\AG0030PreventUseOfDynamics.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="RuleContent\AG0032PreventUseOfTaskWait.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="RuleContent\AG0011NoDirectQueryStringAccess.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

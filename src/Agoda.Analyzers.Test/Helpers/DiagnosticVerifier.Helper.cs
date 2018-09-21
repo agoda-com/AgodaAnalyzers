@@ -313,7 +313,7 @@ namespace Agoda.Analyzers.Test.Helpers
         }
 
         /// <summary>
-        /// Given classes in the form of strings, their language, and an <see cref="DiagnosticAnalyzer"/> to apply to
+        /// Given classes in the form of strings, their language, and an <see cref="Microsoft.CodeAnalysis.Diagnostics.DiagnosticAnalyzer"/> to apply to
         /// it, return the <see cref="Diagnostic"/>s found in the string after converting it to a
         /// <see cref="Document"/>.
         /// </summary>
@@ -355,6 +355,11 @@ namespace Agoda.Analyzers.Test.Helpers
             }
 
             return documents;
+        }
+
+        protected ImmutableArray<DiagnosticAnalyzer> GetCSharpDiagnosticAnalyzers()
+        {
+            return ImmutableArray.Create(DiagnosticAnalyzer);
         }
     }
 }

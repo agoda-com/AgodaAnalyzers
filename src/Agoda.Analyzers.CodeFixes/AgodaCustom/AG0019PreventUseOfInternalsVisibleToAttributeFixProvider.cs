@@ -13,8 +13,8 @@ using System.Threading.Tasks;
 
 namespace Agoda.Analyzers.CodeFixes.AgodaCustom
 {
-    [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(AG0019FixProvider))]
-    public class AG0019FixProvider : CodeFixProvider
+    [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(AG0019PreventUseOfInternalsVisibleToAttributeFixProvider))]
+    public class AG0019PreventUseOfInternalsVisibleToAttributeFixProvider : CodeFixProvider
     {
         public override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(AG0019PreventUseOfInternalsVisibleToAttribute.DIAGNOSTIC_ID);
 
@@ -26,11 +26,11 @@ namespace Agoda.Analyzers.CodeFixes.AgodaCustom
                     CodeAction.Create(
                         title: CustomRulesResources.AG0019FixTitle,
                         createChangedDocument: cancellationToken => GetTransformedDocumentAsync(context.Document, diagnostic, cancellationToken),
-                        equivalenceKey: nameof(AG0019FixProvider)),
+                        equivalenceKey: nameof(AG0019PreventUseOfInternalsVisibleToAttributeFixProvider)),
                     diagnostic);
             }
 
-            return SpecializedTasks.CompletedTask;
+            return Task.CompletedTask;
         }
 
         private static async Task<Document> GetTransformedDocumentAsync(Document document, Diagnostic diagnostic, CancellationToken cancellationToken)

@@ -321,6 +321,7 @@ namespace Agoda.Analyzers.AgodaCustom {
             }
         }
         
+<<<<<<< HEAD
         /// <summary>
         ///   Looks up a localized string similar to Prevent use of Task.Factory.StartNew except for Long Running Tasks.
         /// </summary>
@@ -330,6 +331,8 @@ namespace Agoda.Analyzers.AgodaCustom {
             }
         }
         
+=======
+>>>>>>> origin/master
         /// <summary>
         ///   Looks up a localized string similar to Prevent use of Task.Continue*.
         /// </summary>

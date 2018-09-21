@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Agoda.Analyzers.AgodaCustom;
@@ -14,8 +15,12 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 {
     internal class AG0030UnitTests : DiagnosticVerifier
     {
+	    protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0030PreventUseOfDynamics();
+	    
+	    protected override string DiagnosticId => AG0030PreventUseOfDynamics.DIAGNOSTIC_ID;
+        
         [Test]
-        public async Task AG0030_WhenNoDynamic_ShouldntShowAnyWarning()
+        public async Task AG0030_WhenNoDynamic_ShouldntShowWarning()
         {
             var code = @"
 				class TestClass {
@@ -29,7 +34,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-            await TestForResults(code);
+	        await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
         }
         
         [Test]
@@ -43,13 +48,8 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-            var baseResult =
-                CSharpDiagnostic(AG0030PreventUseOfDynamics.DIAGNOSTIC_ID);
-            var expected = new[]
-            {
-                baseResult.WithLocation(3, 6)
-            };
-            await TestForResults(code, expected);
+            var expected = new DiagnosticLocation(3, 6);
+            await VerifyDiagnosticsAsync(code, expected);
         }
         
         [Test]
@@ -63,13 +63,8 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-            var baseResult =
-                CSharpDiagnostic(AG0030PreventUseOfDynamics.DIAGNOSTIC_ID);
-            var expected = new[]
-            {
-                baseResult.WithLocation(4, 7)
-            };
-            await TestForResults(code, expected);
+            var expected = new DiagnosticLocation(4, 7);
+            await VerifyDiagnosticsAsync(code, expected);
         }
         
         [Test]
@@ -87,14 +82,12 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-            var baseResult =
-                CSharpDiagnostic(AG0030PreventUseOfDynamics.DIAGNOSTIC_ID);
             var expected = new[]
             {
-                baseResult.WithLocation(3, 6),
-                baseResult.WithLocation(8, 7)
+                new DiagnosticLocation(3, 6),
+                new DiagnosticLocation(8, 7)
             };
-            await TestForResults(code, expected);
+            await VerifyDiagnosticsAsync(code, expected);
         }
         
         [Test]
@@ -110,7 +103,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 }
                 ";
 
-            await TestForResults(code);
+            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
         }
 
         [Test]
@@ -122,34 +115,11 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-            var baseResult =
-                CSharpDiagnostic(AG0030PreventUseOfDynamics.DIAGNOSTIC_ID);
-            var expected = new[]
-            {
-                baseResult.WithLocation(3, 6)
-            };
-            await TestForResults(code, expected);
-        }
-        
-        private async Task TestForResults(string code, DiagnosticResult[] expected = null)
-        {
-            expected = expected ?? new DiagnosticResult[0];
-            var doc = CreateProject(new[] {code})
-                .Documents
-                .First();
-
-            var analyzersArray = GetCSharpDiagnosticAnalyzers().ToImmutableArray();
-
-            var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzersArray, new[] {doc}, CancellationToken.None)
-                .ConfigureAwait(false);
-
-
-            VerifyDiagnosticResults(diag, analyzersArray, expected);
+            var expected = new DiagnosticLocation(3, 6);
+            await VerifyDiagnosticsAsync(code, expected);
         }
 
-        protected override IEnumerable<DiagnosticAnalyzer> GetCSharpDiagnosticAnalyzers()
-        {
-            yield return new AG0030PreventUseOfDynamics();
-        }
+
+	    
     }
 }

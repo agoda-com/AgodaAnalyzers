@@ -14,17 +14,31 @@ namespace Agoda.Analyzers.AgodaCustom
     {
         public const string DIAGNOSTIC_ID = "AG0012";
 
-        private static readonly LocalizableString Title = new LocalizableResourceString(nameof(CustomRulesResources.AG0012Title), CustomRulesResources.ResourceManager, typeof(CustomRulesResources));
-        private static readonly LocalizableString MessageFormat = new LocalizableResourceString(nameof(CustomRulesResources.AG0012Title), CustomRulesResources.ResourceManager, typeof(CustomRulesResources));
-        private static readonly LocalizableString Description = DescriptionContentLoader.GetAnalyzerDescription(nameof(AG0012TestMethodMustContainAtLeastOneAssertion));
+        private static readonly LocalizableString Title = new LocalizableResourceString(
+            nameof(CustomRulesResources.AG0012Title), 
+            CustomRulesResources.ResourceManager, 
+            typeof(CustomRulesResources));
         
-        private static readonly DiagnosticDescriptor Descriptor =
-            new DiagnosticDescriptor(DIAGNOSTIC_ID, Title, MessageFormat, AnalyzerCategory.CustomQualityRules,
-                DiagnosticSeverity.Warning, AnalyzerConstants.EnabledByDefault, Description, null, WellKnownDiagnosticTags.EditAndContinue);
+        private static readonly LocalizableString MessageFormat = new LocalizableResourceString(
+            nameof(CustomRulesResources.AG0012Title), 
+            CustomRulesResources.ResourceManager, 
+            typeof(CustomRulesResources));
+        
+        private static readonly LocalizableString Description 
+            = DescriptionContentLoader.GetAnalyzerDescription(nameof(AG0012TestMethodMustContainAtLeastOneAssertion));
+        
+        private static readonly DiagnosticDescriptor Descriptor = new DiagnosticDescriptor(
+            DIAGNOSTIC_ID, 
+            Title, 
+            MessageFormat, 
+            AnalyzerCategory.CustomQualityRules,
+            DiagnosticSeverity.Warning, 
+            AnalyzerConstants.EnabledByDefault, 
+            Description, 
+            null, 
+            WellKnownDiagnosticTags.EditAndContinue);
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = ImmutableArray.Create(Descriptor);
-
-        private static readonly Regex MatchTestAttributeName = new Regex("^Test");
 
         private static readonly AssertLibraryInfo[] AssertionLibraryList =
         {

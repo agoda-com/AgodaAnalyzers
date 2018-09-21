@@ -20,20 +20,28 @@ namespace Agoda.Analyzers.AgodaCustom
         private static readonly Regex MatchAsyncMethod = new Regex("Async$"); 
 
         private static readonly LocalizableString Title = new LocalizableResourceString(
-            nameof(CustomRulesResources.AG0022Title), CustomRulesResources.ResourceManager,
+            nameof(CustomRulesResources.AG0022Title), 
+            CustomRulesResources.ResourceManager,
             typeof(CustomRulesResources));
 
         private static readonly LocalizableString MessageFormat = new LocalizableResourceString(
-            nameof(CustomRulesResources.AG0022MessageFormat), CustomRulesResources.ResourceManager,
+            nameof(CustomRulesResources.AG0022MessageFormat), 
+            CustomRulesResources.ResourceManager,
             typeof(CustomRulesResources));
 
         private static readonly LocalizableString Description =
             DescriptionContentLoader.GetAnalyzerDescription(nameof(AG0022DoNotExposeBothSyncAndAsyncVersionsOfMethods));
 
-        private static readonly DiagnosticDescriptor Descriptor =
-            new DiagnosticDescriptor(DIAGNOSTIC_ID, Title, MessageFormat, AnalyzerCategory.CustomQualityRules,
-                DiagnosticSeverity.Warning, AnalyzerConstants.EnabledByDefault, Description, null,
-                WellKnownDiagnosticTags.EditAndContinue);
+        private static readonly DiagnosticDescriptor Descriptor = new DiagnosticDescriptor(
+            DIAGNOSTIC_ID, 
+            Title, 
+            MessageFormat, 
+            AnalyzerCategory.CustomQualityRules,
+            DiagnosticSeverity.Warning, 
+            AnalyzerConstants.EnabledByDefault, 
+            Description, 
+            null,
+            WellKnownDiagnosticTags.EditAndContinue);
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Descriptor);
 

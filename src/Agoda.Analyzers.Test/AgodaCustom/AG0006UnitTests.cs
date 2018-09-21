@@ -16,6 +16,10 @@ namespace Agoda.Analyzers.Test.AgodaCustom
     {
         private const string REGISTER_SINGLETON = "RegisterSingleton";
         private const string CUSTOM_ATTRIBUTE = "CustomAttribute";
+        
+        protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0006RegisteredComponentShouldHaveExactlyOnePublicConstructor();
+        
+        protected override string DiagnosticId => AG0006RegisteredComponentShouldHaveExactlyOnePublicConstructor.DIAGNOSTIC_ID;
 
         [Test]
         public async Task AG0006_WhenNoRegisterAttribute_ShouldntShowAnyWarning()
@@ -26,7 +30,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 .WithAttributeClass(CUSTOM_ATTRIBUTE)
                 .Build();
 
-            await TestForNoWarnings(code);
+            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
         }
 
         [Test]
@@ -38,7 +42,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 .WithAttributeClass(REGISTER_SINGLETON)
                 .Build();
 
-            await TestForNoWarnings(code);
+            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
         }
 
         [Test]
@@ -50,7 +54,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 .WithAttributeClass(REGISTER_SINGLETON)
                 .Build();
 
-            await TestForNoWarnings(code);
+            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
         }
 
         [Test]
@@ -62,13 +66,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 .WithAttributeClass(REGISTER_SINGLETON)
                 .Build();
 
-            var baseResult =
-                CSharpDiagnostic(AG0006RegisteredComponentShouldHaveExactlyOnePublicConstructor.DIAGNOSTIC_ID);
-            var expected = new[]
-            {
-                baseResult.WithLocation(4, 2)
-            };
-            await TestForNoWarnings(code, expected);
+            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(4, 2));
         }
 
         [Test]
@@ -80,34 +78,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 .WithAttributeClass(REGISTER_SINGLETON)
                 .Build();
 
-            var baseResult =
-                CSharpDiagnostic(AG0006RegisteredComponentShouldHaveExactlyOnePublicConstructor.DIAGNOSTIC_ID);
-            var expected = new[]
-            {
-                baseResult.WithLocation(4, 2)
-            };
-            await TestForNoWarnings(code, expected);
-        }
-
-        private async Task TestForNoWarnings(string code, DiagnosticResult[] expected = null)
-        {
-            expected = expected ?? new DiagnosticResult[0];
-            var doc = CreateProject(new[] {code})
-                .Documents
-                .First();
-
-            var analyzersArray = GetCSharpDiagnosticAnalyzers().ToImmutableArray();
-
-            var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzersArray, new[] {doc}, CancellationToken.None)
-                .ConfigureAwait(false);
-
-
-            VerifyDiagnosticResults(diag, analyzersArray, expected);
-        }
-
-        protected override IEnumerable<DiagnosticAnalyzer> GetCSharpDiagnosticAnalyzers()
-        {
-            yield return new AG0006RegisteredComponentShouldHaveExactlyOnePublicConstructor();
+            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(4, 2));
         }
     }
 }
