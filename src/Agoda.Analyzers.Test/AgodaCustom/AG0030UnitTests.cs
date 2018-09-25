@@ -15,9 +15,9 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 {
     internal class AG0030UnitTests : DiagnosticVerifier
     {
-	    protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0030PreventUseOfDynamics();
+	    protected DiagnosticAnalyzer DiagnosticAnalyzer => new AG0030PreventUseOfDynamics();
 	    
-	    protected override string DiagnosticId => AG0030PreventUseOfDynamics.DIAGNOSTIC_ID;
+	    protected string DiagnosticId => AG0030PreventUseOfDynamics.DIAGNOSTIC_ID;
         
         [Test]
         public async Task AG0030_WhenNoDynamic_ShouldntShowWarning()
@@ -34,7 +34,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-	        await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+	        await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults, DiagnosticId, DiagnosticAnalyzer);
         }
         
         [Test]
@@ -49,7 +49,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 			";
 
             var expected = new DiagnosticLocation(3, 6);
-            await VerifyDiagnosticsAsync(code, expected);
+            await VerifyDiagnosticsAsync(code, expected, DiagnosticId, DiagnosticAnalyzer);
         }
         
         [Test]
@@ -64,7 +64,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 			";
 
             var expected = new DiagnosticLocation(4, 7);
-            await VerifyDiagnosticsAsync(code, expected);
+            await VerifyDiagnosticsAsync(code, expected, DiagnosticId, DiagnosticAnalyzer);
         }
         
         [Test]
@@ -87,7 +87,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 new DiagnosticLocation(3, 6),
                 new DiagnosticLocation(8, 7)
             };
-            await VerifyDiagnosticsAsync(code, expected);
+            await VerifyDiagnosticsAsync(code, expected, DiagnosticId, DiagnosticAnalyzer);
         }
         
         [Test]
@@ -103,7 +103,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 }
                 ";
 
-            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults, DiagnosticId, DiagnosticAnalyzer);
         }
 
         [Test]
@@ -116,7 +116,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 			";
 
             var expected = new DiagnosticLocation(3, 6);
-            await VerifyDiagnosticsAsync(code, expected);
+            await VerifyDiagnosticsAsync(code, expected, DiagnosticId, DiagnosticAnalyzer);
         }
 
 

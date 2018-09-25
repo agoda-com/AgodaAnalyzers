@@ -13,9 +13,9 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 {
     internal class AG0005UnitTests : DiagnosticVerifier
     {
-        protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0005TestMethodNamesMustFollowConvention();
+        protected DiagnosticAnalyzer DiagnosticAnalyzer => new AG0005TestMethodNamesMustFollowConvention();
         
-        protected override string DiagnosticId => AG0005TestMethodNamesMustFollowConvention.DIAGNOSTIC_ID;
+        protected string DiagnosticId => AG0005TestMethodNamesMustFollowConvention.DIAGNOSTIC_ID;
         
         [TestCase("This_IsValid")]
         [TestCase("This_Is_Valid")]
@@ -40,7 +40,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                     }}"
             };
             
-            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults, DiagnosticId, DiagnosticAnalyzer);
         }
 
         [TestCase("ThisIsInvalid")]    // no underscores
@@ -66,7 +66,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                     }}"
             };
             
-            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(9, 29));
+            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(9, 29), DiagnosticId, DiagnosticAnalyzer);
         }
         
         [TestCase("internal")]
@@ -100,7 +100,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                     }}"
             };
 
-            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults, DiagnosticId, DiagnosticAnalyzer);
         }
         
         [Test]
@@ -118,7 +118,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 }
             ";
             
-            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults, DiagnosticId, DiagnosticAnalyzer);
         }
     }
 }

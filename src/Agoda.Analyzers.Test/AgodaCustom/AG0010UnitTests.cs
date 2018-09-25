@@ -14,9 +14,9 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 {
     internal class AG0010UnitTests : DiagnosticVerifier
     {
-        protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0010PreventTestFixtureInheritance();
+        protected DiagnosticAnalyzer DiagnosticAnalyzer => new AG0010PreventTestFixtureInheritance();
         
-        protected override string DiagnosticId => AG0010PreventTestFixtureInheritance.DIAGNOSTIC_ID;
+        protected string DiagnosticId => AG0010PreventTestFixtureInheritance.DIAGNOSTIC_ID;
         
         [Test]
         public async Task AG0010_WhenNoTestCases_ShouldntShowWarning()
@@ -36,7 +36,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                     }"
             };
 
-            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults, DiagnosticId, DiagnosticAnalyzer);
         }
 
         [Test]
@@ -58,7 +58,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                     }"
             };
 
-            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults, DiagnosticId, DiagnosticAnalyzer);
         }
 
         [Test]
@@ -84,7 +84,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                     }"
             };
             
-            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(6, 25));
+            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(6, 25), DiagnosticId, DiagnosticAnalyzer);
         }
      
     }

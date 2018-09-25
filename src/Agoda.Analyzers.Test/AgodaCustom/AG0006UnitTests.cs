@@ -17,9 +17,9 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         private const string REGISTER_SINGLETON = "RegisterSingleton";
         private const string CUSTOM_ATTRIBUTE = "CustomAttribute";
         
-        protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0006RegisteredComponentShouldHaveExactlyOnePublicConstructor();
+        protected DiagnosticAnalyzer DiagnosticAnalyzer => new AG0006RegisteredComponentShouldHaveExactlyOnePublicConstructor();
         
-        protected override string DiagnosticId => AG0006RegisteredComponentShouldHaveExactlyOnePublicConstructor.DIAGNOSTIC_ID;
+        protected string DiagnosticId => AG0006RegisteredComponentShouldHaveExactlyOnePublicConstructor.DIAGNOSTIC_ID;
 
         [Test]
         public async Task AG0006_WhenNoRegisterAttribute_ShouldntShowAnyWarning()
@@ -30,7 +30,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 .WithAttributeClass(CUSTOM_ATTRIBUTE)
                 .Build();
 
-            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults, DiagnosticId, DiagnosticAnalyzer);
         }
 
         [Test]
@@ -42,7 +42,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 .WithAttributeClass(REGISTER_SINGLETON)
                 .Build();
 
-            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults, DiagnosticId, DiagnosticAnalyzer);
         }
 
         [Test]
@@ -54,7 +54,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 .WithAttributeClass(REGISTER_SINGLETON)
                 .Build();
 
-            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults, DiagnosticId, DiagnosticAnalyzer);
         }
 
         [Test]
@@ -66,7 +66,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 .WithAttributeClass(REGISTER_SINGLETON)
                 .Build();
 
-            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(4, 2));
+            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(4, 2), DiagnosticId, DiagnosticAnalyzer);
         }
 
         [Test]
@@ -78,7 +78,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 .WithAttributeClass(REGISTER_SINGLETON)
                 .Build();
 
-            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(4, 2));
+            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(4, 2), DiagnosticId, DiagnosticAnalyzer);
         }
     }
 }

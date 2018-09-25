@@ -8,9 +8,9 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 {
     internal class AG0019UnitTests : DiagnosticVerifier
     {
-        protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0019PreventUseOfInternalsVisibleToAttribute();
+        protected DiagnosticAnalyzer DiagnosticAnalyzer => new AG0019PreventUseOfInternalsVisibleToAttribute();
         
-        protected override string DiagnosticId => AG0019PreventUseOfInternalsVisibleToAttribute.DIAGNOSTIC_ID;
+        protected string DiagnosticId => AG0019PreventUseOfInternalsVisibleToAttribute.DIAGNOSTIC_ID;
         
         [Test]
         public async Task AG0019_RemoveInternalsVisibleToAttributeShouldReportCorrectly()
@@ -49,7 +49,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 new DiagnosticLocation(11, 60),
                 new DiagnosticLocation(11, 115)
             };
-            await VerifyDiagnosticsAsync(code, expected);
+            await VerifyDiagnosticsAsync(code, expected, DiagnosticId, DiagnosticAnalyzer);
         }
     }
 }

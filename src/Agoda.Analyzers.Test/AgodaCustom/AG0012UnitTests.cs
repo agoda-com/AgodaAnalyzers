@@ -8,9 +8,9 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 {
     internal class AG0012UnitTests : DiagnosticVerifier
     {
-        protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0012TestMethodMustContainAtLeastOneAssertion();
+        protected DiagnosticAnalyzer DiagnosticAnalyzer => new AG0012TestMethodMustContainAtLeastOneAssertion();
         
-        protected override string DiagnosticId => AG0012TestMethodMustContainAtLeastOneAssertion.DIAGNOSTIC_ID;
+        protected string DiagnosticId => AG0012TestMethodMustContainAtLeastOneAssertion.DIAGNOSTIC_ID;
         
         [Test]
         public async Task AG0012_WithNoAssertion_ShouldShowWarning()
@@ -35,7 +35,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                     }"
             };
  
-            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(9, 29));
+            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(9, 29), DiagnosticId, DiagnosticAnalyzer);
         }
         
         [Test]
@@ -61,7 +61,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                     }"
             };
 
-            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults, DiagnosticId, DiagnosticAnalyzer);
         }
 
  
@@ -99,7 +99,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                     }"
             };
 
-            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults, DiagnosticId, DiagnosticAnalyzer);
         }
     }
 }

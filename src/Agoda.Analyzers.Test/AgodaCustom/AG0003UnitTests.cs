@@ -9,9 +9,9 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 {
     class AG0003UnitTests : DiagnosticVerifier
     {
-        protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0003HttpContextCannotBePassedAsMethodArgument();
+        protected DiagnosticAnalyzer DiagnosticAnalyzer => new AG0003HttpContextCannotBePassedAsMethodArgument();
         
-        protected override string DiagnosticId => AG0003HttpContextCannotBePassedAsMethodArgument.DIAGNOSTIC_ID;
+        protected string DiagnosticId => AG0003HttpContextCannotBePassedAsMethodArgument.DIAGNOSTIC_ID;
         
         [Test]
         public async Task TestHttpContextAsArgument()
@@ -44,7 +44,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 		        new DiagnosticLocation(10, 30),
 		        new DiagnosticLocation(14, 24)
 	        };
-            await VerifyDiagnosticsAsync(code, expected);
+            await VerifyDiagnosticsAsync(code, expected, DiagnosticId, DiagnosticAnalyzer);
         }
     }
 }

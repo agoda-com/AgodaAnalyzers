@@ -8,9 +8,9 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 {
     internal class AG0023UnitTests : DiagnosticVerifier
     {
-        protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0023PreventUseOfThreadSleep();
+        protected DiagnosticAnalyzer DiagnosticAnalyzer => new AG0023PreventUseOfThreadSleep();
         
-        protected override string DiagnosticId => AG0023PreventUseOfThreadSleep.DIAGNOSTIC_ID;
+        protected string DiagnosticId => AG0023PreventUseOfThreadSleep.DIAGNOSTIC_ID;
        
         [Test]
         public async Task AG0023_WhenThreadYield_ShouldNotShowWarning()
@@ -27,7 +27,7 @@ class TestClass
 }
 ";
 
-            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults, DiagnosticId, DiagnosticAnalyzer);
         }
 
         [Test]
@@ -47,7 +47,7 @@ class TestClass
     }
 }
 ";
-            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults, DiagnosticId, DiagnosticAnalyzer);
         }
 
         [Test]
@@ -65,7 +65,7 @@ class TestClass
 }
 ";
 
-            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(8, 9));
+            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(8, 9), DiagnosticId, DiagnosticAnalyzer);
         }
 
         [Test]
@@ -84,7 +84,7 @@ class TestClass
 }
 ";
 
-            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(9, 9));
+            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(9, 9), DiagnosticId, DiagnosticAnalyzer);
         }
     }
 
