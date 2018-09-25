@@ -27,11 +27,19 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="AgodaCustom\TestCases\AG0002\NoWarning\CorrectDeclarationShouldNotCauseAnyIssue.cs" />
+    <Compile Remove="AgodaCustom\TestCases\AG0002\NoWarning\InterfaceImplementationShouldNotCauseAnyError.cs" />
+    <Compile Remove="AgodaCustom\TestCases\AG0002\NoWarning\PublicDeclarationShouldNotCauseAnyIssue.cs" />
+    <Compile Remove="AgodaCustom\TestCases\AG0002\Warning\NotPartOfTheInterfaceShouldNotBeInternal.cs" />
     <Compile Remove="AgodaCustom\TestCases\AG0024\FactoryStartNewWithLongRunningParameter.cs" />
     <Compile Remove="AgodaCustom\TestCases\AG0024\FactoryStartNewWithMethodParameter.cs" />
     <Compile Remove="AgodaCustom\TestCases\AG0024\FactoryStartNewWithMultipleParameters.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="AgodaCustom\TestCases\AG0002\NoWarning\CorrectDeclarationShouldNotCauseAnyIssue.cs" />
+    <EmbeddedResource Include="AgodaCustom\TestCases\AG0002\NoWarning\InterfaceImplementationShouldNotCauseAnyError.cs" />
+    <EmbeddedResource Include="AgodaCustom\TestCases\AG0002\NoWarning\PublicDeclarationShouldNotCauseAnyIssue.cs" />
+    <EmbeddedResource Include="AgodaCustom\TestCases\AG0002\Warning\NotPartOfTheInterfaceShouldNotBeInternal.cs" />
     <EmbeddedResource Include="AgodaCustom\TestCases\AG0024\NoWarning\FactoryStartNewWithLongRunningParameter.cs" />
     <EmbeddedResource Include="AgodaCustom\TestCases\AG0024\Warning\FactoryStartNewWithMultipleParameters.cs" />
     <EmbeddedResource Include="AgodaCustom\TestCases\AG0024\Warning\FactoryStartNewWithMethodParameter.cs" />
@@ -60,7 +68,7 @@
     <PackageReference Include="NUnit.Extension.NUnitV2ResultWriter" Version="3.5.0" />
     <PackageReference Include="NUnit.Extension.TeamCityEventListener" Version="1.0.2" />
     <PackageReference Include="NUnit.Extension.VSProjectLoader" Version="3.5.0" />
-    <PackageReference Include="NUnit3TestAdapter" Version="3.6.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.10.0" />
     <PackageReference Include="Selenium.WebDriver" Version="3.14.0" />
     <PackageReference Include="Shouldly" Version="3.0.0" />
     <PackageReference Include="System.Collections" Version="4.0.11" />
