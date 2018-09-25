@@ -56,61 +56,35 @@ namespace Agoda.Analyzers.Test.Helpers
         /// The value of the <see cref="FormattingOptions.TabSize"/> to apply to the test workspace.
         /// </value>
         public int TabSize { get; protected set; }
-
+        
         protected static DiagnosticLocation[] EmptyDiagnosticResults { get; } = { };
-
-        /// <summary>
-        /// Verifies that the analyzer will properly handle an empty source.
-        /// </summary>
-        /// <returns>A <see cref="Task"/> representing the asynchronous unit test.</returns>
-        [Test]
-        public async Task TestEmptySourceAsync()
-        {
-            await VerifyDiagnosticsAsync(new CodeDescriptor(), EmptyDiagnosticResults).ConfigureAwait(false);
-        }
-
-        /// <summary>
-        /// Gets the C# analyzer being tested
-        /// </summary>
-        /// <returns>
-        /// New instances of all the C# analyzers being tested.
-        /// </returns>
-        protected abstract DiagnosticAnalyzer DiagnosticAnalyzer { get; }
-
-        /// <summary>
-        /// Gets the C# analyzer being tested
-        /// </summary>
-        /// <returns>
-        /// New instances of all the C# analyzers being tested.
-        /// </returns>
-        protected abstract string DiagnosticId { get; }
         
-        protected async Task VerifyDiagnosticsAsync(string code, DiagnosticLocation expectedLocations)
+        protected async Task VerifyDiagnosticsAsync(string code, DiagnosticLocation expectedLocations, string diagnosticId, DiagnosticAnalyzer diagnosticAnalyzer)
         {
-            await VerifyDiagnosticsAsync(new CodeDescriptor(code), new [] { expectedLocations});
+            await VerifyDiagnosticsAsync(new CodeDescriptor(code), new [] { expectedLocations}, diagnosticId, diagnosticAnalyzer);
         }
 
-        protected async Task VerifyDiagnosticsAsync(string code, DiagnosticLocation[] expectedLocations)
+        protected async Task VerifyDiagnosticsAsync(string code, DiagnosticLocation[] expectedLocations, string diagnosticId, DiagnosticAnalyzer diagnosticAnalyzer)
         {
-            await VerifyDiagnosticsAsync(new CodeDescriptor(code), expectedLocations);
+            await VerifyDiagnosticsAsync(new CodeDescriptor(code), expectedLocations, diagnosticId, diagnosticAnalyzer);
         }
 
-        protected async Task VerifyDiagnosticsAsync(CodeDescriptor descriptor, DiagnosticLocation expectedLocations)
+        protected async Task VerifyDiagnosticsAsync(CodeDescriptor descriptor, DiagnosticLocation expectedLocations, string diagnosticId, DiagnosticAnalyzer diagnosticAnalyzer)
         {
-            await VerifyDiagnosticsAsync(descriptor, new [] { expectedLocations});
+            await VerifyDiagnosticsAsync(descriptor, new [] { expectedLocations}, diagnosticId, diagnosticAnalyzer);
         }
-        
-        protected async Task VerifyDiagnosticsAsync(CodeDescriptor descriptor, DiagnosticLocation[] expectedLocations)
+
+        protected async Task VerifyDiagnosticsAsync(CodeDescriptor descriptor, DiagnosticLocation[] expectedLocations, string diagnosticId, DiagnosticAnalyzer diagnosticAnalyzer)
         {
-            var baseResult = CSharpDiagnostic(DiagnosticId);
+            var baseResult = CSharpDiagnostic(diagnosticAnalyzer, diagnosticId);
             var expected = expectedLocations.Select(l => baseResult.WithLocation(l.Line, l.Col)).ToArray();
             
-            var doc = CreateProject(new[] {descriptor.Code})
+            var doc = CreateProject(new[] {descriptor.Code}, diagnosticAnalyzer)
                 .AddMetadataReferences(descriptor.References.Select(assembly => MetadataReference.CreateFromFile(assembly.Location)))
                 .Documents
                 .First();
 
-            var analyzersArray = ImmutableArray.Create(DiagnosticAnalyzer);
+            var analyzersArray = ImmutableArray.Create(diagnosticAnalyzer);
 
             var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzersArray, new[] {doc}, CancellationToken.None)
                 .ConfigureAwait(false);
@@ -130,9 +104,9 @@ namespace Agoda.Analyzers.Test.Helpers
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that the task will observe.</param>
         /// <param name="filename">The filename or null if the default filename should be used</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        private Task VerifyDiagnosticsAsync(string source, DiagnosticResult[] expected, CancellationToken cancellationToken, string filename = null)
+        private Task VerifyDiagnosticsAsync(string source, DiagnosticResult[] expected, CancellationToken cancellationToken, string diagnosticId, DiagnosticAnalyzer diagnosticAnalyzer, string filename = null)
         {
-            return VerifyDiagnosticsAsync(new[] {source}, LanguageNames.CSharp, GetCSharpDiagnosticAnalyzers(), expected, cancellationToken, filename != null ? new[] {filename} : null);
+            return VerifyDiagnosticsAsync(new[] {source}, LanguageNames.CSharp, diagnosticAnalyzer, GetCSharpDiagnosticAnalyzers(diagnosticAnalyzer), expected, cancellationToken, filename != null ? new[] {filename} : null);
         }
 
         /// <summary>
@@ -148,9 +122,9 @@ namespace Agoda.Analyzers.Test.Helpers
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that the task will observe.</param>
         /// <param name="filenames">The filenames or null if the default filename should be used</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        private Task VerifyDiagnosticsAsync(string[] sources, DiagnosticResult[] expected, CancellationToken cancellationToken, string[] filenames = null)
+        private Task VerifyDiagnosticsAsync(string[] sources, DiagnosticResult[] expected, CancellationToken cancellationToken, DiagnosticAnalyzer diagnosticAnalyzer, string[] filenames = null)
         {
-            return VerifyDiagnosticsAsync(sources, LanguageNames.CSharp, GetCSharpDiagnosticAnalyzers().ToImmutableArray(), expected, cancellationToken, filenames);
+            return VerifyDiagnosticsAsync(sources, LanguageNames.CSharp, diagnosticAnalyzer, GetCSharpDiagnosticAnalyzers(diagnosticAnalyzer).ToImmutableArray(), expected, cancellationToken, filenames);
         }
 
         /// <summary>
@@ -402,9 +376,9 @@ namespace Agoda.Analyzers.Test.Helpers
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that the task will observe.</param>
         /// <param name="filenames">The filenames or null if the default filename should be used</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        private async Task VerifyDiagnosticsAsync(string[] sources, string language, ImmutableArray<DiagnosticAnalyzer> analyzers, DiagnosticResult[] expected, CancellationToken cancellationToken, string[] filenames)
+        private async Task VerifyDiagnosticsAsync(string[] sources, string language, DiagnosticAnalyzer diagnosticAnalyzer, ImmutableArray<DiagnosticAnalyzer> analyzers, DiagnosticResult[] expected, CancellationToken cancellationToken, string[] filenames)
         {
-            VerifyDiagnosticsAsync(await GetSortedDiagnosticsAsync(sources, language, analyzers, cancellationToken, filenames).ConfigureAwait(false), analyzers, expected);
+            VerifyDiagnosticsAsync(await GetSortedDiagnosticsAsync(sources, language, diagnosticAnalyzer, analyzers, cancellationToken, filenames).ConfigureAwait(false), analyzers, expected);
 
             // If filenames is null we want to test for exclusions too
             if (filenames == null)
@@ -420,7 +394,7 @@ namespace Agoda.Analyzers.Test.Helpers
                         .Select(x => x.WithLineOffset(1))
                         .ToArray();
 
-                    VerifyDiagnosticsAsync(await GetSortedDiagnosticsAsync(sources.Select(x => " // <auto-generated>\r\n" + x).ToArray(), language, analyzers, cancellationToken, null).ConfigureAwait(false), analyzers, expectedResults);
+                    VerifyDiagnosticsAsync(await GetSortedDiagnosticsAsync(sources.Select(x => " // <auto-generated>\r\n" + x).ToArray(), language, diagnosticAnalyzer, analyzers, cancellationToken, null).ConfigureAwait(false), analyzers, expectedResults);
                 }
             }
         }

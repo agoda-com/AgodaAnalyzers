@@ -90,7 +90,7 @@ namespace Agoda.Analyzers.Test.Helpers
         /// <param name="fileName">The file name for the document, or <see langword="null"/> to generate a default
         /// filename according to the specified <paramref name="language"/>.</param>
         /// <returns>A <see cref="Document"/> created from the source string.</returns>
-        protected Document CreateDocument(string source, string language = LanguageNames.CSharp, string fileName = null)
+        protected Document CreateDocument(string source, DiagnosticAnalyzer diagnosticAnalyzer, string language = LanguageNames.CSharp, string fileName = null)
         {
             string[] filenames = null;
             if (fileName != null)
@@ -98,7 +98,7 @@ namespace Agoda.Analyzers.Test.Helpers
                 filenames = new[] {fileName};
             }
 
-            return CreateProject(new[] {source}, language, filenames).Documents.Single();
+            return CreateProject(new[] {source}, diagnosticAnalyzer, language, filenames).Documents.Single();
         }
 
         /// <summary>
@@ -186,9 +186,9 @@ namespace Agoda.Analyzers.Test.Helpers
             return null;
         }
 
-        protected DiagnosticResult CSharpDiagnostic(string diagnosticId = null)
+        protected DiagnosticResult CSharpDiagnostic(DiagnosticAnalyzer diagnosticAnalyzer, string diagnosticId = null)
         {
-            var analyzers = GetCSharpDiagnosticAnalyzers();
+            var analyzers = GetCSharpDiagnosticAnalyzers(diagnosticAnalyzer);
             var supportedDiagnostics = analyzers.SelectMany(analyzer => analyzer.SupportedDiagnostics);
             if (diagnosticId == null)
             {
@@ -224,10 +224,10 @@ namespace Agoda.Analyzers.Test.Helpers
         /// <param name="filenames">The filenames or null if the default filename should be used</param>
         /// <returns>A <see cref="Project"/> created out of the <see cref="Document"/>s created from the source
         /// strings.</returns>
-        protected Project CreateProject(string[] sources, string language = LanguageNames.CSharp, string[] filenames = null)
+        protected Project CreateProject(string[] sources, DiagnosticAnalyzer diagnosticAnalyzer, string language = LanguageNames.CSharp, string[] filenames = null)
         {
             var project = CreateProjectImpl(sources, language, filenames);
-            return ApplyCompilationOptions(project);
+            return ApplyCompilationOptions(project, diagnosticAnalyzer);
         }
 
         /// <summary>
@@ -271,9 +271,9 @@ namespace Agoda.Analyzers.Test.Helpers
         /// </remarks>
         /// <param name="project">The project.</param>
         /// <returns>The modified project.</returns>
-        protected virtual Project ApplyCompilationOptions(Project project)
+        protected virtual Project ApplyCompilationOptions(Project project, DiagnosticAnalyzer diagnosticAnalyzer)
         {
-            var analyzers = GetCSharpDiagnosticAnalyzers();
+            var analyzers = GetCSharpDiagnosticAnalyzers(diagnosticAnalyzer);
 
             var supportedDiagnosticsSpecificOptions = new Dictionary<string, ReportDiagnostic>();
             foreach (var analyzer in analyzers)
@@ -325,9 +325,9 @@ namespace Agoda.Analyzers.Test.Helpers
         /// <param name="filenames">The filenames or null if the default filename should be used</param>
         /// <returns>A collection of <see cref="Diagnostic"/>s that surfaced in the source code, sorted by
         /// <see cref="Diagnostic.Location"/>.</returns>
-        private Task<ImmutableArray<Diagnostic>> GetSortedDiagnosticsAsync(string[] sources, string language, ImmutableArray<DiagnosticAnalyzer> analyzers, CancellationToken cancellationToken, string[] filenames)
+        private Task<ImmutableArray<Diagnostic>> GetSortedDiagnosticsAsync(string[] sources, string language, DiagnosticAnalyzer diagnosticAnalyzer, ImmutableArray<DiagnosticAnalyzer> analyzers, CancellationToken cancellationToken, string[] filenames)
         {
-            return GetSortedDiagnosticsFromDocumentsAsync(analyzers, GetDocuments(sources, language, filenames), cancellationToken);
+            return GetSortedDiagnosticsFromDocumentsAsync(analyzers, GetDocuments(sources, language, filenames, diagnosticAnalyzer), cancellationToken);
         }
 
         /// <summary>
@@ -339,14 +339,14 @@ namespace Agoda.Analyzers.Test.Helpers
         /// <see cref="LanguageNames"/> class.</param>
         /// <param name="filenames">The filenames or null if the default filename should be used</param>
         /// <returns>A collection of <see cref="Document"/>s representing the sources.</returns>
-        private Document[] GetDocuments(string[] sources, string language, string[] filenames)
+        private Document[] GetDocuments(string[] sources, string language, string[] filenames, DiagnosticAnalyzer diagnosticAnalyzer)
         {
             if (language != LanguageNames.CSharp && language != LanguageNames.VisualBasic)
             {
                 throw new ArgumentException("Unsupported Language");
             }
 
-            var project = CreateProject(sources, language, filenames);
+            var project = CreateProject(sources, diagnosticAnalyzer, language, filenames);
             var documents = project.Documents.ToArray();
 
             if (sources.Length != documents.Length)
@@ -357,9 +357,9 @@ namespace Agoda.Analyzers.Test.Helpers
             return documents;
         }
 
-        protected ImmutableArray<DiagnosticAnalyzer> GetCSharpDiagnosticAnalyzers()
+        protected ImmutableArray<DiagnosticAnalyzer> GetCSharpDiagnosticAnalyzers(DiagnosticAnalyzer diagnosticAnalyzer)
         {
-            return ImmutableArray.Create(DiagnosticAnalyzer);
+            return ImmutableArray.Create(diagnosticAnalyzer);
         }
     }
 }
