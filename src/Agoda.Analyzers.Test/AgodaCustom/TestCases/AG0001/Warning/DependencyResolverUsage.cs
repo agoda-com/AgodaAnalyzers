@@ -1,5 +1,4 @@
-﻿/*12,39*/
-/*System.Web.Mvc*/
+﻿/*11,39*/
 interface ISomething
 {
     void DoSomething();

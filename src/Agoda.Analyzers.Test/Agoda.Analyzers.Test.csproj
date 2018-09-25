@@ -32,6 +32,7 @@
     <Compile Remove="AgodaCustom\TestCases\AG0002\NoWarning\InterfaceImplementationShouldNotCauseAnyError.cs" />
     <Compile Remove="AgodaCustom\TestCases\AG0002\NoWarning\PublicDeclarationShouldNotCauseAnyIssue.cs" />
     <Compile Remove="AgodaCustom\TestCases\AG0002\Warning\NotPartOfTheInterfaceShouldNotBeInternal.cs" />
+    <Compile Remove="AgodaCustom\TestCases\AG0003\Warning\HttpContextAsArgument.cs" />
     <Compile Remove="AgodaCustom\TestCases\AG0024\FactoryStartNewWithLongRunningParameter.cs" />
     <Compile Remove="AgodaCustom\TestCases\AG0024\FactoryStartNewWithMethodParameter.cs" />
     <Compile Remove="AgodaCustom\TestCases\AG0024\FactoryStartNewWithMultipleParameters.cs" />
@@ -42,6 +43,7 @@
     <EmbeddedResource Include="AgodaCustom\TestCases\AG0002\NoWarning\InterfaceImplementationShouldNotCauseAnyError.cs" />
     <EmbeddedResource Include="AgodaCustom\TestCases\AG0002\NoWarning\PublicDeclarationShouldNotCauseAnyIssue.cs" />
     <EmbeddedResource Include="AgodaCustom\TestCases\AG0002\Warning\NotPartOfTheInterfaceShouldNotBeInternal.cs" />
+    <EmbeddedResource Include="AgodaCustom\TestCases\AG0003\Warning\HttpContextAsArgument.cs" />
     <EmbeddedResource Include="AgodaCustom\TestCases\AG0024\NoWarning\FactoryStartNewWithLongRunningParameter.cs" />
     <EmbeddedResource Include="AgodaCustom\TestCases\AG0024\Warning\FactoryStartNewWithMultipleParameters.cs" />
     <EmbeddedResource Include="AgodaCustom\TestCases\AG0024\Warning\FactoryStartNewWithMethodParameter.cs" />

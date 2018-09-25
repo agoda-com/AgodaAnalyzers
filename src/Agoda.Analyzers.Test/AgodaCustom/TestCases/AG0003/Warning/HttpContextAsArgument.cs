@@ -1,5 +1,4 @@
-﻿/*5, 23, 10, 30, 14, 24*/
-/*System.Web*/
+﻿/*6,21,10,30,14,24*/
 using System.Web;
 
 interface ISomething

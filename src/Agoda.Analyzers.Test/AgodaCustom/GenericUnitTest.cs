@@ -30,14 +30,14 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 //The first line of the test case needs to be locations
                 var locations = GetLocationsFromConfig(code);
                 //The second line of the test case needs to be locations
-                var references = GetReferencesFromConfig(code, 1);
-                await ExecuteTestCaseWithWarning(properties, code, locations, references, diagnosticAnalyzer);
+                var assemblies = GetReferencedAssembliesFromConfig(properties.DiagnosticId);
+                await ExecuteTestCaseWithWarning(properties, code, locations, assemblies, diagnosticAnalyzer);
             }
             else
             {
                 //The first line of the test case needs to be references
-                var references = GetReferencesFromConfig(code, 0);
-                await ExecuteTestCaseWithNoWarning(code, references, properties.DiagnosticId, diagnosticAnalyzer);
+                var assemblies = GetReferencedAssembliesFromConfig(properties.DiagnosticId);
+                await ExecuteTestCaseWithNoWarning(code, assemblies, properties.DiagnosticId, diagnosticAnalyzer);
             }
         }
 
@@ -95,24 +95,20 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 .ToArray();
         }
 
-        private List<string> GetReferencesFromConfig(string code, int index)
+        private IEnumerable<Assembly> GetReferencedAssembliesFromConfig(string diagnosticId)
         {
-            var indexLine = code.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).ElementAt(index);
-            
-            //There is no index line
-            if (indexLine == null)
+            var referenceType = Assembly.GetExecutingAssembly()
+                .GetTypes().
+                FirstOrDefault(c => c.IsSubclassOf(typeof(GenericReferences)) 
+                && c.Name.StartsWith(diagnosticId));
+
+            if (referenceType == null)
                 return null;
 
-            //There is no comment
-            if (!indexLine.Contains("/*") || !indexLine.Replace("/*", String.Empty).Contains("*/"))
-                return null;
+            var referencesClass = (GenericReferences)Activator.CreateInstance(referenceType);
 
-            return indexLine
-                .Replace("/*", String.Empty)
-                .Replace("*/", String.Empty)
-                .Trim()
-                .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                .ToList();
+            var references = referencesClass.ReferenceDefinitions();
+            return references.Select(r => r.Assembly);
         }
 
         public static List<string> GetAllTestCases()
@@ -134,33 +130,41 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         }
 
 
-        private async Task ExecuteTestCaseWithWarning(TestCaseProperties testCase, string code, int[] locations, List<string> references, DiagnosticAnalyzer diagnosticAnalyzer)
+        private async Task ExecuteTestCaseWithWarning(TestCaseProperties testCase, string code, int[] locations, IEnumerable<Assembly> assemblies, DiagnosticAnalyzer diagnosticAnalyzer)
         {
-            var codeDescriptor = GetCodeDescriptor(code, references);
+            var codeDescriptor = GetCodeDescriptor(code, assemblies);
             if (locations.Length % 2 == 1)
-                throw new System.Exception($"Location must contain line and column. Test case {testCase.Name}.");
+                throw new Exception($"Location must contain line and column. Test case {testCase.Name}.");
 
+            var diagLocations = GetDiagnosticLocations(locations);
+            await VerifyDiagnosticsAsync(codeDescriptor, diagLocations, testCase.DiagnosticId, diagnosticAnalyzer);
+        }
+
+        private DiagnosticLocation[] GetDiagnosticLocations(int[] locations)
+        {
+            var diagLocations = new List<DiagnosticLocation>();
             for (int i = 0; i < locations.Length; i += 2)
             {
                 int line = locations[i];
                 int column = locations[i + 1];
-                await VerifyDiagnosticsAsync(codeDescriptor, new DiagnosticLocation(line, column), testCase.DiagnosticId, diagnosticAnalyzer);
+                diagLocations.Add(new DiagnosticLocation(line, column));
             }
+            return diagLocations.ToArray();
         }
 
-        private async Task ExecuteTestCaseWithNoWarning(string code, List<string> references, string diagnosticId, DiagnosticAnalyzer diagnosticAnalyzer)
+        private async Task ExecuteTestCaseWithNoWarning(string code, IEnumerable<Assembly> assemblies, string diagnosticId, DiagnosticAnalyzer diagnosticAnalyzer)
         {
-            var codeDescriptor = GetCodeDescriptor(code, references);
+            var codeDescriptor = GetCodeDescriptor(code, assemblies);
             await VerifyDiagnosticsAsync(codeDescriptor, EmptyDiagnosticResults, diagnosticId, diagnosticAnalyzer);
         }
 
-        private CodeDescriptor GetCodeDescriptor(string code, List<string> references)
+        private CodeDescriptor GetCodeDescriptor(string code, IEnumerable<Assembly> assemblies)
         {
             var codeDescriptor = new CodeDescriptor();
             codeDescriptor.Code = code;
 
-            if (references != null)
-                codeDescriptor.References = references?.Select(a => GetAssemblyByName(a));
+            if (assemblies != null)
+                codeDescriptor.References = assemblies;
 
             return codeDescriptor;
         }
