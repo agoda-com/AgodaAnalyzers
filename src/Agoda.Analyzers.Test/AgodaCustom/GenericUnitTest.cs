@@ -7,12 +7,12 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Runtime.Caching;
+using RefMvc = System.Web.Mvc;
 
 namespace Agoda.Analyzers.Test.AgodaCustom
 {
     public class GenericUnitTest : DiagnosticVerifier
     {
-
         const string AnalyzersAssemblyName = "Agoda.Analyzers";
         const string TestCasePrefix = "Agoda.Analyzers.Test.AgodaCustom.TestCases";
         
@@ -191,5 +191,10 @@ namespace Agoda.Analyzers.Test.AgodaCustom
             IsWarning = warningValue.ToLower() == "warning";
             Name = withoutPrefix.Replace($".{DiagnosticId}.{warningValue}.", String.Empty);
         }
+    }
+
+    public abstract class GenericReferences
+    {
+        public abstract IEnumerable<Type> ReferenceDefinitions();
     }
 }
