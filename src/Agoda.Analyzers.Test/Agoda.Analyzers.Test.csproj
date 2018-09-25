@@ -27,6 +27,16 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="AgodaCustom\TestCases\AG0024\FactoryStartNewWithLongRunningParameter.cs" />
+    <Compile Remove="AgodaCustom\TestCases\AG0024\FactoryStartNewWithMethodParameter.cs" />
+    <Compile Remove="AgodaCustom\TestCases\AG0024\FactoryStartNewWithMultipleParameters.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="AgodaCustom\TestCases\AG0024\NoWarning\FactoryStartNewWithLongRunningParameter.cs" />
+    <EmbeddedResource Include="AgodaCustom\TestCases\AG0024\Warning\FactoryStartNewWithMultipleParameters.cs" />
+    <EmbeddedResource Include="AgodaCustom\TestCases\AG0024\Warning\FactoryStartNewWithMethodParameter.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\Agoda.Analyzers.CodeFixes\Agoda.Analyzers.CodeFixes.csproj" />
     <ProjectReference Include="..\Agoda.Analyzers\Agoda.Analyzers.csproj" />
   </ItemGroup>
@@ -123,6 +133,7 @@
       <HintPath>..\packages\System.Reflection.Metadata.1.2.0\lib\portable-net45+win8\System.Reflection.Metadata.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
