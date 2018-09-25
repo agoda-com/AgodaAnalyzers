@@ -17,11 +17,11 @@ namespace Agoda.Analyzers.Test.StyleCop
     /// </summary>
     public class SA1107UnitTests : CodeFixVerifier
     {
-        protected override DiagnosticAnalyzer DiagnosticAnalyzer => new SA1107CodeMustNotContainMultipleStatementsOnOneLine();
+        protected DiagnosticAnalyzer DiagnosticAnalyzer => new SA1107CodeMustNotContainMultipleStatementsOnOneLine();
         
-        protected override string DiagnosticId => SA1107CodeMustNotContainMultipleStatementsOnOneLine.DIAGNOSTIC_ID;
+        protected string DiagnosticId => SA1107CodeMustNotContainMultipleStatementsOnOneLine.DIAGNOSTIC_ID;
         
-        protected override CodeFixProvider CodeFixProvider => new SA1107CodeFixProvider();
+        protected CodeFixProvider CodeFixProvider => new SA1107CodeFixProvider();
         
         [Test]
         public async Task TestCorrectCodeAsync()
@@ -50,7 +50,7 @@ namespace Agoda.Analyzers.Test.StyleCop
                 }
             ";
             
-            await VerifyDiagnosticsAsync(testCode, EmptyDiagnosticResults);
+            await VerifyDiagnosticsAsync(testCode, EmptyDiagnosticResults, DiagnosticId, DiagnosticAnalyzer);
         }
 
         [Test]
@@ -109,9 +109,9 @@ class ClassName
 }
 ";
 
-            await VerifyDiagnosticsAsync(testCode, expected);
-            await VerifyDiagnosticsAsync(fixedCode, EmptyDiagnosticResults);
-            await VerifyCodeFixAsync(testCode, fixedCode);
+            await VerifyDiagnosticsAsync(testCode, expected, DiagnosticId, DiagnosticAnalyzer);
+            await VerifyDiagnosticsAsync(fixedCode, EmptyDiagnosticResults, DiagnosticId, DiagnosticAnalyzer);
+            await VerifyCodeFixAsync(testCode, fixedCode, CodeFixProvider, DiagnosticAnalyzer);
         }
 
         [Test]
@@ -127,7 +127,7 @@ class ClassName
                 }
             ";
             
-            await VerifyDiagnosticsAsync(testCode, EmptyDiagnosticResults);
+            await VerifyDiagnosticsAsync(testCode, EmptyDiagnosticResults, DiagnosticId, DiagnosticAnalyzer);
         }
     }
 }
