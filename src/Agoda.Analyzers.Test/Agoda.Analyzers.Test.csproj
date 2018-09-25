@@ -27,6 +27,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="AgodaCustom\TestCases\AG0001\Warning\DependencyResolverUsage.cs" />
     <Compile Remove="AgodaCustom\TestCases\AG0002\NoWarning\CorrectDeclarationShouldNotCauseAnyIssue.cs" />
     <Compile Remove="AgodaCustom\TestCases\AG0002\NoWarning\InterfaceImplementationShouldNotCauseAnyError.cs" />
     <Compile Remove="AgodaCustom\TestCases\AG0002\NoWarning\PublicDeclarationShouldNotCauseAnyIssue.cs" />
@@ -36,6 +37,7 @@
     <Compile Remove="AgodaCustom\TestCases\AG0024\FactoryStartNewWithMultipleParameters.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="AgodaCustom\TestCases\AG0001\Warning\DependencyResolverUsage.cs" />
     <EmbeddedResource Include="AgodaCustom\TestCases\AG0002\NoWarning\CorrectDeclarationShouldNotCauseAnyIssue.cs" />
     <EmbeddedResource Include="AgodaCustom\TestCases\AG0002\NoWarning\InterfaceImplementationShouldNotCauseAnyError.cs" />
     <EmbeddedResource Include="AgodaCustom\TestCases\AG0002\NoWarning\PublicDeclarationShouldNotCauseAnyIssue.cs" />

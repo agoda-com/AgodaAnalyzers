@@ -24,9 +24,21 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 
             var diagnosticAnalyzer = GetDiagnosticsFromTestCase(properties.DiagnosticId);
 
-            await ((properties.IsWarning) ?
-                ExecuteTestCaseWithWarning(properties, code, GetLocationsFromConfig(code), diagnosticAnalyzer) 
-                : ExecuteTestCaseWithNoWarning(code, properties.DiagnosticId, diagnosticAnalyzer));
+
+            if(properties.IsWarning)
+            {
+                //The first line of the test case needs to be locations
+                var locations = GetLocationsFromConfig(code);
+                //The second line of the test case needs to be locations
+                var references = GetReferencesFromConfig(code, 1);
+                await ExecuteTestCaseWithWarning(properties, code, locations, references, diagnosticAnalyzer);
+            }
+            else
+            {
+                //The first line of the test case needs to be references
+                var references = GetReferencesFromConfig(code, 0);
+                await ExecuteTestCaseWithNoWarning(code, references, properties.DiagnosticId, diagnosticAnalyzer);
+            }
         }
 
         private Assembly GetAnalyzersAssembly()
@@ -82,7 +94,27 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 .Select(entry => Convert.ToInt32(entry))
                 .ToArray();
         }
-        
+
+        private List<string> GetReferencesFromConfig(string code, int index)
+        {
+            var indexLine = code.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).ElementAt(index);
+            
+            //There is no index line
+            if (indexLine == null)
+                return null;
+
+            //There is no comment
+            if (!indexLine.Contains("/*") || !indexLine.Replace("/*", String.Empty).Contains("*/"))
+                return null;
+
+            return indexLine
+                .Replace("/*", String.Empty)
+                .Replace("*/", String.Empty)
+                .Trim()
+                .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                .ToList();
+        }
+
         public static List<string> GetAllTestCases()
         {
             var embeddedResources = Assembly.GetExecutingAssembly().GetManifestResourceNames().ToList();
@@ -102,8 +134,9 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         }
 
 
-        private async Task ExecuteTestCaseWithWarning(TestCaseProperties testCase, string code, int[] locations, DiagnosticAnalyzer diagnosticAnalyzer)
+        private async Task ExecuteTestCaseWithWarning(TestCaseProperties testCase, string code, int[] locations, List<string> references, DiagnosticAnalyzer diagnosticAnalyzer)
         {
+            var codeDescriptor = GetCodeDescriptor(code, references);
             if (locations.Length % 2 == 1)
                 throw new System.Exception($"Location must contain line and column. Test case {testCase.Name}.");
 
@@ -111,13 +144,35 @@ namespace Agoda.Analyzers.Test.AgodaCustom
             {
                 int line = locations[i];
                 int column = locations[i + 1];
-                await VerifyDiagnosticsAsync(code, new DiagnosticLocation(line, column), testCase.DiagnosticId, diagnosticAnalyzer);
+                await VerifyDiagnosticsAsync(codeDescriptor, new DiagnosticLocation(line, column), testCase.DiagnosticId, diagnosticAnalyzer);
             }
         }
 
-        private async Task ExecuteTestCaseWithNoWarning(string code, string diagnosticId, DiagnosticAnalyzer diagnosticAnalyzer)
+        private async Task ExecuteTestCaseWithNoWarning(string code, List<string> references, string diagnosticId, DiagnosticAnalyzer diagnosticAnalyzer)
         {
-            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults, diagnosticId, diagnosticAnalyzer);
+            var codeDescriptor = GetCodeDescriptor(code, references);
+            await VerifyDiagnosticsAsync(codeDescriptor, EmptyDiagnosticResults, diagnosticId, diagnosticAnalyzer);
+        }
+
+        private CodeDescriptor GetCodeDescriptor(string code, List<string> references)
+        {
+            var codeDescriptor = new CodeDescriptor();
+            codeDescriptor.Code = code;
+
+            if (references != null)
+                codeDescriptor.References = references?.Select(a => GetAssemblyByName(a));
+
+            return codeDescriptor;
+        }
+
+        private Assembly GetAssemblyByName(string name)
+        {
+            var assemblyName = Assembly.GetExecutingAssembly().
+                GetReferencedAssemblies().
+                FirstOrDefault(assembly => assembly.FullName.Contains(name));
+
+            //Load the assembly
+            return Assembly.Load(assemblyName.FullName);
         }
     }
 
