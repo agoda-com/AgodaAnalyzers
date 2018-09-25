@@ -16,11 +16,11 @@ namespace Agoda.Analyzers.Test.CodeFixes.AgodaCustom
 {
     class AG0022RemoveSyncMethodUnitTests : CodeFixVerifier
     {
-        protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0022DoNotExposeBothSyncAndAsyncVersionsOfMethods();
+        protected DiagnosticAnalyzer DiagnosticAnalyzer => new AG0022DoNotExposeBothSyncAndAsyncVersionsOfMethods();
         
-        protected override string DiagnosticId => AG0022DoNotExposeBothSyncAndAsyncVersionsOfMethods.DIAGNOSTIC_ID;
+        protected string DiagnosticId => AG0022DoNotExposeBothSyncAndAsyncVersionsOfMethods.DIAGNOSTIC_ID;
         
-        protected override CodeFixProvider CodeFixProvider => new AG0022RemoveSyncMethodFixProvider();
+        protected CodeFixProvider CodeFixProvider => new AG0022RemoveSyncMethodFixProvider();
 
         [Test]
         public async Task AG0022_ForInterface_ShouldRemoveSyncVersion()
@@ -44,7 +44,7 @@ namespace Agoda.Analyzers.Test.CodeFixes.AgodaCustom
                 }
             ";
             
-            await VerifyCodeFixAsync(code, result);
+            await VerifyCodeFixAsync(code, result, CodeFixProvider, DiagnosticAnalyzer);
         }
         
         [Test]
@@ -78,7 +78,7 @@ namespace Agoda.Analyzers.Test.CodeFixes.AgodaCustom
                 }
             ";
             
-            await VerifyCodeFixAsync(code, result);
+            await VerifyCodeFixAsync(code, result, CodeFixProvider, DiagnosticAnalyzer);
         }
         
         [Test]
@@ -114,7 +114,7 @@ namespace Agoda.Analyzers.Test.CodeFixes.AgodaCustom
                 }
             ";
             
-            await VerifyCodeFixAsync(code, result);
+            await VerifyCodeFixAsync(code, result, CodeFixProvider, DiagnosticAnalyzer);
         }
     }
 }

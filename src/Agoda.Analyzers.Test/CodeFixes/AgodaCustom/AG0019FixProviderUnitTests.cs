@@ -14,11 +14,11 @@ namespace Agoda.Analyzers.Test.CodeFixes.AgodaCustom
 {
     internal class AG0019FixProviderUnitTests : CodeFixVerifier
     {
-        protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0019PreventUseOfInternalsVisibleToAttribute();
+        protected DiagnosticAnalyzer DiagnosticAnalyzer => new AG0019PreventUseOfInternalsVisibleToAttribute();
         
-        protected override string DiagnosticId => AG0019PreventUseOfInternalsVisibleToAttribute.DIAGNOSTIC_ID;
+        protected string DiagnosticId => AG0019PreventUseOfInternalsVisibleToAttribute.DIAGNOSTIC_ID;
         
-        protected override CodeFixProvider CodeFixProvider => new AG0019PreventUseOfInternalsVisibleToAttributeFixProvider();
+        protected CodeFixProvider CodeFixProvider => new AG0019PreventUseOfInternalsVisibleToAttributeFixProvider();
         
         [Test]
         public async Task AG0019_ShouldRemoveAttributeCorrectly()
@@ -74,7 +74,7 @@ namespace Agoda.Analyzers.Test.CodeFixes.AgodaCustom
                             }
                         }
                     ";
-            await VerifyCodeFixAsync(code, result, allowNewCompilerDiagnostics:true);
+            await VerifyCodeFixAsync(code, result, CodeFixProvider, DiagnosticAnalyzer, allowNewCompilerDiagnostics: true);
         }
     }
 }
