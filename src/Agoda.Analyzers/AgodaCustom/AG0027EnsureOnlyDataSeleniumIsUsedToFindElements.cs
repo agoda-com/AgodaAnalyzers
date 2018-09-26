@@ -57,20 +57,23 @@ namespace Agoda.Analyzers.AgodaCustom
                 return;
             }
             
+            // check string literal
             var firstArgument = invocationExpressionSyntax.ArgumentList.Arguments.FirstOrDefault();
-            
             if (firstArgument?.Expression is LiteralExpressionSyntax && !MatchDataSelenium.IsMatch(firstArgument.ToString()))
             {
                 context.ReportDiagnostic(Diagnostic.Create(Descriptor, firstArgument.GetLocation()));
             }
 
-            if (firstArgument?.Expression is IdentifierNameSyntax)
+            if (!(firstArgument?.Expression is IdentifierNameSyntax))
             {
-                var constantValue = context.SemanticModel.GetConstantValue(firstArgument.Expression);
-                if (constantValue.HasValue && !MatchDataSelenium.IsMatch($@"""{constantValue.Value}"""))
-                {
-                    context.ReportDiagnostic(Diagnostic.Create(Descriptor, firstArgument.GetLocation()));
-                }
+                return;
+            }
+            
+            // check compile-time constant
+            var constantValue = context.SemanticModel.GetConstantValue(firstArgument.Expression);
+            if (constantValue.HasValue && !MatchDataSelenium.IsMatch($@"""{constantValue.Value}"""))
+            {
+                context.ReportDiagnostic(Diagnostic.Create(Descriptor, firstArgument.GetLocation()));
             }
         }
     }
