@@ -14,7 +14,7 @@ namespace Agoda.Analyzers.Test.Helpers.TestCaseExecutors
     /// </summary>
     public abstract class GenericTestCase : DiagnosticVerifier
     {
-        public TestCaseProperties TestCaseProperties;
+        public TestCaseProperties TestCaseProperties { get; set; }
 
         public GenericTestCase(TestCaseProperties testCaseProperties)
         {
