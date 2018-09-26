@@ -11,7 +11,7 @@ using Microsoft.CodeAnalysis;
 namespace Agoda.Analyzers.AgodaCustom
 {
     [Microsoft.CodeAnalysis.Diagnostics.DiagnosticAnalyzer(LanguageNames.CSharp)]
-    public class AG0023PreventUseOfThreadSleep : ForbiddenMethodInvocationAnalyzerBase
+    public class AG0023PreventUseOfThreadSleep : PermittedMethodInvocationAnalyzerBase
     {
         public const string DIAGNOSTIC_ID = "AG0023";
 
@@ -35,7 +35,7 @@ namespace Agoda.Analyzers.AgodaCustom
             DiagnosticSeverity.Warning,
             AnalyzerConstants.EnabledByDefault,
             nameof(AG0023PreventUseOfThreadSleep),
-            "https://github.agodadev.io/pages/standards-c-sharp/code-standards/async/avoid-blocking.html", 
+            "https://agoda-com.github.io/standards-c-sharp/async/avoid-blocking.html", 
             WellKnownDiagnosticTags.EditAndContinue);
 
 

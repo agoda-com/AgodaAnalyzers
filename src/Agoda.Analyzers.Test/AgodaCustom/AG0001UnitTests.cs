@@ -27,12 +27,11 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 					class TestClass {
 						public void TestMethod() {
 							var instance = System.Web.Mvc.DependencyResolver.Current.GetService(typeof(ISomething));
-							//instance.DoSomething();
 						}
 					}"
 	        };
 
-            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(8, 38));
+            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(8, 57));
         }
 
     }

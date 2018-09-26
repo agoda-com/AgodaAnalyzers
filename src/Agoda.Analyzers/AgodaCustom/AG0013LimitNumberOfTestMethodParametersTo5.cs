@@ -31,7 +31,7 @@ namespace Agoda.Analyzers.AgodaCustom
                 DiagnosticSeverity.Warning, 
                 AnalyzerConstants.EnabledByDefault, 
                 DescriptionContentLoader.GetAnalyzerDescription(nameof(AG0013LimitNumberOfTestMethodParametersTo5)), 
-                "https://github.agodadev.io/pages/standards-c-sharp/code-standards/unit-testing/use-test-cases-appropriately.html", 
+                "https://agoda-com.github.io/standards-c-sharp/unit-testing/use-test-cases-appropriately.html", 
                 WellKnownDiagnosticTags.EditAndContinue
             );
         }

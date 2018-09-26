@@ -1,0 +1,17 @@
+﻿<p>
+    Use <code>await task</code> instead of <code>task.Result</code>
+</p>
+<p>
+    By design, <code>Task.Result</code> blocks the current thread until the task completes.
+    This defeats the purpose of writing async code. It also has the potential to cause deadlocks.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<code>
+    var result = task.Result;
+</code>
+
+<h2>Compliant Code Example</h2>
+<code>
+    var result = await task;
+</code>

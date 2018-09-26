@@ -10,10 +10,10 @@ using Agoda.Analyzers.Helpers;
 namespace Agoda.Analyzers.AgodaCustom
 {
     /// <summary>
-    /// Base class from which we can forbid the invocation of certain methods simply by defining their
-    /// namespace, type and name. 
+    /// Base class from which we can permit or forbid the invocation of certain methods by defining their namespace,
+    /// type and name. 
     /// </summary>
-    public abstract class ForbiddenMethodInvocationAnalyzerBase : DiagnosticAnalyzer
+    public abstract class PermittedMethodInvocationAnalyzerBase : DiagnosticAnalyzer
     {
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Descriptor);
         protected abstract DiagnosticDescriptor Descriptor { get; }
