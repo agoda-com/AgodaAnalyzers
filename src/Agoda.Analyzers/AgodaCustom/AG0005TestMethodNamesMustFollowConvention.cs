@@ -35,7 +35,7 @@ namespace Agoda.Analyzers.AgodaCustom
             DiagnosticSeverity.Warning, 
             AnalyzerConstants.EnabledByDefault, 
             Description, 
-            null, 
+            "https://agoda-com.github.io/standards-c-sharp/testing/test-method-names-should-clearly-indicate-what-they-are-testing.html", 
             WellKnownDiagnosticTags.EditAndContinue);
 
         // Test names must be in the format Xxxx_Yyyy or Xxxx_Yyyy_Zzzz 

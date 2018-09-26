@@ -14,10 +14,30 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 {
     class AG0032UnitTests : DiagnosticVerifier
     {
-        protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0032PreventUseOfTaskWait();
+        protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0032PreventUseOfBlockingTaskMethods();
         
-        protected override string DiagnosticId => AG0032PreventUseOfTaskWait.DIAGNOSTIC_ID;
+        protected override string DiagnosticId => AG0032PreventUseOfBlockingTaskMethods.DIAGNOSTIC_ID;
         
+	    [Test]
+	    public async Task AG0032_WithTaskGetAwaiter_ShowsWarning()
+	    {
+		    var code = @"
+				using System.Threading.Tasks;
+
+				namespace Test 
+				{
+					class TestClass
+					{
+						public void TestMethod() 
+						{
+							var awaiter = Task.CompletedTask.GetAwaiter();
+						}
+					}
+				}";
+
+		    await VerifyDiagnosticsAsync(code, new DiagnosticLocation(10, 41));
+	    }
+	    
 	    [Test]
         public async Task AG0032_WithTaskWait_ShowsWarning()
         {
@@ -26,7 +46,8 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 
 				namespace Test 
 				{
-					class TestClass {
+					class TestClass 
+					{
 						public void TestMethod() 
 						{
 							var task = Task.CompletedTask;
@@ -35,8 +56,9 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 					}
 				}";
 
-            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(10, 13));
+            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(11, 13));
         }
+	    
 	    [Test]
 	    public async Task AG0032_WithTaskWaitAll_ShowsWarning()
 	    {
@@ -45,7 +67,8 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 
 				namespace Test 
 				{
-					class TestClass {
+					class TestClass 
+					{
 						public void TestMethod() 
 						{
 							var tasks = new [] {Task.CompletedTask};
@@ -54,7 +77,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 					}
 				}";
 
-		    await VerifyDiagnosticsAsync(code, new DiagnosticLocation(10, 13));
+		    await VerifyDiagnosticsAsync(code, new DiagnosticLocation(11, 13));
 	    }
     }
 }

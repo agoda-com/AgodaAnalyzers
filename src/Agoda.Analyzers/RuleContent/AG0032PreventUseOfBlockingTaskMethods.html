@@ -9,17 +9,6 @@
 
 <h2>Noncompliant Code Example</h2>
 <code>
-    task.Wait();
-    var result = task.Result;
-</code>
-
-<h2>Compliant Code Example</h2>
-<code>
-    var result = await task;
-</code>
-
-<h2>Noncompliant Code Example</h2>
-<code>
     var task1 = DownloadFileAsync("...");
     var task2 = DownloadFileAsync("...");
     Task.WaitAll(task1, task2);

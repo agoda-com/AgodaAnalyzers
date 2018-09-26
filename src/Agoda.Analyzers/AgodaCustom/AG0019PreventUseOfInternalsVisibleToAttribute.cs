@@ -28,7 +28,7 @@ namespace Agoda.Analyzers.AgodaCustom
                 DiagnosticSeverity.Error,
                 AnalyzerConstants.EnabledByDefault,
                 DescriptionContentLoader.GetAnalyzerDescription(nameof(AG0019PreventUseOfInternalsVisibleToAttribute)),
-                "https://github.agodadev.io/pages/standards-c-sharp/code-standards/unit-testing/only-test-the-public-interface.html",
+                "https://agoda-com.github.io/standards-c-sharp/unit-testing/only-test-the-public-interface.html",
                 WellKnownDiagnosticTags.EditAndContinue);
         }
 
