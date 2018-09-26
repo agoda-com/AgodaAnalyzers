@@ -4,60 +4,44 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Text.RegularExpressions;
 
 namespace Agoda.Analyzers.AgodaCustom
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    public class AG0001DependencyResolverMustNotBeUsed : DiagnosticAnalyzer
+    public class AG0001DependencyResolverMustNotBeUsed : PermittedPropertyInvocationAnalyzerBase
     {
         public const string DIAGNOSTIC_ID = "AG0001";
-        
+
         private static readonly LocalizableString Title = new LocalizableResourceString(
-            nameof(CustomRulesResources.AG0001Title), 
-            CustomRulesResources.ResourceManager, 
+            nameof(CustomRulesResources.AG0001Title),
+            CustomRulesResources.ResourceManager,
             typeof(CustomRulesResources));
-        
+
         private static readonly LocalizableString MessageFormat = new LocalizableResourceString(
-            nameof(CustomRulesResources.AG0001MessageFormat), 
-            CustomRulesResources.ResourceManager, 
+            nameof(CustomRulesResources.AG0001MessageFormat),
+            CustomRulesResources.ResourceManager,
             typeof(CustomRulesResources));
-        
-        private static readonly LocalizableString Description 
+
+        private static readonly LocalizableString Description
             = DescriptionContentLoader.GetAnalyzerDescription(nameof(AG0001DependencyResolverMustNotBeUsed));
 
-        private static readonly DiagnosticDescriptor Descriptor = new DiagnosticDescriptor(
-            DIAGNOSTIC_ID, 
-            Title, 
-            MessageFormat, 
+        protected override DiagnosticDescriptor Descriptor => new DiagnosticDescriptor(
+            DIAGNOSTIC_ID,
+            Title,
+            MessageFormat,
             AnalyzerCategory.CustomQualityRules,
-            DiagnosticSeverity.Warning, 
-            AnalyzerConstants.EnabledByDefault, 
-            Description, 
-            "https://agoda-com.github.io/standards-c-sharp/di/attribute-based-registration.html", 
+            DiagnosticSeverity.Warning,
+            AnalyzerConstants.EnabledByDefault,
+            Description,
+            "https://agoda-com.github.io/standards-c-sharp/di/attribute-based-registration.html",
             WellKnownDiagnosticTags.EditAndContinue);
 
-        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Descriptor);
-
-        private static void HandleDependencyResolverUsage(SyntaxNodeAnalysisContext context)
+        protected override IEnumerable<PermittedInvocationRule> Rules => new[]
         {
-            var identifier = context.Node as IdentifierNameSyntax;
-            if (identifier?.Identifier.Text != "DependencyResolver")
-                return;
-
-            // making sure this is exactly the type of DependencyResolver we want to prevent being used
-            if (context.SemanticModel.GetTypeInfo(identifier).Type.ToDisplayString() == "System.Web.Mvc.DependencyResolver")
-            {
-                context.ReportDiagnostic(Diagnostic.Create(Descriptor, context.Node.GetLocation()));
-            }
-        }
-
-        public override void Initialize(AnalysisContext context)
-        {
-            context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
-            context.EnableConcurrentExecution();
-
-            context.RegisterSyntaxNodeAction(HandleDependencyResolverUsage, SyntaxKind.IdentifierName);
-        }
+            new BlacklistedInvocationRule("System.Web.Mvc.DependencyResolver", "Current")
+        };
     }
 }
