@@ -1,17 +1,12 @@
 ﻿using Agoda.Analyzers.Test.Helpers;
-using Microsoft.CodeAnalysis.Diagnostics;
 using NUnit.Framework;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 using Agoda.Analyzers.Test.Helpers.GenericTestHelpers;
-using Agoda.Analyzers.Test.Helpers.TestCaseExecutors;
 
 namespace Agoda.Analyzers.Test.AgodaCustom
 {
-    public class GenericUnitTest
+    public class GenericUnitTest : DiagnosticVerifier
     {
         const string AnalyzersAssemblyName = "Agoda.Analyzers";
         const string TestCasePrefix = "Agoda.Analyzers.Test.AgodaCustom.TestCases";
@@ -35,14 +30,42 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         {
             //Get the properties for the test case
             var testCaseProperties = new TestCaseProperties(testCaseName, TestCasePrefix, AnalyzersAssemblyName);
+            await Execute(testCaseProperties);
+        }
 
-            //Get the test case type based on the folder name it is in
-            var testCase = (testCaseProperties.IsWarning) ? 
-                new WarningTestCase(testCaseProperties) as GenericTestCase :
-                new NoWarningTestCase(testCaseProperties);
+        /// <summary>
+        /// Executing the test case
+        /// </summary>
+        /// <param name="testCaseProperties">Properties for execution of the test case</param>
+        /// <returns>Task for async execution</returns>
+        private async Task Execute(TestCaseProperties testCaseProperties)
+        {
+            await ((testCaseProperties.IsWarning) ?
+               ExecuteWarningTestCase(testCaseProperties):
+                ExecuteNonWarningTestCase(testCaseProperties));
+        }
 
-            //Execute the test case
-            await testCase.Execute();
+        /// <summary>
+        /// Executing warning test case
+        /// </summary>
+        /// <param name="testCaseProperties">Properties for execution of the test case</param>
+        /// <returns>Task for async execution</returns>
+        private async Task ExecuteWarningTestCase(TestCaseProperties testCaseProperties)
+        {
+            //The first line of the test case needs to be locations
+            var locations = ConventionManager.GetLocationsFromTestCase(testCaseProperties.CodeDescriptor.Code);
+            var diagLocations = ConventionManager.GetDiagnosticLocations(locations, testCaseProperties.Name);
+            await VerifyDiagnosticsAsync(testCaseProperties.CodeDescriptor, diagLocations, testCaseProperties.DiagnosticId, testCaseProperties.DiagnosticAnalyzer);
+        }
+
+        /// <summary>
+        /// Executing non warning test case
+        /// </summary>
+        /// <param name="testCaseProperties">Properties for execution of the test case</param>
+        /// <returns>Task for async execution</returns>
+        private async Task ExecuteNonWarningTestCase(TestCaseProperties testCaseProperties)
+        {
+            await VerifyDiagnosticsAsync(testCaseProperties.CodeDescriptor, EmptyDiagnosticResults, testCaseProperties.DiagnosticId, testCaseProperties.DiagnosticAnalyzer);
         }
     }
 }
