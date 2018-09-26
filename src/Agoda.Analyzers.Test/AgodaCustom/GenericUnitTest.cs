@@ -33,22 +33,15 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         [Test, TestCaseSource("GetAllTestCases")]
         public async Task GenericTest(string testCaseName)
         {
-            //The code that is provided in the test case
-            var code = ConventionManager.GetTestCaseCode(testCaseName);
+            //Get the properties for the test case
+            var testCaseProperties = new TestCaseProperties(testCaseName, TestCasePrefix, AnalyzersAssemblyName);
 
-            //Test properties for the test
-            var properties = new TestCaseProperties(testCaseName, TestCasePrefix);
+            //Get the test case type based on the folder name it is in
+            var testCase = (testCaseProperties.IsWarning) ? 
+                new WarningTestCase(testCaseProperties) as GenericTestCase :
+                new NoWarningTestCase(testCaseProperties);
 
-            //Analyzer that the test is using
-            var diagnosticAnalyzer = ConventionManager.GetDiagnosticsFromTestCase(properties.DiagnosticId, AnalyzersAssemblyName);
-
-            //Assemblies that the test is referencing
-            var refAssemblies = AssemblyOperations.GetReferencedAssembly(properties.DiagnosticId, typeof(GenericReferences));
-
-            GenericTestCase testCase = (properties.IsWarning) ? 
-                new WarningTestCase(code, properties, refAssemblies, diagnosticAnalyzer) as GenericTestCase :
-                new NoWarningTestCase(code, properties, refAssemblies, diagnosticAnalyzer);
-
+            //Execute the test case
             await testCase.Execute();
         }
     }

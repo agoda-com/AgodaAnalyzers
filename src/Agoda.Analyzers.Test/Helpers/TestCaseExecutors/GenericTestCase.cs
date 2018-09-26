@@ -11,18 +11,11 @@ namespace Agoda.Analyzers.Test.Helpers.TestCaseExecutors
 {
     public abstract class GenericTestCase : DiagnosticVerifier
     {
-        public string Code { get; }
-        public TestCaseProperties TestCaseProperties { get; }
-        public IEnumerable<Assembly> ReferencedAssembies { get; }
-        public DiagnosticAnalyzer DiagnosticAnalyzer { get; }
+        public TestCaseProperties TestCaseProperties;
 
-        public GenericTestCase(string code, TestCaseProperties testCaseProperties,
-            IEnumerable<Assembly> referencedAssembies, DiagnosticAnalyzer diagnosticAnalyzer)
+        public GenericTestCase(TestCaseProperties testCaseProperties)
         {
-            Code = code;
             TestCaseProperties = testCaseProperties;
-            ReferencedAssembies = referencedAssembies;
-            DiagnosticAnalyzer = diagnosticAnalyzer;
         }
 
         public abstract Task Execute();
