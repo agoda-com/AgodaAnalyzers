@@ -6,8 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using System.Runtime.Caching;
-using RefMvc = System.Web.Mvc;
 using Agoda.Analyzers.Test.Helpers.GenericTestHelpers;
 
 namespace Agoda.Analyzers.Test.AgodaCustom
@@ -29,7 +27,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
             if(properties.IsWarning)
             {
                 //The first line of the test case needs to be locations
-                var locations = GetLocationsFromConfig(code);
+                var locations = ConfigManager.GetLocationsFromConfig(code);
                 //The second line of the test case needs to be locations
                 var assemblies = GetReferencedAssembliesFromConfig(properties.DiagnosticId);
                 await ExecuteTestCaseWithWarning(properties, code, locations, assemblies, diagnosticAnalyzer);
@@ -42,58 +40,23 @@ namespace Agoda.Analyzers.Test.AgodaCustom
             }
         }
 
-        private Assembly GetAnalyzersAssembly()
-        {
-            string analyzersAssemblyCacheKey = "AnalyzersAssembly";
-
-            var analyzersAssembly = MemoryCache.Default[analyzersAssemblyCacheKey] as Assembly;
-            if (analyzersAssembly != null)
-                return analyzersAssembly;
-
-            //Check if assemby exists (this should be new unit test)
-            var assemblyName = Assembly.GetExecutingAssembly().
-                GetReferencedAssemblies().
-                Where(a => a.Name == AnalyzersAssemblyName)
-                .FirstOrDefault();
-
-            if (assemblyName == null)
-                throw new Exception("Assembly doesn't exists");
-
-            //Load the analyzer assembly
-            analyzersAssembly = Assembly.Load(assemblyName.FullName);
-            MemoryCache.Default.Set(analyzersAssemblyCacheKey, analyzersAssembly, new CacheItemPolicy());
-
-            return analyzersAssembly;
-        }
 
         private DiagnosticAnalyzer GetDiagnosticsFromTestCase(string diagnosticId)
         {
-            var analyzer = MemoryCache.Default[diagnosticId] as DiagnosticAnalyzer;
+            var analyzer = CacheManager.Get<DiagnosticAnalyzer>(diagnosticId);
             if (analyzer != null)
                 return analyzer;
 
-            var analyzersAssembly = GetAnalyzersAssembly();
+            var analyzersAssembly = AssemblyOperations.GetAssembly(AnalyzersAssemblyName);
 
             var analyzerType = analyzersAssembly.GetTypes().Where(t =>
              t.IsSubclassOf(typeof(DiagnosticAnalyzer)) &&
              t.Name.StartsWith(diagnosticId)).FirstOrDefault();
 
             analyzer = (DiagnosticAnalyzer)Activator.CreateInstance(analyzerType);
-            MemoryCache.Default[diagnosticId] = analyzer;
+            CacheManager.Set(diagnosticId, analyzer);
 
             return analyzer;
-        }
-
-        private int[] GetLocationsFromConfig(string code)
-        {
-            return code.Substring(0, code.IndexOf(Environment.NewLine))
-                .Replace("/*", String.Empty)
-                .Replace("*/", String.Empty)
-                .Trim()
-                .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                .ToList()
-                .Select(entry => Convert.ToInt32(entry))
-                .ToArray();
         }
 
         private IEnumerable<Assembly> GetReferencedAssembliesFromConfig(string diagnosticId)
