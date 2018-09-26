@@ -49,9 +49,13 @@ namespace Agoda.Analyzers.Test.Helpers.GenericTestHelpers
 
             //The code that is provided in the test case
             var code = ConventionManager.GetTestCaseCode(testCaseName);
+            if (String.IsNullOrEmpty(code))
+                throw new Exception($"The code for {testCaseName} cannot be retrieved");
 
             //Analyzer that the test is using
             DiagnosticAnalyzer = ConventionManager.GetDiagnosticsFromTestCase(DiagnosticId, analyzersAssemblyName);
+            if (DiagnosticAnalyzer == null)
+                throw new Exception($"The DiagnosticAnalyzer for {testCaseName} cannot be retrieved");
 
             //Assemblies that the test is referencing
             var referencedAssembies = AssemblyOperations.GetReferencedAssembly(DiagnosticId, typeof(GenericReferences), Assembly.GetExecutingAssembly());
