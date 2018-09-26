@@ -6,8 +6,14 @@ using System.Threading.Tasks;
 
 namespace Agoda.Analyzers.Test.Helpers.GenericTestHelpers
 {
+    /// <summary>
+    /// All test cases that want to include reference to assemblies, must inherit this class
+    /// </summary>
     public abstract class GenericReferences
     {
-        public abstract IEnumerable<Type> ReferenceDefinitions();
+        /// <summary>
+        /// All external assemblies that the test case needs to reference
+        /// </summary>
+        public abstract IEnumerable<Type> ReferenceDefinitions { get; }
     }
 }

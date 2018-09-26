@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 
 namespace Agoda.Analyzers.Test.Helpers.TestCaseExecutors
 {
+    /// <summary>
+    /// Test case that will fire warning
+    /// </summary>
     public class WarningTestCase : GenericTestCase
     {
         private int[] locations;

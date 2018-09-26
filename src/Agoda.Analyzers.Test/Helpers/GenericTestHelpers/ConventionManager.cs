@@ -6,10 +6,19 @@ using System.Reflection;
 
 namespace Agoda.Analyzers.Test.Helpers.GenericTestHelpers
 {
+    /// <summary>
+    /// The class that handles retrieving data based on convention
+    /// </summary>
     public static class ConventionManager
     {
+        /// <summary>
+        /// Extracts the location from the test case file
+        /// </summary>
+        /// <param name="code"></param>
+        /// <returns></returns>
         public static int[] GetLocationsFromTestCase(string code)
         {
+            //The location is specified as a first line in the test case
             return code.Substring(0, code.IndexOf(Environment.NewLine))
                 .Replace("/*", String.Empty)
                 .Replace("*/", String.Empty)
@@ -20,12 +29,19 @@ namespace Agoda.Analyzers.Test.Helpers.GenericTestHelpers
                 .ToArray();
         }
 
+        /// <summary>
+        /// Retrieves the DiagnosticAnalizer for the specified test case
+        /// </summary>
+        /// <param name="diagnosticId">The diagnostic id of the test case</param>
+        /// <param name="analyzersAssemblyName">The name of the assembly that contains the Diagnostic analyzers</param>
+        /// <returns></returns>
         public static DiagnosticAnalyzer GetDiagnosticsFromTestCase(string diagnosticId, string analyzersAssemblyName)
         {
             var analyzer = CacheManager.Get<DiagnosticAnalyzer>(diagnosticId);
             if (analyzer != null)
                 return analyzer;
 
+            //Extracts the assembly that contains the analyzer
             var analyzersAssembly = CacheManager.Get<Assembly>(analyzersAssemblyName);
             if (analyzersAssembly == null)
             {
@@ -33,16 +49,23 @@ namespace Agoda.Analyzers.Test.Helpers.GenericTestHelpers
                 CacheManager.Set(analyzersAssemblyName, analyzersAssembly);
             }
 
+            //Extracts the analyzer type
             var analyzerType = analyzersAssembly.GetTypes().Where(t =>
              t.IsSubclassOf(typeof(DiagnosticAnalyzer)) &&
              t.Name.StartsWith(diagnosticId)).FirstOrDefault();
 
+            //Creates instance of the analyzer
             analyzer = (DiagnosticAnalyzer)Activator.CreateInstance(analyzerType);
             CacheManager.Set(diagnosticId, analyzer);
 
             return analyzer;
         }
 
+        /// <summary>
+        /// Extracts the code of the test case when given the name of the test case
+        /// </summary>
+        /// <param name="testCaseName">Name of the test case</param>
+        /// <returns>The code of the test case</returns>
         public static string GetTestCaseCode(string testCaseName)
         {
             var assembly = Assembly.GetExecutingAssembly();
@@ -55,6 +78,12 @@ namespace Agoda.Analyzers.Test.Helpers.GenericTestHelpers
             }
         }
 
+        /// <summary>
+        /// Convert int[] to DiagnosticLocation[] for the specific test case
+        /// </summary>
+        /// <param name="locations">Locations where warning should happen</param>
+        /// <param name="testCaseName">The name of the specific test case</param>
+        /// <returns></returns>
         public static DiagnosticLocation[] GetDiagnosticLocations(int[] locations, string testCaseName)
         {
             if (locations.Length % 2 == 1)
@@ -68,17 +97,6 @@ namespace Agoda.Analyzers.Test.Helpers.GenericTestHelpers
                 diagLocations.Add(new DiagnosticLocation(line, column));
             }
             return diagLocations.ToArray();
-        }
-
-        public static CodeDescriptor GetCodeDescriptor(string code, IEnumerable<Assembly> assemblies)
-        {
-            var codeDescriptor = new CodeDescriptor();
-            codeDescriptor.Code = code;
-
-            if (assemblies != null)
-                codeDescriptor.References = assemblies;
-
-            return codeDescriptor;
         }
     }
 }

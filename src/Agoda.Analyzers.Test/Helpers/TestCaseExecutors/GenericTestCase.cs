@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 
 namespace Agoda.Analyzers.Test.Helpers.TestCaseExecutors
 {
+    /// <summary>
+    /// Abstract GenericTestCase from which different type of Generic Test Cases extend
+    /// </summary>
     public abstract class GenericTestCase : DiagnosticVerifier
     {
         public TestCaseProperties TestCaseProperties;
@@ -18,6 +21,10 @@ namespace Agoda.Analyzers.Test.Helpers.TestCaseExecutors
             TestCaseProperties = testCaseProperties;
         }
 
+        /// <summary>
+        /// Executing specific test case
+        /// </summary>
+        /// <returns>Task for async execution</returns>
         public abstract Task Execute();
     }
 }
