@@ -12,11 +12,11 @@ namespace Agoda.Analyzers.Test.StyleCop
 {
     public class SA1106UnitTests : CodeFixVerifier
     {
-        protected override DiagnosticAnalyzer DiagnosticAnalyzer => new SA1106CodeMustNotContainEmptyStatements();
+        protected DiagnosticAnalyzer DiagnosticAnalyzer => new SA1106CodeMustNotContainEmptyStatements();
         
-        protected override string DiagnosticId => SA1106CodeMustNotContainEmptyStatements.DIAGNOSTIC_ID;
+        protected string DiagnosticId => SA1106CodeMustNotContainEmptyStatements.DIAGNOSTIC_ID;
         
-        protected override CodeFixProvider CodeFixProvider => new SA1106CodeFixProvider();
+        protected CodeFixProvider CodeFixProvider => new SA1106CodeFixProvider();
         
         [Test]
         [TestCase("if (true)")]
@@ -46,9 +46,9 @@ class TestClass
     }}
 }}";
 
-            await VerifyDiagnosticsAsync(testCode, new DiagnosticLocation(7, 13));
-            await VerifyDiagnosticsAsync(fixedCode, EmptyDiagnosticResults);
-            await VerifyCodeFixAsync(testCode, fixedCode);
+            await VerifyDiagnosticsAsync(testCode, new DiagnosticLocation(7, 13), DiagnosticId, DiagnosticAnalyzer);
+            await VerifyDiagnosticsAsync(fixedCode, EmptyDiagnosticResults, DiagnosticId, DiagnosticAnalyzer);
+            await VerifyCodeFixAsync(testCode, fixedCode, CodeFixProvider, DiagnosticAnalyzer);
         }
 
         [Test]
@@ -79,9 +79,9 @@ class TestClass
 }
 ";
 
-            await VerifyDiagnosticsAsync(testCode, new DiagnosticLocation(7, 13));
-            await VerifyDiagnosticsAsync(fixedCode, EmptyDiagnosticResults);
-            await VerifyCodeFixAsync(testCode, fixedCode);
+            await VerifyDiagnosticsAsync(testCode, new DiagnosticLocation(7, 13), DiagnosticId, DiagnosticAnalyzer);
+            await VerifyDiagnosticsAsync(fixedCode, EmptyDiagnosticResults, DiagnosticId, DiagnosticAnalyzer);
+            await VerifyCodeFixAsync(testCode, fixedCode, CodeFixProvider, DiagnosticAnalyzer);
         }
 
         [Test]
@@ -114,9 +114,9 @@ class TestClass
                 }
             ";
 
-            await VerifyDiagnosticsAsync(testCode, new DiagnosticLocation(9, 29));
-            await VerifyDiagnosticsAsync(fixedCode, EmptyDiagnosticResults);
-            await VerifyCodeFixAsync(testCode, fixedCode);
+            await VerifyDiagnosticsAsync(testCode, new DiagnosticLocation(9, 29), DiagnosticId, DiagnosticAnalyzer);
+            await VerifyDiagnosticsAsync(fixedCode, EmptyDiagnosticResults, DiagnosticId, DiagnosticAnalyzer);
+            await VerifyCodeFixAsync(testCode, fixedCode, CodeFixProvider, DiagnosticAnalyzer);
         }
 
         [Test]
@@ -134,7 +134,7 @@ class TestClass
                 }
             ";
 
-            await VerifyDiagnosticsAsync(testCode, EmptyDiagnosticResults);
+            await VerifyDiagnosticsAsync(testCode, EmptyDiagnosticResults, DiagnosticId, DiagnosticAnalyzer);
         }
 
         [Test]
@@ -159,9 +159,9 @@ class TestClass
                 }
             ";
 
-            await VerifyDiagnosticsAsync(testCode, new DiagnosticLocation(6, 25));
-            await VerifyDiagnosticsAsync(fixedCode, EmptyDiagnosticResults);
-            await VerifyCodeFixAsync(testCode, fixedCode);
+            await VerifyDiagnosticsAsync(testCode, new DiagnosticLocation(6, 25), DiagnosticId, DiagnosticAnalyzer);
+            await VerifyDiagnosticsAsync(fixedCode, EmptyDiagnosticResults, DiagnosticId, DiagnosticAnalyzer);
+            await VerifyCodeFixAsync(testCode, fixedCode, CodeFixProvider, DiagnosticAnalyzer);
         }
 
         [Test]
@@ -178,7 +178,7 @@ class TestClass
                 }
             ";
 
-            await VerifyDiagnosticsAsync(testCode, EmptyDiagnosticResults);
+            await VerifyDiagnosticsAsync(testCode, EmptyDiagnosticResults, DiagnosticId, DiagnosticAnalyzer);
         }
 
         [Test]
@@ -207,9 +207,9 @@ class TestClass
                 }
             ";
 
-            await VerifyDiagnosticsAsync(testCode, new DiagnosticLocation(8, 25));
-            await VerifyDiagnosticsAsync(fixedCode, EmptyDiagnosticResults);
-            await VerifyCodeFixAsync(testCode, fixedCode);
+            await VerifyDiagnosticsAsync(testCode, new DiagnosticLocation(8, 25), DiagnosticId, DiagnosticAnalyzer);
+            await VerifyDiagnosticsAsync(fixedCode, EmptyDiagnosticResults, DiagnosticId, DiagnosticAnalyzer);
+            await VerifyCodeFixAsync(testCode, fixedCode, CodeFixProvider, DiagnosticAnalyzer);
         }
 
         [Test]
@@ -238,9 +238,9 @@ class TestClass
                 }
             ";
 
-            await VerifyDiagnosticsAsync(testCode, new DiagnosticLocation(7, 25));
-            await VerifyDiagnosticsAsync(fixedCode, EmptyDiagnosticResults);
-            await VerifyCodeFixAsync(testCode, fixedCode);
+            await VerifyDiagnosticsAsync(testCode, new DiagnosticLocation(7, 25), DiagnosticId, DiagnosticAnalyzer);
+            await VerifyDiagnosticsAsync(fixedCode, EmptyDiagnosticResults, DiagnosticId, DiagnosticAnalyzer);
+            await VerifyCodeFixAsync(testCode, fixedCode, CodeFixProvider, DiagnosticAnalyzer);
         }
 
         [Test]
@@ -271,9 +271,9 @@ class TestClass
                 }
             ";
 
-            await VerifyDiagnosticsAsync(testCode, new DiagnosticLocation(8, 25));
-            await VerifyDiagnosticsAsync(fixedCode, EmptyDiagnosticResults);
-            await VerifyCodeFixAsync(testCode, fixedCode);
+            await VerifyDiagnosticsAsync(testCode, new DiagnosticLocation(8, 25), DiagnosticId, DiagnosticAnalyzer);
+            await VerifyDiagnosticsAsync(fixedCode, EmptyDiagnosticResults, DiagnosticId, DiagnosticAnalyzer);
+            await VerifyCodeFixAsync(testCode, fixedCode, CodeFixProvider, DiagnosticAnalyzer);
         }
 
         [Test]
@@ -331,9 +331,9 @@ class TestClass
                 new DiagnosticLocation(18, 29)
             };
 
-            await VerifyDiagnosticsAsync(testCode, expected);
-            await VerifyDiagnosticsAsync(fixedCode, EmptyDiagnosticResults);
-            await VerifyCodeFixAsync(testCode, fixedCode);
+            await VerifyDiagnosticsAsync(testCode, expected, DiagnosticId, DiagnosticAnalyzer);
+            await VerifyDiagnosticsAsync(fixedCode, EmptyDiagnosticResults, DiagnosticId, DiagnosticAnalyzer);
+            await VerifyCodeFixAsync(testCode, fixedCode, CodeFixProvider, DiagnosticAnalyzer);
         }
 
         [Test]
@@ -349,9 +349,9 @@ class TestClass
 
             var expected = new DiagnosticLocation(1, declaration.Length + 1);
 
-            await VerifyDiagnosticsAsync(testCode, expected);
-            await VerifyDiagnosticsAsync(fixedCode, EmptyDiagnosticResults);
-            await VerifyCodeFixAsync(testCode, fixedCode);
+            await VerifyDiagnosticsAsync(testCode, expected, DiagnosticId, DiagnosticAnalyzer);
+            await VerifyDiagnosticsAsync(fixedCode, EmptyDiagnosticResults, DiagnosticId, DiagnosticAnalyzer);
+            await VerifyCodeFixAsync(testCode, fixedCode, CodeFixProvider, DiagnosticAnalyzer);
         }
 
         /// <summary>
@@ -398,9 +398,9 @@ class TestClass
                 new DiagnosticLocation(11, 78)
             };
 
-            await VerifyDiagnosticsAsync(testCode, expected);
-            await VerifyDiagnosticsAsync(fixedCode, EmptyDiagnosticResults);
-            await VerifyCodeFixAsync(testCode, fixedCode);
+            await VerifyDiagnosticsAsync(testCode, expected, DiagnosticId, DiagnosticAnalyzer);
+            await VerifyDiagnosticsAsync(fixedCode, EmptyDiagnosticResults, DiagnosticId, DiagnosticAnalyzer);
+            await VerifyCodeFixAsync(testCode, fixedCode, CodeFixProvider, DiagnosticAnalyzer);
         }
 
         /// <summary>
@@ -432,9 +432,9 @@ class TestClass
 
             var expected = new DiagnosticLocation(6, 42);
 
-            await VerifyDiagnosticsAsync(testCode, expected);
-            await VerifyDiagnosticsAsync(fixedCode, EmptyDiagnosticResults);
-            await VerifyCodeFixAsync(testCode, fixedCode);
+            await VerifyDiagnosticsAsync(testCode, expected, DiagnosticId, DiagnosticAnalyzer);
+            await VerifyDiagnosticsAsync(fixedCode, EmptyDiagnosticResults, DiagnosticId, DiagnosticAnalyzer);
+            await VerifyCodeFixAsync(testCode, fixedCode, CodeFixProvider, DiagnosticAnalyzer);
         }
     }
 }

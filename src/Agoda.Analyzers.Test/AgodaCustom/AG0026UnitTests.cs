@@ -15,9 +15,9 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 {
     class AG0026UnitTests : DiagnosticVerifier
     {
-        protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0026EnsureOnlyCssSelectorIsUsedToFindElements();
+        protected DiagnosticAnalyzer DiagnosticAnalyzer => new AG0026EnsureOnlyCssSelectorIsUsedToFindElements();
         
-        protected override string DiagnosticId => AG0026EnsureOnlyCssSelectorIsUsedToFindElements.DIAGNOSTIC_ID;
+        protected string DiagnosticId => AG0026EnsureOnlyCssSelectorIsUsedToFindElements.DIAGNOSTIC_ID;
 
         [Test]
         [TestCase("FindElementByClassName")]
@@ -46,7 +46,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                     }}"
             };
 
-            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(10, 61));
+            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(10, 61), DiagnosticId, DiagnosticAnalyzer);
         }
 
         [Test]
@@ -80,7 +80,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                     }}"
             };
 
-            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(13, 47));
+            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(13, 47), DiagnosticId, DiagnosticAnalyzer);
         }
         
         [Test]
@@ -114,7 +114,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                     }}"
              };
 
-            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(13, 68));
+            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(13, 68), DiagnosticId, DiagnosticAnalyzer);
         }
 
         [Test]
@@ -143,7 +143,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                     }"
             };
 
-            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults, DiagnosticId, DiagnosticAnalyzer);
         }
 
         [Test]
@@ -170,7 +170,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                     }" 
             };
 
-            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults, DiagnosticId, DiagnosticAnalyzer);
         }
 
         [Test]
@@ -196,7 +196,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                     }"
             };
 
-            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults, DiagnosticId, DiagnosticAnalyzer);
         }
 
         [Test]
@@ -227,7 +227,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 }
             }";
 
-            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults, DiagnosticId, DiagnosticAnalyzer);
         }
     }
 }

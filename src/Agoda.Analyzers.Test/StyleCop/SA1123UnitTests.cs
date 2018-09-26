@@ -16,11 +16,11 @@ namespace Agoda.Analyzers.Test.StyleCop
     /// </summary>
     public class SA1123UnitTests : CodeFixVerifier
     {
-        protected override DiagnosticAnalyzer DiagnosticAnalyzer => new SA1123DoNotPlaceRegionsWithinElements();
+        protected DiagnosticAnalyzer DiagnosticAnalyzer => new SA1123DoNotPlaceRegionsWithinElements();
         
-        protected override string DiagnosticId => SA1123DoNotPlaceRegionsWithinElements.DIAGNOSTIC_ID;
+        protected string DiagnosticId => SA1123DoNotPlaceRegionsWithinElements.DIAGNOSTIC_ID;
         
-        protected override CodeFixProvider CodeFixProvider => new RemoveRegionCodeFixProvider();
+        protected CodeFixProvider CodeFixProvider => new RemoveRegionCodeFixProvider();
         
         [Test]
         public async Task TestRegionInMethodAsync()
@@ -37,7 +37,7 @@ public class Foo
 }
 ";
 
-            await VerifyDiagnosticsAsync(testCode, new DiagnosticLocation(6, 1));
+            await VerifyDiagnosticsAsync(testCode, new DiagnosticLocation(6, 1), DiagnosticId, DiagnosticAnalyzer);
 
             var fixedCode = @"
 public class Foo
@@ -49,8 +49,8 @@ public class Foo
 }
 ";
 
-            await VerifyCodeFixAsync(testCode, fixedCode);
-            await VerifyCSharpFixAllFixAsync(testCode, fixedCode, cancellationToken: CancellationToken.None);
+            await VerifyCodeFixAsync(testCode, fixedCode, CodeFixProvider, DiagnosticAnalyzer);
+            await VerifyCSharpFixAllFixAsync(testCode, fixedCode, CodeFixProvider, DiagnosticAnalyzer, cancellationToken: CancellationToken.None);
         }
 
         [Test]
@@ -68,7 +68,7 @@ public class Foo
                 }
             ";
 
-            await VerifyDiagnosticsAsync(testCode, EmptyDiagnosticResults);
+            await VerifyDiagnosticsAsync(testCode, EmptyDiagnosticResults, DiagnosticId, DiagnosticAnalyzer);
         }
 
         [Test]
@@ -86,7 +86,7 @@ public class Foo
                 }
             ";
             
-            await VerifyDiagnosticsAsync(testCode, EmptyDiagnosticResults);
+            await VerifyDiagnosticsAsync(testCode, EmptyDiagnosticResults, DiagnosticId, DiagnosticAnalyzer);
         }
 
         [Test]
@@ -108,7 +108,7 @@ public class Foo
                 }
             ";
             
-            await VerifyDiagnosticsAsync(testCode, EmptyDiagnosticResults);
+            await VerifyDiagnosticsAsync(testCode, EmptyDiagnosticResults, DiagnosticId, DiagnosticAnalyzer);
         }
 
         [Test]
@@ -126,7 +126,7 @@ public class Foo
                 }
             ";
 
-            await VerifyDiagnosticsAsync(testCode, EmptyDiagnosticResults);
+            await VerifyDiagnosticsAsync(testCode, EmptyDiagnosticResults, DiagnosticId, DiagnosticAnalyzer);
         }
 
         [Test]
@@ -144,7 +144,7 @@ public class Foo
                 }
             ";
 
-            await VerifyDiagnosticsAsync(testCode, EmptyDiagnosticResults);
+            await VerifyDiagnosticsAsync(testCode, EmptyDiagnosticResults, DiagnosticId, DiagnosticAnalyzer);
         }
 
         [Test]
@@ -162,7 +162,7 @@ public class Foo
                 }
             ";
 
-            await VerifyDiagnosticsAsync(testCode, EmptyDiagnosticResults);
+            await VerifyDiagnosticsAsync(testCode, EmptyDiagnosticResults, DiagnosticId, DiagnosticAnalyzer);
         }
 
         [Test]
@@ -200,8 +200,8 @@ class ClassName
 }
 ";
             
-            await VerifyCodeFixAsync(testCode, fixedCode);
-            await VerifyCSharpFixAllFixAsync(testCode, fixedCode, cancellationToken: CancellationToken.None);
+            await VerifyCodeFixAsync(testCode, fixedCode, CodeFixProvider, DiagnosticAnalyzer);
+            await VerifyCSharpFixAllFixAsync(testCode, fixedCode, CodeFixProvider, DiagnosticAnalyzer, cancellationToken: CancellationToken.None);
         }
     }
 }

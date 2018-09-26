@@ -13,9 +13,9 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 {
     internal class AG0022UnitTests : DiagnosticVerifier
     {
-        protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0022DoNotExposeBothSyncAndAsyncVersionsOfMethods();
+        protected DiagnosticAnalyzer DiagnosticAnalyzer => new AG0022DoNotExposeBothSyncAndAsyncVersionsOfMethods();
         
-        protected override string DiagnosticId => AG0022DoNotExposeBothSyncAndAsyncVersionsOfMethods.DIAGNOSTIC_ID;
+        protected string DiagnosticId => AG0022DoNotExposeBothSyncAndAsyncVersionsOfMethods.DIAGNOSTIC_ID;
         
         [Test]
         public async Task AG0022_WhenNotExistBothSyncAndAsyncVersionsOnInterface_ShouldNotShowWarning()
@@ -30,7 +30,7 @@ interface TestInterface
 }
 ";
 
-            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults, DiagnosticId, DiagnosticAnalyzer);
         }
         
         [Test]
@@ -52,7 +52,7 @@ class TestClass
 }
 ";
 
-            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults, DiagnosticId, DiagnosticAnalyzer);
         }
         
         [Test]
@@ -68,7 +68,7 @@ interface Interface
 }
 			";
 
-            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(6, 5));
+            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(6, 5), DiagnosticId, DiagnosticAnalyzer);
         }
 
         [Test]
@@ -90,7 +90,7 @@ class TestClass
 }
 ";
 
-            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(6, 5));
+            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(6, 5), DiagnosticId, DiagnosticAnalyzer);
         }
         
         [Test]
@@ -112,7 +112,7 @@ class TestClass
 }
 ";
 
-            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(6, 5));
+            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(6, 5), DiagnosticId, DiagnosticAnalyzer);
         }
         
         [Test]
@@ -134,7 +134,7 @@ class TestClass
 }
 ";
 
-            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(6, 5));
+            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(6, 5), DiagnosticId, DiagnosticAnalyzer);
         }
         
         [Test]
@@ -155,7 +155,7 @@ class TestClass
     }
 }
 ";
-            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults, DiagnosticId, DiagnosticAnalyzer);
         }
     }
 }

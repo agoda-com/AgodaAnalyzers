@@ -14,9 +14,9 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 {
     internal class AG0020UnitTests : DiagnosticVerifier
     {
-        protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0020AvoidReturningNullEnumerables();
+        protected DiagnosticAnalyzer DiagnosticAnalyzer => new AG0020AvoidReturningNullEnumerables();
         
-        protected override string DiagnosticId => AG0020AvoidReturningNullEnumerables.DIAGNOSTIC_ID;
+        protected string DiagnosticId => AG0020AvoidReturningNullEnumerables.DIAGNOSTIC_ID;
 
         [Test]
         public async Task PreventReturningNullForReturnValueOfIEnumerable_ShouldReportCorrectly()
@@ -36,7 +36,7 @@ namespace Agoda.Analyzers.Test
     }
 }";
 
-            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(10, 20));
+            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(10, 20), DiagnosticId, DiagnosticAnalyzer);
         }
 
         [Test]
@@ -56,7 +56,7 @@ namespace Agoda.Analyzers.Test
     }
 }";
 
-            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(10, 20));
+            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(10, 20), DiagnosticId, DiagnosticAnalyzer);
         }
 
         [Test]
@@ -76,16 +76,16 @@ namespace Agoda.Analyzers.Test
     }
 }";
 
-            var doc = CreateProject(new[] {code})
+            var doc = CreateProject(new[] {code}, DiagnosticAnalyzer)
                 .Documents
                 .First();
 
-            var analyzersArray = GetCSharpDiagnosticAnalyzers().ToImmutableArray();
+            var analyzersArray = GetCSharpDiagnosticAnalyzers(DiagnosticAnalyzer).ToImmutableArray();
 
             var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzersArray, new[] {doc}, CancellationToken.None)
                 .ConfigureAwait(false);
 
-            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults, DiagnosticId, DiagnosticAnalyzer);
         }
 
         [Test]
@@ -105,7 +105,7 @@ namespace Agoda.Analyzers.Test
     }
 }";
 
-            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults, DiagnosticId, DiagnosticAnalyzer);
         }
 
         [Test]
@@ -130,7 +130,7 @@ namespace Agoda.Analyzers.Test
             await VerifyDiagnosticsAsync(code, new[] {
                 new DiagnosticLocation(10, 24),
                 new DiagnosticLocation(13, 54)
-            });
+            }, DiagnosticId, DiagnosticAnalyzer);
         }
 
         [Test]
@@ -148,7 +148,7 @@ namespace Agoda.Analyzers.Test
     }
 }";
 
-            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults, DiagnosticId, DiagnosticAnalyzer);
         }
 
         [Test]
@@ -166,7 +166,7 @@ namespace Agoda.Analyzers.Test
     }
 }";
 
-            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(8, 20));
+            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(8, 20), DiagnosticId, DiagnosticAnalyzer);
         }
 
         
