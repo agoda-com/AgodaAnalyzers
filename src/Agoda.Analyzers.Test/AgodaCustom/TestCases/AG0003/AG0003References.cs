@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Agoda.Analyzers.Test.Helpers.GenericTestHelpers;
+using System;
 using System.Collections.Generic;
 using System.Web;
 

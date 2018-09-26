@@ -118,8 +118,5 @@ namespace Agoda.Analyzers.Test.AgodaCustom
             var expected = new DiagnosticLocation(3, 6);
             await VerifyDiagnosticsAsync(code, expected, DiagnosticId, DiagnosticAnalyzer);
         }
-
-
-	    
     }
 }

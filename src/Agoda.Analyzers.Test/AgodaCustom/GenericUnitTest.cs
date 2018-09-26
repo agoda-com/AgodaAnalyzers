@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using System.Runtime.Caching;
 using RefMvc = System.Web.Mvc;
+using Agoda.Analyzers.Test.Helpers.GenericTestHelpers;
 
 namespace Agoda.Analyzers.Test.AgodaCustom
 {
@@ -178,27 +179,5 @@ namespace Agoda.Analyzers.Test.AgodaCustom
             //Load the assembly
             return Assembly.Load(assemblyName.FullName);
         }
-    }
-
-    public class TestCaseProperties
-    {
-        public string DiagnosticId { get; }
-        public bool IsWarning { get; }
-        public string Name { get; }
-
-        public TestCaseProperties(string testName, string testCasePrefix)
-        {
-            var withoutPrefix = testName.Replace(testCasePrefix, String.Empty);
-            var tokens = withoutPrefix.Split(new[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
-            DiagnosticId = tokens[0];
-            string warningValue = tokens[1];
-            IsWarning = warningValue.ToLower() == "warning";
-            Name = withoutPrefix.Replace($".{DiagnosticId}.{warningValue}.", String.Empty);
-        }
-    }
-
-    public abstract class GenericReferences
-    {
-        public abstract IEnumerable<Type> ReferenceDefinitions();
     }
 }
