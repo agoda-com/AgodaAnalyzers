@@ -34,7 +34,7 @@ namespace Agoda.Analyzers.AgodaCustom
             DiagnosticSeverity.Warning, 
             AnalyzerConstants.EnabledByDefault, 
             Description, 
-            null, 
+            "https://agoda-com.github.io/standards-c-sharp/di/attribute-based-registration.html", 
             WellKnownDiagnosticTags.EditAndContinue);
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Descriptor);

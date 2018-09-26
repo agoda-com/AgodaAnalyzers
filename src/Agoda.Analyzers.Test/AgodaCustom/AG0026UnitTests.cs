@@ -174,32 +174,6 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         }
 
         [Test]
-        public async Task AG0026_WithByEqualsMethod_ThenNoWarning()
-        {
-            var code = new CodeDescriptor
-            {
-                References = new [] {typeof(IWebElement).Assembly},
-                Code = @"
-                    using System;
-                    using OpenQA.Selenium;
-                    using OpenQA.Selenium.Chrome;
-        
-                    namespace Selenium.Tests.Utils
-                    {
-                        public class Utils
-                        {
-                            public void Test()
-                            {
-                                var elements1 = By.Equals(""selector1"", ""selector2"");
-                            }
-                        }
-                    }"
-            };
-
-            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
-        }
-
-        [Test]
         public async Task AG0026_WithForbiddenNameInDifferentNamespace_ThenNoWarning()
         {
             var code = @"

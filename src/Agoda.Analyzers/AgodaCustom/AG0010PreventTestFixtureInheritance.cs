@@ -35,7 +35,7 @@ namespace Agoda.Analyzers.AgodaCustom
             DiagnosticSeverity.Warning,
             AnalyzerConstants.EnabledByDefault,
             Description,
-            null,
+            "https://agoda-com.github.io/standards-c-sharp/unit-testing/be-wary-of-refactoring-tests.html",
             WellKnownDiagnosticTags.EditAndContinue);
 
         public override void Initialize(AnalysisContext context)
