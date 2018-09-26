@@ -12,10 +12,6 @@ namespace Agoda.Analyzers.Test.Helpers.GenericTestHelpers
     {
         public static Assembly GetAssembly(string name)
         {
-            var assembly = CacheManager.Get<Assembly>(name);
-            if (assembly != null)
-                return assembly;
-
             //Check if assemby exists (this should be new unit test)
             var assemblyName = Assembly.GetExecutingAssembly().
                 GetReferencedAssemblies().
@@ -26,10 +22,29 @@ namespace Agoda.Analyzers.Test.Helpers.GenericTestHelpers
                 throw new Exception("Assembly doesn't exists");
 
             //Load the analyzer assembly
-            assembly = Assembly.Load(assemblyName.FullName);
-            CacheManager.Set(name, assembly);
+            return Assembly.Load(assemblyName.FullName);
+        }
 
-            return assembly;
+        public static IEnumerable<Assembly> GetReferencedAssembly(string name, Type parentClass)
+        {
+            var referenceType = Assembly.GetExecutingAssembly()
+                .GetTypes().
+                FirstOrDefault(c => c.IsSubclassOf(parentClass)
+                && c.Name.StartsWith(name));
+
+            if (referenceType == null)
+                return null;
+
+            var referencesClass = (GenericReferences)Activator.CreateInstance(referenceType);
+
+            var references = referencesClass.ReferenceDefinitions();
+            return references.Select(r => r.Assembly);
+        }
+
+        public static IEnumerable<string> GetEmbeddedResourcesByPrefix(string embeddedResourcePrefix)
+        {
+            var embeddedResources = Assembly.GetExecutingAssembly().GetManifestResourceNames().ToList();
+            return embeddedResources.Where(name => name.StartsWith(embeddedResourcePrefix));
         }
     }
 }
