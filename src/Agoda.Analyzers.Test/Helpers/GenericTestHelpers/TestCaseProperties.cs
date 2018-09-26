@@ -57,10 +57,10 @@ namespace Agoda.Analyzers.Test.Helpers.GenericTestHelpers
             var referencedAssembies = AssemblyOperations.GetReferencedAssembly(DiagnosticId, typeof(GenericReferences), Assembly.GetExecutingAssembly());
 
             //We combine the code and the referenced assemblies to get the code descriptor
-            var codeDescriptor = new CodeDescriptor();
-            codeDescriptor.Code = code;
+            CodeDescriptor = new CodeDescriptor();
+            CodeDescriptor.Code = code;
             if (referencedAssembies != null)
-                codeDescriptor.References = referencedAssembies;
+                CodeDescriptor.References = referencedAssembies;
         }
     }
 }
