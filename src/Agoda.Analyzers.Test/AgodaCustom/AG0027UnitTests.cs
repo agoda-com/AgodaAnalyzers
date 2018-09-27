@@ -127,7 +127,59 @@ namespace Agoda.Analyzers.Test.AgodaCustom
             };
             await VerifyDiagnosticsAsync(code , expected);
         }
+        
+        [Test]
+        public async Task AG0027_WithInvalidConstantSelector_ShowsWarning()
+        {
+            var code = new CodeDescriptor
+            {
+                References = new[] {typeof(IWebElement).Assembly},
+                Code = @"
+                    using System;
+                    using OpenQA.Selenium;
+                    using OpenQA.Selenium.Chrome;
+        
+                    public class TestClass
+                    {
+                        private const string SELECTOR = ""test"";
+    
+                        public void TestMethod()
+                        {
+                            var driver = new ChromeDriver();
+                            var elements1 = driver.FindElementsByCssSelector(SELECTOR);
+                        }
+                    }"
+            };
 
+            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(13,78));
+        }
+
+        [Test]
+        public async Task AG0027_WithValidConstantSelector_ShowsNoWarning()
+        {
+            var code = new CodeDescriptor
+            {
+                References = new[] {typeof(IWebElement).Assembly},
+                Code = @"
+                    using System;
+                    using OpenQA.Selenium;
+                    using OpenQA.Selenium.Chrome;
+        
+                    public class TestClass
+                    {
+                        private const string SELECTOR = ""[data-selenium=hotel-item]"";
+    
+                        public void TestMethod()
+                        {
+                            var driver = new ChromeDriver();
+                            var elements1 = driver.FindElementsByCssSelector(SELECTOR);
+                        }
+                    }"
+            };
+
+            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+        }
+        
         [Test]
         public async Task AG0027_WhenNotSeleniumMethod_ShowsNoWarning()
         {
