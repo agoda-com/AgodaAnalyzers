@@ -58,7 +58,8 @@ namespace Agoda.Analyzers.AgodaCustom
             var methodName = methodDeclaration.Identifier.ValueText;
             if (MatchValidTestName.IsMatch(methodName)) return;
 
-            context.ReportDiagnostic(Diagnostic.Create(Descriptor, methodDeclaration.GetLocation()));
+            var methodNameToken = methodDeclaration.ChildTokens().First(t => t.IsKind(SyntaxKind.IdentifierToken));
+            context.ReportDiagnostic(Diagnostic.Create(Descriptor, methodNameToken.GetLocation()));
         }
     }
 }
