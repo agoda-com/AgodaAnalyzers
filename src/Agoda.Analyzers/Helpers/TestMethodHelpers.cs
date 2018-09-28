@@ -11,6 +11,11 @@ namespace Agoda.Analyzers.Helpers
 {
     public static class TestMethodHelpers
     {
+        private static readonly string[] TestCaseInterfaces = {
+            "NUnit.Framework.Interfaces.ISimpleTestBuilder",
+            "NUnit.Framework.Interfaces.ITestBuilder",
+        };
+        
         public static bool IsTestCase(MethodDeclarationSyntax methodDeclaration, SyntaxNodeAnalysisContext context)
         {
             // ensure public method
@@ -24,8 +29,8 @@ namespace Agoda.Analyzers.Helpers
             return context.SemanticModel
                 .GetDeclaredSymbol(methodDeclaration)
                 .GetAttributes()
-                .Select(a => a.AttributeClass.BaseType.ToDisplayString())
-                .Any(displayString => displayString == "NUnit.Framework.NUnitAttribute");
+                .SelectMany(a => a.AttributeClass.AllInterfaces)
+                .Any(i => TestCaseInterfaces.Contains(i.ConstructedFrom.ToDisplayString()));
         }
 
         public static readonly IEnumerable<PermittedInvocationRule> PermittedSeleniumAccessors = new[]
