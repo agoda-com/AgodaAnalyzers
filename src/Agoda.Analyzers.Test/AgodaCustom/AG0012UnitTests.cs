@@ -13,6 +13,32 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         protected override string DiagnosticId => AG0012TestMethodMustContainAtLeastOneAssertion.DIAGNOSTIC_ID;
         
         [Test]
+        public async Task AG0012_WithSetupMethod_ShouldNotShowWarning()
+        {
+            var code = new CodeDescriptor
+            {
+                References = new[] {typeof(TestFixtureAttribute).Assembly},
+                Code = @"
+                    using NUnit.Framework;
+                    using System;
+                    
+                    namespace Tests
+                    {
+                        public class TestClass
+                        {
+                            [SetUp]
+                            public void This_Is_Valid()
+                            {
+                                int[] arrayForShouldBe = { 1, 2, 3 };
+                            }
+                        }
+                    }"
+            };
+ 
+            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+        }
+        
+        [Test]
         public async Task AG0012_WithNoAssertion_ShouldShowWarning()
         {
             var code = new CodeDescriptor
@@ -27,7 +53,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                         public class TestClass
                         {
                             [Test]
-                            public void This_Is_Not_Valid()
+                            public void This_Is_NotValid()
                             {
                                 int[] arrayForShouldBe = { 1, 2, 3 };
                             }
