@@ -52,13 +52,22 @@ namespace Agoda.Analyzers.AgodaCustom
         {
             var methodDeclaration = (MethodDeclarationSyntax) context.Node;
 
-            if (!TestMethodHelpers.IsTestCase(methodDeclaration, context)) return;
-                
-            // ensure valid name
+            // ensure is test case 
+            if (!TestMethodHelpers.IsTestCase(methodDeclaration, context))
+            {
+                return;
+            }
+            
+            // ensure name is valid
             var methodName = methodDeclaration.Identifier.ValueText;
-            if (MatchValidTestName.IsMatch(methodName)) return;
+            if (MatchValidTestName.IsMatch(methodName))
+            {
+                return;
+            }
 
-            context.ReportDiagnostic(Diagnostic.Create(Descriptor, methodDeclaration.GetLocation()));
+            // report error at position of method name
+            var methodNameToken = methodDeclaration.ChildTokens().First(t => t.IsKind(SyntaxKind.IdentifierToken));
+            context.ReportDiagnostic(Diagnostic.Create(Descriptor, methodNameToken.GetLocation()));
         }
     }
 }
