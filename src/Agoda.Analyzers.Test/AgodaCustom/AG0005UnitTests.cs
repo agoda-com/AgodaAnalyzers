@@ -66,7 +66,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                     }}"
             };
             
-            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(9, 29));
+            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(10, 41));
         }
         
         [TestCase("internal")]
