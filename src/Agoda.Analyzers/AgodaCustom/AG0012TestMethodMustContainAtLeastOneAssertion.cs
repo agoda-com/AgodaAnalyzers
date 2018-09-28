@@ -105,11 +105,11 @@ namespace Agoda.Analyzers.AgodaCustom
 
         private class AssertLibraryInfo
         {
-            public string Namespace;
-            public string Module;
-            public string Name;
-            public string Type;
-            public bool HasExtenstionMethods;
+            public string Namespace { get; }
+            public string Module { get; }
+            public string Name { get; }
+            public string Type { get; }
+            public bool HasExtenstionMethods { get; }
 
             public AssertLibraryInfo(string namespaceTitle, string module, string name, string type = null)
             {
