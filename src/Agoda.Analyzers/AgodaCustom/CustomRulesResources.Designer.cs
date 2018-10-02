@@ -19,7 +19,7 @@ namespace Agoda.Analyzers.AgodaCustom {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class CustomRulesResources {
@@ -372,6 +372,15 @@ namespace Agoda.Analyzers.AgodaCustom {
         public static string AG0032Title {
             get {
                 return ResourceManager.GetString("AG0032Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Prevent use of blocking Task.Result.
+        /// </summary>
+        public static string AG0033Title {
+            get {
+                return ResourceManager.GetString("AG0033Title", resourceCulture);
             }
         }
     }
