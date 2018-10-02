@@ -16,12 +16,12 @@ namespace Agoda.Analyzers.AgodaCustom
         public const string DIAGNOSTIC_ID = "AG0033";
         
         private static readonly LocalizableString Title = new LocalizableResourceString(
-            nameof(CustomRulesResources.AG0032Title), 
+            nameof(CustomRulesResources.AG0033Title), 
             CustomRulesResources.ResourceManager, 
             typeof(CustomRulesResources));
         
         private static readonly LocalizableString MessageFormat = new LocalizableResourceString(
-            nameof(CustomRulesResources.AG0032Title), 
+            nameof(CustomRulesResources.AG0033Title), 
             CustomRulesResources.ResourceManager, 
             typeof(CustomRulesResources));
         

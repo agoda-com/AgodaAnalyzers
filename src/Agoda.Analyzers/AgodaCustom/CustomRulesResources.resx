@@ -218,8 +218,11 @@
   </data>
   <data name="AG0024Title" xml:space="preserve">
     <value>Prevent use of Task.Factory.StartNew except for Long Running Tasks</value>
-  </data>    
+  </data>
   <data name="AG0032Title" xml:space="preserve">
     <value>Prevent use of blocking Task.Wait*</value>
+  </data>
+  <data name="AG0033Title" xml:space="preserve">
+    <value>Prevent use of blocking Task.Result</value>
   </data>
 </root>
