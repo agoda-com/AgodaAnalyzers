@@ -162,6 +162,17 @@
   <data name="AG0011Title" xml:space="preserve">
     <value>Controllers should not access HttpRequest.QueryString directly but use ASP.NET model binding instead</value>
   </data>
+  <data name="AG0009Title" xml:space="preserve">
+    <value>Do not pass IHttpContextAccessor as method argument</value>
+    <comment>AG0009MessageFormat</comment>
+  </data>
+  <data name="AG0009Description" xml:space="preserve">
+    <value>Pass only the fields that are actually needed, not the entire IHttpContextAccessor instance</value>
+  </data>
+  <data name="AG0009MessageFormat" xml:space="preserve">
+    <value>Pass only the fields that are actually needed, not the entire IHttpContextAccessor instance</value>
+    <comment>AG0009Description</comment>
+  </data>
   <data name="AG0012Title" xml:space="preserve">
     <value>Test method should contain at least one assertion</value>
   </data>

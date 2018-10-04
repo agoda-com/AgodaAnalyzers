@@ -169,6 +169,33 @@ namespace Agoda.Analyzers.AgodaCustom {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Pass only the fields that are actually needed, not the entire IHttpContextAccessor instance.
+        /// </summary>
+        public static string AG0009Description {
+            get {
+                return ResourceManager.GetString("AG0009Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pass only the fields that are actually needed, not the entire IHttpContextAccessor instance.
+        /// </summary>
+        public static string AG0009MessageFormat {
+            get {
+                return ResourceManager.GetString("AG0009MessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Do not pass IHttpContextAccessor as method argument.
+        /// </summary>
+        public static string AG0009Title {
+            get {
+                return ResourceManager.GetString("AG0009Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Prevent test fixture inheritance.
         /// </summary>
         public static string AG0010Title {
