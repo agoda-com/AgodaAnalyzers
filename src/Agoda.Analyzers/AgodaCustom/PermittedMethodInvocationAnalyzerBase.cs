@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -26,8 +27,8 @@ namespace Agoda.Analyzers.AgodaCustom
 
         private void AnalyzeInvocation(SyntaxNodeAnalysisContext context)
         {
-            var invocationExpressionSyntax = (InvocationExpressionSyntax)context.Node;
-            if (!(context.SemanticModel.GetSymbolInfo(invocationExpressionSyntax).Symbol is IMethodSymbol methodSymbol)) return;
+            //var invocationExpressionSyntax = (InvocationExpressionSyntax)context.Node;
+            //if (!(context.SemanticModel.GetSymbolInfo(invocationExpressionSyntax).Symbol is IMethodSymbol)) return;
 
             if (Rules.Any(r => !r.Verify(context)))
             {

@@ -142,25 +142,7 @@ namespace Agoda.Analyzers.AgodaCustom {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
-        /// </summary>
-        public static string AG0004Description {
-            get {
-                return ResourceManager.GetString("AG0004Description", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to This method is blocking on async code which can cause threadpool starvation..
-        /// </summary>
-        public static string AG0004MessageFormat {
-            get {
-                return ResourceManager.GetString("AG0004MessageFormat", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Don&apos;t Mix Blocking and Async.
+        ///   Looks up a localized string similar to Do not use hard coded string to identify types.
         /// </summary>
         public static string AG0004Title {
             get {
