@@ -38,11 +38,19 @@ namespace Agoda.Analyzers.Helpers
                 return true;
             }
             
+            return Verify(methodSymbol);
+        }
+        
+        /// <summary>
+        /// Verifies the given method symbol complies with the rule.
+        /// </summary>
+        public bool Verify(IMethodSymbol methodSymbol)
+        {
             return Verify(methodSymbol.ContainingType.ConstructedFrom.ToDisplayString(), methodSymbol.Name);
         }
         
         /// <summary>
-        /// Verifies the namespace, type and name comply with the rule.
+        /// Verifies the namespace, type name and method name comply with the rule.
         /// </summary>
         public bool Verify(string namespaceAndType, string name)
         {
