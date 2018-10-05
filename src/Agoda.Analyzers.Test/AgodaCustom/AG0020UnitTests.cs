@@ -184,25 +184,13 @@ namespace Agoda.Analyzers.Test
                     using System.Collections.Generic;
                     
                     namespace Agoda.Analyzers.Test
-                    {
-                        public class SomeThing
-                        {
-                        }
-                    
+                    {                    
                         public class TestClass
-                        {
-                            private static SomeThing GetThing()
+                        {                            
+                            public static List<object> GetList()
                             {
-                                return new SomeThing();
-                            }
-                            
-                            public static List<SomeThing> GetList()
-                            {
-                                var someCondition = true;
-                                var o = someCondition ? GetThing() : null;
-                    
-                                var someThings = new List<SomeThing> {o};
-                    
+                                var o = true ? new object() : null;                    
+                                var someThings = new List<object> {o};                    
                                 return someThings;
                             }
                         }
