@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Threading;
@@ -15,13 +16,13 @@ namespace Agoda.Analyzers.Test.AgodaCustom
     internal class AG0020UnitTests : DiagnosticVerifier
     {
         protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0020AvoidReturningNullEnumerables();
-        
+
         protected override string DiagnosticId => AG0020AvoidReturningNullEnumerables.DIAGNOSTIC_ID;
 
         [Test]
         public async Task PreventReturningNullForReturnValueOfIEnumerable_ShouldReportCorrectly()
         {
-        
+
             var code = @"
 using System.Collections.Generic;
 
@@ -40,7 +41,8 @@ namespace Agoda.Analyzers.Test
         }
 
         [Test]
-        public async Task PreventReturningNullForReturnValueOfIEnumerable_ShouldReportCorrectlyForClassImplementingIEnumerable()
+        public async Task
+            PreventReturningNullForReturnValueOfIEnumerable_ShouldReportCorrectlyForClassImplementingIEnumerable()
         {
             var code = @"
 using System.Collections.Generic;
@@ -127,14 +129,16 @@ namespace Agoda.Analyzers.Test
     }
 }";
 
-            await VerifyDiagnosticsAsync(code, new[] {
+            await VerifyDiagnosticsAsync(code, new[]
+            {
                 new DiagnosticLocation(10, 24),
                 new DiagnosticLocation(13, 54)
             });
         }
 
         [Test]
-        public async Task PreventReturningNullForReturnValueOfIEnumerable_ShouldNotReportNullReturnFromPropertyOfStringOrOtherType()
+        public async Task
+            PreventReturningNullForReturnValueOfIEnumerable_ShouldNotReportNullReturnFromPropertyOfStringOrOtherType()
         {
             var code = @"
 using System.Collections.Generic;
@@ -152,23 +156,60 @@ namespace Agoda.Analyzers.Test
         }
 
         [Test]
-        public async Task PreventReturningNullForReturnValueOfIEnumerable_ShouldReportNullReturnFromStringArray()
+        public async Task AG0020_ForNullStringArray_ShowsWarning()
         {
             var code = @"
-namespace Agoda.Analyzers.Test
-{
-    public class TestClass
-    {
-        public string[] Method()
-        {
-            return null;
-        }
-    }
-}";
+                namespace Agoda.Analyzers.Test
+                {
+                    public class TestClass
+                    {
+                        public string[] Method()
+                        {
+                            return null;
+                        }
+                    }
+                }";
 
             await VerifyDiagnosticsAsync(code, new DiagnosticLocation(8, 20));
         }
 
-        
+        [Test]
+        public async Task AG0020_ForIssue110_DoesNotShowWarning()
+        {
+            var code = new CodeDescriptor
+            {
+                References = new[] {typeof(List<>).Assembly, typeof(object).Assembly},
+                Code = @"
+                    using System;
+                    using System.Collections.Generic;
+                    
+                    namespace Agoda.Analyzers.Test
+                    {
+                        public class SomeThing
+                        {
+                        }
+                    
+                        public class TestClass
+                        {
+                            private static SomeThing GetThing()
+                            {
+                                return new SomeThing();
+                            }
+                            
+                            public static List<SomeThing> GetList()
+                            {
+                                var someCondition = true;
+                                var o = someCondition ? GetThing() : null;
+                    
+                                var someThings = new List<SomeThing> {o};
+                    
+                                return someThings;
+                            }
+                        }
+                    }"
+            };
+
+            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+        }
     }
 }
