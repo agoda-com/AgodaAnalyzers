@@ -78,7 +78,6 @@ namespace Agoda.Analyzers.AgodaCustom
             {
                 context.ReportDiagnostic(Diagnostic.Create(Descriptor, context.Node.GetLocation()));
             }
-            
         }
     }
 }
