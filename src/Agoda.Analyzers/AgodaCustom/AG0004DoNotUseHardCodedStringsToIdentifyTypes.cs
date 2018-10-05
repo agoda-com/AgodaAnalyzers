@@ -62,7 +62,7 @@ namespace Agoda.Analyzers.AgodaCustom
             }
 
             // Activator.CreateInstance("", "") - we need to prevent the use only of the overloads that takes strings
-            if (!(methodSymbol.ContainingType.ConstructedFrom.ToDisplayString() == "System.Activator" && methodSymbol.Name != "CreateInstance"))
+            if (!(methodSymbol.ContainingType.ConstructedFrom.ToDisplayString() == "System.Activator" && methodSymbol.Name == "CreateInstance"))
             {
                 return;
             }
