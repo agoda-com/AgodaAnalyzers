@@ -176,26 +176,22 @@ namespace Agoda.Analyzers.Test
         [Test]
         public async Task AG0020_ForIssue110_DoesNotShowWarning()
         {
-            var code = new CodeDescriptor
-            {
-                References = new[] {typeof(List<>).Assembly, typeof(object).Assembly},
-                Code = @"
-                    using System;
-                    using System.Collections.Generic;
-                    
-                    namespace Agoda.Analyzers.Test
-                    {                    
-                        public class TestClass
-                        {                            
-                            public static List<object> GetList()
-                            {
-                                var o = true ? new object() : null;                    
-                                var someThings = new List<object> {o};                    
-                                return someThings;
-                            }
+            var code = @"
+                using System;
+                using System.Collections.Generic;
+                
+                namespace Agoda.Analyzers.Test
+                {                    
+                    public class TestClass
+                    {                            
+                        public static List<object> GetList()
+                        {
+                            var o = true ? new object() : null;                    
+                            var someThings = new List<object> {o};                    
+                            return someThings;
                         }
-                    }"
-            };
+                    }
+                }";
 
             await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
         }
