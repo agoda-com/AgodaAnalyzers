@@ -68,6 +68,9 @@
     <None Update="RuleContent\AG0001DependencyResolverMustNotBeUsed.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="RuleContent\AG0004DoNotUseHardCodedStringsToIdentifyTypes.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="RuleContent\AG0002PrivateMethodsShouldNotBeTested.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
