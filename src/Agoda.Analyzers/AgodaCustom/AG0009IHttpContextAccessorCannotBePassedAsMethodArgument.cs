@@ -32,12 +32,9 @@ namespace Agoda.Analyzers.AgodaCustom
                 DiagnosticSeverity.Warning, AnalyzerConstants.EnabledByDefault, Description, null,
                 WellKnownDiagnosticTags.EditAndContinue);
 
-        private static readonly Action<SyntaxNodeAnalysisContext> DependencyResolverUsageAction =
-            HandleDependencyResolverUsage;
-
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Descriptor);
 
-        private static void HandleDependencyResolverUsage(SyntaxNodeAnalysisContext context)
+        private static void AnalyzeNode(SyntaxNodeAnalysisContext context)
         {
             var methodParam = context.Node as ParameterSyntax;
             var paramType = (methodParam.Type as QualifiedNameSyntax)?.Right ?? methodParam.Type as SimpleNameSyntax;
@@ -47,7 +44,9 @@ namespace Agoda.Analyzers.AgodaCustom
             var paramTypeName = context.SemanticModel.GetTypeInfo(paramType).Type.ToDisplayString();
             if ("Microsoft.AspNetCore.Http.IHttpContextAccessor" == paramTypeName
                 || "Microsoft.AspNetCore.Http.HttpContextAccessor" == paramTypeName)
+            {
                 context.ReportDiagnostic(Diagnostic.Create(Descriptor, context.Node.GetLocation()));
+            }
         }
 
         public override void Initialize(AnalysisContext context)
@@ -55,7 +54,7 @@ namespace Agoda.Analyzers.AgodaCustom
             context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
             context.EnableConcurrentExecution();
 
-            context.RegisterSyntaxNodeAction(DependencyResolverUsageAction, SyntaxKind.Parameter);
+            context.RegisterSyntaxNodeAction(AnalyzeNode, SyntaxKind.Parameter);
         }
     }
 }
