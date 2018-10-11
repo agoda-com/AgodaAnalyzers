@@ -170,7 +170,29 @@ namespace Agoda.Analyzers.Test
                     }
                 }";
 
-            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(8, 20));
+            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(8, 36));
+        }
+
+        [Test]
+        public async Task AG0020_ForNullInTernaryExpression_ShowsWarning()
+        {
+            var code = @"
+                using System;
+                using System.Collections.Generic;
+
+                namespace Agoda.Analyzers.Test
+                {
+                    public class TestClass
+                    {
+                        public static List<object> GetList()
+                        {
+                            int x = 0;
+                            return x == 0 ? null : new List<object>();
+                        }
+                    }
+                }";
+
+            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(12, 45));
         }
 
         [Test]
