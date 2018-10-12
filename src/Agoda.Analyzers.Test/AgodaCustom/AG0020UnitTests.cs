@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Threading;
@@ -15,13 +16,13 @@ namespace Agoda.Analyzers.Test.AgodaCustom
     internal class AG0020UnitTests : DiagnosticVerifier
     {
         protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0020AvoidReturningNullEnumerables();
-        
+
         protected override string DiagnosticId => AG0020AvoidReturningNullEnumerables.DIAGNOSTIC_ID;
 
         [Test]
         public async Task PreventReturningNullForReturnValueOfIEnumerable_ShouldReportCorrectly()
         {
-        
+
             var code = @"
 using System.Collections.Generic;
 
@@ -40,7 +41,8 @@ namespace Agoda.Analyzers.Test
         }
 
         [Test]
-        public async Task PreventReturningNullForReturnValueOfIEnumerable_ShouldReportCorrectlyForClassImplementingIEnumerable()
+        public async Task
+            PreventReturningNullForReturnValueOfIEnumerable_ShouldReportCorrectlyForClassImplementingIEnumerable()
         {
             var code = @"
 using System.Collections.Generic;
@@ -127,14 +129,16 @@ namespace Agoda.Analyzers.Test
     }
 }";
 
-            await VerifyDiagnosticsAsync(code, new[] {
+            await VerifyDiagnosticsAsync(code, new[]
+            {
                 new DiagnosticLocation(10, 24),
                 new DiagnosticLocation(13, 54)
             });
         }
 
         [Test]
-        public async Task PreventReturningNullForReturnValueOfIEnumerable_ShouldNotReportNullReturnFromPropertyOfStringOrOtherType()
+        public async Task
+            PreventReturningNullForReturnValueOfIEnumerable_ShouldNotReportNullReturnFromPropertyOfStringOrOtherType()
         {
             var code = @"
 using System.Collections.Generic;
@@ -152,23 +156,66 @@ namespace Agoda.Analyzers.Test
         }
 
         [Test]
-        public async Task PreventReturningNullForReturnValueOfIEnumerable_ShouldReportNullReturnFromStringArray()
+        public async Task AG0020_ForNullStringArray_ShowsWarning()
         {
             var code = @"
-namespace Agoda.Analyzers.Test
-{
-    public class TestClass
-    {
-        public string[] Method()
+                namespace Agoda.Analyzers.Test
+                {
+                    public class TestClass
+                    {
+                        public string[] Method()
+                        {
+                            return null;
+                        }
+                    }
+                }";
+
+            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(8, 36));
+        }
+
+        [Test]
+        public async Task AG0020_ForNullInTernaryExpression_ShowsWarning()
         {
-            return null;
-        }
-    }
-}";
+            var code = @"
+                using System;
+                using System.Collections.Generic;
 
-            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(8, 20));
+                namespace Agoda.Analyzers.Test
+                {
+                    public class TestClass
+                    {
+                        public static List<object> GetList()
+                        {
+                            int x = 0;
+                            return x == 0 ? null : new List<object>();
+                        }
+                    }
+                }";
+
+            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(12, 45));
         }
 
-        
+        [Test]
+        public async Task AG0020_ForIssue110_DoesNotShowWarning()
+        {
+            var code = @"
+                using System;
+                using System.Collections.Generic;
+                
+                namespace Agoda.Analyzers.Test
+                {                    
+                    public class TestClass
+                    {                            
+                        public static List<object> GetList()
+                        {
+                            var o = true ? new object() : null;                    
+                            var someThings = new List<object> {o};                    
+                            return someThings;
+                        }
+                    }
+                }";
+
+            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+        }
     }
 }
