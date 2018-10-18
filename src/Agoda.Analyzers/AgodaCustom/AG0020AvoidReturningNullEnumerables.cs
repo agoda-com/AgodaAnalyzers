@@ -55,6 +55,12 @@ namespace Agoda.Analyzers.AgodaCustom
         {
             if (expression.IsKind(SyntaxKind.NullLiteralExpression))
                 return expression.GetLocation();
+
+            if (expression.IsKind(SyntaxKind.ConditionalExpression))
+            {
+                var statement = expression as ConditionalExpressionSyntax;
+                return GetNullLiteralLocation(statement.WhenTrue) ?? GetNullLiteralLocation(statement.WhenFalse);
+            }
             return null;
         }
 
@@ -65,32 +71,24 @@ namespace Agoda.Analyzers.AgodaCustom
                 if (!(context.Node is ReturnStatementSyntax statement)) return null;
                 return GetNullLiteralLocation(statement.Expression);
             }
-            
+
             if (context.Node.IsKind(SyntaxKind.ArrowExpressionClause))
             {
                 var statement = context.Node as ArrowExpressionClauseSyntax;
                 return GetNullLiteralLocation(statement.Expression);
             }
-            
-            if (context.Node.IsKind(SyntaxKind.ConditionalExpression))
-            {
-                var statement = context.Node as ConditionalExpressionSyntax;
-                return GetNullLiteralLocation(statement.WhenTrue) ?? GetNullLiteralLocation(statement.WhenFalse);
-            }
-            
             return null;
         }
 
         private void AnalyzeNode(SyntaxNodeAnalysisContext context)
         {
-            Location location = IsReturningNullLiteral(context);
+            var location = IsReturningNullLiteral(context);
             if (location != null && context.ContainingSymbol.Kind == SymbolKind.Method)
             {
-                IMethodSymbol method = (IMethodSymbol)context.ContainingSymbol;
+                var method = (IMethodSymbol)context.ContainingSymbol;
                 var isArray = method.ReturnType is IArrayTypeSymbol;
-                var methodReturnType = method.ReturnType as INamedTypeSymbol;
                 if (isArray ||
-                    (methodReturnType != null
+                    (method.ReturnType is INamedTypeSymbol methodReturnType
                      && methodReturnType.ConstructedFrom.Interfaces.Any(x => x.ToDisplayString() == "System.Collections.IEnumerable")
                      && methodReturnType.ConstructedFrom.ToDisplayString() != "string"))
                 {
