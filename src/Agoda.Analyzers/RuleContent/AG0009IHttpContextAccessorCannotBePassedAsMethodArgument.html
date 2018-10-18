@@ -1,0 +1,57 @@
+﻿<p>
+    Passing the whole <code>Microsoft.AspNetCore.Http.IHttpContextAccessor</code> to your method as a parameter create hard dependency on the IHttpContextAccessor and makes testing really hard ( mocking IHttpContextAccessor itself). 
+    You should only pass parts of the <code>Microsoft.AspNetCore.Http.IHttpContextAccessor</code> that you actually using.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+using Microsoft.AspNetCore.Http;
+
+interface ISomething
+{
+    void SomeMethod(IHttpContextAccessor c, string sampleString); // ugly interface method
+    void SomeMethod(HttpContextAccessor c, string sampleString); // ugly interface method
+}
+
+class TestClass : ISomething
+{
+    public void SomeMethod(IHttpContextAccessor context, string sampleString)
+    {
+        // this method is ugly
+    }
+
+    public void SomeMethod(HttpContextAccessor context, string sampleString)
+    {
+        // this method is ugly
+    }
+
+     public TestClass(Microsoft.AspNetCore.Http.IHttpContextAccessor context)
+    {
+        // this constructor is uglier
+    }
+
+    public TestClass(Microsoft.AspNetCore.Http.HttpContextAccessor context)
+    {
+        // this constructor is uglier
+    }
+}
+</pre>
+
+<h2>Compliant Code Example</h2>
+<pre>
+interface ISomething
+{
+    void SomeMethod(string userAgent, string sampleString);
+}
+
+class TestClass : ISomething
+{
+    public void SomeMethod(string userAgent, string sampleString)
+    {
+    }
+
+    public TestClass(string userAgent)
+    {
+    }
+}
+</pre>
