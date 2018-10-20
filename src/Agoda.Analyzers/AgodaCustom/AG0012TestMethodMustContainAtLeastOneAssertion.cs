@@ -5,7 +5,6 @@ using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Agoda.Analyzers.Helpers;
 using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace Agoda.Analyzers.AgodaCustom
 {
