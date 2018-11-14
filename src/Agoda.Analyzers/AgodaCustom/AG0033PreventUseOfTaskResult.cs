@@ -32,7 +32,7 @@ namespace Agoda.Analyzers.AgodaCustom
             AnalyzerCategory.CustomQualityRules,
             DiagnosticSeverity.Error, 
             AnalyzerConstants.EnabledByDefault, 
-            DescriptionContentLoader.GetAnalyzerDescription(nameof(AG0032PreventUseOfBlockingTaskMethods)),
+            DescriptionContentLoader.GetAnalyzerDescription(nameof(AG0033PreventUseOfTaskResult)),
             "https://agoda-com.github.io/standards-c-sharp/async/await-task-result.html", 
             WellKnownDiagnosticTags.EditAndContinue);
 
