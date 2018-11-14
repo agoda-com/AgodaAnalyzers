@@ -16,7 +16,7 @@
     interface IFileDownloader
     {
         byte[] DownloadFile(string url);
-        Task<byte[]> DownloadFileAsync(string url);
+        Task&lt;byte[]&gt; DownloadFileAsync(string url);
     }
 </pre>
 
@@ -27,6 +27,6 @@
 <pre>
     interface IFileDownloader
     {
-        Task<byte[]> DownloadFileAsync(string url);
+        Task&lt;byte[]&gt; DownloadFileAsync(string url);
     }
 </pre>

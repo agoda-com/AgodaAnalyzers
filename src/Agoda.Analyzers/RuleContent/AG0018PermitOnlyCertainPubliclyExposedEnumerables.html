@@ -1,24 +1,24 @@
 ﻿ <p>
      If `public` class/interface method/property return value implements `IEnumerable`, then it can _only_ be declared as one of the following:
-     - `IEnumerable<T>`
-     - `ISet<T>`
-     - `IList<T>`
-     - `IDictionary<K, V>`
-     - `IReadOnlyDictionary<K, V>`
-     - `KeyedCollection<K, V>`
+     - `IEnumerable&lt;T&gt;`
+     - `ISet&lt;T&gt;`
+     - `IList&lt;T&gt;`
+     - `IDictionary&lt;K, V&gt;`
+     - `IReadOnlyDictionary&lt;K, V&gt;`
+     - `KeyedCollection&lt;K, V&gt;`
      - `byte[]` (special case for raw binary data)
-     - `string` (which happens to implement `IEnumerable<char>`)
+     - `string` (which happens to implement `IEnumerable&lt;char&gt;`)
  </p>
 
 
 <h2>Noncompliant Code Example</h2>
 <pre>
-    public List<string> GetStrings() { ... }
-    public List<string> GetStringsV2 { get; set; }
+    public List&lt;string&gt; GetStrings() { ... }
+    public List&lt;string&gt; GetStringsV2 { get; set; }
 </pre>
 
  <h2>Compliant Code Example</h2>
 <pre>
-    public IList<string> GetStrings() { ... }
-    public IList<string> GetStringsV2 { get; set; }
+    public IList&lt;string&gt; GetStrings() { ... }
+    public IList&lt;string&gt; GetStringsV2 { get; set; }
 </pre>
