@@ -132,6 +132,9 @@
     <None Update="RuleContent\AG0032PreventUseOfBlockingTaskMethods.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="RuleContent\AG0033PreventUseOfTaskResult.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="RuleContent\AG0011NoDirectQueryStringAccess.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
