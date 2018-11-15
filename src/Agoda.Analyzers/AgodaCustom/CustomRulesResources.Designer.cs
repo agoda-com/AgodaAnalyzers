@@ -394,7 +394,9 @@ namespace Agoda.Analyzers.AgodaCustom {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Use of machine name tightly couples your code to the our infrastructure and its naming scheme, which can and will change over time. Your code should be agnostic of Environment, Data Center, Cluster and Server. Having different code paths for different environments can lead to bugs that can only be caught in production. Such environmental concerns are usually only relevant when connecting to external services, as will you want to hit the service running in your local data center. For this, use a Services con [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to Use of MachineName tightly couples your code to the our infrastructure and its naming scheme, which can and will change over time.
+        ///Your code should be agnostic of environment, data center, cluster and server. Having different code paths for different environments can lead to bugs that can only be caught in production.
+        ///Such environmental variations are usually only required when calling external services, as you will want to call the service running in your local data center. For this, use Consul&apos;s service [rest of string was truncated]&quot;;.
         /// </summary>
         public static string AG0035Description {
             get {
@@ -403,7 +405,7 @@ namespace Agoda.Analyzers.AgodaCustom {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Do not use Environment.MachineName.
+        ///   Looks up a localized string similar to Do not use MachineName.
         /// </summary>
         public static string AG0035Title {
             get {
