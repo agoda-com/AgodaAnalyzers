@@ -11,7 +11,7 @@ using System.Text.RegularExpressions;
 namespace Agoda.Analyzers.AgodaCustom
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    public class AG0035PreventUseOfMachineName : PermittedPropertyInvocationAnalyzerBase
+    public class AG0035PreventUseOfMachineName : PropertyInvocationAnalyzerBase
     {
         public const string DIAGNOSTIC_ID = "AG0035";
         
@@ -36,7 +36,7 @@ namespace Agoda.Analyzers.AgodaCustom
             null,
             WellKnownDiagnosticTags.EditAndContinue);
 
-        protected override IEnumerable<PermittedInvocationRule> Rules => new[]
+        protected override IEnumerable<InvocationRule> Rules => new[]
         {
             new BlacklistedInvocationRule("System.Environment", "MachineName")
         };

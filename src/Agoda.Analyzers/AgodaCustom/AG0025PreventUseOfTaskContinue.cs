@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace Agoda.Analyzers.AgodaCustom
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    public class AG0025PreventUseOfTaskContinue : PermittedMethodInvocationAnalyzerBase
+    public class AG0025PreventUseOfTaskContinue : MethodInvocationAnalyzerBase
     {
         public const string DIAGNOSTIC_ID = "AG0025";
 
@@ -40,7 +40,7 @@ namespace Agoda.Analyzers.AgodaCustom
             "https://agoda-com.github.io/standards-c-sharp/async/never-task-continue-with.html", 
             WellKnownDiagnosticTags.EditAndContinue);
 
-        protected override IEnumerable<PermittedInvocationRule> Rules => new[]
+        protected override IEnumerable<InvocationRule> Rules => new[]
         {
             new BlacklistedInvocationRule("System.Threading.Tasks.Task", new Regex("^Continue")),
         };

@@ -11,7 +11,7 @@ using Microsoft.CodeAnalysis;
 namespace Agoda.Analyzers.AgodaCustom
 {
     [Microsoft.CodeAnalysis.Diagnostics.DiagnosticAnalyzer(LanguageNames.CSharp)]
-    public class AG0023PreventUseOfThreadSleep : PermittedMethodInvocationAnalyzerBase
+    public class AG0023PreventUseOfThreadSleep : MethodInvocationAnalyzerBase
     {
         public const string DIAGNOSTIC_ID = "AG0023";
 
@@ -39,7 +39,7 @@ namespace Agoda.Analyzers.AgodaCustom
             WellKnownDiagnosticTags.EditAndContinue);
 
 
-        protected override IEnumerable<PermittedInvocationRule> Rules => new[]
+        protected override IEnumerable<InvocationRule> Rules => new[]
         {
             new BlacklistedInvocationRule("System.Threading.Thread", "Sleep"),
         };

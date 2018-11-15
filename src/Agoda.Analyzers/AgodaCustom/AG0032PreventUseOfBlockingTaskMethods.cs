@@ -11,7 +11,7 @@ using System.Text.RegularExpressions;
 namespace Agoda.Analyzers.AgodaCustom
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    public class AG0032PreventUseOfBlockingTaskMethods : PermittedPropertyInvocationAnalyzerBase
+    public class AG0032PreventUseOfBlockingTaskMethods : PropertyInvocationAnalyzerBase
     {
         public const string DIAGNOSTIC_ID = "AG0032";
         
@@ -36,7 +36,7 @@ namespace Agoda.Analyzers.AgodaCustom
             "https://agoda-com.github.io/standards-c-sharp/async/never-task-wait.html", 
             WellKnownDiagnosticTags.EditAndContinue);
 
-        protected override IEnumerable<PermittedInvocationRule> Rules => new[]
+        protected override IEnumerable<InvocationRule> Rules => new[]
         {
             new BlacklistedInvocationRule("System.Threading.Tasks.Task",
                 new Regex("^Wait"),

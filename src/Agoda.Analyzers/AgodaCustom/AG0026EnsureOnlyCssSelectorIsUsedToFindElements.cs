@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 namespace Agoda.Analyzers.AgodaCustom
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    public class AG0026EnsureOnlyCssSelectorIsUsedToFindElements : PermittedMethodInvocationAnalyzerBase
+    public class AG0026EnsureOnlyCssSelectorIsUsedToFindElements : MethodInvocationAnalyzerBase
     {
         public const string DIAGNOSTIC_ID = "AG0026";
 
@@ -28,6 +28,6 @@ namespace Agoda.Analyzers.AgodaCustom
             "https://agoda-com.github.io/standards-c-sharp/gui-testing/css-selectors.html",
             WellKnownDiagnosticTags.EditAndContinue);
         
-        protected override IEnumerable<PermittedInvocationRule> Rules => TestMethodHelpers.PermittedSeleniumAccessors;
+        protected override IEnumerable<InvocationRule> Rules => TestMethodHelpers.PermittedSeleniumAccessors;
     }
 }

@@ -11,7 +11,7 @@ using System.Text.RegularExpressions;
 namespace Agoda.Analyzers.AgodaCustom
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    public class AG0001DependencyResolverMustNotBeUsed : PermittedPropertyInvocationAnalyzerBase
+    public class AG0001DependencyResolverMustNotBeUsed : PropertyInvocationAnalyzerBase
     {
         public const string DIAGNOSTIC_ID = "AG0001";
 
@@ -39,7 +39,7 @@ namespace Agoda.Analyzers.AgodaCustom
             "https://agoda-com.github.io/standards-c-sharp/di/attribute-based-registration.html",
             WellKnownDiagnosticTags.EditAndContinue);
 
-        protected override IEnumerable<PermittedInvocationRule> Rules => new[]
+        protected override IEnumerable<InvocationRule> Rules => new[]
         {
             new BlacklistedInvocationRule("System.Web.Mvc.DependencyResolver", "Current")
         };

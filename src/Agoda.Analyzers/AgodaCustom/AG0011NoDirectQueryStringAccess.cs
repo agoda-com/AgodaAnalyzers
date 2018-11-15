@@ -11,7 +11,7 @@ using System.Text.RegularExpressions;
 namespace Agoda.Analyzers.AgodaCustom
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    public class AG0011NoDirectQueryStringAccess : PermittedPropertyInvocationAnalyzerBase
+    public class AG0011NoDirectQueryStringAccess : PropertyInvocationAnalyzerBase
     {
         public const string DIAGNOSTIC_ID = "AG0011";
         
@@ -36,7 +36,7 @@ namespace Agoda.Analyzers.AgodaCustom
             "https://agoda-com.github.io/standards-c-sharp/services/framework-abstractions.html", 
             WellKnownDiagnosticTags.EditAndContinue);
 
-        protected override IEnumerable<PermittedInvocationRule> Rules => new[]
+        protected override IEnumerable<InvocationRule> Rules => new[]
         {
             new BlacklistedInvocationRule("System.Web.HttpRequest", "QueryString")
         };

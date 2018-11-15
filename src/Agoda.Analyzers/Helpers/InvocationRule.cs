@@ -10,17 +10,17 @@ namespace Agoda.Analyzers.Helpers
     /// <summary>
     /// Base class to represent permitted/forbidden method/property invocations.
     /// </summary>
-    public abstract class PermittedInvocationRule
+    public abstract class InvocationRule
     {
         private readonly string _namespaceAndType;
         private readonly bool _isBlacklist;
         private readonly Regex[] _names;
 
-        protected PermittedInvocationRule(string namespaceAndType, bool isBlacklist, string[] names)
+        protected InvocationRule(string namespaceAndType, bool isBlacklist, string[] names)
             : this(namespaceAndType, isBlacklist, names.Select(name => new Regex($"^{name}$")).ToArray())
         {}
             
-        protected PermittedInvocationRule(string namespaceAndType, bool isBlacklist, params Regex[] names)
+        protected InvocationRule(string namespaceAndType, bool isBlacklist, params Regex[] names)
         {
             _namespaceAndType = namespaceAndType;
             _isBlacklist = isBlacklist;
@@ -84,7 +84,7 @@ namespace Agoda.Analyzers.Helpers
         }
     }
 
-    internal class WhitelistedInvocationRule : PermittedInvocationRule
+    internal class WhitelistedInvocationRule : InvocationRule
     {
         public WhitelistedInvocationRule(string namespaceAndType, params string[] names)
             : base(namespaceAndType, false, names)
@@ -95,7 +95,7 @@ namespace Agoda.Analyzers.Helpers
         {}
     }
     
-    internal class BlacklistedInvocationRule : PermittedInvocationRule
+    internal class BlacklistedInvocationRule : InvocationRule
     {
         public BlacklistedInvocationRule(string namespaceAndType, params string[] names)
             : base(namespaceAndType, true, names)

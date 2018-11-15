@@ -33,7 +33,7 @@ namespace Agoda.Analyzers.Helpers
                 .Any(i => TestCaseInterfaces.Contains(i.ConstructedFrom.ToDisplayString()));
         }
 
-        public static readonly IEnumerable<PermittedInvocationRule> PermittedSeleniumAccessors = new[]
+        public static readonly IEnumerable<InvocationRule> PermittedSeleniumAccessors = new[]
         {
             new WhitelistedInvocationRule("OpenQA.Selenium.By", "CssSelector"),
             new WhitelistedInvocationRule("OpenQA.Selenium.Remote.RemoteWebDriver",
