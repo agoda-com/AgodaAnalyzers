@@ -38,7 +38,9 @@ namespace Agoda.Analyzers.AgodaCustom
 
         protected override IEnumerable<InvocationRule> Rules => new[]
         {
-            new BlacklistedInvocationRule("System.Environment", "MachineName")
+            new BlacklistedInvocationRule("System.Environment", "MachineName"),
+            new BlacklistedInvocationRule("System.Web.HttpServerUtilityBase", "MachineName"),
+            new BlacklistedInvocationRule("System.Web.HttpServerUtility", "MachineName"),
         };
     }
 }
