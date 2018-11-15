@@ -29,7 +29,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 	    }
 	    
 	    [Test]
-	    public async Task AG0035_WithHttpContextMachineName_ShowsWarning()
+	    public async Task AG0035_WithMachineNameFromHttpContext_ShowsWarning()
 	    {
 		    var code = new CodeDescriptor
 		    {
@@ -48,7 +48,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 	    }
 	    
 	    [Test]
-	    public async Task AG0035_WithHttpContextWrapperMachineName_ShowsWarning()
+	    public async Task AG0035_WithMachineNameFromHttpContextWrapper_ShowsWarning()
 	    {
 		    var code = new CodeDescriptor
 		    {
