@@ -19,7 +19,7 @@ namespace Agoda.Analyzers.AgodaCustom {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class CustomRulesResources {
@@ -390,6 +390,24 @@ namespace Agoda.Analyzers.AgodaCustom {
         public static string AG0033Title {
             get {
                 return ResourceManager.GetString("AG0033Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use of machine name tightly couples your code to the our infrastructure, which can change over time. Your code should be agnostic of Environment, Data Center, Cluster and Server. Having different code paths for different environments can lead to bugs can only be caught in production. Such environmental concerns are usually only relevant when connecting to external services, as you will usually want to hit the one in your local data center. For this, use a Services configuration in Consul, which can automati [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string AG0035Description {
+            get {
+                return ResourceManager.GetString("AG0035Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Do not use Environment.MachineName.
+        /// </summary>
+        public static string AG0035Title {
+            get {
+                return ResourceManager.GetString("AG0035Title", resourceCulture);
             }
         }
     }
