@@ -33,7 +33,7 @@ namespace Agoda.Analyzers.AgodaCustom
             DiagnosticSeverity.Error, 
             AnalyzerConstants.EnabledByDefault, 
             DescriptionContentLoader.GetAnalyzerDescription(nameof(AG0035PreventUseOfMachineName)),
-            null,
+            "https://agoda-com.github.io/standards-c-sharp/configuration/machine-name.html",
             WellKnownDiagnosticTags.EditAndContinue);
 
         protected override IEnumerable<InvocationRule> Rules => new[]
