@@ -11,17 +11,17 @@ using System.Text.RegularExpressions;
 namespace Agoda.Analyzers.AgodaCustom
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    public class AG0033PreventUseOfTaskResult : PermittedPropertyInvocationAnalyzerBase
+    public class AG0035PreventUseOfMachineName : PermittedPropertyInvocationAnalyzerBase
     {
-        public const string DIAGNOSTIC_ID = "AG0033";
+        public const string DIAGNOSTIC_ID = "AG0035";
         
         private static readonly LocalizableString Title = new LocalizableResourceString(
-            nameof(CustomRulesResources.AG0033Title), 
+            nameof(CustomRulesResources.AG0035Title), 
             CustomRulesResources.ResourceManager, 
             typeof(CustomRulesResources));
         
         private static readonly LocalizableString MessageFormat = new LocalizableResourceString(
-            nameof(CustomRulesResources.AG0033Title), 
+            nameof(CustomRulesResources.AG0035Description), 
             CustomRulesResources.ResourceManager, 
             typeof(CustomRulesResources));
         
@@ -32,13 +32,13 @@ namespace Agoda.Analyzers.AgodaCustom
             AnalyzerCategory.CustomQualityRules,
             DiagnosticSeverity.Error, 
             AnalyzerConstants.EnabledByDefault, 
-            DescriptionContentLoader.GetAnalyzerDescription(nameof(AG0033PreventUseOfTaskResult)),
-            "https://agoda-com.github.io/standards-c-sharp/async/await-task-result.html", 
+            DescriptionContentLoader.GetAnalyzerDescription(nameof(AG0035PreventUseOfMachineName)),
+            null,
             WellKnownDiagnosticTags.EditAndContinue);
 
         protected override IEnumerable<PermittedInvocationRule> Rules => new[]
         {
-            new BlacklistedInvocationRule("System.Threading.Tasks.Task", "Result")
+            new BlacklistedInvocationRule("System.Environment", "MachineName")
         };
     }
 }
