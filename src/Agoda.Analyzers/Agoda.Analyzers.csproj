@@ -135,6 +135,9 @@
     <None Update="RuleContent\AG0033PreventUseOfTaskResult.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="RuleContent\AG0035PreventUseOfMachineName.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="RuleContent\AG0011NoDirectQueryStringAccess.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

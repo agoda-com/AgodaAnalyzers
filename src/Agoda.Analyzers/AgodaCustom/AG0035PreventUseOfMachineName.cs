@@ -11,17 +11,17 @@ using System.Text.RegularExpressions;
 namespace Agoda.Analyzers.AgodaCustom
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    public class AG0011NoDirectQueryStringAccess : PropertyInvocationAnalyzerBase
+    public class AG0035PreventUseOfMachineName : PropertyInvocationAnalyzerBase
     {
-        public const string DIAGNOSTIC_ID = "AG0011";
+        public const string DIAGNOSTIC_ID = "AG0035";
         
         private static readonly LocalizableString Title = new LocalizableResourceString(
-            nameof(CustomRulesResources.AG0011Title), 
+            nameof(CustomRulesResources.AG0035Title), 
             CustomRulesResources.ResourceManager, 
             typeof(CustomRulesResources));
         
         private static readonly LocalizableString MessageFormat = new LocalizableResourceString(
-            nameof(CustomRulesResources.AG0011Title), 
+            nameof(CustomRulesResources.AG0035Description), 
             CustomRulesResources.ResourceManager, 
             typeof(CustomRulesResources));
         
@@ -32,13 +32,15 @@ namespace Agoda.Analyzers.AgodaCustom
             AnalyzerCategory.CustomQualityRules,
             DiagnosticSeverity.Error, 
             AnalyzerConstants.EnabledByDefault, 
-            DescriptionContentLoader.GetAnalyzerDescription(nameof(AG0011NoDirectQueryStringAccess)),
-            "https://agoda-com.github.io/standards-c-sharp/services/framework-abstractions.html", 
+            DescriptionContentLoader.GetAnalyzerDescription(nameof(AG0035PreventUseOfMachineName)),
+            "https://agoda-com.github.io/standards-c-sharp/configuration/machine-name.html",
             WellKnownDiagnosticTags.EditAndContinue);
 
         protected override IEnumerable<InvocationRule> Rules => new[]
         {
-            new BlacklistedInvocationRule("System.Web.HttpRequest", "QueryString")
+            new BlacklistedInvocationRule("System.Environment", "MachineName"),
+            new BlacklistedInvocationRule("System.Web.HttpServerUtilityBase", "MachineName"),
+            new BlacklistedInvocationRule("System.Web.HttpServerUtility", "MachineName"),
         };
     }
 }

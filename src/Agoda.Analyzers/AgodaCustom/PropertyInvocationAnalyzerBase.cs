@@ -14,11 +14,11 @@ namespace Agoda.Analyzers.AgodaCustom
     /// Base class from which we can permit or forbid the invocation of certain properties by defining their namespace,
     /// type and name. 
     /// </summary>
-    public abstract class PermittedPropertyInvocationAnalyzerBase : DiagnosticAnalyzer
+    public abstract class PropertyInvocationAnalyzerBase : DiagnosticAnalyzer
     {
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Descriptor);
         protected abstract DiagnosticDescriptor Descriptor { get; }
-        protected abstract IEnumerable<PermittedInvocationRule> Rules { get; }
+        protected abstract IEnumerable<InvocationRule> Rules { get; }
 
         private static readonly Regex MatchGeneric = new Regex("<.*>$"); 
 

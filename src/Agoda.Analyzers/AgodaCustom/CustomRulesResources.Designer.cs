@@ -19,7 +19,7 @@ namespace Agoda.Analyzers.AgodaCustom {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class CustomRulesResources {
@@ -390,6 +390,26 @@ namespace Agoda.Analyzers.AgodaCustom {
         public static string AG0033Title {
             get {
                 return ResourceManager.GetString("AG0033Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use of MachineName tightly couples your code to our infrastructure and its naming scheme, which can and will change over time.
+        ///Your code should be agnostic of environment, data center, cluster and server. Having different code paths for different environments can lead to bugs that can only be caught in production.
+        ///Such environmental variations are usually only required when calling external services, as you will want to call the service running in your local data center. For this, use Consul&apos;s service dis [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string AG0035Description {
+            get {
+                return ResourceManager.GetString("AG0035Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Do not use MachineName.
+        /// </summary>
+        public static string AG0035Title {
+            get {
+                return ResourceManager.GetString("AG0035Title", resourceCulture);
             }
         }
     }
