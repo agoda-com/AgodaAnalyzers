@@ -1,13 +1,11 @@
 ﻿// <copyright file="AG0018EnsureThatPubliclyExposedIEnumerableTypes.cs" company="Agoda Company Co., Ltd.">
 // AGODA ® is a registered trademark of AGIP LLC, used under license by Agoda Company Co., Ltd.. Agoda is part of Priceline (NASDAQ:PCLN)
 // </copyright>
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using Agoda.Analyzers.Helpers;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 
 namespace Agoda.Analyzers.AgodaCustom
