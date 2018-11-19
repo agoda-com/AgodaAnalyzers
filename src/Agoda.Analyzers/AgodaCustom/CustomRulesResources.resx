@@ -239,7 +239,6 @@ One exception is logging, where it can be useful to see the exact DC / cluster /
   <data name="AG0035Title" xml:space="preserve">
     <value>Do not use MachineName</value>
   </data>
-  <data name="AG0037Description" xml:space="preserve">
     <value>A Selenium test case - and/or its entire test class - must be decorated with the [OwnedBy()] attribute.</value>
   </data>
   <data name="AG0037Title" xml:space="preserve">
