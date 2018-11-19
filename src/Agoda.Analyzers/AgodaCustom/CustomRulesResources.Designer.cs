@@ -412,5 +412,24 @@ namespace Agoda.Analyzers.AgodaCustom {
                 return ResourceManager.GetString("AG0035Title", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The entire test class and/or each individual tests must be decorated with the [OwnedBy()] attribute.
+        ///    This allows us to automatically notify the relevant parties of a problematic test..
+        /// </summary>
+        public static string AG0037Description {
+            get {
+                return ResourceManager.GetString("AG0037Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A Selenium test must indicate the team responsible for its maintenance..
+        /// </summary>
+        public static string AG0037Title {
+            get {
+                return ResourceManager.GetString("AG0037Title", resourceCulture);
+            }
+        }
     }
 }

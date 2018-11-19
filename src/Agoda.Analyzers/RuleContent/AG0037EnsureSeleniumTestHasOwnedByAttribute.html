@@ -1,0 +1,66 @@
+﻿<p>
+    A Selenium test must indicate the team responsible for its maintenance.
+</p>
+<p>
+    The entire test class and/or each individual tests must be decorated with the <code>[OwnedBy()]</code> attribute.
+    This allows us to automatically notify the relevant parties of a problematic test.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+
+<pre>
+    namespace Agoda.Website.Selenium.Tests
+    {
+        class TestClass
+        {
+            [Test]
+            public void BadMethod() 
+            {
+            }
+        }
+    }
+</pre>
+
+<h2>Compliant Code Examples</h2>
+<pre>
+    namespace Agoda.Website.Selenium.Tests
+    {
+        class TestClass
+        {
+            [Test]
+            [OwnedBy(Team.MyTeam)]
+            public void Test1() 
+            {
+            }
+    
+            [Test]
+            [OwnedBy(Team.AnotherTeam)]
+            public void Test2() 
+            {
+            }
+        }
+    }
+    
+    namespace Agoda.Website.Selenium.Tests
+    {
+        [OwnedBy(Team.MyTeam)] // all tests is class owned by MyTeam, except Test3
+        class TestClass
+        {
+            [Test]
+            public void Test1() 
+            {
+            }
+    
+            [Test]
+            public void Test2() 
+            {
+            }
+    
+            [Test]
+            [OwnedBy(Team.AnotherTeam)]
+            public void Test3() 
+            {
+            }
+        }
+    }
+</pre>
