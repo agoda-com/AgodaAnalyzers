@@ -19,7 +19,7 @@ namespace Agoda.Analyzers.AgodaCustom {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class CustomRulesResources {
@@ -414,8 +414,7 @@ namespace Agoda.Analyzers.AgodaCustom {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The entire test class and/or each individual tests must be decorated with the [OwnedBy()] attribute.
-        ///    This allows us to automatically notify the relevant parties of a problematic test..
+        ///   Looks up a localized string similar to A Selenium test case - and/or its entire test class - must be decorated with the [OwnedBy()] attribute..
         /// </summary>
         public static string AG0037Description {
             get {
