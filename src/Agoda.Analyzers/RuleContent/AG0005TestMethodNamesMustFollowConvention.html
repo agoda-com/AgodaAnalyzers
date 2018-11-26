@@ -2,7 +2,7 @@
     Test method names should clearly indicate what they are testing.
 </p>
 <p>
-    A test’s purpose (its pre- and post-conditions) should be obvious from its name alone.
+    A test’s purpose (what is being tested, any pre-conditions, and the expected result) should be obvious from its name alone.
     It should not be necessary to read the code to work out what is being tested.
 </p>
 
@@ -11,17 +11,19 @@
 <pre>
 public class &lt;ClassNameUnderTest&gt;Tests 
 {
-    // seperated by underscores
+    // separated by underscores
     [Test]
-    public void &lt;MethodUnderTest&gt;_&lt;PostCondition&gt;()
+    public void &lt;SystemUnderTest&gt;_&lt;PostCondition&gt;()
     {...}
 
     // or
     [Test]
-    public void &lt;MethodUnderTest&gt;_&lt;PreCondition&gt;_&lt;PostCondition&gt;()
+    public void &lt;SystemUnderTest&gt;_&lt;PreCondition&gt;_&lt;PostCondition&gt;()
     {...}
 }
 </pre>
+
+<p>For unit tests, the <code>SystemUnderTest</code> will usually be the name of the method you are testing.</p>
 
 <h2>Noncompliant Code Example</h2>
 <pre>
@@ -33,12 +35,12 @@ public void HazardLightsTest()
 <h2>Compliant Code Example</h2>
 <pre>
 [Test]
-public void ToggleHarzardLights_WhenAlreadyBlinking_StopsBlinking()
+public void HazardLightsToggleButton_WhenPushedWithLightsBlinking_StopsLightsBlinking()
 {...}
 </pre>
 
 <p>
-    If you are having difficutly naming your test this way, it might indicate it is doing
+    If you are having difficultly naming your test this way, it might indicate it is doing
     too much and should be split into more granular tests.
 </p>
 
