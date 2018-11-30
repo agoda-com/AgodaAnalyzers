@@ -430,5 +430,14 @@ namespace Agoda.Analyzers.AgodaCustom {
                 return ResourceManager.GetString("AG0037Title", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Do not use #region directives.
+        /// </summary>
+        public static string AG0038Title {
+            get {
+                return ResourceManager.GetString("AG0038Title", resourceCulture);
+            }
+        }
     }
 }
