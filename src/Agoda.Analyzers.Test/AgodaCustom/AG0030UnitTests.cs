@@ -15,10 +15,10 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 {
     internal class AG0030UnitTests : DiagnosticVerifier
     {
-	    protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0030PreventUseOfDynamics();
-	    
-	    protected override string DiagnosticId => AG0030PreventUseOfDynamics.DIAGNOSTIC_ID;
-        
+        protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0030PreventUseOfDynamics();
+
+        protected override string DiagnosticId => AG0030PreventUseOfDynamics.DIAGNOSTIC_ID;
+
         [Test]
         public async Task AG0030_WhenNoDynamic_ShouldntShowWarning()
         {
@@ -34,9 +34,9 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-	        await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
         }
-        
+
         [Test]
         public async Task AG0030_WhenMethodReturnsDynamic_ShowWarning()
         {
@@ -51,7 +51,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
             var expected = new DiagnosticLocation(3, 6);
             await VerifyDiagnosticsAsync(code, expected);
         }
-        
+
         [Test]
         public async Task AG0030_WhenDynamicVariableDeclared_ShowWarning()
         {
@@ -66,7 +66,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
             var expected = new DiagnosticLocation(4, 7);
             await VerifyDiagnosticsAsync(code, expected);
         }
-        
+
         [Test]
         public async Task AG0030_WhenMultipleDynamicUsed_ShowWarning()
         {
@@ -89,7 +89,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
             };
             await VerifyDiagnosticsAsync(code, expected);
         }
-        
+
         [Test]
         public async Task AG0030_WhenReturnTypeContainsTheStringDynamic_ShouldntShowAnyWarning()
         {
@@ -119,7 +119,48 @@ namespace Agoda.Analyzers.Test.AgodaCustom
             await VerifyDiagnosticsAsync(code, expected);
         }
 
+        [Test]
+        public async Task AG0030_WhenClassHasDynamicAsGenericParameter_ShouldShowWarning()
+        {
+            var code = @"
+				class TestClass<T> {
+					public void TestMethod1() {
+						 var test = new TestClass<dynamic>();
+					}
+				}
+			";
 
-	    
+            var expected = new DiagnosticLocation(4, 23);
+            await VerifyDiagnosticsAsync(code, expected);
+        }
+
+        [Test]
+        public async Task AG0030_WhenClassHasDynamicAsOneOfManyGenericParameters_ShouldShowWarning()
+        {
+            var code = @"
+				class TestClass<T1, T2, T3> {
+					public void TestMethod1() {
+						 var test = new TestClass<bool, dynamic, int>();
+					}
+				}
+			";
+
+            var expected = new DiagnosticLocation(4, 23);
+            await VerifyDiagnosticsAsync(code, expected);
+        }
+
+        [Test]
+        public async Task AG0030_WhenClassDoesNotHaveDynamicAsGenericParameter_ShouldNotShowWarning()
+        {
+            var code = @"
+				class TestClass<T1, T2, T3> {
+					public void TestMethod1() {
+						 var test = new TestClass<bool, long, int>();
+					}
+				}
+			";
+
+            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+        }
     }
 }
