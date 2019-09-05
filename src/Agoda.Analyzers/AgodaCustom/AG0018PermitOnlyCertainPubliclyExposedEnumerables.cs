@@ -71,7 +71,7 @@ namespace Agoda.Analyzers.AgodaCustom
                 IMethodSymbol method = (IMethodSymbol)symbol;
                 if(method.ReturnType is IArrayTypeSymbol)
                 {
-                    if ((method.ReturnType as IArrayTypeSymbol).ElementType.Name != "byte")
+                    if ((method.ReturnType as IArrayTypeSymbol).ElementType.Name != "Byte")
                     {
                         return false;
                     }
