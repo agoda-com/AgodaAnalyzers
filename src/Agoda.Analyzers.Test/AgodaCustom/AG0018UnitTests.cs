@@ -40,6 +40,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                             public IDictionary<string, string> GetServerDnsV2() { return null; }
                             public IReadOnlyDictionary<string, int> GetNumberOfServerV2() { return null; }
                             public KeyedCollection<string, string> GetServerDnsV3() { return null; }
+                            public byte[] GetRawData() { return null; }
                             public int NumberOfServer { get; set; }
                             public byte[] RawData { get; set; }
                             public string DNSName { get; set; }
