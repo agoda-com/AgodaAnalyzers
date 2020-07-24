@@ -1,7 +1,11 @@
 ﻿using System.Threading.Tasks;
-using System.Web;
 using Agoda.Analyzers.AgodaCustom;
 using Agoda.Analyzers.Test.Helpers;
+#if NET462
+using System.Web;
+#else
+using Microsoft.AspNetCore.Http;
+#endif
 using Microsoft.CodeAnalysis.Diagnostics;
 using NUnit.Framework;
 

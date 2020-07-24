@@ -3,7 +3,11 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+#if NET462
 using System.Web;
+#else
+using Microsoft.AspNetCore.Http;
+#endif
 using Agoda.Analyzers.AgodaCustom;
 using Agoda.Analyzers.Test.Helpers;
 using Microsoft.CodeAnalysis;
