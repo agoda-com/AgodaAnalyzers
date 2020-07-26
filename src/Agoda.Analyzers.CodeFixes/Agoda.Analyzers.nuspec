@@ -15,13 +15,13 @@
     <developmentDependency>true</developmentDependency>
   </metadata>
   <files>
-    <file src="bin\Release\net462\Agoda.Analyzers.dll" target="analyzers\dotnet\cs" />
-    <file src="bin\Release\net462\**\Agoda.Analyzers.resources.dll" target="analyzers\dotnet\cs" />
-    <file src="bin\Release\net462\Agoda.Analyzers.pdb" target="analyzers\dotnet\cs" />
-    <file src="bin\Release\net462\Agoda.Analyzers.CodeFixes.dll" target="analyzers\dotnet\cs" />
-    <file src="bin\Release\net462\**\Agoda.Analyzers.CodeFixes.resources.dll" target="analyzers\dotnet\cs" />
-    <file src="bin\Release\net462\Agoda.Analyzers.CodeFixes.pdb" target="analyzers\dotnet\cs" />
-    <file src="bin\Release\net462\RuleContent\*.html" target="analyzers\dotnet\cs\RuleContent" />
+    <file src="bin\Release\netstandard2.0\Agoda.Analyzers.dll" target="analyzers\dotnet\cs" />
+    <file src="bin\Release\netstandard2.0\**\Agoda.Analyzers.resources.dll" target="analyzers\dotnet\cs" />
+    <file src="bin\Release\netstandard2.0\Agoda.Analyzers.pdb" target="analyzers\dotnet\cs" />
+    <file src="bin\Release\netstandard2.0\Agoda.Analyzers.CodeFixes.dll" target="analyzers\dotnet\cs" />
+    <file src="bin\Release\netstandard2.0\**\Agoda.Analyzers.CodeFixes.resources.dll" target="analyzers\dotnet\cs" />
+    <file src="bin\Release\netstandard2.0\Agoda.Analyzers.CodeFixes.pdb" target="analyzers\dotnet\cs" />
+    <file src="bin\Release\netstandard2.0\RuleContent\*.html" target="analyzers\dotnet\cs\RuleContent" />
     <file src="tools\install.ps1" target="tools\" />
     <file src="tools\uninstall.ps1" target="tools\" />
   </files>
