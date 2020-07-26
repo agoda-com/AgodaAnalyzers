@@ -7,25 +7,21 @@
     <authors>Joel Dickson</authors>
     <owners>Agoda Services</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>TBA</description>
+    <description>A set of opinionated Roslyn analyzers for C#. This project is used by Agoda internally for analysis of our C# projects. We have opened it for community contribution and usage.</description>
     <copyright>Copyright © Agoda 2017</copyright>
     <projectUrl>https://github.com/agoda-com/AgodaAnalyzers</projectUrl>
     <iconUrl>https://avatars3.githubusercontent.com/u/19235448?s=200</iconUrl>
     <licenseUrl>https://github.com/agoda-com/AgodaAnalyzers</licenseUrl>
+    <developmentDependency>true</developmentDependency>
   </metadata>
   <files>
-    <file src="bin\Release\net462\Microsoft.CodeAnalysis.CSharp.dll" target="analyzers\dotnet\cs" />
-    <file src="bin\Release\net462\System.Reflection.Metadata.dll" target="analyzers\dotnet\cs" />
-    <file src="bin\Release\net462\Microsoft.CodeAnalysis.Workspaces.dll" target="analyzers\dotnet\cs" />
-    <file src="bin\Release\net462\Microsoft.CodeAnalysis.dll" target="analyzers\dotnet\cs" />
-    <file src="bin\Release\net462\Agoda.Analyzers.dll" target="analyzers\dotnet\cs" />
-    <file src="bin\Release\net462\**\Agoda.Analyzers.resources.dll" target="analyzers\dotnet\cs" />
-    <file src="bin\Release\net462\Agoda.Analyzers.pdb" target="analyzers\dotnet\cs" />
-    <file src="bin\Release\net462\Agoda.Analyzers.CodeFixes.dll" target="analyzers\dotnet\cs" />
-    <file src="bin\Release\net462\**\Agoda.Analyzers.CodeFixes.resources.dll" target="analyzers\dotnet\cs" />
-    <file src="bin\Release\net462\Agoda.Analyzers.CodeFixes.pdb" target="analyzers\dotnet\cs" />
-    <file src="bin\Release\net462\Newtonsoft.Json.dll" target="analyzers\dotnet\cs" />
-    <file src="bin\Release\net462\RuleContent\*.html" target="analyzers\dotnet\cs\RuleContent" />
+    <file src="bin\Release\netstandard2.0\Agoda.Analyzers.dll" target="analyzers\dotnet\cs" />
+    <file src="bin\Release\netstandard2.0\**\Agoda.Analyzers.resources.dll" target="analyzers\dotnet\cs" />
+    <file src="bin\Release\netstandard2.0\Agoda.Analyzers.pdb" target="analyzers\dotnet\cs" />
+    <file src="bin\Release\netstandard2.0\Agoda.Analyzers.CodeFixes.dll" target="analyzers\dotnet\cs" />
+    <file src="bin\Release\netstandard2.0\**\Agoda.Analyzers.CodeFixes.resources.dll" target="analyzers\dotnet\cs" />
+    <file src="bin\Release\netstandard2.0\Agoda.Analyzers.CodeFixes.pdb" target="analyzers\dotnet\cs" />
+    <file src="bin\Release\netstandard2.0\RuleContent\*.html" target="analyzers\dotnet\cs\RuleContent" />
     <file src="tools\install.ps1" target="tools\" />
     <file src="tools\uninstall.ps1" target="tools\" />
   </files>

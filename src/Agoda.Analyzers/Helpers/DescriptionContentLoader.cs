@@ -14,9 +14,11 @@ namespace Agoda.Analyzers.Helpers
         /// <returns>Content of the analyzer description.</returns>
         public static string GetAnalyzerDescription(string analyzerName)
         {
-            string path = Path.Combine(localPath, $"RuleContent\\{analyzerName}.html");
-            var content = File.ReadAllText(path);
-            return content;
+            return "";
+            // TODO fix this, could not work out how to include the html files nicely in the package
+            // string path = Path.Combine(localPath, $"RuleContent\\{analyzerName}.html");
+            // var content = File.ReadAllText(path);
+            // return content;
         }
     }
 }
