@@ -16,9 +16,9 @@ namespace Agoda.Analyzers.Helpers
         {
             return "";
             // TODO fix this, could not work out how to include the html files nicely in the package
-            string path = Path.Combine(localPath, $"RuleContent\\{analyzerName}.html");
-            var content = File.ReadAllText(path);
-            return content;
+            // string path = Path.Combine(localPath, $"RuleContent\\{analyzerName}.html");
+            // var content = File.ReadAllText(path);
+            // return content;
         }
     }
 }
