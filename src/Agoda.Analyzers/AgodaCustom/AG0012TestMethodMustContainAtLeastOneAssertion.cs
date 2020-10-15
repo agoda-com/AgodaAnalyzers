@@ -1,9 +1,9 @@
-﻿using System.Collections.Immutable;
+﻿using Agoda.Analyzers.Helpers;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Agoda.Analyzers.Helpers;
+using Microsoft.CodeAnalysis.Diagnostics;
+using System.Collections.Immutable;
 using System.Linq;
 
 namespace Agoda.Analyzers.AgodaCustom
@@ -14,26 +14,26 @@ namespace Agoda.Analyzers.AgodaCustom
         public const string DIAGNOSTIC_ID = "AG0012";
 
         private static readonly LocalizableString Title = new LocalizableResourceString(
-            nameof(CustomRulesResources.AG0012Title), 
-            CustomRulesResources.ResourceManager, 
+            nameof(CustomRulesResources.AG0012Title),
+            CustomRulesResources.ResourceManager,
             typeof(CustomRulesResources));
-        
+
         private static readonly LocalizableString MessageFormat = new LocalizableResourceString(
-            nameof(CustomRulesResources.AG0012Title), 
-            CustomRulesResources.ResourceManager, 
+            nameof(CustomRulesResources.AG0012Title),
+            CustomRulesResources.ResourceManager,
             typeof(CustomRulesResources));
-        
-        private static readonly LocalizableString Description 
+
+        private static readonly LocalizableString Description
             = DescriptionContentLoader.GetAnalyzerDescription(nameof(AG0012TestMethodMustContainAtLeastOneAssertion));
-        
+
         private static readonly DiagnosticDescriptor Descriptor = new DiagnosticDescriptor(
-            DIAGNOSTIC_ID, 
-            Title, 
-            MessageFormat, 
+            DIAGNOSTIC_ID,
+            Title,
+            MessageFormat,
             AnalyzerCategory.CustomQualityRules,
-            DiagnosticSeverity.Warning, 
-            AnalyzerConstants.EnabledByDefault, 
-            Description, 
+            DiagnosticSeverity.Warning,
+            AnalyzerConstants.EnabledByDefault,
+            Description,
             "https://agoda-com.github.io/standards-c-sharp/testing/tests-as-a-specification.html",
             WellKnownDiagnosticTags.EditAndContinue);
 
@@ -49,7 +49,7 @@ namespace Agoda.Analyzers.AgodaCustom
         {
             context.RegisterSyntaxNodeAction(AnalyzeNode, SyntaxKind.MethodDeclaration);
         }
-        
+
         private static void AnalyzeNode(SyntaxNodeAnalysisContext context)
         {
             var methodDeclaration = context.Node as MethodDeclarationSyntax;
