@@ -69,8 +69,7 @@ namespace Agoda.Analyzers.AgodaCustom
         private static bool HasInvokedAssertStaticMethod(MethodDeclarationSyntax methodDeclaration, SyntaxNodeAnalysisContext context)
         {
             return methodDeclaration.Body.Statements
-                .OfType<ExpressionStatementSyntax>()
-                .Select(ess => ess.Expression)
+                .SelectMany(s => s.DescendantNodesAndSelf())
                 .OfType<InvocationExpressionSyntax>()
                 .Select(ies => ies.Expression)
                 .OfType<MemberAccessExpressionSyntax>()
@@ -86,8 +85,7 @@ namespace Agoda.Analyzers.AgodaCustom
         private static bool HasInvokedAssertExtensionMethod(MethodDeclarationSyntax methodDeclaration, SyntaxNodeAnalysisContext context)
         {
             return methodDeclaration.Body.Statements
-                .OfType<ExpressionStatementSyntax>()
-                .Select(ess => ess.Expression)
+                .SelectMany(s => s.DescendantNodesAndSelf())
                 .OfType<InvocationExpressionSyntax>()
                 .Select(ies => ies.Expression)
                 .OfType<MemberAccessExpressionSyntax>()
