@@ -127,5 +127,62 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 
             await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
         }
+
+        [Test]
+        public async Task AG0012_WithNestedAssertions_ShouldNotShowWarning()
+        {
+            var code = new CodeDescriptor
+            {
+                References = new[] { typeof(TestFixtureAttribute).Assembly, typeof(Shouldly.Should).Assembly },
+                Code = @"
+                    using NUnit.Framework;
+                    using Shouldly;
+                    using System;
+                    
+                    namespace Tests
+                    {
+                        public class TestClass
+                        {
+                            [Test]
+                            public void Assertion_In_Loop_Is_Valid()
+                            {
+                                int[] array = { 1, 2, 3 };
+                                for (int i = 0; i < 3; i++)
+                                {
+                                    array[i].ShouldBe(i + 1);
+                                }
+                            }
+                            
+                            [Test]
+                            public void Assertion_In_Nested_Loop_Is_Valid()
+                            {
+                                int[] array = { 1, 2, 3 };
+                                for (int i = 0; i < 3; i++)
+                                {
+                                    for (int j = 0; j < 3; j++)
+                                    {    
+                                        array[i].ShouldBe(i + 1);
+                                    }
+                                }
+                            }
+
+                            [Test]
+                            public void Assertion_In_Local_Function_Is_Valid()
+                            {
+                                int[] array = { 1, 2, 3 };
+                                
+                                helper(array[0]);
+
+                                void helper(int i)
+                                {
+	                                Assert.AreEqual(i, i + 1);
+                                }
+                            }
+                        }
+                    }"
+            };
+
+            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+        }
     }
 }
