@@ -232,7 +232,7 @@ namespace Agoda.Analyzers.AgodaCustom {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Ensure that publicly exposed IEnumerable types.
+        ///   Looks up a localized string similar to AG0018: Ensure that publicly exposed enumerable types are on our whitelist.
         /// </summary>
         public static string AG0018Title {
             get {
