@@ -198,7 +198,7 @@
     <value>Prevent use of dynamic</value>
   </data>
   <data name="AG0018Title" xml:space="preserve">
-    <value>Ensure that publicly exposed IEnumerable types</value>
+    <value>Invalid return type. Publicly exposed enumerable types must be on our whitelist.</value>
   </data>
   <data name="AG0026Title" xml:space="preserve">
     <value>Use only CSS Selectors to find elements in Selenium tests</value>
