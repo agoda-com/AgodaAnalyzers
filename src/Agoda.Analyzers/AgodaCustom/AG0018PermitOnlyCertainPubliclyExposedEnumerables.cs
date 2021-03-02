@@ -3,6 +3,7 @@
 // </copyright>
 using System.Collections.Immutable;
 using System.Linq;
+using System.Collections.Generic;
 using Agoda.Analyzers.Helpers;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -15,7 +16,7 @@ namespace Agoda.Analyzers.AgodaCustom
     {
         public const string DIAGNOSTIC_ID = "AG0018";
 
-        private static readonly string[] AllowedTypes = 
+        private static readonly HashSet<string> AllowedTypes = new HashSet<string>
         {
             "System.Collections.Generic.ISet<T>",
             "System.Collections.Generic.IList<T>",
@@ -23,6 +24,7 @@ namespace Agoda.Analyzers.AgodaCustom
             "System.Collections.Generic.IReadOnlyDictionary<TKey, TValue>",
             "System.Collections.Generic.KeyedCollection<TKey, TValue>",
             "System.Collections.Generic.IEnumerable<T>",
+            "System.Collections.Generic.IReadOnlyCollection<T>"
         };
 
         private static readonly LocalizableString Title = new LocalizableResourceString(
