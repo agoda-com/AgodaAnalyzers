@@ -80,6 +80,8 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         [TestCase("IReadOnlyDictionary<string, int>")]
         [TestCase("KeyedCollection<string, string>")]
         [TestCase("IEnumerable<string>")]
+        [TestCase("IReadOnlyCollection<string>")]
+        [TestCase("IReadOnlyList<string>")]
         public async Task AG0018_WithPermittedCollection_ShouldNotShowWarning(string type)
         {
             var code = $@"
