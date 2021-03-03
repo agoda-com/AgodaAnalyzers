@@ -24,7 +24,8 @@ namespace Agoda.Analyzers.AgodaCustom
             "System.Collections.Generic.IReadOnlyDictionary<TKey, TValue>",
             "System.Collections.Generic.KeyedCollection<TKey, TValue>",
             "System.Collections.Generic.IEnumerable<T>",
-            "System.Collections.Generic.IReadOnlyCollection<T>"
+            "System.Collections.Generic.IReadOnlyCollection<T>",
+            "System.Collections.Generic.IReadOnlyList<T>"
         };
 
         private static readonly LocalizableString Title = new LocalizableResourceString(
