@@ -349,7 +349,7 @@ namespace Agoda.Analyzers.AgodaCustom {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Use only CSS Selectors to find elements in Selenium tests.
+        ///   Looks up a localized string similar to Use only CSS Selectors to find elements in Selenium tests (preferrably use [data-selenium] attributes).
         /// </summary>
         public static string AG0026Title {
             get {
