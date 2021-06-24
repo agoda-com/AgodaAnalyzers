@@ -43,6 +43,7 @@ namespace Agoda.Analyzers.AgodaCustom
         {
             new AssertLibraryInfo("NUnit.Framework", "nunit.framework.dll", "Assert"),
             new AssertLibraryInfo("Shouldly", "Shouldly.dll", "Should", "Shouldly.Should"),
+            new AssertLibraryInfo("FluentAssertions", "FluentAssertions.dll", "Should", "FluentAssertions.NumericAssertionsExtensions"),
         };
 
         public override void Initialize(AnalysisContext context)

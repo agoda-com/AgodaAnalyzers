@@ -201,7 +201,7 @@
     <value>Ensure that publicly exposed IEnumerable types</value>
   </data>
   <data name="AG0026Title" xml:space="preserve">
-    <value>Use only CSS Selectors to find elements in Selenium tests</value>
+    <value>Use only CSS Selectors to find elements in Selenium tests (preferrably use [data-selenium] attributes)</value>
   </data>
   <data name="AG0010Title" xml:space="preserve">
     <value>Prevent test fixture inheritance</value>

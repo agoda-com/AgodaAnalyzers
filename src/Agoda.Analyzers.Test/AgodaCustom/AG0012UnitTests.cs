@@ -184,5 +184,40 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 
             await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
         }
+
+        [Test]
+        public async Task AG0012_WithFluentAssertions_ShouldNotShowWarning()
+        {
+            var code = new CodeDescriptor
+            {
+                References = new[] { typeof(TestFixtureAttribute).Assembly, typeof(FluentAssertions.NumericAssertionsExtensions).Assembly },
+                Code = @"
+                    using NUnit.Framework;
+                    using FluentAssertions;
+                    using System;
+                    
+                    namespace Tests
+                    {
+                        public class TestClass
+                        {
+                            [Test]
+                            public void This_Is_Valid()
+                            {
+                                int[] arrayForShouldBe = { 1, 2, 3 };
+                                arrayForShouldBe.Length.Should().Be(3);
+                            }
+                    
+                            [Test]
+                            public void This_Is_AlsoValid()
+                            {
+                                var act = () => var y = 1;
+                                act.Should().Throw<Exception>();
+                            }
+                        }
+                    }"
+            };
+
+            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+        }
     }
 }
