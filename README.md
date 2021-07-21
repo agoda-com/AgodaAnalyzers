@@ -85,4 +85,4 @@ To generate a jar file from this project for use with SonarQube we have prepared
 
 ## Contributing
 
-[Please read the contributing guidelines](CONTRIBUTING.md)
+[Please read the contributing guidelines](CONTRIBUTING.md) 
