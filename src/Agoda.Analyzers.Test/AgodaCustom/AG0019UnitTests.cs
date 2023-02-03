@@ -44,7 +44,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
             var expected = new DiagnosticLocation[]
             {
             };
-            await VerifyDiagnosticsAsync(code, expected);
+            await VerifyDiagnosticsAsync(code, expected, "Core1Test.cs");
         }
 
         [Test]
