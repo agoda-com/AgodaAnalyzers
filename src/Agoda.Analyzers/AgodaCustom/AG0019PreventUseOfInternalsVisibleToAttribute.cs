@@ -57,7 +57,7 @@ namespace Agoda.Analyzers.AgodaCustom
 
         private bool IsTestSourceFile(string aFilePath)
         {
-            return aFilePath.ToLower().EndsWith("test") || aFilePath.ToLower().EndsWith("tests");
+            return aFilePath.ToLower().EndsWith("test.cs") || aFilePath.ToLower().EndsWith("tests.cs");
 
         }
     }
