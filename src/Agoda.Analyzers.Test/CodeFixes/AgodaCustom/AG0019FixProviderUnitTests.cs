@@ -74,7 +74,7 @@ namespace Agoda.Analyzers.Test.CodeFixes.AgodaCustom
                             }
                         }
                     ";
-            await VerifyCodeFixAsync(code, result, allowNewCompilerDiagnostics:true);
+            await VerifyCodeFixAsync(code, result, allowNewCompilerDiagnostics: true, oldFileName: "Core.cs");
         }
     }
 }

@@ -35,12 +35,6 @@ namespace Agoda.Analyzers.CodeFixes.AgodaCustom
 
         private static async Task<Document> GetTransformedDocumentAsync(Document document, Diagnostic diagnostic, CancellationToken cancellationToken)
         {
-            var projectName = document.Project.Name;
-            if (projectName.Contains("test"))
-            {
-                return document;
-            }
-
             var root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
             var token = root.FindToken(diagnostic.Location.SourceSpan.Start);
 

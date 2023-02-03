@@ -90,9 +90,9 @@ namespace Agoda.Analyzers.Test.Helpers
             await VerifyDiagnosticsAsync(new CodeDescriptor(code), new [] { expectedLocations});
         }
 
-        protected async Task VerifyDiagnosticsAsync(string code, DiagnosticLocation[] expectedLocations)
+        protected async Task VerifyDiagnosticsAsync(string code, DiagnosticLocation[] expectedLocations, string filename = null)
         {
-            await VerifyDiagnosticsAsync(new CodeDescriptor(code), expectedLocations);
+            await VerifyDiagnosticsAsync(new CodeDescriptor(code), expectedLocations, filename);
         }
 
         protected async Task VerifyDiagnosticsAsync(CodeDescriptor descriptor, DiagnosticLocation expectedLocations)
@@ -100,12 +100,12 @@ namespace Agoda.Analyzers.Test.Helpers
             await VerifyDiagnosticsAsync(descriptor, new [] { expectedLocations});
         }
         
-        protected async Task VerifyDiagnosticsAsync(CodeDescriptor descriptor, DiagnosticLocation[] expectedLocations)
+        protected async Task VerifyDiagnosticsAsync(CodeDescriptor descriptor, DiagnosticLocation[] expectedLocations, string filename = null)
         {
             var baseResult = CSharpDiagnostic(DiagnosticId);
-            var expected = expectedLocations.Select(l => baseResult.WithLocation(l.Line, l.Col)).ToArray();
-            
-            var doc = CreateProject(new[] {descriptor.Code})
+            var expected = expectedLocations.Select(l => baseResult.WithLocation(l.Line, l.Col, filename)).ToArray();
+
+            var doc = CreateProject(new[] { descriptor.Code }, filenames: new[] { filename })
                 .AddMetadataReferences(descriptor.References.Select(assembly => MetadataReference.CreateFromFile(assembly.Location)))
                 .Documents
                 .First();

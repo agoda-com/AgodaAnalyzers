@@ -85,9 +85,9 @@ namespace Agoda.Analyzers.Test.Helpers
             return result;
         }
 
-        public DiagnosticResult WithLocation(int line, int column)
+        public DiagnosticResult WithLocation(int line, int column, string path = null)
         {
-            return WithLocation(DefaultPath, line, column);
+            return WithLocation(path ?? DefaultPath, line, column);
         }
 
         public DiagnosticResult WithLocation(string path, int line, int column)

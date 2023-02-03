@@ -41,15 +41,50 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                     }
                 ";
 
+            var expected = new DiagnosticLocation[]
+            {
+            };
+            await VerifyDiagnosticsAsync(code, expected);
+        }
+
+        [Test]
+        public async Task AG0019_RemoveInternalsVisibleToAttributeShouldNotReport()
+        {
+            var code = @"
+                using System;
+                using System.Diagnostics;
+                using System.Reflection;
+                using System.Runtime.CompilerServices;
+
+                [assembly: AssemblyTitle(""MyApplication"")]
+                [assembly: InternalsVisibleTo(""Agoda.Website.Core"")]
+                [assembly: AssemblyDescription(""Description""), InternalsVisibleTo(""Agoda.Website.Core"")]
+                [assembly: InternalsVisibleTo(""Agoda.Website.Core""), AssemblyDefaultAlias(""alias"")]
+                [assembly: AssemblyCopyright(""CopyRight""), InternalsVisibleTo(""Agoda.Website.Core""), InternalsVisibleTo(""Agoda.Website.Core""), AssemblyFileVersion(""0.0.0.0"")]
+
+                namespace RoslynTest
+                    {
+                        [Serializable]
+                        public class Program
+                        {
+                            [Conditional(""DEBUG""), Conditional(""Core1"")]
+                            static void Main(string[] args)
+                            {
+                                Console.WriteLine(""Hello World!"");
+                            }
+                        }
+                    }
+                ";
+
             var expected = new[]
             {
                 new DiagnosticLocation(8, 28),
                 new DiagnosticLocation(9, 64),
                 new DiagnosticLocation(10, 28),
                 new DiagnosticLocation(11, 60),
-                new DiagnosticLocation(11, 115)
+                new DiagnosticLocation(11, 102)
             };
-            await VerifyDiagnosticsAsync(code, expected);
+            await VerifyDiagnosticsAsync(code, expected, "Core1.cs");
         }
     }
 }

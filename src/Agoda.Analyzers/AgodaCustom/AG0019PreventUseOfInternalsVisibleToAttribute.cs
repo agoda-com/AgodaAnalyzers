@@ -4,6 +4,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System.Collections.Immutable;
+using System.Linq;
 
 namespace Agoda.Analyzers.AgodaCustom
 {
@@ -34,14 +35,17 @@ namespace Agoda.Analyzers.AgodaCustom
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(_diagnosticDescriptor);
 
-        public override void Initialize(AnalysisContext context) => context.RegisterSyntaxNodeAction(AnalyzeNode, SyntaxKind.AttributeList);
+        public override void Initialize(AnalysisContext context) =>
+            context.RegisterSyntaxNodeAction(AnalyzeNode, SyntaxKind.AttributeList);
 
         private void AnalyzeNode(SyntaxNodeAnalysisContext context)
         {
             var attributeNode = (AttributeListSyntax)context.Node;
-
-            if (attributeNode.Target?.Identifier.Text != "assembly") return;
-
+            var targetSyntaxTree = context.Compilation?.SyntaxTrees.FirstOrDefault(tree => tree == attributeNode.SyntaxTree);
+            if (attributeNode.Target?.Identifier.Text != "assembly" || targetSyntaxTree == null || targetSyntaxTree.FilePath.ToLower().Contains("test"))
+            {
+                return;
+            }
             foreach (var attribute in attributeNode.Attributes)
             {
                 if (attribute.Name is IdentifierNameSyntax name && name.Identifier.Text == "InternalsVisibleTo")
