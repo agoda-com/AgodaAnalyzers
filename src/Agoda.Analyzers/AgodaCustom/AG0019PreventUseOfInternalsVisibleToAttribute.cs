@@ -42,7 +42,7 @@ namespace Agoda.Analyzers.AgodaCustom
         {
             var attributeNode = (AttributeListSyntax)context.Node;
             var targetSyntaxTree = context.Compilation?.SyntaxTrees.FirstOrDefault(tree => tree == attributeNode.SyntaxTree);
-            if (attributeNode.Target?.Identifier.Text != "assembly" || targetSyntaxTree == null || targetSyntaxTree.FilePath.ToLower().Contains("test"))
+            if (attributeNode.Target?.Identifier.Text != "assembly" || targetSyntaxTree == null || IsTestSourceFile(targetSyntaxTree.FilePath))
             {
                 return;
             }
@@ -53,6 +53,12 @@ namespace Agoda.Analyzers.AgodaCustom
                     context.ReportDiagnostic(Diagnostic.Create(_diagnosticDescriptor, attribute.GetLocation()));
                 }
             }
+        }
+
+        private bool IsTestSourceFile(string aFilePath)
+        {
+            return aFilePath.ToLower().EndsWith("test") || aFilePath.ToLower().EndsWith("tests");
+
         }
     }
 }
