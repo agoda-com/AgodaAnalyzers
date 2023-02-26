@@ -58,9 +58,9 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 
                 [assembly: AssemblyTitle(""MyApplication"")]
                 [assembly: InternalsVisibleTo(""Agoda.Website.UnitTestFramework"")]
-                [assembly: AssemblyDescription(""Description""), InternalsVisibleTo(""Agoda.Website.Core"")]
+                [assembly: AssemblyDescription(""Description""), InternalsVisibleTo(""Agoda.Website.UnitTestFramework"")]
                 [assembly: InternalsVisibleTo(""Agoda.Website.UnitTestFramework""), AssemblyDefaultAlias(""alias"")]
-                [assembly: AssemblyCopyright(""CopyRight""), InternalsVisibleTo(""Agoda.Website.Core""), InternalsVisibleTo(""Agoda.Website.Core""), AssemblyFileVersion(""0.0.0.0"")]
+                [assembly: AssemblyCopyright(""CopyRight""), InternalsVisibleTo(""Agoda.Website.UnitTestFramework""), InternalsVisibleTo(""Agoda.Website.Core""), AssemblyFileVersion(""0.0.0.0"")]
 
                 namespace RoslynTest
                     {
