@@ -1,6 +1,10 @@
-![alt text](logo.png) 
+![alt text](AgodaAnalyzersLogo.png) 
+
+Opinionated C# for FullStack Developers 
 
 This project is used by Agoda internally for analysis of our C# projects. We have opened it for community contribution.
+
+![alt text](AgodaAnalyzersAgoji.png) 
 
 ## Dive straight in?
 
