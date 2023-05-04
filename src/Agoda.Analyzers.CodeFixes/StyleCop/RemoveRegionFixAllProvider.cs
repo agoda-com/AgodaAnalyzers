@@ -6,6 +6,7 @@ using Agoda.Analyzers.Helpers;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using DocumentBasedFixAllProvider = Agoda.Analyzers.CodeFixes.Helpers.DocumentBasedFixAllProvider;
 
 namespace Agoda.Analyzers.CodeFixes.StyleCop
 {
