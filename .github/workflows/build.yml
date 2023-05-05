@@ -10,7 +10,7 @@ env:
   NETCORE_VERSION: '6.0.x'  
   GIT_REPO_ROOT: src
   MAJOR_MINOR_VERSION: 1.1.
-  SOLUTION_FILE: AgodaAnalyzers.sln
+  SOLUTION_FILE: AgodaAnalyzers.Build.sln
 
 jobs:
   build:
