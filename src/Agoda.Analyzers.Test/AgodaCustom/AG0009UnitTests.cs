@@ -5,21 +5,22 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.CodeAnalysis.Diagnostics;
 using NUnit.Framework;
 
-namespace Agoda.Analyzers.Test.AgodaCustom
+namespace Agoda.Analyzers.Test.AgodaCustom;
+
+[TestFixture]
+class AG0009UnitTests : DiagnosticVerifier
 {
-    class AG0009UnitTests : DiagnosticVerifier
+    protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0009IHttpContextAccessorCannotBePassedAsMethodArgument();
+
+    protected override string DiagnosticId => AG0009IHttpContextAccessorCannotBePassedAsMethodArgument.DIAGNOSTIC_ID;
+
+    [Test]
+    public async Task TestIHttpContextAccessorAsArgument()
     {
-        protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0009IHttpContextAccessorCannotBePassedAsMethodArgument();
-
-        protected override string DiagnosticId => AG0009IHttpContextAccessorCannotBePassedAsMethodArgument.DIAGNOSTIC_ID;
-
-        [Test]
-        public async Task TestIHttpContextAccessorAsArgument()
+        var code = new CodeDescriptor
         {
-            var code = new CodeDescriptor
-            {
-                References = new[] {typeof(IHttpContextAccessor).Assembly, typeof(HttpContextAccessor).Assembly},
-                Code = @"
+            References = new[] {typeof(IHttpContextAccessor).Assembly, typeof(HttpContextAccessor).Assembly},
+            Code = @"
 using Microsoft.AspNetCore.Http;
 
 interface ISomething
@@ -50,19 +51,18 @@ class TestClass : ISomething
         // this constructor is uglier
     }
 }"
-            };
+        };
 
-            var expected = new[]
-            {
-                new DiagnosticLocation(6, 21),
-                new DiagnosticLocation(7, 21),
-                new DiagnosticLocation(12, 28),
-                new DiagnosticLocation(17, 28),
-                new DiagnosticLocation(22, 23),
-                new DiagnosticLocation(27, 22)
-            };
-            HttpContextAccessor a;
-            await VerifyDiagnosticsAsync(code, expected);
-        }
+        var expected = new[]
+        {
+            new DiagnosticLocation(6, 21),
+            new DiagnosticLocation(7, 21),
+            new DiagnosticLocation(12, 28),
+            new DiagnosticLocation(17, 28),
+            new DiagnosticLocation(22, 23),
+            new DiagnosticLocation(27, 22)
+        };
+        HttpContextAccessor a;
+        await VerifyDiagnosticsAsync(code, expected);
     }
 }

@@ -59,7 +59,7 @@ internal static class Class1
 {
 	public static async Task<int> Wrong()
 	{
-		return Delay1();
+		return await Delay1();
 	}
     async static Task<int> Delay1() { await Task.Delay (1000); return 1; }
 }

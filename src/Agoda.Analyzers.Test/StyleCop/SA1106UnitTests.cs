@@ -8,24 +8,24 @@ using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Diagnostics;
 using NUnit.Framework;
 
-namespace Agoda.Analyzers.Test.StyleCop
+namespace Agoda.Analyzers.Test.StyleCop;
+
+public class SA1106UnitTests : CodeFixVerifier
 {
-    public class SA1106UnitTests : CodeFixVerifier
+    protected override DiagnosticAnalyzer DiagnosticAnalyzer => new SA1106CodeMustNotContainEmptyStatements();
+        
+    protected override string DiagnosticId => SA1106CodeMustNotContainEmptyStatements.DIAGNOSTIC_ID;
+        
+    protected override CodeFixProvider CodeFixProvider => new SA1106CodeFixProvider();
+        
+    [Test]
+    [TestCase("if (true)")]
+    [TestCase("if (true) { } else")]
+    [TestCase("for (int i = 0; i < 10; i++)")]
+    [TestCase("while (true)")]
+    public async Task TestEmptyStatementAsBlockAsync(string controlFlowConstruct)
     {
-        protected override DiagnosticAnalyzer DiagnosticAnalyzer => new SA1106CodeMustNotContainEmptyStatements();
-        
-        protected override string DiagnosticId => SA1106CodeMustNotContainEmptyStatements.DIAGNOSTIC_ID;
-        
-        protected override CodeFixProvider CodeFixProvider => new SA1106CodeFixProvider();
-        
-        [Test]
-        [TestCase("if (true)")]
-        [TestCase("if (true) { } else")]
-        [TestCase("for (int i = 0; i < 10; i++)")]
-        [TestCase("while (true)")]
-        public async Task TestEmptyStatementAsBlockAsync(string controlFlowConstruct)
-        {
-            var testCode = $@"
+        var testCode = $@"
 class TestClass
 {{
     public void TestMethod()
@@ -35,7 +35,7 @@ class TestClass
     }}
 }}";
             
-            var fixedCode = $@"
+        var fixedCode = $@"
 class TestClass
 {{
     public void TestMethod()
@@ -46,15 +46,15 @@ class TestClass
     }}
 }}";
 
-            await VerifyDiagnosticsAsync(testCode, new DiagnosticLocation(7, 13));
-            await VerifyDiagnosticsAsync(fixedCode, EmptyDiagnosticResults);
-            await VerifyCodeFixAsync(testCode, fixedCode);
-        }
+        await VerifyDiagnosticsAsync(testCode, new DiagnosticLocation(7, 13));
+        await VerifyDiagnosticsAsync(fixedCode, EmptyDiagnosticResults);
+        await VerifyCodeFixAsync(testCode, fixedCode);
+    }
 
-        [Test]
-        public async Task TestEmptyStatementAsBlockInDoWhileAsync()
-        {
-            var testCode = @"
+    [Test]
+    public async Task TestEmptyStatementAsBlockInDoWhileAsync()
+    {
+        var testCode = @"
 class TestClass
 {
     public void TestMethod()
@@ -66,7 +66,7 @@ class TestClass
 }
 ";
             
-            var fixedCode = @"
+        var fixedCode = @"
 class TestClass
 {
     public void TestMethod()
@@ -79,15 +79,15 @@ class TestClass
 }
 ";
 
-            await VerifyDiagnosticsAsync(testCode, new DiagnosticLocation(7, 13));
-            await VerifyDiagnosticsAsync(fixedCode, EmptyDiagnosticResults);
-            await VerifyCodeFixAsync(testCode, fixedCode);
-        }
+        await VerifyDiagnosticsAsync(testCode, new DiagnosticLocation(7, 13));
+        await VerifyDiagnosticsAsync(fixedCode, EmptyDiagnosticResults);
+        await VerifyCodeFixAsync(testCode, fixedCode);
+    }
 
-        [Test]
-        public async Task TestEmptyStatementWithinBlockAsync()
-        {
-            var testCode = @"
+    [Test]
+    public async Task TestEmptyStatementWithinBlockAsync()
+    {
+        var testCode = @"
                 class TestClass
                 {
                     public void TestMethod()
@@ -101,7 +101,7 @@ class TestClass
                 }
             ";
             
-            var fixedCode = @"
+        var fixedCode = @"
                 class TestClass
                 {
                     public void TestMethod()
@@ -114,15 +114,15 @@ class TestClass
                 }
             ";
 
-            await VerifyDiagnosticsAsync(testCode, new DiagnosticLocation(9, 29));
-            await VerifyDiagnosticsAsync(fixedCode, EmptyDiagnosticResults);
-            await VerifyCodeFixAsync(testCode, fixedCode);
-        }
+        await VerifyDiagnosticsAsync(testCode, new DiagnosticLocation(9, 29));
+        await VerifyDiagnosticsAsync(fixedCode, EmptyDiagnosticResults);
+        await VerifyCodeFixAsync(testCode, fixedCode);
+    }
 
-        [Test]
-        public async Task TestEmptyStatementInForStatementAsync()
-        {
-            var testCode = @"
+    [Test]
+    public async Task TestEmptyStatementInForStatementAsync()
+    {
+        var testCode = @"
                 class TestClass
                 {
                     public void TestMethod()
@@ -134,13 +134,13 @@ class TestClass
                 }
             ";
 
-            await VerifyDiagnosticsAsync(testCode, EmptyDiagnosticResults);
-        }
+        await VerifyDiagnosticsAsync(testCode, EmptyDiagnosticResults);
+    }
 
-        [Test]
-        public async Task TestEmptyStatementAsync()
-        {
-            var testCode = @"
+    [Test]
+    public async Task TestEmptyStatementAsync()
+    {
+        var testCode = @"
                 class TestClass
                 {
                     public void TestMethod()
@@ -150,7 +150,7 @@ class TestClass
                 }
             ";
             
-            var fixedCode = @"
+        var fixedCode = @"
                 class TestClass
                 {
                     public void TestMethod()
@@ -159,15 +159,15 @@ class TestClass
                 }
             ";
 
-            await VerifyDiagnosticsAsync(testCode, new DiagnosticLocation(6, 25));
-            await VerifyDiagnosticsAsync(fixedCode, EmptyDiagnosticResults);
-            await VerifyCodeFixAsync(testCode, fixedCode);
-        }
+        await VerifyDiagnosticsAsync(testCode, new DiagnosticLocation(6, 25));
+        await VerifyDiagnosticsAsync(fixedCode, EmptyDiagnosticResults);
+        await VerifyCodeFixAsync(testCode, fixedCode);
+    }
 
-        [Test]
-        public async Task TestLabeledEmptyStatementAsync()
-        {
-            var testCode = @"
+    [Test]
+    public async Task TestLabeledEmptyStatementAsync()
+    {
+        var testCode = @"
                 class TestClass
                 {
                     public void TestMethod()
@@ -178,13 +178,13 @@ class TestClass
                 }
             ";
 
-            await VerifyDiagnosticsAsync(testCode, EmptyDiagnosticResults);
-        }
+        await VerifyDiagnosticsAsync(testCode, EmptyDiagnosticResults);
+    }
 
-        [Test]
-        public async Task TestLabeledEmptyStatementFollowedByEmptyStatementAsync()
-        {
-            var testCode = @"
+    [Test]
+    public async Task TestLabeledEmptyStatementFollowedByEmptyStatementAsync()
+    {
+        var testCode = @"
                 class TestClass
                 {
                     public void TestMethod()
@@ -196,7 +196,7 @@ class TestClass
                 }
             ";
             
-            var fixedCode = @"
+        var fixedCode = @"
                 class TestClass
                 {
                     public void TestMethod()
@@ -207,15 +207,15 @@ class TestClass
                 }
             ";
 
-            await VerifyDiagnosticsAsync(testCode, new DiagnosticLocation(8, 25));
-            await VerifyDiagnosticsAsync(fixedCode, EmptyDiagnosticResults);
-            await VerifyCodeFixAsync(testCode, fixedCode);
-        }
+        await VerifyDiagnosticsAsync(testCode, new DiagnosticLocation(8, 25));
+        await VerifyDiagnosticsAsync(fixedCode, EmptyDiagnosticResults);
+        await VerifyCodeFixAsync(testCode, fixedCode);
+    }
 
-        [Test]
-        public async Task TestLabeledEmptyStatementFollowedByNonEmptyStatementAsync()
-        {
-            var testCode = @"
+    [Test]
+    public async Task TestLabeledEmptyStatementFollowedByNonEmptyStatementAsync()
+    {
+        var testCode = @"
                 class TestClass
                 {
                     public void TestMethod()
@@ -227,7 +227,7 @@ class TestClass
                 }
             ";
             
-            var fixedCode = @"
+        var fixedCode = @"
                 class TestClass
                 {
                     public void TestMethod()
@@ -238,15 +238,15 @@ class TestClass
                 }
             ";
 
-            await VerifyDiagnosticsAsync(testCode, new DiagnosticLocation(7, 25));
-            await VerifyDiagnosticsAsync(fixedCode, EmptyDiagnosticResults);
-            await VerifyCodeFixAsync(testCode, fixedCode);
-        }
+        await VerifyDiagnosticsAsync(testCode, new DiagnosticLocation(7, 25));
+        await VerifyDiagnosticsAsync(fixedCode, EmptyDiagnosticResults);
+        await VerifyCodeFixAsync(testCode, fixedCode);
+    }
 
-        [Test]
-        public async Task TestConsecutiveLabelsAsync()
-        {
-            var testCode = @"
+    [Test]
+    public async Task TestConsecutiveLabelsAsync()
+    {
+        var testCode = @"
                 class TestClass
                 {
                     public void TestMethod()
@@ -259,7 +259,7 @@ class TestClass
                 }
             ";
             
-            var fixedCode = @"
+        var fixedCode = @"
                 class TestClass
                 {
                     public void TestMethod()
@@ -271,15 +271,15 @@ class TestClass
                 }
             ";
 
-            await VerifyDiagnosticsAsync(testCode, new DiagnosticLocation(8, 25));
-            await VerifyDiagnosticsAsync(fixedCode, EmptyDiagnosticResults);
-            await VerifyCodeFixAsync(testCode, fixedCode);
-        }
+        await VerifyDiagnosticsAsync(testCode, new DiagnosticLocation(8, 25));
+        await VerifyDiagnosticsAsync(fixedCode, EmptyDiagnosticResults);
+        await VerifyCodeFixAsync(testCode, fixedCode);
+    }
 
-        [Test]
-        public async Task TestSwitchCasesAsync()
-        {
-            var testCode = @"
+    [Test]
+    public async Task TestSwitchCasesAsync()
+    {
+        var testCode = @"
                 class TestClass
                 {
                     public void TestMethod()
@@ -303,7 +303,7 @@ class TestClass
                 }
             ";
             
-            var fixedCode = @"
+        var fixedCode = @"
                 class TestClass
                 {
                     public void TestMethod()
@@ -324,45 +324,45 @@ class TestClass
                 }
             ";
 
-            var expected = new []
-            {
-                new DiagnosticLocation(9, 29),
-                new DiagnosticLocation(14, 29),
-                new DiagnosticLocation(18, 29)
-            };
-
-            await VerifyDiagnosticsAsync(testCode, expected);
-            await VerifyDiagnosticsAsync(fixedCode, EmptyDiagnosticResults);
-            await VerifyCodeFixAsync(testCode, fixedCode);
-        }
-
-        [Test]
-        [TestCase("class Foo { }")]
-        [TestCase("struct Foo { }")]
-        [TestCase("interface IFoo { }")]
-        [TestCase("enum Foo { }")]
-        [TestCase("namespace Foo { }")]
-        public async Task TestMemberAsync(string declaration)
+        var expected = new []
         {
-            var testCode = declaration + ";";
-            var fixedCode = declaration;
+            new DiagnosticLocation(9, 29),
+            new DiagnosticLocation(14, 29),
+            new DiagnosticLocation(18, 29)
+        };
 
-            var expected = new DiagnosticLocation(1, declaration.Length + 1);
+        await VerifyDiagnosticsAsync(testCode, expected);
+        await VerifyDiagnosticsAsync(fixedCode, EmptyDiagnosticResults);
+        await VerifyCodeFixAsync(testCode, fixedCode);
+    }
 
-            await VerifyDiagnosticsAsync(testCode, expected);
-            await VerifyDiagnosticsAsync(fixedCode, EmptyDiagnosticResults);
-            await VerifyCodeFixAsync(testCode, fixedCode);
-        }
+    [Test]
+    [TestCase("class Foo { }")]
+    [TestCase("struct Foo { }")]
+    [TestCase("interface IFoo { }")]
+    [TestCase("enum Foo { }")]
+    [TestCase("namespace Foo { }")]
+    public async Task TestMemberAsync(string declaration)
+    {
+        var testCode = declaration + ";";
+        var fixedCode = declaration;
 
-        /// <summary>
-        /// Verifies that the code fix will remove all unnecessary whitespace.
-        /// This is a regression for #1556
-        /// </summary>
-        /// <returns>A <see cref="Task"/> representing the asynchronous unit test.</returns>
-        [Test]
-        public async Task VerifyCodeFixWillRemoveUnnecessaryWhitespaceAsync()
-        {
-            var testCode = @"
+        var expected = new DiagnosticLocation(1, declaration.Length + 1);
+
+        await VerifyDiagnosticsAsync(testCode, expected);
+        await VerifyDiagnosticsAsync(fixedCode, EmptyDiagnosticResults);
+        await VerifyCodeFixAsync(testCode, fixedCode);
+    }
+
+    /// <summary>
+    /// Verifies that the code fix will remove all unnecessary whitespace.
+    /// This is a regression for #1556
+    /// </summary>
+    /// <returns>A <see cref="Task"/> representing the asynchronous unit test.</returns>
+    [Test]
+    public async Task VerifyCodeFixWillRemoveUnnecessaryWhitespaceAsync()
+    {
+        var testCode = @"
                 class TestClass
                 {
                     public void TestMethod1()
@@ -377,7 +377,7 @@ class TestClass
                 }
             ";
             
-            var fixedCode = @"
+        var fixedCode = @"
                 class TestClass
                 {
                     public void TestMethod1()
@@ -392,25 +392,25 @@ class TestClass
                 }
             ";
 
-            var expected = new []
-            {
-                new DiagnosticLocation(6, 69),
-                new DiagnosticLocation(11, 78)
-            };
-
-            await VerifyDiagnosticsAsync(testCode, expected);
-            await VerifyDiagnosticsAsync(fixedCode, EmptyDiagnosticResults);
-            await VerifyCodeFixAsync(testCode, fixedCode);
-        }
-
-        /// <summary>
-        /// Verifies that the code fix will not remove relevant trivia.
-        /// </summary>
-        /// <returns>A <see cref="Task"/> representing the asynchronous unit test.</returns>
-        [Test]
-        public async Task VerifyCodeFixWillNotRemoveTriviaAsync()
+        var expected = new []
         {
-            var testCode = @"
+            new DiagnosticLocation(6, 69),
+            new DiagnosticLocation(11, 78)
+        };
+
+        await VerifyDiagnosticsAsync(testCode, expected);
+        await VerifyDiagnosticsAsync(fixedCode, EmptyDiagnosticResults);
+        await VerifyCodeFixAsync(testCode, fixedCode);
+    }
+
+    /// <summary>
+    /// Verifies that the code fix will not remove relevant trivia.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> representing the asynchronous unit test.</returns>
+    [Test]
+    public async Task VerifyCodeFixWillNotRemoveTriviaAsync()
+    {
+        var testCode = @"
                 class TestClass
                 {
                     public void TestMethod()
@@ -420,7 +420,7 @@ class TestClass
                 }
             ";
             
-            var fixedCode = @"
+        var fixedCode = @"
                 class TestClass
                 {
                     public void TestMethod()
@@ -430,11 +430,10 @@ class TestClass
                 }
             ";
 
-            var expected = new DiagnosticLocation(6, 42);
+        var expected = new DiagnosticLocation(6, 42);
 
-            await VerifyDiagnosticsAsync(testCode, expected);
-            await VerifyDiagnosticsAsync(fixedCode, EmptyDiagnosticResults);
-            await VerifyCodeFixAsync(testCode, fixedCode);
-        }
+        await VerifyDiagnosticsAsync(testCode, expected);
+        await VerifyDiagnosticsAsync(fixedCode, EmptyDiagnosticResults);
+        await VerifyCodeFixAsync(testCode, fixedCode);
     }
 }

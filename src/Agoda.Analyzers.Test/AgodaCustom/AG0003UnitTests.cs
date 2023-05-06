@@ -1,29 +1,26 @@
 ﻿using System.Threading.Tasks;
 using Agoda.Analyzers.AgodaCustom;
 using Agoda.Analyzers.Test.Helpers;
-#if NET462
-using System.Web;
-#else
 using Microsoft.AspNetCore.Http;
-#endif
 using Microsoft.CodeAnalysis.Diagnostics;
 using NUnit.Framework;
 
-namespace Agoda.Analyzers.Test.AgodaCustom
+namespace Agoda.Analyzers.Test.AgodaCustom;
+
+[TestFixture]
+class AG0003UnitTests : DiagnosticVerifier
 {
-    class AG0003UnitTests : DiagnosticVerifier
+    protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0003HttpContextCannotBePassedAsMethodArgument();
+        
+    protected override string DiagnosticId => AG0003HttpContextCannotBePassedAsMethodArgument.DIAGNOSTIC_ID;
+        
+    [Test]
+    public async Task TestHttpContextAsArgument()
     {
-        protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0003HttpContextCannotBePassedAsMethodArgument();
-        
-        protected override string DiagnosticId => AG0003HttpContextCannotBePassedAsMethodArgument.DIAGNOSTIC_ID;
-        
-        [Test]
-        public async Task TestHttpContextAsArgument()
+        var code = new CodeDescriptor
         {
-	        var code = new CodeDescriptor
-	        {
-		        References = new[] {typeof(HttpContext).Assembly},
-		        Code = @"
+            References = new[] {typeof(HttpContext).Assembly},
+            Code = @"
 					using System.Web;
 	
 					interface ISomething {
@@ -40,15 +37,14 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 							// this constructor is uglier
 						}
 					}"
-	        };
+        };
 
-	        var expected = new[]
-	        {
-		        new DiagnosticLocation(5, 23),
-		        new DiagnosticLocation(10, 30),
-		        new DiagnosticLocation(14, 24)
-	        };
-            await VerifyDiagnosticsAsync(code, expected);
-        }
+        var expected = new[]
+        {
+            new DiagnosticLocation(5, 23),
+            new DiagnosticLocation(10, 30),
+            new DiagnosticLocation(14, 24)
+        };
+        await VerifyDiagnosticsAsync(code, expected);
     }
 }

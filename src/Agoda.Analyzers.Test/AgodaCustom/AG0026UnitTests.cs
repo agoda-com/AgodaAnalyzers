@@ -11,28 +11,29 @@ using OpenQA.Selenium;
 using Agoda.Analyzers.AgodaCustom;
 using System.Collections.ObjectModel;
 
-namespace Agoda.Analyzers.Test.AgodaCustom
-{
-    class AG0026UnitTests : DiagnosticVerifier
-    {
-        protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0026EnsureOnlyCssSelectorIsUsedToFindElements();
-        
-        protected override string DiagnosticId => AG0026EnsureOnlyCssSelectorIsUsedToFindElements.DIAGNOSTIC_ID;
+namespace Agoda.Analyzers.Test.AgodaCustom;
 
-        [Test]
-        [TestCase("FindElementByClassName")]
-        [TestCase("FindElementById")]
-        [TestCase("FindElementByLinkText")]
-        [TestCase("FindElementByName")]
-        [TestCase("FindElementByPartialLinkText")]
-        [TestCase("FindElementByTagName")]
-        [TestCase("FindElementByXPath")]
-        public async Task AG0026_WithForbiddenFindElementsAsProperty_ThenShowWarning(string methodName)
+[TestFixture]
+class AG0026UnitTests : DiagnosticVerifier
+{
+    protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0026EnsureOnlyCssSelectorIsUsedToFindElements();
+        
+    protected override string DiagnosticId => AG0026EnsureOnlyCssSelectorIsUsedToFindElements.DIAGNOSTIC_ID;
+
+    [Test]
+    [TestCase("FindElementByClassName")]
+    [TestCase("FindElementById")]
+    [TestCase("FindElementByLinkText")]
+    [TestCase("FindElementByName")]
+    [TestCase("FindElementByPartialLinkText")]
+    [TestCase("FindElementByTagName")]
+    [TestCase("FindElementByXPath")]
+    public async Task AG0026_WithForbiddenFindElementsAsProperty_ThenShowWarning(string methodName)
+    {
+        var code = new CodeDescriptor
         {
-            var code = new CodeDescriptor
-            {
-                References = new[] {typeof(IWebElement).Assembly},
-                Code = $@"
+            References = new[] {typeof(IWebElement).Assembly},
+            Code = $@"
                     using System;
                     using OpenQA.Selenium;
                     using OpenQA.Selenium.Chrome;
@@ -44,25 +45,25 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                             public IWebElement element11 => new ChromeDriver().{methodName}(""abc"");
                         }}
                     }}"
-            };
+        };
 
-            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(10, 61));
-        }
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(10, 61));
+    }
 
-        [Test]
-        [TestCase("FindElementsByClassName")]
-        [TestCase("FindElementsById")]
-        [TestCase("FindElementsByLinkText")]
-        [TestCase("FindElementByName")]
-        [TestCase("FindElementsByPartialLinkText")]
-        [TestCase("FindElementsByTagName")]
-        [TestCase("FindElementsByXPath")]
-        public async Task AG0026_WithForbiddenFindElementsInMethod_ThenShowWarning(string methodName)
+    [Test]
+    [TestCase("FindElementsByClassName")]
+    [TestCase("FindElementsById")]
+    [TestCase("FindElementsByLinkText")]
+    [TestCase("FindElementByName")]
+    [TestCase("FindElementsByPartialLinkText")]
+    [TestCase("FindElementsByTagName")]
+    [TestCase("FindElementsByXPath")]
+    public async Task AG0026_WithForbiddenFindElementsInMethod_ThenShowWarning(string methodName)
+    {
+        var code = new CodeDescriptor
         {
-            var code = new CodeDescriptor
-            {
-                References = new[] {typeof(IWebElement).Assembly},
-                Code = $@"
+            References = new[] {typeof(IWebElement).Assembly},
+            Code = $@"
                     using System;
                     using OpenQA.Selenium;
                     using OpenQA.Selenium.Chrome;
@@ -78,25 +79,25 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                             }}
                         }}
                     }}"
-            };
+        };
 
-            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(13, 47));
-        }
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(13, 47));
+    }
         
-        [Test]
-        [TestCase("ClassName")]
-        [TestCase("Id")]
-        [TestCase("LinkText")]
-        [TestCase("Name")]
-        [TestCase("PartialLinkText")]
-        [TestCase("TagName")]
-        [TestCase("XPath")]
-        public async Task AG0026_WithForbiddenByAccessor_ThenShowWarning(string methodName)
+    [Test]
+    [TestCase("ClassName")]
+    [TestCase("Id")]
+    [TestCase("LinkText")]
+    [TestCase("Name")]
+    [TestCase("PartialLinkText")]
+    [TestCase("TagName")]
+    [TestCase("XPath")]
+    public async Task AG0026_WithForbiddenByAccessor_ThenShowWarning(string methodName)
+    {
+        var code = new CodeDescriptor
         {
-            var code = new CodeDescriptor
-            {
-                References = new [] {typeof(IWebElement).Assembly},
-                Code = $@"
+            References = new [] {typeof(IWebElement).Assembly},
+            Code = $@"
                     using System;
                     using OpenQA.Selenium;
                     using OpenQA.Selenium.Chrome;
@@ -112,18 +113,18 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                             }}
                         }}
                     }}"
-             };
+        };
 
-            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(13, 68));
-        }
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(13, 68));
+    }
 
-        [Test]
-        public async Task AG0026_WithPermittedFindElementAccessor_ThenNoWarning()
+    [Test]
+    public async Task AG0026_WithPermittedFindElementAccessor_ThenNoWarning()
+    {
+        var code = new CodeDescriptor
         {
-            var code = new CodeDescriptor
-            {
-                References = new [] {typeof(IWebElement).Assembly},
-                Code = @"
+            References = new [] {typeof(IWebElement).Assembly},
+            Code = @"
                     using System;
                     using OpenQA.Selenium;
                     using OpenQA.Selenium.Chrome;
@@ -141,18 +142,18 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                             }
                         }
                     }"
-            };
+        };
 
-            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
-        }
+        await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+    }
 
-        [Test]
-        public async Task AG0026_WithPermittedByAccessor_ThenNoWarning()
+    [Test]
+    public async Task AG0026_WithPermittedByAccessor_ThenNoWarning()
+    {
+        var code = new CodeDescriptor
         {
-            var code = new CodeDescriptor
-            {
-                References = new [] {typeof(IWebElement).Assembly},
-                Code = @"
+            References = new [] {typeof(IWebElement).Assembly},
+            Code = @"
                     using System;
                     using OpenQA.Selenium;
                     using OpenQA.Selenium.Chrome;
@@ -168,15 +169,15 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                             }
                         }
                     }" 
-            };
+        };
 
-            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
-        }
+        await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+    }
 
-        [Test]
-        public async Task AG0026_WithForbiddenNameInDifferentNamespace_ThenNoWarning()
-        {
-            var code = @"
+    [Test]
+    public async Task AG0026_WithForbiddenNameInDifferentNamespace_ThenNoWarning()
+    {
+        var code = @"
             using System;
 
             namespace Selenium.Tests.Utils
@@ -201,7 +202,6 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 }
             }";
 
-            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
-        }
+        await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
     }
 }

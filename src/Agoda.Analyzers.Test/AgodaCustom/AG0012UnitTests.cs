@@ -4,21 +4,22 @@ using Microsoft.CodeAnalysis.Diagnostics;
 using NUnit.Framework;
 using System.Threading.Tasks;
 
-namespace Agoda.Analyzers.Test.AgodaCustom
+namespace Agoda.Analyzers.Test.AgodaCustom;
+
+[TestFixture]
+internal class AG0012UnitTests : DiagnosticVerifier
 {
-    internal class AG0012UnitTests : DiagnosticVerifier
+    protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0012TestMethodMustContainAtLeastOneAssertion();
+
+    protected override string DiagnosticId => AG0012TestMethodMustContainAtLeastOneAssertion.DIAGNOSTIC_ID;
+
+    [Test]
+    public async Task AG0012_WithSetupMethod_ShouldNotShowWarning()
     {
-        protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0012TestMethodMustContainAtLeastOneAssertion();
-
-        protected override string DiagnosticId => AG0012TestMethodMustContainAtLeastOneAssertion.DIAGNOSTIC_ID;
-
-        [Test]
-        public async Task AG0012_WithSetupMethod_ShouldNotShowWarning()
+        var code = new CodeDescriptor
         {
-            var code = new CodeDescriptor
-            {
-                References = new[] { typeof(TestFixtureAttribute).Assembly },
-                Code = @"
+            References = new[] { typeof(TestFixtureAttribute).Assembly },
+            Code = @"
                     using NUnit.Framework;
                     using System;
                     
@@ -33,18 +34,18 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                             }
                         }
                     }"
-            };
+        };
 
-            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
-        }
+        await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+    }
 
-        [Test]
-        public async Task AG0012_WithNoAssertion_ShouldShowWarning()
+    [Test]
+    public async Task AG0012_WithNoAssertion_ShouldShowWarning()
+    {
+        var code = new CodeDescriptor
         {
-            var code = new CodeDescriptor
-            {
-                References = new[] { typeof(TestFixtureAttribute).Assembly },
-                Code = @"
+            References = new[] { typeof(TestFixtureAttribute).Assembly },
+            Code = @"
                     using NUnit.Framework;
                     using System;
                     
@@ -59,18 +60,18 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                             }
                         }
                     }"
-            };
+        };
 
-            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(9, 29));
-        }
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(9, 29));
+    }
 
-        [Test]
-        public async Task AG0012_WithNUnitAssertion_ShouldNotShowWarning()
+    [Test]
+    public async Task AG0012_WithNUnitAssertion_ShouldNotShowWarning()
+    {
+        var code = new CodeDescriptor
         {
-            var code = new CodeDescriptor
-            {
-                References = new[] { typeof(TestFixtureAttribute).Assembly, typeof(Shouldly.Should).Assembly },
-                Code = @"
+            References = new[] { typeof(TestFixtureAttribute).Assembly, typeof(Shouldly.Should).Assembly },
+            Code = @"
                     using NUnit.Framework;
                     
                     namespace Tests
@@ -85,20 +86,20 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                             }
                         }
                     }"
-            };
+        };
 
-            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
-        }
+        await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+    }
 
 
 
-        [Test]
-        public async Task AG0012_WithShouldlyAssertion_ShouldNotShowWarning()
+    [Test]
+    public async Task AG0012_WithShouldlyAssertion_ShouldNotShowWarning()
+    {
+        var code = new CodeDescriptor
         {
-            var code = new CodeDescriptor
-            {
-                References = new[] { typeof(TestFixtureAttribute).Assembly, typeof(Shouldly.Should).Assembly },
-                Code = @"
+            References = new[] { typeof(TestFixtureAttribute).Assembly, typeof(Shouldly.Should).Assembly },
+            Code = @"
                     using NUnit.Framework;
                     using Shouldly;
                     using System;
@@ -123,18 +124,18 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                             }
                         }
                     }"
-            };
+        };
 
-            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
-        }
+        await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+    }
 
-        [Test]
-        public async Task AG0012_WithNestedAssertions_ShouldNotShowWarning()
+    [Test]
+    public async Task AG0012_WithNestedAssertions_ShouldNotShowWarning()
+    {
+        var code = new CodeDescriptor
         {
-            var code = new CodeDescriptor
-            {
-                References = new[] { typeof(TestFixtureAttribute).Assembly, typeof(Shouldly.Should).Assembly },
-                Code = @"
+            References = new[] { typeof(TestFixtureAttribute).Assembly, typeof(Shouldly.Should).Assembly },
+            Code = @"
                     using NUnit.Framework;
                     using Shouldly;
                     using System;
@@ -180,9 +181,8 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                             }
                         }
                     }"
-            };
+        };
 
-            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
-        }
+        await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
     }
 }

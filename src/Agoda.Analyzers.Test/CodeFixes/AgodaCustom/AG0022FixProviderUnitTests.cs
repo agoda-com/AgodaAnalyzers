@@ -12,20 +12,20 @@ using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Diagnostics;
 using NUnit.Framework;
 
-namespace Agoda.Analyzers.Test.CodeFixes.AgodaCustom
-{
-    class AG0022RemoveSyncMethodUnitTests : CodeFixVerifier
-    {
-        protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0022DoNotExposeBothSyncAndAsyncVersionsOfMethods();
-        
-        protected override string DiagnosticId => AG0022DoNotExposeBothSyncAndAsyncVersionsOfMethods.DIAGNOSTIC_ID;
-        
-        protected override CodeFixProvider CodeFixProvider => new AG0022RemoveSyncMethodFixProvider();
+namespace Agoda.Analyzers.Test.CodeFixes.AgodaCustom;
 
-        [Test]
-        public async Task AG0022_ForInterface_ShouldRemoveSyncVersion()
-        {
-            var code = @"
+class AG0022RemoveSyncMethodUnitTests : CodeFixVerifier
+{
+    protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0022DoNotExposeBothSyncAndAsyncVersionsOfMethods();
+        
+    protected override string DiagnosticId => AG0022DoNotExposeBothSyncAndAsyncVersionsOfMethods.DIAGNOSTIC_ID;
+        
+    protected override CodeFixProvider CodeFixProvider => new AG0022RemoveSyncMethodFixProvider();
+
+    [Test]
+    public async Task AG0022_ForInterface_ShouldRemoveSyncVersion()
+    {
+        var code = @"
                 using System.Threading.Tasks;
                 
                 interface TestInterface
@@ -35,7 +35,7 @@ namespace Agoda.Analyzers.Test.CodeFixes.AgodaCustom
                 }
             ";
 
-            var result = @"
+        var result = @"
                 using System.Threading.Tasks;
                 
                 interface TestInterface
@@ -44,13 +44,13 @@ namespace Agoda.Analyzers.Test.CodeFixes.AgodaCustom
                 }
             ";
             
-            await VerifyCodeFixAsync(code, result);
-        }
+        await VerifyCodeFixAsync(code, result);
+    }
         
-        [Test]
-        public async Task AG0022_ForClass_ShouldRemoveSyncVersion()
-        {
-            var code = @"
+    [Test]
+    public async Task AG0022_ForClass_ShouldRemoveSyncVersion()
+    {
+        var code = @"
                 using System.Threading.Tasks;
                 
                 class TestClass
@@ -66,7 +66,7 @@ namespace Agoda.Analyzers.Test.CodeFixes.AgodaCustom
                 }
             ";
 
-            var result = @"
+        var result = @"
                 using System.Threading.Tasks;
                 
                 class TestClass
@@ -78,13 +78,13 @@ namespace Agoda.Analyzers.Test.CodeFixes.AgodaCustom
                 }
             ";
             
-            await VerifyCodeFixAsync(code, result);
-        }
+        await VerifyCodeFixAsync(code, result);
+    }
         
-        [Test]
-        public async Task AG0022_ForMethodWithComment_ShouldRemoveSyncVersionWithComment()
-        {
-            var code = @"
+    [Test]
+    public async Task AG0022_ForMethodWithComment_ShouldRemoveSyncVersionWithComment()
+    {
+        var code = @"
                 using System.Threading.Tasks;
                 
                 interface TestInterface
@@ -101,7 +101,7 @@ namespace Agoda.Analyzers.Test.CodeFixes.AgodaCustom
                 }
             ";
 
-            var result = @"
+        var result = @"
                 using System.Threading.Tasks;
                 
                 interface TestInterface
@@ -114,7 +114,6 @@ namespace Agoda.Analyzers.Test.CodeFixes.AgodaCustom
                 }
             ";
             
-            await VerifyCodeFixAsync(code, result);
-        }
+        await VerifyCodeFixAsync(code, result);
     }
 }

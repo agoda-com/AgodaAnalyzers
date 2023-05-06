@@ -4,18 +4,19 @@ using Microsoft.CodeAnalysis.Diagnostics;
 using NUnit.Framework;
 using System.Threading.Tasks;
 
-namespace Agoda.Analyzers.Test.AgodaCustom
+namespace Agoda.Analyzers.Test.AgodaCustom;
+
+[TestFixture]
+internal class AG0023UnitTests : DiagnosticVerifier
 {
-    internal class AG0023UnitTests : DiagnosticVerifier
-    {
-        protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0023PreventUseOfThreadSleep();
+    protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0023PreventUseOfThreadSleep();
         
-        protected override string DiagnosticId => AG0023PreventUseOfThreadSleep.DIAGNOSTIC_ID;
+    protected override string DiagnosticId => AG0023PreventUseOfThreadSleep.DIAGNOSTIC_ID;
        
-        [Test]
-        public async Task AG0023_WhenThreadYield_ShouldNotShowWarning()
-        {
-            var code = @"
+    [Test]
+    public async Task AG0023_WhenThreadYield_ShouldNotShowWarning()
+    {
+        var code = @"
 using System.Threading;
 
 class TestClass 
@@ -27,13 +28,13 @@ class TestClass
 }
 ";
 
-            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
-        }
+        await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+    }
 
-        [Test]
-        public async Task AG0023_WhenDifferentNameSpaceThreadSleep_ShouldNotShowWarning()
-        {
-            var code = @"
+    [Test]
+    public async Task AG0023_WhenDifferentNameSpaceThreadSleep_ShouldNotShowWarning()
+    {
+        var code = @"
 public static class Thread {
     public static void Sleep(int time) {}
 }
@@ -47,13 +48,13 @@ class TestClass
     }
 }
 ";
-            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
-        }
+        await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+    }
 
-        [Test]
-        public async Task AG0023_WhenThreadSleepWithInt_ShouldShowWarning()
-        {
-            var code = @"
+    [Test]
+    public async Task AG0023_WhenThreadSleepWithInt_ShouldShowWarning()
+    {
+        var code = @"
 using System.Threading;
 
 class TestClass 
@@ -65,13 +66,13 @@ class TestClass
 }
 ";
 
-            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(8, 9));
-        }
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(8, 9));
+    }
 
-        [Test]
-        public async Task AG0023_WhenThreadSleepWithTimeSpan_ShouldShowWarning()
-        {
-            var code = @"
+    [Test]
+    public async Task AG0023_WhenThreadSleepWithTimeSpan_ShouldShowWarning()
+    {
+        var code = @"
 using System.Threading;
 using System;
 
@@ -84,8 +85,6 @@ class TestClass
 }
 ";
 
-            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(9, 9));
-        }
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(9, 9));
     }
-
 }

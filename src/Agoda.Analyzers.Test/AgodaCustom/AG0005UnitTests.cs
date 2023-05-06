@@ -9,23 +9,24 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using NUnit.Framework;
 
-namespace Agoda.Analyzers.Test.AgodaCustom
+namespace Agoda.Analyzers.Test.AgodaCustom;
+
+[TestFixture]
+internal class AG0005UnitTests : DiagnosticVerifier
 {
-    internal class AG0005UnitTests : DiagnosticVerifier
+    protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0005TestMethodNamesMustFollowConvention();
+        
+    protected override string DiagnosticId => AG0005TestMethodNamesMustFollowConvention.DIAGNOSTIC_ID;
+        
+    [TestCase("This_IsValid")]
+    [TestCase("This_Is_Valid")]
+    [TestCase("This_IsAlso_QuiteValid555")]
+    public async Task AG0005_WithValidTestNames_ShouldNotShowWarning(string methodName)
     {
-        protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0005TestMethodNamesMustFollowConvention();
-        
-        protected override string DiagnosticId => AG0005TestMethodNamesMustFollowConvention.DIAGNOSTIC_ID;
-        
-        [TestCase("This_IsValid")]
-        [TestCase("This_Is_Valid")]
-        [TestCase("This_IsAlso_QuiteValid555")]
-        public async Task AG0005_WithValidTestNames_ShouldNotShowWarning(string methodName)
+        var code = new CodeDescriptor
         {
-            var code = new CodeDescriptor
-            {
-                References = new[] {typeof(TestFixtureAttribute).Assembly},
-                Code = $@"
+            References = new[] {typeof(TestFixtureAttribute).Assembly},
+            Code = $@"
                     using System.Collections;
                     using NUnit.Framework;
                     
@@ -38,20 +39,20 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                         }}
                     
                     }}"
-            };
+        };
             
-            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
-        }
+        await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+    }
 
-        [TestCase("ThisIsInvalid")]    // no underscores
-        [TestCase("This_Is_In_Valid")] // too many underscores
-        [TestCase("This_Is_invalid")]  // invalid casing
-        public async Task AG0005_WithInvalidValidTestNames_ShouldShowWarning(string methodName)
+    [TestCase("ThisIsInvalid")]    // no underscores
+    [TestCase("This_Is_In_Valid")] // too many underscores
+    [TestCase("This_Is_invalid")]  // invalid casing
+    public async Task AG0005_WithInvalidValidTestNames_ShouldShowWarning(string methodName)
+    {
+        var code = new CodeDescriptor
         {
-            var code = new CodeDescriptor
-            {
-                References = new[] {typeof(TestFixtureAttribute).Assembly},
-                Code = $@"
+            References = new[] {typeof(TestFixtureAttribute).Assembly},
+            Code = $@"
                     using System.Collections;
                     using NUnit.Framework;
                     
@@ -64,20 +65,20 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                         }}
                     
                     }}"
-            };
+        };
             
-            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(10, 41));
-        }
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(10, 41));
+    }
         
-        [TestCase("internal")]
-        [TestCase("protected")]
-        [TestCase("private")]
-        public async Task AG0005_WhenMethodNotPublic_ShouldNotShowWarning(string modifier)
+    [TestCase("internal")]
+    [TestCase("protected")]
+    [TestCase("private")]
+    public async Task AG0005_WhenMethodNotPublic_ShouldNotShowWarning(string modifier)
+    {
+        var code = new CodeDescriptor
         {
-            var code = new CodeDescriptor
-            {
-                References = new[] {typeof(TestFixtureAttribute).Assembly},
-                Code = $@"
+            References = new[] {typeof(TestFixtureAttribute).Assembly},
+            Code = $@"
                     using System.Collections;
                     using NUnit.Framework;
                     
@@ -98,15 +99,15 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                             }}
                         }}
                     }}"
-            };
+        };
 
-            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
-        }
+        await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+    }
         
-        [Test]
-        public async Task AG0005_WhenNotATest_ShouldNotShowWarning()
-        {
-            var code = @"
+    [Test]
+    public async Task AG0005_WhenNotATest_ShouldNotShowWarning()
+    {
+        var code = @"
                 using System.Collections;
                 
                 namespace Tests
@@ -118,7 +119,6 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 }
             ";
             
-            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
-        }
+        await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
     }
 }

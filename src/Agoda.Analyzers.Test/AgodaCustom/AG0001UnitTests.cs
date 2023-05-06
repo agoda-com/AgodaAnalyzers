@@ -5,21 +5,22 @@ using Agoda.Analyzers.Test.Helpers;
 using Microsoft.CodeAnalysis.Diagnostics;
 using NUnit.Framework;
 
-namespace Agoda.Analyzers.Test.AgodaCustom
+namespace Agoda.Analyzers.Test.AgodaCustom;
+
+[TestFixture]
+class AG0001UnitTests : DiagnosticVerifier
 {
-    class AG0001UnitTests : DiagnosticVerifier
-    {
-	    protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0001DependencyResolverMustNotBeUsed();
+    protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0001DependencyResolverMustNotBeUsed();
         
-	    protected override string DiagnosticId => AG0001DependencyResolverMustNotBeUsed.DIAGNOSTIC_ID;
+    protected override string DiagnosticId => AG0001DependencyResolverMustNotBeUsed.DIAGNOSTIC_ID;
 	    
-        [Test]
-        public async Task TestDependencyResolverUsageAsync()
+    [Test]
+    public async Task TestDependencyResolverUsageAsync()
+    {
+        var code = new CodeDescriptor
         {
-	        var code = new CodeDescriptor
-	        {
-		        References = new[] {typeof(DependencyResolver).Assembly},
-		        Code = @"
+            References = new[] {typeof(DependencyResolver).Assembly},
+            Code = @"
 					interface ISomething {
 						void DoSomething();
 					}
@@ -29,10 +30,9 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 							var instance = System.Web.Mvc.DependencyResolver.Current.GetService(typeof(ISomething));
 						}
 					}"
-	        };
+        };
 
-            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(8, 57));
-        }
-
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(8, 57));
     }
+
 }

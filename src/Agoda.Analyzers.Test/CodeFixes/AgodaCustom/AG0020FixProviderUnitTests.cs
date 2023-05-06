@@ -12,20 +12,20 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using NUnit.Framework;
 
-namespace Agoda.Analyzers.Test.AgodaCustom
+namespace Agoda.Analyzers.Test.AgodaCustom;
+
+internal class AG0020FixProviderUnitTests : CodeFixVerifier
 {
-    internal class AG0020FixProviderUnitTests : CodeFixVerifier
+    protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0020AvoidReturningNullEnumerables();
+        
+    protected override string DiagnosticId => AG0020AvoidReturningNullEnumerables.DIAGNOSTIC_ID;
+        
+    protected override CodeFixProvider CodeFixProvider => new AG0020AvoidReturningNullEnumerablesFixProvider();
+        
+    [Test]
+    public async Task TestShouldFixIEnumerableCorrectly()
     {
-        protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0020AvoidReturningNullEnumerables();
-        
-        protected override string DiagnosticId => AG0020AvoidReturningNullEnumerables.DIAGNOSTIC_ID;
-        
-        protected override CodeFixProvider CodeFixProvider => new AG0020AvoidReturningNullEnumerablesFixProvider();
-        
-        [Test]
-        public async Task TestShouldFixIEnumerableCorrectly()
-        {
-            var code = @"
+        var code = @"
                 using System.Collections.Generic;
                 using System.Linq;
                 
@@ -43,7 +43,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 }
             ";
             
-            var result = @"
+        var result = @"
                 using System.Collections.Generic;
                 using System.Linq;
                 
@@ -61,13 +61,13 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 }
             ";
 
-            await VerifyCodeFixAsync(code, result);
-        }
+        await VerifyCodeFixAsync(code, result);
+    }
 
-        [Test]
-        public async Task TestShouldFixListCorrectly()
-        {
-            var code = @"
+    [Test]
+    public async Task TestShouldFixListCorrectly()
+    {
+        var code = @"
                 using System.Collections.Generic;
                 
                 namespace Agoda.Analyzers.Test
@@ -82,7 +82,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 }
             ";
             
-            var result = @"
+        var result = @"
                 using System.Collections.Generic;
                 
                 namespace Agoda.Analyzers.Test
@@ -97,13 +97,13 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 }
             ";
 
-            await VerifyCodeFixAsync(code, result);
-        }
+        await VerifyCodeFixAsync(code, result);
+    }
 
-        [Test]
-        public async Task TestShouldFixArrayCorrectly()
-        {
-            var code = @"
+    [Test]
+    public async Task TestShouldFixArrayCorrectly()
+    {
+        var code = @"
                 using System;
                 using System.Collections.Generic;
                 
@@ -119,7 +119,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 }
             ";
             
-            var result = @"
+        var result = @"
                 using System;
                 using System.Collections.Generic;
                 
@@ -135,13 +135,13 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 }
             ";
 
-            await VerifyCodeFixAsync(code, result);
-        }
+        await VerifyCodeFixAsync(code, result);
+    }
 
-        [Test]
-        public async Task TestShouldFixLinkedListCorrectly()
-        {
-            var code = @"
+    [Test]
+    public async Task TestShouldFixLinkedListCorrectly()
+    {
+        var code = @"
                 using System.Collections.Generic;
                 
                 namespace Agoda.Analyzers.Test
@@ -156,7 +156,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 }
             ";
             
-            var result = @"
+        var result = @"
                 using System.Collections.Generic;
                 
                 namespace Agoda.Analyzers.Test
@@ -171,7 +171,6 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 }
             ";
 
-            await VerifyCodeFixAsync(code, result);
-        }
+        await VerifyCodeFixAsync(code, result);
     }
 }

@@ -4,18 +4,19 @@ using Agoda.Analyzers.Test.Helpers;
 using Microsoft.CodeAnalysis.Diagnostics;
 using NUnit.Framework;
 
-namespace Agoda.Analyzers.Test.AgodaCustom
+namespace Agoda.Analyzers.Test.AgodaCustom;
+
+[TestFixture]
+class AG0002UnitTests : DiagnosticVerifier
 {
-    class AG0002UnitTests : DiagnosticVerifier
-    {
-	    protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0002PrivateMethodsShouldNotBeTested();
+    protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0002PrivateMethodsShouldNotBeTested();
         
-	    protected override string DiagnosticId => AG0002PrivateMethodsShouldNotBeTested.DIAGNOSTIC_ID;
+    protected override string DiagnosticId => AG0002PrivateMethodsShouldNotBeTested.DIAGNOSTIC_ID;
 	    
-        [Test]
-        public async Task TestCorrectDeclarationShouldNotCauseAnyIssue()
-        {
-            var code = @"
+    [Test]
+    public async Task TestCorrectDeclarationShouldNotCauseAnyIssue()
+    {
+        var code = @"
 				interface ISomething {
 					void DoSomething();
 				}
@@ -26,13 +27,13 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
-        }
+        await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+    }
 
-        [Test]
-        public async Task TestExtraPublicDeclarationShouldNotCauseAnyIssue()
-        {
-            var code = $@"
+    [Test]
+    public async Task TestExtraPublicDeclarationShouldNotCauseAnyIssue()
+    {
+        var code = $@"
 				interface ISomething {{
 					void DoSomething();
 				}}
@@ -45,14 +46,14 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}}
 			";
 
-            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
-        }
+        await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+    }
 
 
-        [Test]
-        public async Task TestExplicitInterfaceImplementationShouldNotCauseAnyError()
-        {
-            var code = $@"
+    [Test]
+    public async Task TestExplicitInterfaceImplementationShouldNotCauseAnyError()
+    {
+        var code = $@"
 				interface ISomething {{
 					void DoSomething();
 				}}
@@ -63,13 +64,13 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}}
 			";
 
-	        await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
-        }
+        await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+    }
 
-        [Test]
-        public async Task TestMethodThatNotPartOfTheInterfaceShouldNotBeInternal()
-        {
-            var code = $@"
+    [Test]
+    public async Task TestMethodThatNotPartOfTheInterfaceShouldNotBeInternal()
+    {
+        var code = $@"
 				interface ISomething {{
 					void DoSomething();
 				}}
@@ -84,7 +85,6 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}}
 			";
 
-            await VerifyDiagnosticsAsync(code , new DiagnosticLocation(10, 21));
-        }
+        await VerifyDiagnosticsAsync(code , new DiagnosticLocation(10, 21));
     }
 }
