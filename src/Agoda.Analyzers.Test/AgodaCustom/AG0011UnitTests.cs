@@ -24,16 +24,17 @@ class AG0011UnitTests : DiagnosticVerifier
     {
         var code = new CodeDescriptor
         {
-            References = new[] {typeof(HttpContext).Assembly},
+            References = new[] {typeof(IHttpContextAccessor).Assembly},
             Code = @"
+using Microsoft.AspNetCore.Http;
 					class TestClass {
-						public void TestMethod() {
-							var queryString = System.Web.HttpContext.Current.Request.QueryString;
+						public void TestMethod(IHttpContextAccessor httpCtx) {
+							var queryString = httpCtx.HttpContext.Request.QueryString;
 						}
 					}"
         };
 
-        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(4, 65));
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(5, 54));
     }
 
     [Test]
@@ -41,16 +42,17 @@ class AG0011UnitTests : DiagnosticVerifier
     {
         var code = new CodeDescriptor
         {
-            References = new[] {typeof(HttpContext).Assembly},
+            References = new[] {typeof(IHttpContextAccessor).Assembly},
             Code = @"
+using Microsoft.AspNetCore.Http;
 					class TestClass {
-						public void TestMethod() {
-							var request = System.Web.HttpContext.Current.Request;
-							var queryParamValue = request.QueryString[""queryParam""];
+						public void TestMethod(IHttpContextAccessor httpCtx) {
+							var request = httpCtx.HttpContext.Request;
+							var queryParamValue = request.QueryString.Value;
 						}
 					}"
         };
-
-        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(5, 38));
+        
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(6, 38));
     }
 }

@@ -104,9 +104,17 @@ public abstract partial class DiagnosticVerifier
     {
         var baseResult = CSharpDiagnostic(DiagnosticId);
         var expected = expectedLocations.Select(l => baseResult.WithLocation(l.Line, l.Col)).ToArray();
-            
-        var doc = CreateProject(new[] {descriptor.Code})
+
+
+    var doc = CreateProject(new[] {descriptor.Code})
             .AddMetadataReferences(descriptor.References.Select(assembly => MetadataReference.CreateFromFile(assembly.Location)))
+            .AddMetadataReference(MetadataReference.CreateFromFile(typeof(Type).GetTypeInfo().Assembly.Location.Replace("System.Private.CoreLib", "mscorlib")))
+            .AddMetadataReference(MetadataReference.CreateFromFile(typeof(Type).GetTypeInfo().Assembly.Location.Replace("System.Private.CoreLib", "netstandard")))
+            .AddMetadataReference(MetadataReference.CreateFromFile(typeof(Type).GetTypeInfo().Assembly.Location.Replace("System.Private.CoreLib", "System.Runtime")))
+            .AddMetadataReference(MetadataReference.CreateFromFile(typeof(Type).GetTypeInfo().Assembly.Location.Replace("System.Private.CoreLib", "System.Threading.Tasks")))
+            .AddMetadataReference(MetadataReference.CreateFromFile(typeof(Type).GetTypeInfo().Assembly.Location.Replace("System.Private.CoreLib", "System.ObjectModel")))
+            //System.Collections.ObjectModel
+            
             .Documents
             .First();
 

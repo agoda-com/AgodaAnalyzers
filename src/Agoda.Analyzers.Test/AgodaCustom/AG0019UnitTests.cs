@@ -36,7 +36,7 @@ internal class AG0019UnitTests : DiagnosticVerifier
                             [Conditional(""DEBUG""), Conditional(""TEST1"")]
                             static void Main(string[] args)
                             {
-                                Console.WriteLine(""Hello World!"");
+                                
                             }
                         }
                     }

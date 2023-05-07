@@ -21,7 +21,7 @@ class AG0003UnitTests : DiagnosticVerifier
         {
             References = new[] {typeof(HttpContext).Assembly},
             Code = @"
-					using System.Web;
+					using Microsoft.AspNetCore.Http;
 	
 					interface ISomething {
 						void SomeMethod(HttpContext c, string sampleString); // ugly interface method
@@ -33,7 +33,7 @@ class AG0003UnitTests : DiagnosticVerifier
 							// this method is ugly
 						}
 	
-						public TestClass(System.Web.HttpContext context) {
+						public TestClass(Microsoft.AspNetCore.Http.HttpContext context) {
 							// this constructor is uglier
 						}
 					}"

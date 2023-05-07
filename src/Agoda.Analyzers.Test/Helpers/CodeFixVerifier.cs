@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -380,6 +381,8 @@ public abstract partial class CodeFixVerifier : DiagnosticVerifier
         {
             // Format and get the compiler diagnostics again so that the locations make sense in the output
             project = await ReformatProjectDocumentsAsync(project, cancellationToken).ConfigureAwait(false);
+            project = project.AddMetadataReference(MetadataReference.CreateFromFile(typeof(Type).GetTypeInfo().Assembly.Location
+                .Replace("System.Private.CoreLib", "System.Runtime")));
             newCompilerDiagnostics = GetNewDiagnostics(compilerDiagnostics, await GetCompilerDiagnosticsAsync(project, cancellationToken).ConfigureAwait(false));
 
             var message = new StringBuilder();

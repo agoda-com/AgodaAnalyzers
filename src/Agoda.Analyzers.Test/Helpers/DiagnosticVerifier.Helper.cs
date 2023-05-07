@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Agoda.Analyzers.StyleCop.Settings;
@@ -119,7 +120,14 @@ public abstract partial class DiagnosticVerifier
             .AddMetadataReference(projectId, MetadataReferences.SystemReference)
             .AddMetadataReference(projectId, MetadataReferences.SystemCoreReference)
             .AddMetadataReference(projectId, MetadataReferences.CSharpSymbolsReference)
-            .AddMetadataReference(projectId, MetadataReferences.CodeAnalysisReference);
+            .AddMetadataReference(projectId, MetadataReferences.CodeAnalysisReference)
+            .AddMetadataReference(projectId, MetadataReference.CreateFromFile(typeof(Type).GetTypeInfo().Assembly.Location
+                .Replace("System.Private.CoreLib", "System.Runtime")))
+            .AddMetadataReference(projectId, MetadataReference.CreateFromFile(typeof(Type).GetTypeInfo().Assembly.Location
+                .Replace("System.Private.CoreLib", "System.Linq.Expressions")))
+            .AddMetadataReference(projectId, MetadataReference.CreateFromFile(typeof(Type).GetTypeInfo().Assembly.Location
+            .Replace("System.Private.CoreLib", "System.Collections")));
+        //System.Runtime.CompilerServices.DynamicAttribute' 
 
         solution.Workspace.Options =
             solution.Workspace.Options
