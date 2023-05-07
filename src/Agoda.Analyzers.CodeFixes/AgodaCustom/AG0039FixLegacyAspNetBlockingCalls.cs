@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Composition;
+using System.Diagnostics.Contracts;
+using System.Diagnostics;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Threading;
 using System.Threading.Tasks;
 using Agoda.Analyzers.AgodaCustom;
@@ -11,7 +14,10 @@ using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Differencing;
 using Microsoft.CodeAnalysis.Editing;
+using Microsoft.Extensions.Options;
+using Document = Microsoft.CodeAnalysis.Document;
 
 namespace Agoda.Analyzers.CodeFixes.AgodaCustom
 {
@@ -29,57 +35,75 @@ namespace Agoda.Analyzers.CodeFixes.AgodaCustom
             var root = await context.Document.GetSyntaxRootAsync(context.CancellationToken).ConfigureAwait(false);
 
             // Find the node to fix
-            var diagnostic = context.Diagnostics.First();
-            var node = root.FindNode(diagnostic.Location.SourceSpan);
-
-            // Register a code fix for the diagnostic
-            context.RegisterCodeFix(
-                CodeAction.Create(
-                    title: title,
-                    createChangedDocument: c => ReplaceBlockingCallWithAsync(context.Document, root, node, c),
-                    equivalenceKey: title
-                ),
-                diagnostic
-            );
-        }
-        public async Task<Document> RemoveResultFromClass3(Document document, SyntaxNode root, CancellationToken cancellationToken)
-        {
-            var semanticModel = await document.GetSemanticModelAsync(cancellationToken);
-            var methodDeclarationNodes = root.DescendantNodes().OfType<MethodDeclarationSyntax>();
-
-            var editor = await DocumentEditor.CreateAsync(document, cancellationToken);
-
-            foreach (var methodDeclarationNode in methodDeclarationNodes)
+            foreach (var diagnostic in context.Diagnostics)
             {
-                var nodes = methodDeclarationNode.DescendantNodes().OfType<MemberAccessExpressionSyntax>();
-                var results = new List<MemberAccessExpressionSyntax>();
+                var diagnostics = ImmutableArray.Create(diagnostic ?? context.Diagnostics[0]);
 
-                foreach (var node in nodes)
-                {
-                    if (node.Name.ToString() == "Result" &&
-                        semanticModel.GetTypeInfo(node.Expression, cancellationToken).Type?.Name == "Task")
-                    {
-                        results.Add(node);
-                    }
-                }
+                // Register a code fix for the diagnostic
+                context.RegisterCodeFix(
+                    CodeAction.Create(
+                        title: title,
+                        createChangedDocument: c => 
+                            FixAllWithEditorAsync(context.Document, 
+                                editor => FixAllAsync(context.Document, diagnostics, editor, context.CancellationToken)
+                                , c),
+                        equivalenceKey: title
+                ),
+                    diagnostics
+                );
+                //RegisterCodeFix(context, title, nameof(AG0039FixLegacyAspNetBlockingCalls), diagnostic);
 
-                if (!results.Any())
-                {
-                    continue;
-                }
-
-                foreach (var result in results)
-                {
-                    var awaitExpression = SyntaxFactory.AwaitExpression(result.Expression)
-                        .WithTriviaFrom(result);
-
-                    editor.ReplaceNode(result, awaitExpression);
-                }
             }
+        }
+        protected Task FixAllAsync(
+            Document document,
+            ImmutableArray<Diagnostic> diagnostics,
+            SyntaxEditor editor,
+            CancellationToken cancellationToken)
+        {
+            foreach (var diagnostic in diagnostics)
+            {
+                var nullableDirective = diagnostic.Location.FindNode(findInsideTrivia: true, getInnermostNodeForTie: true, cancellationToken);
+                editor.RemoveNode(nullableDirective, SyntaxRemoveOptions.KeepNoTrivia);
+            }
+            return Task.CompletedTask;
+        }
+        internal static async Task<Document> FixAllWithEditorAsync(
+            Document document,
+            Func<SyntaxEditor, Task> editAsync,
+            CancellationToken cancellationToken)
+        {
+            try
+            {
+                var root = await document.GetRequiredSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
+                var editor = new SyntaxEditor(root, document.Project.Solution.Services);
 
-            return editor.GetChangedDocument();
+                await editAsync(editor).ConfigureAwait(false);
+
+                var newRoot = editor.GetChangedRoot();
+                return document.WithSyntaxRoot(newRoot);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
 
+        // Local function
+        static void RemoveStatement(SyntaxEditor editor, SyntaxNode statement)
+        {
+            if (!statement.IsParentKind(SyntaxKind.Block)
+                && !statement.IsParentKind(SyntaxKind.SwitchSection)
+                && !statement.IsParentKind(SyntaxKind.GlobalStatement))
+            {
+                editor.ReplaceNode(statement, SyntaxFactory.Block());
+            }
+            else
+            {
+                editor.RemoveNode(statement, SyntaxRemoveOptions.KeepUnbalancedDirectives);
+            }
+        }
         private static async Task<Document> ReplaceBlockingCallWithAsync(Document document, 
             SyntaxNode root,
             SyntaxNode node, 
@@ -138,6 +162,15 @@ namespace Agoda.Analyzers.CodeFixes.AgodaCustom
 
     public static class SyntaxNodeExt
     {
+
+        public static async ValueTask<SyntaxNode> GetRequiredSyntaxRootAsync(this Document document, CancellationToken cancellationToken)
+        {
+            if (document.TryGetSyntaxRoot(out var root))
+                return root;
+
+            root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
+            return root ?? throw new InvalidOperationException(string.Format("Error {0}", document.Name));
+        }
         public static T ReplaceMultipleNodesWithOne<T>(
             this T root, IReadOnlyList<SyntaxNode> oldNodes, SyntaxNode newNode)
             where T : SyntaxNode
@@ -171,6 +204,47 @@ namespace Agoda.Analyzers.CodeFixes.AgodaCustom
             newRoot = newRoot.RemoveNodes(toRemove, SyntaxRemoveOptions.KeepNoTrivia);
 
             return newRoot;
+        }
+    }
+    internal static class LocationExtensions
+    {
+        public static SyntaxTree GetSourceTreeOrThrow(this Location location)
+        {
+            if(location.SourceTree == null) throw new NullReferenceException("SourceTree was null");
+            return location.SourceTree;
+        }
+
+        public static SyntaxToken FindToken(this Location location, CancellationToken cancellationToken)
+            => location.GetSourceTreeOrThrow().GetRoot(cancellationToken).FindToken(location.SourceSpan.Start);
+
+        public static SyntaxNode FindNode(this Location location, CancellationToken cancellationToken)
+            => location.GetSourceTreeOrThrow().GetRoot(cancellationToken).FindNode(location.SourceSpan);
+
+        public static SyntaxNode FindNode(this Location location, bool getInnermostNodeForTie, CancellationToken cancellationToken)
+            => location.GetSourceTreeOrThrow().GetRoot(cancellationToken).FindNode(location.SourceSpan, getInnermostNodeForTie: getInnermostNodeForTie);
+
+        public static SyntaxNode FindNode(this Location location, bool findInsideTrivia, bool getInnermostNodeForTie, CancellationToken cancellationToken)
+            => location.GetSourceTreeOrThrow().GetRoot(cancellationToken).FindNode(location.SourceSpan, findInsideTrivia, getInnermostNodeForTie);
+        
+        public static bool IntersectsWith(this Location loc1, Location loc2)
+        {
+            Debug.Assert(loc1.IsInSource && loc2.IsInSource);
+            return loc1.SourceTree == loc2.SourceTree && loc1.SourceSpan.IntersectsWith(loc2.SourceSpan);
+        }
+        public static bool IsParentKind(this SyntaxNode node, SyntaxKind kind)
+            => (bool)node?.Parent.IsKind(kind);
+
+        public static bool IsParentKind<TNode>(this SyntaxNode node, SyntaxKind kind, out TNode result)
+            where TNode : SyntaxNode
+        {
+            if (node.IsParentKind(kind))
+            {
+                result = (TNode)node.Parent;
+                return true;
+            }
+
+            result = null;
+            return false;
         }
     }
 }
