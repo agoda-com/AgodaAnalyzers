@@ -91,3 +91,6 @@ To generate a jar file from this project for use with SonarQube we have prepared
 
 [Please read the contributing guidelines](CONTRIBUTING.md)
 
+## Dotnet Framework 4.x
+
+[1.0.523](https://www.nuget.org/packages/Agoda.Analyzers/1.0.523) is our last version that supports dotnet framework, if you need to access the rules on a legacy project please use this version.
