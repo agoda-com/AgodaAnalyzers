@@ -9,8 +9,6 @@ using NUnit.Framework;
 
 namespace Agoda.Analyzers.Test.AgodaCustom;
 
-using VerifyCS = CSharpAnalyzerVerifier<AG0001DependencyResolverMustNotBeUsed, NUnitVerifier>;
-
 [TestFixture]
 class AG0001UnitTests : DiagnosticVerifier
 {
