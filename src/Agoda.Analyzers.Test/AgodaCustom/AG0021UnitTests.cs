@@ -9,18 +9,19 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using NUnit.Framework;
 
-namespace Agoda.Analyzers.Test.AgodaCustom
+namespace Agoda.Analyzers.Test.AgodaCustom;
+
+[TestFixture]
+internal class AG0021UnitTests : DiagnosticVerifier
 {
-    internal class AG0021UnitTests : DiagnosticVerifier
-    {
-	    protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0021PreferAsyncMethods();
+    protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0021PreferAsyncMethods();
         
-	    protected override string DiagnosticId => AG0021PreferAsyncMethods.DIAGNOSTIC_ID;
+    protected override string DiagnosticId => AG0021PreferAsyncMethods.DIAGNOSTIC_ID;
 	    
-        [Test]
-        public async Task AG0021_Static_WhenAsyncDoesNotExist_ShouldNotShowWarning()
-        {
-            var code = @"
+    [Test]
+    public async Task AG0021_Static_WhenAsyncDoesNotExist_ShouldNotShowWarning()
+    {
+        var code = @"
 				class TestClassDeclaration {
 					public static void TestMethod() {
 						int instance = 1;
@@ -34,13 +35,13 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-	        await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
-        }
+        await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+    }
 
-        [Test]
-        public async Task AG0021_Instance_WhenAsyncDoesNotExist_ShouldNotShowWarning()
-        {
-            var code = @"
+    [Test]
+    public async Task AG0021_Instance_WhenAsyncDoesNotExist_ShouldNotShowWarning()
+    {
+        var code = @"
 				class TestClassDeclaration {
 					public void TestMethod() {
 						int instance = 1;
@@ -55,14 +56,14 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-	        await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
-        }
+        await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+    }
 	   
 
-        [Test]
-        public async Task AG0021_Static_WhenAsyncWithPostfixExists_ShouldShowWarning()
-        {
-            var code = @"
+    [Test]
+    public async Task AG0021_Static_WhenAsyncWithPostfixExists_ShouldShowWarning()
+    {
+        var code = @"
 				using System.Threading.Tasks;
 
 				class TestClassDeclaration {
@@ -82,13 +83,13 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-	        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(16, 7));
-        }
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(16, 7));
+    }
 
-        [Test]
-        public async Task AG0021_Instance_WhenAsyncWithPostfixExists_ShouldShowWarning()
-        {
-            var code = @"
+    [Test]
+    public async Task AG0021_Instance_WhenAsyncWithPostfixExists_ShouldShowWarning()
+    {
+        var code = @"
 				using System.Threading.Tasks;
 
 				class TestClassDeclaration {
@@ -109,13 +110,13 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-	        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(17, 7));
-        }
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(17, 7));
+    }
 
-        [Test]
-        public async Task AG0021_Static_WhenAsyncWithoutPostfixExists_ShouldShowWarning()
-        {
-            var code = @"
+    [Test]
+    public async Task AG0021_Static_WhenAsyncWithoutPostfixExists_ShouldShowWarning()
+    {
+        var code = @"
 				using System.Threading;
 				using System.Threading.Tasks;
 
@@ -136,13 +137,13 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-	        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(17, 7));
-        }
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(17, 7));
+    }
 
-        [Test]
-        public async Task AG0021_Instance_WhenAsyncWithoutPostfixExists_ShouldShowWarning()
-        {
-            var code = @"
+    [Test]
+    public async Task AG0021_Instance_WhenAsyncWithoutPostfixExists_ShouldShowWarning()
+    {
+        var code = @"
 				using System.Threading;
 				using System.Threading.Tasks;
 
@@ -164,13 +165,13 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-	        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(18, 7));
-        }
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(18, 7));
+    }
 
-        [Test]
-        public async Task AG0021_Static_WhenAsyncWithPostfixIsUsed_ShouldNotShowAnyWarning()
-        {
-            var code = @"
+    [Test]
+    public async Task AG0021_Static_WhenAsyncWithPostfixIsUsed_ShouldNotShowAnyWarning()
+    {
+        var code = @"
 				using System.Threading.Tasks;
 
 				class TestClassDeclaration {
@@ -190,13 +191,13 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
-        }
+        await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+    }
 
-        [Test]
-        public async Task AG0021_Instance_WhenAsyncWithPostfixIsUsed_ShouldNotShowAnyWarning()
-        {
-            var code = @"
+    [Test]
+    public async Task AG0021_Instance_WhenAsyncWithPostfixIsUsed_ShouldNotShowAnyWarning()
+    {
+        var code = @"
 				using System.Threading.Tasks;
 
 				class TestClassDeclaration {
@@ -217,13 +218,13 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
-        }
+        await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+    }
 
-        [Test]
-        public async Task AG0021_Static_WhenAsyncWithoutPostfixIsUsed_ShouldNotShowAnyWarning()
-        {
-            var code = @"
+    [Test]
+    public async Task AG0021_Static_WhenAsyncWithoutPostfixIsUsed_ShouldNotShowAnyWarning()
+    {
+        var code = @"
 				using System.Threading;
 				using System.Threading.Tasks;
 
@@ -244,13 +245,13 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
-        }
+        await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+    }
 
-        [Test]
-        public async Task AG0021_Instance_WhenAsyncWithoutPostfixIsUsed_ShouldNotShowAnyWarning()
-        {
-            var code = @"
+    [Test]
+    public async Task AG0021_Instance_WhenAsyncWithoutPostfixIsUsed_ShouldNotShowAnyWarning()
+    {
+        var code = @"
 				using System.Threading;
 				using System.Threading.Tasks;
 
@@ -272,13 +273,13 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
-        }
+        await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+    }
 
-        [Test]
-        public async Task AG0021_Static_WhenInstanceAsyncWithPostfixExists_ShouldNotShowAnyWarning()
-        {
-            var code = @"
+    [Test]
+    public async Task AG0021_Static_WhenInstanceAsyncWithPostfixExists_ShouldNotShowAnyWarning()
+    {
+        var code = @"
 				using System.Threading.Tasks;
 
 				class TestClassDeclaration {
@@ -298,13 +299,13 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
-        }
+        await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+    }
 
-        [Test]
-        public async Task AG0021_Static_WhenInstanceAsyncWithoutPostfixExists_ShouldNotShowAnyWarning()
-        {
-            var code = @"
+    [Test]
+    public async Task AG0021_Static_WhenInstanceAsyncWithoutPostfixExists_ShouldNotShowAnyWarning()
+    {
+        var code = @"
 				using System.Threading;
 				using System.Threading.Tasks;
 
@@ -325,13 +326,13 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
-        }
+        await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+    }
 
-        [Test]
-        public async Task AG0021_Instance_WhenStaticAsyncWithPostfixExists_ShouldNotShowAnyWarning()
-        {
-            var code = @"
+    [Test]
+    public async Task AG0021_Instance_WhenStaticAsyncWithPostfixExists_ShouldNotShowAnyWarning()
+    {
+        var code = @"
 				using System.Threading.Tasks;
 
 				class TestClassDeclaration {
@@ -352,13 +353,13 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
-        }
+        await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+    }
 
-        [Test]
-        public async Task AG0021_Instance_WhenStaticAsyncWithoutPostfixExists_ShouldNotShowAnyWarning()
-        {
-            var code = @"
+    [Test]
+    public async Task AG0021_Instance_WhenStaticAsyncWithoutPostfixExists_ShouldNotShowAnyWarning()
+    {
+        var code = @"
 				using System.Threading;
 				using System.Threading.Tasks;
 
@@ -380,13 +381,13 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
-        }
+        await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+    }
 
-        [Test]
-        public async Task AG0021_Instance_WhenMethodIsInReferencedAssembly_ShouldShowWarning()
-        {
-            var code = @"
+    [Test]
+    public async Task AG0021_Instance_WhenMethodIsInReferencedAssembly_ShouldShowWarning()
+    {
+        var code = @"
 				class TestClassInvocation {
 					public void InvocationMethod() {
 						var stream = new System.IO.MemoryStream();
@@ -395,13 +396,13 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-	        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(5, 7));
-        }
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(5, 7));
+    }
 
-        [Test]
-        public async Task AG0021_Instance_WhenAsyncWithoutPrefixIsExtended_ShouldNotShowWarning()
-        {
-            var code = @"
+    [Test]
+    public async Task AG0021_Instance_WhenAsyncWithoutPrefixIsExtended_ShouldNotShowWarning()
+    {
+        var code = @"
 				using System.Threading;
 				using System.Threading.Tasks;
 
@@ -425,13 +426,13 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 	        
-	        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(20, 7));
-        }
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(20, 7));
+    }
 
-        [Test]
-        public async Task AG0021_Instance_WhenAsyncWithPrefixIsExtended_ShouldNotShowWarning()
-        {
-            var code = @"
+    [Test]
+    public async Task AG0021_Instance_WhenAsyncWithPrefixIsExtended_ShouldNotShowWarning()
+    {
+        var code = @"
 				using System.Threading;
 				using System.Threading.Tasks;
 
@@ -455,13 +456,13 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-	        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(20, 7));
-        }
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(20, 7));
+    }
 
-        [Test]
-        public async Task AG0021_Instance_WhenUsedAndAsyncWithPrefixIsExtended_ShouldShowWarning()
-        {
-            var code = @"
+    [Test]
+    public async Task AG0021_Instance_WhenUsedAndAsyncWithPrefixIsExtended_ShouldShowWarning()
+    {
+        var code = @"
 				using System.Threading;
 				using System.Threading.Tasks;
 
@@ -486,13 +487,13 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-	        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(21, 7));
-        }
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(21, 7));
+    }
 
-        [Test]
-        public async Task AG0021_Instance_WhenUsedAndAsyncWithoutPrefixIsExtended_ShouldShowWarning()
-        {
-            var code = @"
+    [Test]
+    public async Task AG0021_Instance_WhenUsedAndAsyncWithoutPrefixIsExtended_ShouldShowWarning()
+    {
+        var code = @"
 				using System.Threading;
 				using System.Threading.Tasks;
 
@@ -517,13 +518,13 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-	        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(21, 7));
-        }
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(21, 7));
+    }
 
-        [Test]
-        public async Task AG0021_Static_WhenUsedAndAsyncWithPrefixIsExtended_ShouldShowWarning()
-        {
-            var code = @"
+    [Test]
+    public async Task AG0021_Static_WhenUsedAndAsyncWithPrefixIsExtended_ShouldShowWarning()
+    {
+        var code = @"
 				using System.Threading;
 				using System.Threading.Tasks;
 
@@ -548,13 +549,13 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-	        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(21, 7));
-        }
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(21, 7));
+    }
 
-        [Test]
-        public async Task AG0021_Static_WhenUsedAndAsyncWithoutPrefixIsExtended_ShouldShowWarning()
-        {
-            var code = @"
+    [Test]
+    public async Task AG0021_Static_WhenUsedAndAsyncWithoutPrefixIsExtended_ShouldShowWarning()
+    {
+        var code = @"
 				using System.Threading;
 				using System.Threading.Tasks;
 
@@ -579,13 +580,13 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-	        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(21, 7));
-        }
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(21, 7));
+    }
         
-        [Test]
-        public async Task AG0021_Instance_WhenUsedIsExtendedAndAsyncWithoutPrefixIsNot_ShouldShowWarning()
-        {
-            var code = @"
+    [Test]
+    public async Task AG0021_Instance_WhenUsedIsExtendedAndAsyncWithoutPrefixIsNot_ShouldShowWarning()
+    {
+        var code = @"
 				using System.Threading;
 				using System.Threading.Tasks;
 
@@ -609,13 +610,13 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-	        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(20, 7));
-        }
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(20, 7));
+    }
 
-        [Test]
-        public async Task AG0021_Instance_WhenUsedIsExtendedAndAsyncWithPrefixIsNot_ShouldShowWarning()
-        {
-            var code = @"
+    [Test]
+    public async Task AG0021_Instance_WhenUsedIsExtendedAndAsyncWithPrefixIsNot_ShouldShowWarning()
+    {
+        var code = @"
 				using System.Threading;
 				using System.Threading.Tasks;
 
@@ -639,13 +640,13 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-	        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(20, 7));
-        }
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(20, 7));
+    }
 
-        [Test]
-        public async Task AG0021_Static_WhenUsedIsExtendedAndAsyncWithoutPrefixIsNot_ShouldShowWarning()
-        {
-            var code = @"
+    [Test]
+    public async Task AG0021_Static_WhenUsedIsExtendedAndAsyncWithoutPrefixIsNot_ShouldShowWarning()
+    {
+        var code = @"
 				using System.Threading;
 				using System.Threading.Tasks;
 
@@ -669,13 +670,13 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 	        
-	        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(20, 7));
-        }
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(20, 7));
+    }
 
-        [Test]
-        public async Task AG0021_Static_WhenUsedIsExtendedAndAsyncWithPrefixIsNot_ShouldShowWarning()
-        {
-            var code = @"
+    [Test]
+    public async Task AG0021_Static_WhenUsedIsExtendedAndAsyncWithPrefixIsNot_ShouldShowWarning()
+    {
+        var code = @"
 				using System.Threading;
 				using System.Threading.Tasks;
 
@@ -699,13 +700,13 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-	        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(20, 7));
-        }
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(20, 7));
+    }
 
-        [Test]
-        public async Task AG0021_Static_WhenAsyncMethodWithoutTaskExists_ShouldShowWarning()
-        {
-            var code = @"
+    [Test]
+    public async Task AG0021_Static_WhenAsyncMethodWithoutTaskExists_ShouldShowWarning()
+    {
+        var code = @"
 				using System.Threading;
 				using System.Threading.Tasks;
 				using System.Runtime.CompilerServices;
@@ -734,13 +735,13 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-	        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(25, 7));
-        }
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(25, 7));
+    }
 
-        [Test]
-        public async Task AG0021_Static_WhenUsedAsyncMethodWithoutTask_ShouldNotShowWarning()
-        {
-            var code = @"
+    [Test]
+    public async Task AG0021_Static_WhenUsedAsyncMethodWithoutTask_ShouldNotShowWarning()
+    {
+        var code = @"
 				using System.Threading;
 				using System.Threading.Tasks;
 				using System.Runtime.CompilerServices;
@@ -769,13 +770,13 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
-        }
+        await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+    }
 
-        [Test]
-        public async Task AG0021_Instance_WhenAsyncWithoutPrefixIsInParent_ShouldShowWarning()
-        {
-            var code = @"
+    [Test]
+    public async Task AG0021_Instance_WhenAsyncWithoutPrefixIsInParent_ShouldShowWarning()
+    {
+        var code = @"
 				using System.Threading;
 				using System.Threading.Tasks;
 
@@ -799,13 +800,13 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-	        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(20, 7));
-        }
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(20, 7));
+    }
 
-        [Test]
-        public async Task AG0021_Instance_WhenAsyncWithoutPrefixIsInChild_ShouldShowWarning()
-        {
-            var code = @"
+    [Test]
+    public async Task AG0021_Instance_WhenAsyncWithoutPrefixIsInChild_ShouldShowWarning()
+    {
+        var code = @"
 				using System.Threading;
 				using System.Threading.Tasks;
 
@@ -829,13 +830,13 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-	        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(20, 7));
-        }
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(20, 7));
+    }
 
-        [Test]
-        public async Task AG0021_Instance_WhenAsyncWithPrefixIsInParent_ShouldShowWarning()
-        {
-            var code = @"
+    [Test]
+    public async Task AG0021_Instance_WhenAsyncWithPrefixIsInParent_ShouldShowWarning()
+    {
+        var code = @"
 				using System.Threading;
 				using System.Threading.Tasks;
 
@@ -859,13 +860,13 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 	        
-	        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(20, 7));
-        }
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(20, 7));
+    }
 
-        [Test]
-        public async Task AG0021_Instance_WhenAsyncWithPrefixIsInChild_ShouldShowWarning()
-        {
-            var code = @"
+    [Test]
+    public async Task AG0021_Instance_WhenAsyncWithPrefixIsInChild_ShouldShowWarning()
+    {
+        var code = @"
 				using System.Threading;
 				using System.Threading.Tasks;
 
@@ -889,13 +890,13 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-	        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(20, 7));
-        }
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(20, 7));
+    }
 
-        [Test]
-        public async Task AG0021_Instance_WhenUsedDomesticMethod_ShouldShowWarning()
-        {
-            var code = @"
+    [Test]
+    public async Task AG0021_Instance_WhenUsedDomesticMethod_ShouldShowWarning()
+    {
+        var code = @"
 				using System.Threading;
 				using System.Threading.Tasks;
 
@@ -914,13 +915,13 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(15, 7));
-        }
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(15, 7));
+    }
 
-        [Test]
-        public async Task AG0021_Static_WhenUsedDomesticMethod_ShouldShowWarning()
-        {
-            var code = @"
+    [Test]
+    public async Task AG0021_Static_WhenUsedDomesticMethod_ShouldShowWarning()
+    {
+        var code = @"
 				using System.Threading;
 				using System.Threading.Tasks;
 
@@ -939,13 +940,13 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(15, 7));
-        }
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(15, 7));
+    }
 
-        [Test]
-        public async Task AG0021_Instance_WhenUsedFromFunctionResult_ShouldShowWarning()
-        {
-            var code = @"
+    [Test]
+    public async Task AG0021_Instance_WhenUsedFromFunctionResult_ShouldShowWarning()
+    {
+        var code = @"
 				using System.Threading;
 				using System.Threading.Tasks;
 
@@ -970,13 +971,13 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(21, 7));
-        }
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(21, 7));
+    }
 
-        [Test]
-        public async Task AG0021_Static_WhenUsedIsLocal_ShouldNotShowWarning()
-        {
-            var code = @"
+    [Test]
+    public async Task AG0021_Static_WhenUsedIsLocal_ShouldNotShowWarning()
+    {
+        var code = @"
 				using System;
 				using System.Threading;
 				using System.Threading.Tasks;
@@ -994,13 +995,13 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
-        }
+        await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+    }
 
-        [Test]
-        public async Task AG0021_Instance_WhenAsyncIsNotAccessible_ShouldNotShowWarning()
-        {
-            var code = @"
+    [Test]
+    public async Task AG0021_Instance_WhenAsyncIsNotAccessible_ShouldNotShowWarning()
+    {
+        var code = @"
 				using System;
 				using System.Threading;
 				using System.Threading.Tasks;
@@ -1024,13 +1025,13 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
-        }
+        await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+    }
 
-        [Test]
-        public async Task AG0021_Static_WhenAsyncIsNotAccessible_ShouldNotShowWarning()
-        {
-            var code = @"
+    [Test]
+    public async Task AG0021_Static_WhenAsyncIsNotAccessible_ShouldNotShowWarning()
+    {
+        var code = @"
 				using System;
 				using System.Threading;
 				using System.Threading.Tasks;
@@ -1052,13 +1053,13 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
-        }
+        await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+    }
 
-        [Test]
-        public async Task AG0021_Instance_WhenUsedOnClassField_ShouldShowWarning()
-        {
-            var code = @"
+    [Test]
+    public async Task AG0021_Instance_WhenUsedOnClassField_ShouldShowWarning()
+    {
+        var code = @"
 				using System;
 				using System.Threading;
 				using System.Threading.Tasks;
@@ -1082,13 +1083,13 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(20, 7));
-        }
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(20, 7));
+    }
 
-        [Test]
-        public async Task AG0021_Instance_WhenUsedOnDynamic_ShouldNotShowWarning()
-        {
-            var code = @"
+    [Test]
+    public async Task AG0021_Instance_WhenUsedOnDynamic_ShouldNotShowWarning()
+    {
+        var code = @"
 				using System;
 				using System.Threading;
 				using System.Threading.Tasks;
@@ -1112,8 +1113,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 				}
 			";
 
-            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
-        }
-
+        await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
     }
+
 }

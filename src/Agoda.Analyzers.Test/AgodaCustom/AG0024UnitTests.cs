@@ -4,19 +4,20 @@ using Agoda.Analyzers.Test.Helpers;
 using Microsoft.CodeAnalysis.Diagnostics;
 using NUnit.Framework;
 
-namespace Agoda.Analyzers.Test.AgodaCustom
+namespace Agoda.Analyzers.Test.AgodaCustom;
+
+[TestFixture]
+internal class AG0024UnitTests : DiagnosticVerifier
 {
-    internal class AG0024UnitTests : DiagnosticVerifier
+
+    protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0024PreventUseOfTaskFactoryStartNew();
+
+    protected override string DiagnosticId => AG0024PreventUseOfTaskFactoryStartNew.DIAGNOSTIC_ID;
+
+    [Test]
+    public async Task AG0024_Only_Method_Parameter_Should_Show_Warning()
     {
-
-        protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0024PreventUseOfTaskFactoryStartNew();
-
-        protected override string DiagnosticId => AG0024PreventUseOfTaskFactoryStartNew.DIAGNOSTIC_ID;
-
-        [Test]
-        public async Task AG0024_Only_Method_Parameter_Should_Show_Warning()
-        {
-            var code = @"
+        var code = @"
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -33,13 +34,13 @@ class TestClass
 }
 ";
 
-            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(9, 9));
-        }
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(9, 9));
+    }
 
-        [Test]
-        public async Task AG0024_TaskCreationOptions_DenyChildAttach_Parameter_Should_Show_Warning_For()
-        {
-            var code = @"
+    [Test]
+    public async Task AG0024_TaskCreationOptions_DenyChildAttach_Parameter_Should_Show_Warning_For()
+    {
+        var code = @"
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -55,13 +56,13 @@ class TestClass
     }
 }
 ";
-            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(9, 9));
-        }
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(9, 9));
+    }
 
-        [Test]
-        public async Task AG0024_TaskCreationOptions_LongRunning_Parameter_Should_Be_Allowed()
-        {
-            var code = @"
+    [Test]
+    public async Task AG0024_TaskCreationOptions_LongRunning_Parameter_Should_Be_Allowed()
+    {
+        var code = @"
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -77,7 +78,6 @@ class TestClass
     }
 }
 ";
-            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
-        }
+        await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
     }
 }

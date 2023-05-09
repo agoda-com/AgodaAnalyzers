@@ -10,18 +10,19 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using NUnit.Framework;
 
-namespace Agoda.Analyzers.Test.AgodaCustom
+namespace Agoda.Analyzers.Test.AgodaCustom;
+
+[TestFixture]
+class AG0033UnitTests : DiagnosticVerifier
 {
-    class AG0033UnitTests : DiagnosticVerifier
+    protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0033PreventUseOfTaskResult();
+        
+    protected override string DiagnosticId => AG0033PreventUseOfTaskResult.DIAGNOSTIC_ID;
+        
+    [Test]
+    public async Task AG0032_WithTaskResult_ShowsWarning()
     {
-        protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0033PreventUseOfTaskResult();
-        
-        protected override string DiagnosticId => AG0033PreventUseOfTaskResult.DIAGNOSTIC_ID;
-        
-	    [Test]
-	    public async Task AG0032_WithTaskResult_ShowsWarning()
-	    {
-		    var code = @"
+        var code = @"
 				using System.Threading.Tasks;
 
 				namespace Test 
@@ -36,7 +37,6 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 					}
 				}";
 
-		    await VerifyDiagnosticsAsync(code, new DiagnosticLocation(11, 26));
-	    }
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(11, 26));
     }
 }

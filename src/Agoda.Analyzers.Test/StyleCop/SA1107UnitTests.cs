@@ -9,24 +9,24 @@ using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Diagnostics;
 using NUnit.Framework;
 
-namespace Agoda.Analyzers.Test.StyleCop
+namespace Agoda.Analyzers.Test.StyleCop;
+
+/// <summary>
+/// This class contains unit tests for <see cref="SA1107CodeMustNotContainMultipleStatementsOnOneLine"/> and
+/// <see cref="SA1107CodeFixProvider"/>.
+/// </summary>
+public class SA1107UnitTests : CodeFixVerifier
 {
-    /// <summary>
-    /// This class contains unit tests for <see cref="SA1107CodeMustNotContainMultipleStatementsOnOneLine"/> and
-    /// <see cref="SA1107CodeFixProvider"/>.
-    /// </summary>
-    public class SA1107UnitTests : CodeFixVerifier
+    protected override DiagnosticAnalyzer DiagnosticAnalyzer => new SA1107CodeMustNotContainMultipleStatementsOnOneLine();
+        
+    protected override string DiagnosticId => SA1107CodeMustNotContainMultipleStatementsOnOneLine.DIAGNOSTIC_ID;
+        
+    protected override CodeFixProvider CodeFixProvider => new SA1107CodeFixProvider();
+        
+    [Test]
+    public async Task TestCorrectCodeAsync()
     {
-        protected override DiagnosticAnalyzer DiagnosticAnalyzer => new SA1107CodeMustNotContainMultipleStatementsOnOneLine();
-        
-        protected override string DiagnosticId => SA1107CodeMustNotContainMultipleStatementsOnOneLine.DIAGNOSTIC_ID;
-        
-        protected override CodeFixProvider CodeFixProvider => new SA1107CodeFixProvider();
-        
-        [Test]
-        public async Task TestCorrectCodeAsync()
-        {
-            var testCode = @"
+        var testCode = @"
                 using System;
                 class ClassName
                 {
@@ -50,13 +50,13 @@ namespace Agoda.Analyzers.Test.StyleCop
                 }
             ";
             
-            await VerifyDiagnosticsAsync(testCode, EmptyDiagnosticResults);
-        }
+        await VerifyDiagnosticsAsync(testCode, EmptyDiagnosticResults);
+    }
 
-        [Test]
-        public async Task TestWrongCodeAsync()
-        {
-            var testCode = @"
+    [Test]
+    public async Task TestWrongCodeAsync()
+    {
+        var testCode = @"
 using System;
 class ClassName
 {
@@ -76,15 +76,15 @@ class ClassName
 }
 ";
             
-            var expected = new[]
-            {
-                new DiagnosticLocation(7, 20),
-                new DiagnosticLocation(7, 38),
-                new DiagnosticLocation(14, 11),
-                new DiagnosticLocation(16, 50)
-            };
+        var expected = new[]
+        {
+            new DiagnosticLocation(7, 20),
+            new DiagnosticLocation(7, 38),
+            new DiagnosticLocation(14, 11),
+            new DiagnosticLocation(16, 50)
+        };
 
-            var fixedCode = @"
+        var fixedCode = @"
 using System;
 class ClassName
 {
@@ -109,15 +109,15 @@ class ClassName
 }
 ";
 
-            await VerifyDiagnosticsAsync(testCode, expected);
-            await VerifyDiagnosticsAsync(fixedCode, EmptyDiagnosticResults);
-            await VerifyCodeFixAsync(testCode, fixedCode);
-        }
+        await VerifyDiagnosticsAsync(testCode, expected);
+        await VerifyDiagnosticsAsync(fixedCode, EmptyDiagnosticResults);
+        await VerifyCodeFixAsync(testCode, fixedCode);
+    }
 
-        [Test]
-        public async Task TestThatAnalyzerDoesntCrashOnEmptyBlockAsync()
-        {
-            var testCode = @"
+    [Test]
+    public async Task TestThatAnalyzerDoesntCrashOnEmptyBlockAsync()
+    {
+        var testCode = @"
                 using System;
                 class ClassName
                 {
@@ -127,7 +127,6 @@ class ClassName
                 }
             ";
             
-            await VerifyDiagnosticsAsync(testCode, EmptyDiagnosticResults);
-        }
+        await VerifyDiagnosticsAsync(testCode, EmptyDiagnosticResults);
     }
 }

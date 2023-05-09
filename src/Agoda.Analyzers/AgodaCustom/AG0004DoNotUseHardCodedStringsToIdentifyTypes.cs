@@ -74,7 +74,7 @@ namespace Agoda.Analyzers.AgodaCustom
                 return;
             }
 
-            if (firstParameter.ToDisplayString() == "string")
+            if (firstParameter.Type.Name.ToLower() == "string")
             {
                 context.ReportDiagnostic(Diagnostic.Create(Descriptor, context.Node.GetLocation()));
             }

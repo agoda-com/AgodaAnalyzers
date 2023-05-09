@@ -11,23 +11,24 @@ using Microsoft.CodeAnalysis;
 using Agoda.Analyzers.AgodaCustom;
 using OpenQA.Selenium;
 
-namespace Agoda.Analyzers.Test.AgodaCustom
+namespace Agoda.Analyzers.Test.AgodaCustom;
+
+[TestFixture]
+class AG0027UnitTests : DiagnosticVerifier
 {
-    class AG0027UnitTests : DiagnosticVerifier
+    protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0027EnsureOnlyDataSeleniumIsUsedToFindElements();
+        
+    protected override string DiagnosticId => AG0027EnsureOnlyDataSeleniumIsUsedToFindElements.DIAGNOSTIC_ID;
+        
+    [Test]
+    [TestCase("[data-selenium='hotel-item']")]
+    [TestCase("[data-selenium=hotel-item]")]
+    public async Task AG0027_WithPermittedSelectors_ThenPass(string selectBy)
     {
-        protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0027EnsureOnlyDataSeleniumIsUsedToFindElements();
-        
-        protected override string DiagnosticId => AG0027EnsureOnlyDataSeleniumIsUsedToFindElements.DIAGNOSTIC_ID;
-        
-        [Test]
-        [TestCase("[data-selenium='hotel-item']")]
-        [TestCase("[data-selenium=hotel-item]")]
-        public async Task AG0027_WithPermittedSelectors_ThenPass(string selectBy)
+        var code = new CodeDescriptor
         {
-            var code = new CodeDescriptor
-            {
-                References = new[] {typeof(IWebElement).Assembly},
-                Code = $@"
+            References = new[] {typeof(IWebElement).Assembly},
+            Code = $@"
                     using System;
                     using OpenQA.Selenium;
                     using OpenQA.Selenium.Chrome;
@@ -43,24 +44,24 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                             public IWebElement element2 = new ChromeDriver().FindElementByCssSelector(""{selectBy}"");
                         }}
                     }}"
-            };
+        };
 
-            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
-        }
+        await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+    }
 
-        [Test]
-        [TestCase("link[rel='link']")]
-        [TestCase("meta[name='meta']")]
-        [TestCase("form button.login-button")]
-        [TestCase(".class")]
-        [TestCase("#id")]
-        [TestCase("[data-selenium=unterminated")]
-        public async Task AG0027_WithForbiddenSelectorsInByMethod_ThenShowWarning(string selectBy)
+    [Test]
+    [TestCase("link[rel='link']")]
+    [TestCase("meta[name='meta']")]
+    [TestCase("form button.login-button")]
+    [TestCase(".class")]
+    [TestCase("#id")]
+    [TestCase("[data-selenium=unterminated")]
+    public async Task AG0027_WithForbiddenSelectorsInByMethod_ThenShowWarning(string selectBy)
+    {
+        var code = new CodeDescriptor
         {
-            var code = new CodeDescriptor
-            {
-                References = new[] {typeof(IWebElement).Assembly},
-                Code = $@"
+            References = new[] {typeof(IWebElement).Assembly},
+            Code = $@"
                     using System;
                     using OpenQA.Selenium;
                     using OpenQA.Selenium.Chrome;
@@ -78,29 +79,29 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                             }}
                         }}
                     }}" 
-            };
+        };
             
-            var expected = new[]
-            {
-                new DiagnosticLocation(14, 84),
-                new DiagnosticLocation(15, 83),
-            };
-            await VerifyDiagnosticsAsync(code, expected);
-        }
-
-        [Test]
-        [TestCase("link[rel='link']")]
-        [TestCase("meta[name='meta']")]
-        [TestCase("form button.login-button")]
-        [TestCase(".class")]
-        [TestCase("#id")]
-        [TestCase("[data-selenium=unterminated")]
-        public async Task AG0027_WithForbiddenFindElementsSelectorsInMethod_ThenShowWarning(string selectBy)
+        var expected = new[]
         {
-            var code = new CodeDescriptor
-            {
-                References = new [] { typeof(IWebElement).Assembly },
-                Code = $@"
+            new DiagnosticLocation(14, 84),
+            new DiagnosticLocation(15, 83),
+        };
+        await VerifyDiagnosticsAsync(code, expected);
+    }
+
+    [Test]
+    [TestCase("link[rel='link']")]
+    [TestCase("meta[name='meta']")]
+    [TestCase("form button.login-button")]
+    [TestCase(".class")]
+    [TestCase("#id")]
+    [TestCase("[data-selenium=unterminated")]
+    public async Task AG0027_WithForbiddenFindElementsSelectorsInMethod_ThenShowWarning(string selectBy)
+    {
+        var code = new CodeDescriptor
+        {
+            References = new [] { typeof(IWebElement).Assembly },
+            Code = $@"
                     using System;
                     using OpenQA.Selenium;
                     using OpenQA.Selenium.Chrome;
@@ -118,23 +119,23 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                         }}
                     }}
                 "
-            };
+        };
 
-            var expected = new[]
-            {
-                new DiagnosticLocation(13, 82),
-                new DiagnosticLocation(14, 81),
-            };
-            await VerifyDiagnosticsAsync(code , expected);
-        }
-        
-        [Test]
-        public async Task AG0027_WithInvalidConstantSelector_ShowsWarning()
+        var expected = new[]
         {
-            var code = new CodeDescriptor
-            {
-                References = new[] {typeof(IWebElement).Assembly},
-                Code = @"
+            new DiagnosticLocation(13, 82),
+            new DiagnosticLocation(14, 81),
+        };
+        await VerifyDiagnosticsAsync(code , expected);
+    }
+        
+    [Test]
+    public async Task AG0027_WithInvalidConstantSelector_ShowsWarning()
+    {
+        var code = new CodeDescriptor
+        {
+            References = new[] {typeof(IWebElement).Assembly},
+            Code = @"
                     using System;
                     using OpenQA.Selenium;
                     using OpenQA.Selenium.Chrome;
@@ -149,18 +150,18 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                             var elements1 = driver.FindElementsByCssSelector(SELECTOR);
                         }
                     }"
-            };
+        };
 
-            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(13,78));
-        }
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(13,78));
+    }
 
-        [Test]
-        public async Task AG0027_WithValidConstantSelector_ShowsNoWarning()
+    [Test]
+    public async Task AG0027_WithValidConstantSelector_ShowsNoWarning()
+    {
+        var code = new CodeDescriptor
         {
-            var code = new CodeDescriptor
-            {
-                References = new[] {typeof(IWebElement).Assembly},
-                Code = @"
+            References = new[] {typeof(IWebElement).Assembly},
+            Code = @"
                     using System;
                     using OpenQA.Selenium;
                     using OpenQA.Selenium.Chrome;
@@ -175,15 +176,15 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                             var elements1 = driver.FindElementsByCssSelector(SELECTOR);
                         }
                     }"
-            };
+        };
 
-            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
-        }
+        await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+    }
         
-        [Test]
-        public async Task AG0027_WhenNotSeleniumMethod_ShowsNoWarning()
-        {
-            var code = @"
+    [Test]
+    public async Task AG0027_WhenNotSeleniumMethod_ShowsNoWarning()
+    {
+        var code = @"
                 public class TestClass
                 {
                     public void TestMethod(string s)
@@ -196,7 +197,6 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                     }
                 }";
 
-            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
-        }
+        await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
     }
 }

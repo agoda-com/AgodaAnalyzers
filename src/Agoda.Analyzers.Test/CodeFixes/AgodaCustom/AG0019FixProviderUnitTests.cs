@@ -10,20 +10,20 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Agoda.Analyzers.Test.CodeFixes.AgodaCustom
+namespace Agoda.Analyzers.Test.CodeFixes.AgodaCustom;
+
+internal class AG0019FixProviderUnitTests : CodeFixVerifier
 {
-    internal class AG0019FixProviderUnitTests : CodeFixVerifier
+    protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0019PreventUseOfInternalsVisibleToAttribute();
+        
+    protected override string DiagnosticId => AG0019PreventUseOfInternalsVisibleToAttribute.DIAGNOSTIC_ID;
+        
+    protected override CodeFixProvider CodeFixProvider => new AG0019PreventUseOfInternalsVisibleToAttributeFixProvider();
+        
+    [Test]
+    public async Task AG0019_ShouldRemoveAttributeCorrectly()
     {
-        protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0019PreventUseOfInternalsVisibleToAttribute();
-        
-        protected override string DiagnosticId => AG0019PreventUseOfInternalsVisibleToAttribute.DIAGNOSTIC_ID;
-        
-        protected override CodeFixProvider CodeFixProvider => new AG0019PreventUseOfInternalsVisibleToAttributeFixProvider();
-        
-        [Test]
-        public async Task AG0019_ShouldRemoveAttributeCorrectly()
-        {
-            var code = @"
+        var code = @"
                     using System;
                     using System.Diagnostics;
                     using System.Reflection;
@@ -49,7 +49,7 @@ namespace Agoda.Analyzers.Test.CodeFixes.AgodaCustom
                         }
                     ";
 
-            var result = @"
+        var result = @"
                     using System;
                     using System.Diagnostics;
                     using System.Reflection;
@@ -74,7 +74,6 @@ namespace Agoda.Analyzers.Test.CodeFixes.AgodaCustom
                             }
                         }
                     ";
-            await VerifyCodeFixAsync(code, result, allowNewCompilerDiagnostics:true);
-        }
+        await VerifyCodeFixAsync(code, result, allowNewCompilerDiagnostics:true);
     }
 }

@@ -9,8 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Agoda.Analyzers.CodeFixes",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Agoda.Analyzers.Test", "Agoda.Analyzers.Test\Agoda.Analyzers.Test.csproj", "{756B9DD8-2FE7-485D-8640-6E2755514EAE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Agoda.Analyzers.Vsix", "Agoda.Analyzers.Vsix\Agoda.Analyzers.Vsix.csproj", "{55E08542-C84B-477C-B739-FC1979EB1D91}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1C629672-E8E6-482D-BB3E-A5FFA386327A}"
 	ProjectSection(SolutionItems) = preProject
 		..\CONTRIBUTING.md = ..\CONTRIBUTING.md

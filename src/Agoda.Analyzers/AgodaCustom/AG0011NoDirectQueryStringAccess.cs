@@ -38,7 +38,7 @@ namespace Agoda.Analyzers.AgodaCustom
 
         protected override IEnumerable<InvocationRule> Rules => new[]
         {
-            new BlacklistedInvocationRule("System.Web.HttpRequest", "QueryString")
+            new BlacklistedInvocationRule("Microsoft.AspNetCore.Http.HttpRequest", "QueryString")
         };
     }
 }

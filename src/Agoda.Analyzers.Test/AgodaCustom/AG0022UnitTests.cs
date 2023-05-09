@@ -9,18 +9,19 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using NUnit.Framework;
 
-namespace Agoda.Analyzers.Test.AgodaCustom
+namespace Agoda.Analyzers.Test.AgodaCustom;
+
+[TestFixture]
+internal class AG0022UnitTests : DiagnosticVerifier
 {
-    internal class AG0022UnitTests : DiagnosticVerifier
+    protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0022DoNotExposeBothSyncAndAsyncVersionsOfMethods();
+        
+    protected override string DiagnosticId => AG0022DoNotExposeBothSyncAndAsyncVersionsOfMethods.DIAGNOSTIC_ID;
+        
+    [Test]
+    public async Task AG0022_WhenNotExistBothSyncAndAsyncVersionsOnInterface_ShouldNotShowWarning()
     {
-        protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0022DoNotExposeBothSyncAndAsyncVersionsOfMethods();
-        
-        protected override string DiagnosticId => AG0022DoNotExposeBothSyncAndAsyncVersionsOfMethods.DIAGNOSTIC_ID;
-        
-        [Test]
-        public async Task AG0022_WhenNotExistBothSyncAndAsyncVersionsOnInterface_ShouldNotShowWarning()
-        {
-            const string code = @"
+        const string code = @"
 using System.Threading.Tasks;
 
 interface TestInterface
@@ -30,13 +31,13 @@ interface TestInterface
 }
 ";
 
-            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
-        }
+        await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+    }
         
-        [Test]
-        public async Task AG0022_WhenNotExistBothSyncAndAsyncVersionsOnClass_ShouldNotShowWarning()
-        {
-            const string code = @"
+    [Test]
+    public async Task AG0022_WhenNotExistBothSyncAndAsyncVersionsOnClass_ShouldNotShowWarning()
+    {
+        const string code = @"
 using System.Threading.Tasks;
 
 class TestClass
@@ -52,13 +53,13 @@ class TestClass
 }
 ";
 
-            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
-        }
+        await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+    }
         
-        [Test]
-        public async Task AG0022_WhenExistBothSyncAndAsyncVersionsOfMethodsOnInterface_ShouldShowWarning()
-        {
-            const string code = @"
+    [Test]
+    public async Task AG0022_WhenExistBothSyncAndAsyncVersionsOfMethodsOnInterface_ShouldShowWarning()
+    {
+        const string code = @"
 using System.Threading.Tasks;
 
 interface Interface
@@ -68,13 +69,13 @@ interface Interface
 }
 			";
 
-            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(6, 5));
-        }
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(6, 5));
+    }
 
-        [Test]
-        public async Task AG0022_WhenExistBothSyncAndAsyncVersionsOnClass_ShouldShowWarning()
-        {
-            const string code = @"
+    [Test]
+    public async Task AG0022_WhenExistBothSyncAndAsyncVersionsOnClass_ShouldShowWarning()
+    {
+        const string code = @"
 using System.Threading.Tasks;
 
 class TestClass
@@ -90,13 +91,13 @@ class TestClass
 }
 ";
 
-            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(6, 5));
-        }
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(6, 5));
+    }
         
-        [Test]
-        public async Task AG0022_WhenExistBothSyncAndAsyncVoidVersions_ShouldShowWarning()
-        {
-            const string code = @"
+    [Test]
+    public async Task AG0022_WhenExistBothSyncAndAsyncVoidVersions_ShouldShowWarning()
+    {
+        const string code = @"
 using System.Threading.Tasks;
 
 class TestClass
@@ -112,13 +113,13 @@ class TestClass
 }
 ";
 
-            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(6, 5));
-        }
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(6, 5));
+    }
         
-        [Test]
-        public async Task AG0022_WhenExistBothSyncAndAsyncMethodsNamedSame_ShouldShowWarning()
-        {
-            const string code = @"
+    [Test]
+    public async Task AG0022_WhenExistBothSyncAndAsyncMethodsNamedSame_ShouldShowWarning()
+    {
+        const string code = @"
 using System.Threading.Tasks;
 
 class TestClass
@@ -134,13 +135,13 @@ class TestClass
 }
 ";
 
-            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(6, 5));
-        }
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(6, 5));
+    }
         
-        [Test]
-        public async Task AG0022_WhenExistBothSyncAndAsyncVersionsOfInternalMethods_ShouldNotShowWarning()
-        {
-            const string code = @"
+    [Test]
+    public async Task AG0022_WhenExistBothSyncAndAsyncVersionsOfInternalMethods_ShouldNotShowWarning()
+    {
+        const string code = @"
 using System.Threading.Tasks;
 
 class TestClass
@@ -155,7 +156,6 @@ class TestClass
     }
 }
 ";
-            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
-        }
+        await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
     }
 }

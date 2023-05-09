@@ -10,21 +10,22 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using NUnit.Framework;
 
-namespace Agoda.Analyzers.Test.AgodaCustom
+namespace Agoda.Analyzers.Test.AgodaCustom;
+
+[TestFixture]
+internal class AG0010UnitTests : DiagnosticVerifier
 {
-    internal class AG0010UnitTests : DiagnosticVerifier
+    protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0010PreventTestFixtureInheritance();
+        
+    protected override string DiagnosticId => AG0010PreventTestFixtureInheritance.DIAGNOSTIC_ID;
+        
+    [Test]
+    public async Task AG0010_WhenNoTestCases_ShouldntShowWarning()
     {
-        protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0010PreventTestFixtureInheritance();
-        
-        protected override string DiagnosticId => AG0010PreventTestFixtureInheritance.DIAGNOSTIC_ID;
-        
-        [Test]
-        public async Task AG0010_WhenNoTestCases_ShouldntShowWarning()
+        var code = new CodeDescriptor
         {
-            var code = new CodeDescriptor
-            {
-                References = new[] {typeof(TestFixtureAttribute).Assembly},
-                Code = @"
+            References = new[] {typeof(TestFixtureAttribute).Assembly},
+            Code = @"
                     using NUnit.Framework;
                     
                     namespace Tests
@@ -34,18 +35,18 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                             public void This_IsValid(){}
                         }
                     }"
-            };
+        };
 
-            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
-        }
+        await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+    }
 
-        [Test]
-        public async Task AG0010_WhenNoInheritance_ShouldntShowWarning()
+    [Test]
+    public async Task AG0010_WhenNoInheritance_ShouldntShowWarning()
+    {
+        var code = new CodeDescriptor
         {
-            var code = new CodeDescriptor
-            {
-                References = new[] {typeof(TestFixtureAttribute).Assembly},
-                Code = @"
+            References = new[] {typeof(TestFixtureAttribute).Assembly},
+            Code = @"
                     using NUnit.Framework;
                     
                     namespace Tests
@@ -56,18 +57,18 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                             public void This_IsValid(){}
                         }
                     }"
-            };
+        };
 
-            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
-        }
+        await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+    }
 
-        [Test]
-        public async Task AG0010_WhenInheritance_ShouldShowWarning()
+    [Test]
+    public async Task AG0010_WhenInheritance_ShouldShowWarning()
+    {
+        var code = new CodeDescriptor
         {
-            var code = new CodeDescriptor
-            {
-                References = new[] {typeof(TestFixtureAttribute).Assembly},
-                Code = @"
+            References = new[] {typeof(TestFixtureAttribute).Assembly},
+            Code = @"
                     using NUnit.Framework;
                     
                     namespace Tests
@@ -82,10 +83,9 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                     
                         }
                     }"
-            };
+        };
             
-            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(6, 25));
-        }
-     
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(6, 25));
     }
+     
 }

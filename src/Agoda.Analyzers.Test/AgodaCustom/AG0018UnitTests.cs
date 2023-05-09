@@ -1,33 +1,32 @@
-﻿// <copyright file="AG018Unittest.cs" company="Agoda Company Co., Ltd.">
-// AGODA ® is a registered trademark of AGIP LLC, used under license by Agoda Company Co., Ltd.. Agoda is part of Priceline (NASDAQ:PCLN)
-// </copyright>
-namespace Agoda.Analyzers.Test.AgodaCustom
-{
-    using Agoda.Analyzers.AgodaCustom;
-    using Agoda.Analyzers.Test.Helpers;
-    using Microsoft.CodeAnalysis;
-    using Microsoft.CodeAnalysis.Diagnostics;
-    using NUnit.Framework;
-    using System;
-    using System.Collections.Generic;
-    using System.Collections.Immutable;
-    using System.Linq;
-    using System.Threading;
-    using System.Threading.Tasks;
+﻿
+namespace Agoda.Analyzers.Test.AgodaCustom;
 
-    public class AG0018UnitTests : DiagnosticVerifier
+using Agoda.Analyzers.AgodaCustom;
+using Agoda.Analyzers.Test.Helpers;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.Diagnostics;
+using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+
+[TestFixture]
+public class AG0018UnitTests : DiagnosticVerifier
+{
+    protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0018PermitOnlyCertainPubliclyExposedEnumerables();
+        
+    protected override string DiagnosticId => AG0018PermitOnlyCertainPubliclyExposedEnumerables.DIAGNOSTIC_ID;
+        
+    [Test]
+    public async Task AG0018_ShouldBeAllowedWhenCreateAMethodWhichReturnInterfaces()
     {
-        protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0018PermitOnlyCertainPubliclyExposedEnumerables();
-        
-        protected override string DiagnosticId => AG0018PermitOnlyCertainPubliclyExposedEnumerables.DIAGNOSTIC_ID;
-        
-        [Test]
-        public async Task AG0018_ShouldBeAllowedWhenCreateAMethodWhichReturnInterfaces()
+        var code = new CodeDescriptor
         {
-            var code = new CodeDescriptor
-            {
-                References = new[] {typeof(TestFixtureAttribute).Assembly},
-                Code = @"
+            References = new[] {typeof(TestFixtureAttribute).Assembly},
+            Code = @"
                     namespace Tests
                     {
                         using System.Collections.Generic;
@@ -46,19 +45,19 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                             public string DNSName { get; set; }
                         }
                     }"
-            };
+        };
             
-            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
-        }
+        await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+    }
 
-        [TestCase("List<double>")]
-        [TestCase("HashSet<int>")]
-        [TestCase("Dictionary<string, string>")]
-        [TestCase("ReadOnlyDictionary<string, int>")]
-        [TestCase("int[]")]
-        public async Task AG0018_WithForbiddenCollection_ShowShowWarning(string type)
-        {
-            var code = $@"
+    [TestCase("List<double>")]
+    [TestCase("HashSet<int>")]
+    [TestCase("Dictionary<string, string>")]
+    [TestCase("ReadOnlyDictionary<string, int>")]
+    [TestCase("int[]")]
+    public async Task AG0018_WithForbiddenCollection_ShowShowWarning(string type)
+    {
+        var code = $@"
                 using System.Collections.Generic;
                 using System.Collections.ObjectModel;
                 namespace Tests
@@ -69,22 +68,22 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                     }}
                 }}";
 
-            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(8, 25));
-        }
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(8, 25));
+    }
 
-        [TestCase("ISet<int>")]
-        [TestCase("IList<int>")]
-        [TestCase("IDictionary<int, int>")]
-        [TestCase("byte[]")]
-        [TestCase("string")]
-        [TestCase("IReadOnlyDictionary<string, int>")]
-        [TestCase("KeyedCollection<string, string>")]
-        [TestCase("IEnumerable<string>")]
-        [TestCase("IReadOnlyCollection<string>")]
-        [TestCase("IReadOnlyList<string>")]
-        public async Task AG0018_WithPermittedCollection_ShouldNotShowWarning(string type)
-        {
-            var code = $@"
+    [TestCase("ISet<int>")]
+    [TestCase("IList<int>")]
+    [TestCase("IDictionary<int, int>")]
+    [TestCase("byte[]")]
+    [TestCase("string")]
+    [TestCase("IReadOnlyDictionary<string, int>")]
+    [TestCase("KeyedCollection<string, string>")]
+    [TestCase("IEnumerable<string>")]
+    [TestCase("IReadOnlyCollection<string>")]
+    [TestCase("IReadOnlyList<string>")]
+    public async Task AG0018_WithPermittedCollection_ShouldNotShowWarning(string type)
+    {
+        var code = $@"
                 namespace Tests
                 {{
                     using System.Collections.Generic;
@@ -95,16 +94,16 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                     }}
                 }}";
 
-            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
-        }
+        await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+    }
 
-        [Test]
-        public async Task AG0018_WhenCreateAMethodWhichReturnList_ShouldNotEffectOtherCases()
+    [Test]
+    public async Task AG0018_WhenCreateAMethodWhichReturnList_ShouldNotEffectOtherCases()
+    {
+        var code = new CodeDescriptor
         {
-            var code = new CodeDescriptor
-            {
-                References = new[] {typeof(TestFixtureAttribute).Assembly},
-                Code = @"
+            References = new[] {typeof(TestFixtureAttribute).Assembly},
+            Code = @"
                     namespace Tests
                     {
                         using System.Collections.Generic;
@@ -117,9 +116,8 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                             internal List<int> GetIPFromLocalDisk() { return null; }
                         }
                     }"
-            };
+        };
 
-            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(8, 29));
-        }
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(8, 29));
     }
 }
