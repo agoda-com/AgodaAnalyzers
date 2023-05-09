@@ -35,7 +35,6 @@ class AG0001UnitTests : DiagnosticVerifier
 						}
 					}"
         };
-        //await VerifyCS.VerifyAnalyzerAsync(code.Code);
         await VerifyDiagnosticsAsync(code, new DiagnosticLocation(8, 57));
     }
 
