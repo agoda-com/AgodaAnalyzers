@@ -113,8 +113,6 @@ public abstract partial class DiagnosticVerifier
             .AddMetadataReference(MetadataReference.CreateFromFile(typeof(Type).GetTypeInfo().Assembly.Location.Replace("System.Private.CoreLib", "System.Runtime")))
             .AddMetadataReference(MetadataReference.CreateFromFile(typeof(Type).GetTypeInfo().Assembly.Location.Replace("System.Private.CoreLib", "System.Threading.Tasks")))
             .AddMetadataReference(MetadataReference.CreateFromFile(typeof(Type).GetTypeInfo().Assembly.Location.Replace("System.Private.CoreLib", "System.ObjectModel")))
-            //System.Collections.ObjectModel
-            
             .Documents
             .First();
 
