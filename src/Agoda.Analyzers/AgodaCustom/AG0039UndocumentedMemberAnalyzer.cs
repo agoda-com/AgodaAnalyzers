@@ -29,7 +29,7 @@ namespace Agoda.Analyzers.AgodaCustom
             Title,
             MessageFormat,
             Category,
-            DiagnosticSeverity.Warning,
+            DiagnosticSeverity.Hidden,
             isEnabledByDefault: true,
             description: "Public surfaces should be documented, please add XML documentation.");
 

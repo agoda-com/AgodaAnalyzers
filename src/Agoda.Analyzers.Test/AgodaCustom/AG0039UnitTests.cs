@@ -23,7 +23,27 @@ class AG0039UnitTests : DiagnosticVerifier
                     public void DoesNothing() {}
                     public event SampleEventHandler SampleEvent;
                     public delegate void SampleEventHandler(object sender);
+                    internal string internalString;
+                    internal string internalStringProp {get;}
+                    protected string protectedString;
+                    private int _privateInt;
 				}
+                internal class InternalClass
+                {
+                    public string str1 {get;}
+                    public const int int2 = 1;
+                    public void DoesNothing() {}
+                    public event SampleEventHandler SampleEvent;
+                    public delegate void SampleEventHandler(object sender);
+                    internal string internalString;
+                    internal string internalStringProp {get;}
+                    protected string protectedString;
+                    private int _privateInt;
+
+                    private class MyClass
+                    {
+                    }
+                }
 			";
         
         await VerifyDiagnosticsAsync(code, new []{
@@ -34,6 +54,12 @@ class AG0039UnitTests : DiagnosticVerifier
             new DiagnosticLocation(6, 33),
             new DiagnosticLocation(7, 53),
             new DiagnosticLocation(8, 42),
+            new DiagnosticLocation(16, 35),
+            new DiagnosticLocation(16, 41),
+            new DiagnosticLocation(17, 38),
+            new DiagnosticLocation(18, 33),
+            new DiagnosticLocation(19, 53),
+            new DiagnosticLocation(20, 42)
         });
     }
 }
