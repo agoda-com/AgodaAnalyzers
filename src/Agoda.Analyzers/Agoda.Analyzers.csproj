@@ -61,6 +61,11 @@
     <Compile Update="Helpers\HelpersResources.Designer.cs">
       <DependentUpon>HelpersResources.resx</DependentUpon>
     </Compile>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Update="StyleCop\ReadabilityResources.Designer.cs">
       <DependentUpon>ReadabilityResources.resx</DependentUpon>
     </Compile>
@@ -76,6 +81,10 @@
     <EmbeddedResource Update="AgodaCustom\CustomRulesResources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>CustomRulesResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
