@@ -12,7 +12,6 @@
 	<PropertyGroup>
 		<Authors>Joel Dickson</Authors>
 		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-		<PackageLicenseUrl>https://github.com/agoda-com/AgodaAnalyzers</PackageLicenseUrl>
 		<PackageProjectUrl>https://github.com/agoda-com/AgodaAnalyzers</PackageProjectUrl>
 		<PackageIconUrl>https://raw.githubusercontent.com/agoda-com/AgodaAnalyzers/master/AgodaAnalyzersAgoji.png</PackageIconUrl>
 		<RepositoryUrl>https://github.com/agoda-com/AgodaAnalyzers</RepositoryUrl>
