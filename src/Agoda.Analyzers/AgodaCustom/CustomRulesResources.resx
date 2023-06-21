@@ -248,4 +248,7 @@ One exception is logging, where it can be useful to see the exact DC / cluster /
   <data name="AG0038Title" xml:space="preserve">
     <value>Do not use #region directives</value>
   </data>
+  <data name="AG0039Title" xml:space="preserve">
+    <value>Libraries with Public members must have documentation</value>
+  </data>
 </root>
