@@ -8,6 +8,7 @@
     <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+	  <IsPackable>false</IsPackable>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -39,7 +40,6 @@
     <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.Common" Version="4.5.0" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Agoda.Analyzers.nuspec" />
     <None Include="app.config" />
     <None Include="tools\install.ps1" />
     <None Include="tools\uninstall.ps1" />
