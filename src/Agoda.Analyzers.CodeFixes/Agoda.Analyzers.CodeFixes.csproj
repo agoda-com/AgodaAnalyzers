@@ -9,6 +9,16 @@
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
   </PropertyGroup>
+	<PropertyGroup>
+		<Authors>Joel Dickson</Authors>
+		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+		<PackageLicenseUrl>https://github.com/agoda-com/AgodaAnalyzers</PackageLicenseUrl>
+		<PackageProjectUrl>https://github.com/agoda-com/AgodaAnalyzers</PackageProjectUrl>
+		<PackageIconUrl>https://raw.githubusercontent.com/agoda-com/AgodaAnalyzers/master/AgodaAnalyzersAgoji.png</PackageIconUrl>
+		<RepositoryUrl>https://github.com/agoda-com/AgodaAnalyzers</RepositoryUrl>
+		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+		<Description>A set of opinionated Roslyn analyzers for C#. This project is used by Agoda internally for analysis of our C# projects. We have opened it for community contribution and usage.</Description>
+	</PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
@@ -38,8 +48,10 @@
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.5.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.Common" Version="4.5.0" />
   </ItemGroup>
+	<ItemGroup>
+		<None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+	</ItemGroup>
   <ItemGroup>
-    <None Include="Agoda.Analyzers.nuspec" />
     <None Include="app.config" />
     <None Include="tools\install.ps1" />
     <None Include="tools\uninstall.ps1" />
