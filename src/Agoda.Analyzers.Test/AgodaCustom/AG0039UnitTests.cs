@@ -58,7 +58,7 @@ class AG0039UnitTests : DiagnosticVerifier
                     public delegate void SampleEventHandler(object sender);
                 }
 ")]
-    public async Task AG0037_WithRegion_ShowsNoWarning(string code)
+    public async Task AG0039_WithDoc_ShowNoWarning(string code)
     {
         await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
     }
@@ -94,19 +94,17 @@ class AG0039UnitTests : DiagnosticVerifier
                     }
                 }
 ")]
-    public async Task AG0037_WithRegion_ShowsWarning(string code)
+    public async Task AG0039_WithoutDoc_ShowWarning(string code)
     {
         
         await VerifyDiagnosticsAsync(code, new[]{
             new DiagnosticLocation(2, 18),
             new DiagnosticLocation(4, 20),
-            new DiagnosticLocation(4, 26),
             new DiagnosticLocation(5, 23),
             new DiagnosticLocation(6, 33),
             new DiagnosticLocation(7, 53),
             new DiagnosticLocation(8, 42),
             new DiagnosticLocation(16, 35),
-            new DiagnosticLocation(16, 41),
             new DiagnosticLocation(17, 38),
             new DiagnosticLocation(18, 33),
             new DiagnosticLocation(19, 53),
