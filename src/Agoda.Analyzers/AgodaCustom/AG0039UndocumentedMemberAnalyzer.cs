@@ -47,6 +47,15 @@ namespace Agoda.Analyzers.AgodaCustom
 
             if (!string.IsNullOrWhiteSpace(context.Symbol.GetDocumentationCommentXml()))
                 return;
+            
+            // ignore getters and setter methods for documentation 
+            if (context.Symbol.Kind == SymbolKind.Method)
+            {
+                var methodSymbol = (IMethodSymbol)context.Symbol;
+                if (methodSymbol.MethodKind == MethodKind.PropertyGet ||
+                    methodSymbol.MethodKind == MethodKind.PropertySet)
+                    return;
+            }
 
             var location = context.Symbol.Locations[0];
             var name = context.Symbol.Name;

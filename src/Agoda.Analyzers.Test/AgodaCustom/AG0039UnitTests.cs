@@ -13,9 +13,58 @@ class AG0039UnitTests : DiagnosticVerifier
     protected override string DiagnosticId => AG0039UndocumentedMemberAnalyzer.DIAGNOSTIC_ID;
 
     [Test]
-    public async Task AG0037_WithRegion_ShowsWarning()
+    [TestCase(@"
+                /// <summary>
+                /// 
+                /// </summary>
+                public class NotDoc
+                {
+                    /// <summary>
+                    /// 
+                    /// </summary>
+                    public string str1 { get; }
+                    ///// <summary>
+                    ///// 
+                    ///// </summary>
+                    //public const int int2 = 1;
+                    ///// <summary>
+                    ///// 
+                    ///// </summary>
+                    //public void DoesNothing() { }
+                    ///// <summary>
+                    ///// 
+                    ///// </summary>
+                    //public event SampleEventHandler SampleEvent;
+                    ///// <summary>
+                    ///// 
+                    ///// </summary>
+                    ///// <param name=""sender""></param>
+                    //public delegate void SampleEventHandler(object sender);
+                }
+")]
+    [TestCase(@"
+                /// <include file='xml_include_tag.xml' path='MyDocs/MyMembers[@name=""test""]/*' />
+                public class NotDoc
+                {
+                    /// <include file='xml_include_tag.xml' path='MyDocs/MyMembers[@name=""test""]/*' />
+                    public string str1 { get; }
+                    /// <include file='xml_include_tag.xml' path='MyDocs/MyMembers[@name=""test""]/*' />
+                    public const int int2 = 1;
+                    /// <include file='xml_include_tag.xml' path='MyDocs/MyMembers[@name=""test""]/*' />
+                    public void DoesNothing() { }
+                    /// <include file='xml_include_tag.xml' path='MyDocs/MyMembers[@name=""test""]/*' />
+                    public event SampleEventHandler SampleEvent;
+                    /// <include file='xml_include_tag.xml' path='MyDocs/MyMembers[@name=""test""]/*' />
+                    public delegate void SampleEventHandler(object sender);
+                }
+")]
+    public async Task AG0037_WithRegion_ShowsNoWarning(string code)
     {
-        var code = @"
+        await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+    }
+
+    [Test]
+    [TestCase(@"
 				public class NotDoc
 				{
 					public string str1 {get;}
@@ -44,9 +93,11 @@ class AG0039UnitTests : DiagnosticVerifier
                     {
                     }
                 }
-			";
+")]
+    public async Task AG0037_WithRegion_ShowsWarning(string code)
+    {
         
-        await VerifyDiagnosticsAsync(code, new []{
+        await VerifyDiagnosticsAsync(code, new[]{
             new DiagnosticLocation(2, 18),
             new DiagnosticLocation(4, 20),
             new DiagnosticLocation(4, 26),
