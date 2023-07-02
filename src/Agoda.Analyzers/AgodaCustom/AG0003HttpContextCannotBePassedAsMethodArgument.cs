@@ -57,7 +57,7 @@ namespace Agoda.Analyzers.AgodaCustom
                 return;
             }
 
-            if (context.SemanticModel.GetTypeInfo(simpleType).Type.ToDisplayString() == "System.Web.HttpContext")
+            if (context.SemanticModel.GetTypeInfo(simpleType).Type.ToDisplayString() == "Microsoft.AspNetCore.Http.HttpContext")
             {
                 context.ReportDiagnostic(Diagnostic.Create(Descriptor, context.Node.GetLocation()));
             }

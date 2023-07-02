@@ -10,18 +10,19 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using NUnit.Framework;
 
-namespace Agoda.Analyzers.Test.AgodaCustom
+namespace Agoda.Analyzers.Test.AgodaCustom;
+
+[TestFixture]
+class AG0032UnitTests : DiagnosticVerifier
 {
-    class AG0032UnitTests : DiagnosticVerifier
+    protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0032PreventUseOfBlockingTaskMethods();
+        
+    protected override string DiagnosticId => AG0032PreventUseOfBlockingTaskMethods.DIAGNOSTIC_ID;
+        
+    [Test]
+    public async Task AG0032_WithTaskGetAwaiter_ShowsWarning()
     {
-        protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0032PreventUseOfBlockingTaskMethods();
-        
-        protected override string DiagnosticId => AG0032PreventUseOfBlockingTaskMethods.DIAGNOSTIC_ID;
-        
-	    [Test]
-	    public async Task AG0032_WithTaskGetAwaiter_ShowsWarning()
-	    {
-		    var code = @"
+        var code = @"
 				using System.Threading.Tasks;
 
 				namespace Test 
@@ -35,13 +36,13 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 					}
 				}";
 
-		    await VerifyDiagnosticsAsync(code, new DiagnosticLocation(10, 41));
-	    }
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(10, 41));
+    }
 	    
-	    [Test]
-        public async Task AG0032_WithTaskWait_ShowsWarning()
-        {
-	        var code = @"
+    [Test]
+    public async Task AG0032_WithTaskWait_ShowsWarning()
+    {
+        var code = @"
 				using System.Threading.Tasks;
 
 				namespace Test 
@@ -56,13 +57,13 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 					}
 				}";
 
-            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(11, 13));
-        }
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(11, 13));
+    }
 	    
-	    [Test]
-	    public async Task AG0032_WithTaskWaitAll_ShowsWarning()
-	    {
-		    var code = @"
+    [Test]
+    public async Task AG0032_WithTaskWaitAll_ShowsWarning()
+    {
+        var code = @"
 				using System.Threading.Tasks;
 
 				namespace Test 
@@ -77,7 +78,6 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 					}
 				}";
 
-		    await VerifyDiagnosticsAsync(code, new DiagnosticLocation(11, 13));
-	    }
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(11, 13));
     }
 }

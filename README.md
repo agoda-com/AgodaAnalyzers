@@ -1,6 +1,10 @@
-![alt text](logo.png) 
+![alt text](AgodaAnalyzersLogo.png) 
+
+Opinionated C# for FullStack Developers 
 
 This project is used by Agoda internally for analysis of our C# projects. We have opened it for community contribution.
+
+![alt text](AgodaAnalyzersAgoji.png) 
 
 ## Dive straight in?
 
@@ -86,3 +90,7 @@ To generate a jar file from this project for use with SonarQube we have prepared
 ## Contributing
 
 [Please read the contributing guidelines](CONTRIBUTING.md)
+
+## Dotnet Framework 4.x
+
+[1.0.523](https://www.nuget.org/packages/Agoda.Analyzers/1.0.523) is our last version that supports dotnet framework, if you need to access the rules on a legacy project please use this version.

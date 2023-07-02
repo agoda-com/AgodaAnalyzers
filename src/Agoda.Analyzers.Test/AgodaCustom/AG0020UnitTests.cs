@@ -11,19 +11,20 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using NUnit.Framework;
 
-namespace Agoda.Analyzers.Test.AgodaCustom
+namespace Agoda.Analyzers.Test.AgodaCustom;
+
+[TestFixture]
+internal class AG0020UnitTests : DiagnosticVerifier
 {
-    internal class AG0020UnitTests : DiagnosticVerifier
+    protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0020AvoidReturningNullEnumerables();
+
+    protected override string DiagnosticId => AG0020AvoidReturningNullEnumerables.DIAGNOSTIC_ID;
+
+    [Test]
+    public async Task PreventReturningNullForReturnValueOfIEnumerable_ShouldReportCorrectly()
     {
-        protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0020AvoidReturningNullEnumerables();
 
-        protected override string DiagnosticId => AG0020AvoidReturningNullEnumerables.DIAGNOSTIC_ID;
-
-        [Test]
-        public async Task PreventReturningNullForReturnValueOfIEnumerable_ShouldReportCorrectly()
-        {
-
-            var code = @"
+        var code = @"
 using System.Collections.Generic;
 
 namespace Agoda.Analyzers.Test
@@ -37,14 +38,14 @@ namespace Agoda.Analyzers.Test
     }
 }";
 
-            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(10, 20));
-        }
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(10, 20));
+    }
 
-        [Test]
-        public async Task
-            PreventReturningNullForReturnValueOfIEnumerable_ShouldReportCorrectlyForClassImplementingIEnumerable()
-        {
-            var code = @"
+    [Test]
+    public async Task
+        PreventReturningNullForReturnValueOfIEnumerable_ShouldReportCorrectlyForClassImplementingIEnumerable()
+    {
+        var code = @"
 using System.Collections.Generic;
 
 namespace Agoda.Analyzers.Test
@@ -58,13 +59,13 @@ namespace Agoda.Analyzers.Test
     }
 }";
 
-            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(10, 20));
-        }
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(10, 20));
+    }
 
-        [Test]
-        public async Task PreventReturningNullForReturnValueOfIEnumerable_ShouldNotReportStringReturnType()
-        {
-            var code = @"
+    [Test]
+    public async Task PreventReturningNullForReturnValueOfIEnumerable_ShouldNotReportStringReturnType()
+    {
+        var code = @"
 using System.Collections.Generic;
 
 namespace Agoda.Analyzers.Test
@@ -78,22 +79,22 @@ namespace Agoda.Analyzers.Test
     }
 }";
 
-            var doc = CreateProject(new[] {code})
-                .Documents
-                .First();
+        var doc = CreateProject(new[] {code})
+            .Documents
+            .First();
 
-            var analyzersArray = GetCSharpDiagnosticAnalyzers().ToImmutableArray();
+        var analyzersArray = GetCSharpDiagnosticAnalyzers().ToImmutableArray();
 
-            var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzersArray, new[] {doc}, CancellationToken.None)
-                .ConfigureAwait(false);
+        var diag = await GetSortedDiagnosticsFromDocumentsAsync(analyzersArray, new[] {doc}, CancellationToken.None)
+            .ConfigureAwait(false);
 
-            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
-        }
+        await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+    }
 
-        [Test]
-        public async Task PreventReturningNullForReturnValueOfIEnumerable_ShouldNotReportNullableInt()
-        {
-            var code = @"
+    [Test]
+    public async Task PreventReturningNullForReturnValueOfIEnumerable_ShouldNotReportNullableInt()
+    {
+        var code = @"
 using System.Collections.Generic;
 
 namespace Agoda.Analyzers.Test
@@ -107,13 +108,13 @@ namespace Agoda.Analyzers.Test
     }
 }";
 
-            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
-        }
+        await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+    }
 
-        [Test]
-        public async Task PreventReturningNullForReturnValueOfIEnumerable_ShouldReportNullReturnFromProperty()
-        {
-            var code = @"
+    [Test]
+    public async Task PreventReturningNullForReturnValueOfIEnumerable_ShouldReportNullReturnFromProperty()
+    {
+        var code = @"
 using System.Collections.Generic;
 
 namespace Agoda.Analyzers.Test
@@ -129,18 +130,18 @@ namespace Agoda.Analyzers.Test
     }
 }";
 
-            await VerifyDiagnosticsAsync(code, new[]
-            {
-                new DiagnosticLocation(10, 24),
-                new DiagnosticLocation(13, 54)
-            });
-        }
-
-        [Test]
-        public async Task
-            PreventReturningNullForReturnValueOfIEnumerable_ShouldNotReportNullReturnFromPropertyOfStringOrOtherType()
+        await VerifyDiagnosticsAsync(code, new[]
         {
-            var code = @"
+            new DiagnosticLocation(10, 24),
+            new DiagnosticLocation(13, 54)
+        });
+    }
+
+    [Test]
+    public async Task
+        PreventReturningNullForReturnValueOfIEnumerable_ShouldNotReportNullReturnFromPropertyOfStringOrOtherType()
+    {
+        var code = @"
 using System.Collections.Generic;
 
 namespace Agoda.Analyzers.Test
@@ -152,13 +153,13 @@ namespace Agoda.Analyzers.Test
     }
 }";
 
-            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
-        }
+        await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+    }
 
-        [Test]
-        public async Task AG0020_ForNullStringArray_ShowsWarning()
-        {
-            var code = @"
+    [Test]
+    public async Task AG0020_ForNullStringArray_ShowsWarning()
+    {
+        var code = @"
                 namespace Agoda.Analyzers.Test
                 {
                     public class TestClass
@@ -170,13 +171,13 @@ namespace Agoda.Analyzers.Test
                     }
                 }";
 
-            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(8, 36));
-        }
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(8, 36));
+    }
 
-        [Test]
-        public async Task AG0020_ForNullInTernaryExpression_ShowsWarning()
-        {
-            var code = @"
+    [Test]
+    public async Task AG0020_ForNullInTernaryExpression_ShowsWarning()
+    {
+        var code = @"
                 using System;
                 using System.Collections.Generic;
 
@@ -192,13 +193,13 @@ namespace Agoda.Analyzers.Test
                     }
                 }";
 
-            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(12, 45));
-        }
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(12, 45));
+    }
 
-        [Test]
-        public async Task AG0020_ForIssue110_DoesNotShowWarning()
-        {
-            var code = @"
+    [Test]
+    public async Task AG0020_ForIssue110_DoesNotShowWarning()
+    {
+        var code = @"
                 using System;
                 using System.Collections.Generic;
                 
@@ -215,7 +216,6 @@ namespace Agoda.Analyzers.Test
                     }
                 }";
 
-            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
-        }
+        await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
     }
 }

@@ -5,21 +5,22 @@ using Agoda.Analyzers.Test.Helpers;
 using Microsoft.CodeAnalysis.Diagnostics;
 using NUnit.Framework;
 
-namespace Agoda.Analyzers.Test.AgodaCustom
-{
-    class AG0037UnitTests : DiagnosticVerifier
-    {
-        protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0037EnsureSeleniumTestHasOwnedByAttribute();
-        
-        protected override string DiagnosticId => AG0037EnsureSeleniumTestHasOwnedByAttribute.DIAGNOSTIC_ID;
+namespace Agoda.Analyzers.Test.AgodaCustom;
 
-	    [Test]
-	    public async Task AG0037_OutsideMatchingNamespace_ShowsNoWarning()
-	    {
-		    var code = new CodeDescriptor
-		    {
-			    References = new[] {typeof(TestFixtureAttribute).Assembly},
-			    Code = @"
+[TestFixture]
+class AG0037UnitTests : DiagnosticVerifier
+{
+    protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0037EnsureSeleniumTestHasOwnedByAttribute();
+        
+    protected override string DiagnosticId => AG0037EnsureSeleniumTestHasOwnedByAttribute.DIAGNOSTIC_ID;
+
+    [Test]
+    public async Task AG0037_OutsideMatchingNamespace_ShowsNoWarning()
+    {
+        var code = new CodeDescriptor
+        {
+            References = new[] {typeof(TestFixtureAttribute).Assembly},
+            Code = @"
 					using NUnit.Framework;
 
 					namespace SomethingNotSeleniumRelated
@@ -32,18 +33,18 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 							}
 						}
 					}"
-		    };
+        };
 
-		    await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
-	    }
+        await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+    }
 	   
-	    [Test]
-	    public async Task AG0037_WithOwnedByAttributeOnMethod_ShowsNoWarning()
-	    {
-		    var code = new CodeDescriptor
-		    {
-			    References = new[] {typeof(TestFixtureAttribute).Assembly, typeof(OwnedByAttribute).Assembly},
-			    Code = @"
+    [Test]
+    public async Task AG0037_WithOwnedByAttributeOnMethod_ShowsNoWarning()
+    {
+        var code = new CodeDescriptor
+        {
+            References = new[] {typeof(TestFixtureAttribute).Assembly, typeof(OwnedByAttribute).Assembly},
+            Code = @"
 					using NUnit.Framework;
 					using Agoda.Analyzers.Test.AgodaCustom;
 
@@ -58,18 +59,18 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 							}
 						}
 					}"
-		    };
+        };
 
-		    await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
-	    }
+        await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+    }
 	    
-	    [Test]
-	    public async Task AG0037_WithOwnedByAttributeMissing_ShowsWarning()
-	    {
-		    var code = new CodeDescriptor
-		    {
-			    References = new[] {typeof(TestFixtureAttribute).Assembly, typeof(OwnedByAttribute).Assembly},
-			    Code = @"
+    [Test]
+    public async Task AG0037_WithOwnedByAttributeMissing_ShowsWarning()
+    {
+        var code = new CodeDescriptor
+        {
+            References = new[] {typeof(TestFixtureAttribute).Assembly, typeof(OwnedByAttribute).Assembly},
+            Code = @"
 					using NUnit.Framework;
 					using Agoda.Analyzers.Test.AgodaCustom;
 
@@ -89,18 +90,18 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 							}
 						}
 					}"
-		    };
+        };
 
-		    await VerifyDiagnosticsAsync(code, new DiagnosticLocation(15, 8));
-	    }
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(15, 8));
+    }
 	    
-	    [Test]
-	    public async Task AG0037_WithOwnedByAttributeOnClass_ShowsNoWarning()
-	    {
-		    var code = new CodeDescriptor
-		    {
-			    References = new[] {typeof(TestFixtureAttribute).Assembly, typeof(OwnedByAttribute).Assembly},
-			    Code = @"
+    [Test]
+    public async Task AG0037_WithOwnedByAttributeOnClass_ShowsNoWarning()
+    {
+        var code = new CodeDescriptor
+        {
+            References = new[] {typeof(TestFixtureAttribute).Assembly, typeof(OwnedByAttribute).Assembly},
+            Code = @"
 					using NUnit.Framework;
 					using Agoda.Analyzers.Test.AgodaCustom;
 
@@ -120,20 +121,19 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 							}
 						}
 					}"
-		    };
+        };
 
-		    await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
-	    }
+        await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
     }
+}
 
-	public class OwnedByAttribute : Attribute
-	{
-		public OwnedByAttribute(Team team)
-		{}
-	}
+public class OwnedByAttribute : Attribute
+{
+    public OwnedByAttribute(Team team)
+    {}
+}
 
-	public enum Team
-	{
-		Team1
-	}
+public enum Team
+{
+    Team1
 }

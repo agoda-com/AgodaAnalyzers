@@ -8,24 +8,24 @@ using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Diagnostics;
 using NUnit.Framework;
 
-namespace Agoda.Analyzers.Test.StyleCop
+namespace Agoda.Analyzers.Test.StyleCop;
+
+/// <summary>
+/// This class contains unit tests for <see cref="SA1123DoNotPlaceRegionsWithinElements"/> and
+/// <see cref="RemoveRegionCodeFixProvider"/>.
+/// </summary>
+public class SA1123UnitTests : CodeFixVerifier
 {
-    /// <summary>
-    /// This class contains unit tests for <see cref="SA1123DoNotPlaceRegionsWithinElements"/> and
-    /// <see cref="RemoveRegionCodeFixProvider"/>.
-    /// </summary>
-    public class SA1123UnitTests : CodeFixVerifier
+    protected override DiagnosticAnalyzer DiagnosticAnalyzer => new SA1123DoNotPlaceRegionsWithinElements();
+        
+    protected override string DiagnosticId => SA1123DoNotPlaceRegionsWithinElements.DIAGNOSTIC_ID;
+        
+    protected override CodeFixProvider CodeFixProvider => new RemoveRegionCodeFixProvider();
+        
+    [Test]
+    public async Task TestRegionInMethodAsync()
     {
-        protected override DiagnosticAnalyzer DiagnosticAnalyzer => new SA1123DoNotPlaceRegionsWithinElements();
-        
-        protected override string DiagnosticId => SA1123DoNotPlaceRegionsWithinElements.DIAGNOSTIC_ID;
-        
-        protected override CodeFixProvider CodeFixProvider => new RemoveRegionCodeFixProvider();
-        
-        [Test]
-        public async Task TestRegionInMethodAsync()
-        {
-            var testCode = @"
+        var testCode = @"
 public class Foo
 {
     public void Bar()
@@ -37,9 +37,9 @@ public class Foo
 }
 ";
 
-            await VerifyDiagnosticsAsync(testCode, new DiagnosticLocation(6, 1));
+        await VerifyDiagnosticsAsync(testCode, new DiagnosticLocation(6, 1));
 
-            var fixedCode = @"
+        var fixedCode = @"
 public class Foo
 {
     public void Bar()
@@ -49,14 +49,14 @@ public class Foo
 }
 ";
 
-            await VerifyCodeFixAsync(testCode, fixedCode);
-            await VerifyCSharpFixAllFixAsync(testCode, fixedCode, cancellationToken: CancellationToken.None);
-        }
+        await VerifyCodeFixAsync(testCode, fixedCode);
+        await VerifyCSharpFixAllFixAsync(testCode, fixedCode, cancellationToken: CancellationToken.None);
+    }
 
-        [Test]
-        public async Task TestRegionPartialyInMethodAsync()
-        {
-            var testCode = @"
+    [Test]
+    public async Task TestRegionPartialyInMethodAsync()
+    {
+        var testCode = @"
                 public class Foo
                 {
                     public void Bar()
@@ -68,13 +68,13 @@ public class Foo
                 }
             ";
 
-            await VerifyDiagnosticsAsync(testCode, EmptyDiagnosticResults);
-        }
+        await VerifyDiagnosticsAsync(testCode, EmptyDiagnosticResults);
+    }
 
-        [Test]
-        public async Task TestRegionPartialyInMethod2Async()
-        {
-            var testCode = @"
+    [Test]
+    public async Task TestRegionPartialyInMethod2Async()
+    {
+        var testCode = @"
                 public class Foo
                 {
                     public void Bar()
@@ -86,13 +86,13 @@ public class Foo
                 }
             ";
             
-            await VerifyDiagnosticsAsync(testCode, EmptyDiagnosticResults);
-        }
+        await VerifyDiagnosticsAsync(testCode, EmptyDiagnosticResults);
+    }
 
-        [Test]
-        public async Task TestRegionPartialyMultipleMethodsAsync()
-        {
-            var testCode = @"
+    [Test]
+    public async Task TestRegionPartialyMultipleMethodsAsync()
+    {
+        var testCode = @"
                 public class Foo
                 {
                     public void Bar()
@@ -108,13 +108,13 @@ public class Foo
                 }
             ";
             
-            await VerifyDiagnosticsAsync(testCode, EmptyDiagnosticResults);
-        }
+        await VerifyDiagnosticsAsync(testCode, EmptyDiagnosticResults);
+    }
 
-        [Test]
-        public async Task TestEndRegionInMethodAsync()
-        {
-            var testCode = @"
+    [Test]
+    public async Task TestEndRegionInMethodAsync()
+    {
+        var testCode = @"
                 public class Foo
                 {
                 #region Foo
@@ -126,13 +126,13 @@ public class Foo
                 }
             ";
 
-            await VerifyDiagnosticsAsync(testCode, EmptyDiagnosticResults);
-        }
+        await VerifyDiagnosticsAsync(testCode, EmptyDiagnosticResults);
+    }
 
-        [Test]
-        public async Task TestRegionOutsideMethodAsync()
-        {
-            var testCode = @"
+    [Test]
+    public async Task TestRegionOutsideMethodAsync()
+    {
+        var testCode = @"
                 public class Foo
                 {
                 #region Foo
@@ -144,13 +144,13 @@ public class Foo
                 }
             ";
 
-            await VerifyDiagnosticsAsync(testCode, EmptyDiagnosticResults);
-        }
+        await VerifyDiagnosticsAsync(testCode, EmptyDiagnosticResults);
+    }
 
-        [Test]
-        public async Task TestRegionOutsideMethod2Async()
-        {
-            var testCode = @"
+    [Test]
+    public async Task TestRegionOutsideMethod2Async()
+    {
+        var testCode = @"
                 public class Foo
                 {
                 #region Foo
@@ -162,13 +162,13 @@ public class Foo
                 }
             ";
 
-            await VerifyDiagnosticsAsync(testCode, EmptyDiagnosticResults);
-        }
+        await VerifyDiagnosticsAsync(testCode, EmptyDiagnosticResults);
+    }
 
-        [Test]
-        public async Task TestFixAllProviderAsync()
-        {
-            var testCode = @"
+    [Test]
+    public async Task TestFixAllProviderAsync()
+    {
+        var testCode = @"
 class ClassName
 {
     void MethodName()
@@ -190,7 +190,7 @@ class ClassName
 }
 ";
 
-            var fixedCode = @"
+        var fixedCode = @"
 class ClassName
 {
     void MethodName()
@@ -200,8 +200,7 @@ class ClassName
 }
 ";
             
-            await VerifyCodeFixAsync(testCode, fixedCode);
-            await VerifyCSharpFixAllFixAsync(testCode, fixedCode, cancellationToken: CancellationToken.None);
-        }
+        await VerifyCodeFixAsync(testCode, fixedCode);
+        await VerifyCSharpFixAllFixAsync(testCode, fixedCode, cancellationToken: CancellationToken.None);
     }
 }

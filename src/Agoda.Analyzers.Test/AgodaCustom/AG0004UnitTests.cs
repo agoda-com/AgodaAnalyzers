@@ -5,18 +5,19 @@ using Agoda.Analyzers.Test.Helpers;
 using Microsoft.CodeAnalysis.Diagnostics;
 using NUnit.Framework;
 
-namespace Agoda.Analyzers.Test.AgodaCustom
+namespace Agoda.Analyzers.Test.AgodaCustom;
+
+[TestFixture]
+class AG0004UnitTests : DiagnosticVerifier
 {
-	class AG0004UnitTests : DiagnosticVerifier
-	{
-		protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0004DoNotUseHardCodedStringsToIdentifyTypes();
+    protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0004DoNotUseHardCodedStringsToIdentifyTypes();
 
-		protected override string DiagnosticId => AG0004DoNotUseHardCodedStringsToIdentifyTypes.DIAGNOSTIC_ID;
+    protected override string DiagnosticId => AG0004DoNotUseHardCodedStringsToIdentifyTypes.DIAGNOSTIC_ID;
 
-		[Test]
-		public async Task AG0004_ForTypeGetType_ShowsWarning()
-		{
-			var code = @"
+    [Test]
+    public async Task AG0004_ForTypeGetType_ShowsWarning()
+    {
+        var code = @"
 				using System;
 
 				class TestClass
@@ -27,13 +28,13 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 					}
 				}";
 
-            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(8, 18));
-        }
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(8, 18));
+    }
 		
-		[Test]
-		public async Task AG0004_ForActivatorCreateInstanceWithStringArg_ShowsWarning()
-		{
-			var code = @"
+    [Test]
+    public async Task AG0004_ForActivatorCreateInstanceWithStringArg_ShowsWarning()
+    {
+        var code = @"
 				using System;
 
 				class TestClass
@@ -44,13 +45,13 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 					}
 				}";
 
-			await VerifyDiagnosticsAsync(code, new DiagnosticLocation(8, 22));
-		}
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(8, 22));
+    }
 		
-		[Test]
-		public async Task AG0004_ForActivatorCreateInstanceWithTypeArg_DoesNotShowWarning()
-		{
-			var code = @"
+    [Test]
+    public async Task AG0004_ForActivatorCreateInstanceWithTypeArg_DoesNotShowWarning()
+    {
+        var code = @"
 				using System;
 
 				class TestClass
@@ -61,7 +62,6 @@ namespace Agoda.Analyzers.Test.AgodaCustom
 					}
 				}";
 
-			await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
-		}
+        await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
     }
 }
