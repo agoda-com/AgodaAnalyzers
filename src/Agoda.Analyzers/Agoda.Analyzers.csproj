@@ -92,9 +92,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-	  <None Include="RuleContent\AG0039UndocumentedMemberAnalyzer.html">
-		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </None>
     <None Include="RuleContent\AG0001DependencyResolverMustNotBeUsed.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

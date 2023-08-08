@@ -441,7 +441,7 @@ namespace Agoda.Analyzers.AgodaCustom {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Libraries with Public members must have documentation.
+        ///   Looks up a localized string similar to Methods with more than 120 lines of code are potentially not readable, consider refactoring for better readability..
         /// </summary>
         public static string AG0039Title {
             get {
