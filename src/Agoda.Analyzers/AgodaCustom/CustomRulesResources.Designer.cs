@@ -441,7 +441,7 @@ namespace Agoda.Analyzers.AgodaCustom {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Methods with more than 120 lines of code are potentially not readable, consider refactoring for better readability..
+        ///   Looks up a localized string similar to Method {0} has {1} lines of code and is potentially not readable, consider refactoring for better readability..
         /// </summary>
         public static string AG0039Title {
             get {

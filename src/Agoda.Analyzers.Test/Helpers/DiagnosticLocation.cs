@@ -6,7 +6,13 @@ public class DiagnosticLocation
 {
     public int Line { get; }
     public int Col { get; }
-
+    public string[] Args { get; set; }
+    public DiagnosticLocation(int line, int col, params string[] args)
+    {
+        Line = line;
+        Col = col;
+        Args = args;
+    }
     public DiagnosticLocation(int line, int col)
     {
         if (line <= 0 || col <= 0)
@@ -15,5 +21,6 @@ public class DiagnosticLocation
         }
         Line = line;
         Col = col;
+        Args = Array.Empty<string>();
     }
 }

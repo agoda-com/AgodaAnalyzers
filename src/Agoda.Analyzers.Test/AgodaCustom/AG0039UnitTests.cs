@@ -31,7 +31,7 @@ var a = 1;
                 }
 ";
         await VerifyDiagnosticsAsync(code, new[]{
-            new DiagnosticLocation(4, 34),
+            new DiagnosticLocation(4, 34, "MyMethod","126"),
         });
     }
 

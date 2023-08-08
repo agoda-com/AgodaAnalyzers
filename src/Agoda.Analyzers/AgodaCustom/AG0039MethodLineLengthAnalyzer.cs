@@ -40,7 +40,7 @@ namespace Agoda.Analyzers.AgodaCustom
             Category,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            description: "Method is longer than 120 lines of code, please consider refactoring to make it more readable.");
+            helpLinkUri: "https://github.com/agoda-com/AgodaAnalyzers/blob/master/src/Agoda.Analyzers/RuleContent/AG0039UndocumentedMemberAnalyzer.html");
         
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get { return ImmutableArray.Create(Descriptor); } }
 
