@@ -35,6 +35,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+<PackageReference Include="FluentAssertions" Version="5.10.3" />
     <PackageReference Include="Microsoft.AspNet.Mvc" Version="5.2.3" />
     <PackageReference Include="Microsoft.AspNet.Razor" Version="3.2.3" />
     <PackageReference Include="Microsoft.AspNet.WebPages" Version="3.2.3" />
@@ -72,6 +73,9 @@
     <PackageReference Include="System.Runtime.Extensions" Version="4.3.1" />
     <PackageReference Include="System.Threading" Version="4.3.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.5.0" />
+    <PackageReference Include="System.Xml.XDocument" Version="4.3.0" />
+    <PackageReference Include="xunit" Version="2.5.0" />
+    <PackageReference Include="xunit.assert" Version="2.5.0" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Web" />

@@ -6,11 +6,10 @@
         This rule is to help people identify potentially long methods, so they can consider refactoring them.
     </li>
     <li>
-        The rule does not count lines of whitespace in the limit of 40 lines.
+        The rule does not count lines of whitespace in the recommended maximum is 40 lines, this varies per context though and should not be looked at as a hard limit.
     </li>
     <li>
         Try to break up long methods into smaller private methods that describe what's going on, however, don''t chain methods together to avoid long methods when refactoring.
-
     </li>
         <h2>Noncompliant Code Example</h2>
         <pre>

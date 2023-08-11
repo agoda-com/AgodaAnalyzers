@@ -5,6 +5,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Net;
 
 namespace Agoda.Analyzers.AgodaCustom
 {
@@ -43,6 +44,7 @@ namespace Agoda.Analyzers.AgodaCustom
         {
             new AssertLibraryInfo("NUnit.Framework", "nunit.framework.dll", "Assert"),
             new AssertLibraryInfo("Shouldly", "Shouldly.dll", "Should", "Shouldly.Should"),
+            //FluentAssertions
         };
 
         public override void Initialize(AnalysisContext context)
@@ -84,20 +86,27 @@ namespace Agoda.Analyzers.AgodaCustom
 
         private static bool HasInvokedAssertExtensionMethod(MethodDeclarationSyntax methodDeclaration, SyntaxNodeAnalysisContext context)
         {
-            return methodDeclaration.Body.Statements
+            var i = methodDeclaration.Body.Statements
                 .SelectMany(s => s.DescendantNodesAndSelf())
                 .OfType<InvocationExpressionSyntax>()
                 .Select(ies => ies.Expression)
-                .OfType<MemberAccessExpressionSyntax>()
-                .Select(mae => mae.Name)
-                .OfType<IdentifierNameSyntax>()
-                .Select(ins => context.SemanticModel.GetSymbolInfo(ins).Symbol)
-                .Any(symbol => AssertionLibraryList
+                .OfType<MemberAccessExpressionSyntax>();
+            var z = i.Select(mae => mae.Name)
+                .OfType<IdentifierNameSyntax>();
+            foreach (var identifierNameSyntax in z)
+            {
+                var t = context.SemanticModel.GetSymbolInfo(identifierNameSyntax);
+                var u = context.SemanticModel.GetDiagnostics();
+                var r = context.SemanticModel.GetDeclaredSymbol(identifierNameSyntax);
+            }
+            var y = z.Select(ins => context.SemanticModel.GetSymbolInfo(ins).Symbol)
+            .Any(symbol => AssertionLibraryList
                     .Where(lib => lib.HasExtenstionMethods).Any(lib
                     => symbol.ContainingNamespace.ToDisplayString() == lib.Namespace
                     && symbol.ContainingModule.ToDisplayString() == lib.Module
                     && symbol.ContainingType.ToDisplayString().StartsWith(lib.Type)
                     && symbol.Name.StartsWith(lib.Name)));
+            return y;
         }
 
         private class AssertLibraryInfo

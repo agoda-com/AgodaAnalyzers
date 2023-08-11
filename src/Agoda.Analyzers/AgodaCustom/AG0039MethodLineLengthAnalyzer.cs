@@ -38,9 +38,9 @@ namespace Agoda.Analyzers.AgodaCustom
             Title,
             MessageFormat,
             Category,
-            DiagnosticSeverity.Warning,
+            DiagnosticSeverity.Hidden, // THis rule should be opt in and not on by default
             isEnabledByDefault: true,
-            helpLinkUri: "https://github.com/agoda-com/AgodaAnalyzers/blob/master/src/Agoda.Analyzers/RuleContent/AG0039UndocumentedMemberAnalyzer.html");
+            helpLinkUri: "https://github.com/agoda-com/AgodaAnalyzers/blob/master/src/Agoda.Analyzers/RuleContent/AG0039MethodLineLengthAnalyzer.html");
         
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get { return ImmutableArray.Create(Descriptor); } }
 
