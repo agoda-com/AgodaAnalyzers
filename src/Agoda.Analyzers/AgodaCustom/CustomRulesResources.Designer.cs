@@ -441,7 +441,7 @@ namespace Agoda.Analyzers.AgodaCustom {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Method {0} has {1} lines of code and is potentially not readable, consider refactoring for better readability. 40 non-whitespace lines is what we recommend as a maximum, but its up to individual context..
+        ///   Looks up a localized string similar to Method {0} has {1} lines of code and is potentially not readable, consider refactoring for better readability. {2} non-whitespace lines is what we recommend as a maximum, but its up to individual context..
         /// </summary>
         public static string AG0039Title {
             get {
