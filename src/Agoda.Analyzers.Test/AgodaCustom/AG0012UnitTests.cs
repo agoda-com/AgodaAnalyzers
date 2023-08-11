@@ -1,8 +1,11 @@
-﻿using Agoda.Analyzers.AgodaCustom;
+﻿using System.Reflection;
+using Agoda.Analyzers.AgodaCustom;
 using Agoda.Analyzers.Test.Helpers;
 using Microsoft.CodeAnalysis.Diagnostics;
 using NUnit.Framework;
 using System.Threading.Tasks;
+using System.Xml;
+using System.Xml.Linq;
 using FluentAssertions;
 
 namespace Agoda.Analyzers.Test.AgodaCustom;
@@ -123,7 +126,11 @@ internal class AG0012UnitTests : DiagnosticVerifier
         var code = new CodeDescriptor
         {
             References = new[] { typeof(NUnitAttribute).Assembly, 
-                typeof(FluentAssertions.CallerIdentifier).Assembly
+                typeof(FluentAssertions.TypeExtensions).Assembly,
+                typeof(XDocument).Assembly,
+                typeof(XmlNode).Assembly,
+                Assembly.LoadFrom("System.Xml.XDocument.dll"),
+                Assembly.LoadFrom("System.Xml.ReaderWriter.dll"),
             },
             Code = @"
                     using NUnit.Framework;
@@ -136,8 +143,8 @@ internal class AG0012UnitTests : DiagnosticVerifier
                             [Test]
                             internal void This_Is_Valid()
                             {
-                                int[] arrayToAssert = { 1, 2, 3 };
-                                arrayToAssert.Should().Be(new[]{ 1, 2, 3 });
+                                int arrayToAssert = 1;
+                                arrayToAssert.Should().Be(1);
                             }
                         }
                     }"
