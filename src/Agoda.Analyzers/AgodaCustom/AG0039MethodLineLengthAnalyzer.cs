@@ -15,10 +15,9 @@ namespace Agoda.Analyzers.AgodaCustom
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public class AG0039MethodLineLengthAnalyzer : DiagnosticAnalyzer
     {
-        private const int MaxLines = 40; // Adjust the maximum allowed lines as needed.
-
+        private const int MAX_LINE_DEFAULT = 40; // Adjust the maximum allowed lines as needed.
         public const string DIAGNOSTIC_ID = "AG0039";
-
+        private int MaxLines = MAX_LINE_DEFAULT;
         private static readonly LocalizableString Title = new LocalizableResourceString(
             nameof(CustomRulesResources.AG0039Title),
             CustomRulesResources.ResourceManager,
@@ -46,10 +45,24 @@ namespace Agoda.Analyzers.AgodaCustom
 
         public override void Initialize(AnalysisContext context)
         {
-            context.RegisterSyntaxNodeAction(AnalyzeMethod, SyntaxKind.MethodDeclaration);
+            context.RegisterCompilationStartAction(compilationContext =>
+            {
+                var optionsProvider = compilationContext.Options.AnalyzerConfigOptionsProvider;
+                var options = optionsProvider.GetOptions(compilationContext.Compilation.SyntaxTrees.First());
+
+                if (options.TryGetValue("dotnet_diagnostic.AG0039.method_line_length_limit", out var configValue))
+                {
+                    if (int.TryParse(configValue, out var i))
+                    {
+                        MaxLines = i;
+                    }
+                }
+
+                compilationContext.RegisterSyntaxNodeAction(AnalyzeMethod, SyntaxKind.MethodDeclaration);
+            });
         }
 
-        private static void AnalyzeMethod(SyntaxNodeAnalysisContext context)
+        private void AnalyzeMethod(SyntaxNodeAnalysisContext context)
         {
             var methodNode = (MethodDeclarationSyntax)context.Node;
             var lineCount = GetNonEmptyLineCount(methodNode.GetText().Lines);
