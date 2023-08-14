@@ -13,7 +13,7 @@ class AG0039UnitTests : DiagnosticVerifier
     protected override string DiagnosticId => AG0039MethodLineLengthAnalyzer.DIAGNOSTIC_ID;
     
     [Test]
-    public async Task AG0039_At120LinesOfCode_ShowWarning()
+    public async Task AG0039_At40LinesOfCode_ShowWarning()
     {
         var code = @"
                 internal class InternalClass
@@ -36,7 +36,7 @@ var a = 1;
     }
 
     [Test]
-    public async Task AG0039_At120LinesOfWhiteSpace_DoNotShowWarning()
+    public async Task AG0039_At40LinesOfWhiteSpace_DoNotShowWarning()
     {
         var code = @"
                 internal class InternalClass
