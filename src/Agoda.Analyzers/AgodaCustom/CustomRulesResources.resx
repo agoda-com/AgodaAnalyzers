@@ -249,6 +249,6 @@ One exception is logging, where it can be useful to see the exact DC / cluster /
     <value>Do not use #region directives</value>
   </data>
   <data name="AG0039Title" xml:space="preserve">
-    <value>Libraries with Public members must have documentation</value>
+    <value>Method {0} has {1} lines of code and is potentially not readable, consider refactoring for better readability. {2} non-whitespace lines is what we recommend as a maximum, but its up to individual context.</value>
   </data>
 </root>

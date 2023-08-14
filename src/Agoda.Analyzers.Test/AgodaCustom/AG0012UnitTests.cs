@@ -1,8 +1,12 @@
-﻿using Agoda.Analyzers.AgodaCustom;
+﻿using System.Reflection;
+using Agoda.Analyzers.AgodaCustom;
 using Agoda.Analyzers.Test.Helpers;
 using Microsoft.CodeAnalysis.Diagnostics;
 using NUnit.Framework;
 using System.Threading.Tasks;
+using System.Xml;
+using System.Xml.Linq;
+using FluentAssertions;
 
 namespace Agoda.Analyzers.Test.AgodaCustom;
 
@@ -87,12 +91,66 @@ internal class AG0012UnitTests : DiagnosticVerifier
                         }
                     }"
         };
+        await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+    }
+    
+    [Test]
+    public async Task AG0012_WithXUnitAssertion_ShouldNotShowWarning()
+    {
+        var code = new CodeDescriptor
+        {
+            References = new[] { typeof(Xunit.FactAttribute).Assembly, typeof(Xunit.Assert).Assembly },
+            Code = @"
+                    using Xunit;
+
+                    namespace Tests
+                    {
+                        public class TestClass
+                        {
+                            [Fact]
+                            public void This_Is_Valid()
+                            {
+                                int[] arrayToAssert = { 1, 2, 3 };
+                                Assert.NotNull(arrayToAssert);
+                            }
+                        }
+                    }"
+        };
 
         await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
     }
 
+    [Test]
+    public async Task AG0012_WithFluentAssertions_ShouldNotShowWarning()
+    {
+        var code = new CodeDescriptor
+        {
+            References = new[] { typeof(NUnitAttribute).Assembly, 
+                typeof(FluentAssertions.TypeExtensions).Assembly,
+                typeof(XDocument).Assembly,
+                typeof(XmlNode).Assembly,
+                Assembly.LoadFrom("System.Xml.XDocument.dll"),
+                Assembly.LoadFrom("System.Xml.ReaderWriter.dll"),
+            },
+            Code = @"
+                    using NUnit.Framework;
+                    using FluentAssertions;
 
-
+                    namespace Tests
+                    {
+                        internal class TestClass
+                        {
+                            [Test]
+                            internal void This_Is_Valid()
+                            {
+                                int arrayToAssert = 1;
+                                arrayToAssert.Should().Be(1);
+                            }
+                        }
+                    }"
+        };
+        await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+    }
     [Test]
     public async Task AG0012_WithShouldlyAssertion_ShouldNotShowWarning()
     {

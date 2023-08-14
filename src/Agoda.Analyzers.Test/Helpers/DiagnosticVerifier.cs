@@ -103,7 +103,7 @@ public abstract partial class DiagnosticVerifier
     protected async Task VerifyDiagnosticsAsync(CodeDescriptor descriptor, DiagnosticLocation[] expectedLocations)
     {
         var baseResult = CSharpDiagnostic(DiagnosticId);
-        var expected = expectedLocations.Select(l => baseResult.WithLocation(l.Line, l.Col)).ToArray();
+        var expected = expectedLocations.Select(l => baseResult.WithLocation(l.Line, l.Col).WithArguments(l.Args)).ToArray();
 
 
     var doc = CreateProject(new[] {descriptor.Code})
