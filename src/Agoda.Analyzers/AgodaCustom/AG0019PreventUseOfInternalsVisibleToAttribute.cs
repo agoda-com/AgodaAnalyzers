@@ -4,6 +4,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System.Collections.Immutable;
+using System.Linq;
 
 namespace Agoda.Analyzers.AgodaCustom
 {
@@ -34,14 +35,17 @@ namespace Agoda.Analyzers.AgodaCustom
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(_diagnosticDescriptor);
 
-        public override void Initialize(AnalysisContext context) => context.RegisterSyntaxNodeAction(AnalyzeNode, SyntaxKind.AttributeList);
+        public override void Initialize(AnalysisContext context) =>
+            context.RegisterSyntaxNodeAction(AnalyzeNode, SyntaxKind.AttributeList);
 
         private void AnalyzeNode(SyntaxNodeAnalysisContext context)
         {
             var attributeNode = (AttributeListSyntax)context.Node;
-
-            if (attributeNode.Target?.Identifier.Text != "assembly") return;
-
+            var targetSyntaxTree = context.Compilation?.SyntaxTrees.FirstOrDefault(tree => tree == attributeNode.SyntaxTree);
+            if (attributeNode.Target?.Identifier.Text != "assembly" || targetSyntaxTree == null || IsTestSourceFile(targetSyntaxTree.FilePath))
+            {
+                return;
+            }
             foreach (var attribute in attributeNode.Attributes)
             {
                 if (attribute.Name is IdentifierNameSyntax name && name.Identifier.Text == "InternalsVisibleTo")
@@ -49,6 +53,12 @@ namespace Agoda.Analyzers.AgodaCustom
                     context.ReportDiagnostic(Diagnostic.Create(_diagnosticDescriptor, attribute.GetLocation()));
                 }
             }
+        }
+
+        private bool IsTestSourceFile(string aFilePath)
+        {
+            return aFilePath.ToLower().EndsWith("test.cs") || aFilePath.ToLower().EndsWith("tests.cs");
+
         }
     }
 }
