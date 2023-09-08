@@ -2,9 +2,7 @@
 using System.Composition;
 using System.Threading;
 using System.Threading.Tasks;
-using Agoda.Analyzers.CodeFixes.Helpers;
 using Agoda.Analyzers.Helpers;
-using Agoda.Analyzers.StyleCop;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeFixes;
@@ -12,7 +10,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 
-namespace Agoda.Analyzers.CodeFixes.StyleCop
+namespace Agoda.Analyzers.StyleCop
 {
     /// <summary>
     /// This class provides a code fix for <see cref="SA1106CodeMustNotContainEmptyStatements"/>.

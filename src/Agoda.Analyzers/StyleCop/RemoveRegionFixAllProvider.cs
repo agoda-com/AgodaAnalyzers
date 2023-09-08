@@ -1,16 +1,14 @@
 ﻿using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
-using Agoda.Analyzers.CodeFixes.Helpers;
-using Agoda.Analyzers.Helpers;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using DocumentBasedFixAllProvider = Agoda.Analyzers.CodeFixes.Helpers.DocumentBasedFixAllProvider;
+using DocumentBasedFixAllProvider = Agoda.Analyzers.Helpers.DocumentBasedFixAllProvider;
 
-namespace Agoda.Analyzers.CodeFixes.StyleCop
+namespace Agoda.Analyzers.StyleCop
 {
-    internal sealed class RemoveRegionFixAllProvider : DocumentBasedFixAllProvider
+    internal sealed class RemoveRegionFixAllProvider : Helpers.DocumentBasedFixAllProvider
     {
         protected override string CodeActionTitle => "Remove region";
 

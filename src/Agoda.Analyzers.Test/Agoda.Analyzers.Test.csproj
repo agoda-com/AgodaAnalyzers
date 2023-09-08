@@ -39,7 +39,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Agoda.Analyzers.CodeFixes\Agoda.Analyzers.CodeFixes.csproj" />
     <ProjectReference Include="..\Agoda.Analyzers\Agoda.Analyzers.csproj" />
   </ItemGroup>
   <ItemGroup>
