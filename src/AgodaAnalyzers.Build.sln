@@ -5,8 +5,6 @@ VisualStudioVersion = 17.5.33530.505
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Agoda.Analyzers", "Agoda.Analyzers\Agoda.Analyzers.csproj", "{4F934D25-9BFF-4153-8965-F12F52BA41DF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Agoda.Analyzers.CodeFixes", "Agoda.Analyzers.CodeFixes\Agoda.Analyzers.CodeFixes.csproj", "{A5863784-CD41-4419-9C8F-53D89D509FE9}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Agoda.Analyzers.Test", "Agoda.Analyzers.Test\Agoda.Analyzers.Test.csproj", "{756B9DD8-2FE7-485D-8640-6E2755514EAE}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1C629672-E8E6-482D-BB3E-A5FFA386327A}"
