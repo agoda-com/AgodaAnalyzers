@@ -18,7 +18,9 @@ namespace Agoda.Analyzers.CodeFixes.AgodaCustom
     public class AG0022RemoveSyncMethodFixProvider : CodeFixProvider
     {
         public override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(AG0022DoNotExposeBothSyncAndAsyncVersionsOfMethods.DIAGNOSTIC_ID);
-        
+
+        public override FixAllProvider GetFixAllProvider() => WellKnownFixAllProviders.BatchFixer;
+
         public override Task RegisterCodeFixesAsync(CodeFixContext context)
         {            
             foreach (var diagnostic in context.Diagnostics)

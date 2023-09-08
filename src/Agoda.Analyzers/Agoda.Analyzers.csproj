@@ -16,7 +16,7 @@
 		<Authors>Joel Dickson</Authors>
 		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
 		<PackageProjectUrl>https://github.com/agoda-com/AgodaAnalyzers</PackageProjectUrl>
-		<PackageIconUrl>https://raw.githubusercontent.com/agoda-com/AgodaAnalyzers/master/AgodaAnalyzersAgoji.png</PackageIconUrl>
+		<PackageIcon>https://raw.githubusercontent.com/agoda-com/AgodaAnalyzers/master/AgodaAnalyzersAgoji.png</PackageIcon>
 		<RepositoryUrl>https://github.com/agoda-com/AgodaAnalyzers</RepositoryUrl>
 		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
 		<Description>A set of opinionated Roslyn analyzers for C#. This project is used by Agoda internally for analysis of our C# projects. We have opened it for community contribution and usage.</Description>
