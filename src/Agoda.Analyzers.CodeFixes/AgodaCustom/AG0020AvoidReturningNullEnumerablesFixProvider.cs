@@ -20,6 +20,8 @@ namespace Agoda.Analyzers.CodeFixes.AgodaCustom
     {
         public override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(AG0020AvoidReturningNullEnumerables.DIAGNOSTIC_ID);
 
+        public override FixAllProvider GetFixAllProvider() => WellKnownFixAllProviders.BatchFixer;
+
         public override Task RegisterCodeFixesAsync(CodeFixContext context)
         {
             foreach (var diagnostic in context.Diagnostics)

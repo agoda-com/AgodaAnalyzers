@@ -62,7 +62,6 @@ class TestClass : ISomething
             new DiagnosticLocation(22, 23),
             new DiagnosticLocation(27, 22)
         };
-        HttpContextAccessor a;
         await VerifyDiagnosticsAsync(code, expected);
     }
 }

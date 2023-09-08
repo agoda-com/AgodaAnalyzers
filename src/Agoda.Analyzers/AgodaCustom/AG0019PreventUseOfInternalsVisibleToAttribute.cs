@@ -34,7 +34,12 @@ namespace Agoda.Analyzers.AgodaCustom
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(_diagnosticDescriptor);
 
-        public override void Initialize(AnalysisContext context) => context.RegisterSyntaxNodeAction(AnalyzeNode, SyntaxKind.AttributeList);
+        public override void Initialize(AnalysisContext context)
+        {
+            context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
+            context.EnableConcurrentExecution();
+            context.RegisterSyntaxNodeAction(AnalyzeNode, SyntaxKind.AttributeList);
+        }
 
         private void AnalyzeNode(SyntaxNodeAnalysisContext context)
         {

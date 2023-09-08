@@ -43,6 +43,7 @@ namespace Agoda.Analyzers.StyleCop
         {
             context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
             context.EnableConcurrentExecution();
+            context.EnableConcurrentExecution();
 
             context.RegisterSyntaxNodeAction(BlockAction, SyntaxKind.Block);
         }

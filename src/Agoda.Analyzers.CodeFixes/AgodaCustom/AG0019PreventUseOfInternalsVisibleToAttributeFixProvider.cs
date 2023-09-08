@@ -20,6 +20,8 @@ namespace Agoda.Analyzers.CodeFixes.AgodaCustom
     [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(AG0019PreventUseOfInternalsVisibleToAttributeFixProvider))]
     public class AG0019PreventUseOfInternalsVisibleToAttributeFixProvider : CodeFixProvider
     {
+        public override FixAllProvider GetFixAllProvider() => WellKnownFixAllProviders.BatchFixer;
+
         public override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(AG0019PreventUseOfInternalsVisibleToAttribute.DIAGNOSTIC_ID);
 
         public override Task RegisterCodeFixesAsync(CodeFixContext context)

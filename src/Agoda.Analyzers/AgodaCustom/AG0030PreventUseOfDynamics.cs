@@ -39,6 +39,8 @@ namespace Agoda.Analyzers.AgodaCustom
 
         public override void Initialize(AnalysisContext context)
         {
+            context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
+            context.EnableConcurrentExecution();
             context.RegisterSyntaxNodeAction(AnalyzeVariableDeclaration, SyntaxKind.VariableDeclaration);
             context.RegisterSyntaxNodeAction(AnalyzeMethodDeclaration, SyntaxKind.MethodDeclaration);
             context.RegisterSyntaxNodeAction(AnalyzeGenericName, SyntaxKind.GenericName);
