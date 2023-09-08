@@ -55,7 +55,6 @@
 		<Content Include="AgodaAnalyzersAgoji.png" Pack="true" PackagePath="">
 		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
-		<None Include="..\Agoda.Analyzers.CodeFixes\bin\Release\netstandard2.0\Agoda.Analyzers.CodeFixes.pdb" Pack="true" PackagePath="analyzers\dotnet\cs" Visible="false" />
 	</ItemGroup>
   <ItemGroup>
     <Compile Update="AgodaCustom\AG0018PermitOnlyCertainPubliclyExposedEnumerables.cs">
