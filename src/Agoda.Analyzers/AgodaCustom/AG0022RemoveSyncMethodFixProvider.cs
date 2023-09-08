@@ -1,18 +1,13 @@
-﻿using System;
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
 using System.Composition;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Agoda.Analyzers.AgodaCustom;
-using Agoda.Analyzers.Helpers;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeFixes;
-using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace Agoda.Analyzers.CodeFixes.AgodaCustom
+namespace Agoda.Analyzers.AgodaCustom
 {
     [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(AG0022RemoveSyncMethodFixProvider)), Shared]
     public class AG0022RemoveSyncMethodFixProvider : CodeFixProvider

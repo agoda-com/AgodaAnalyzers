@@ -1,5 +1,4 @@
 ﻿using Agoda.Analyzers.AgodaCustom;
-using Agoda.Analyzers.CodeFixes.AgodaCustom;
 using Agoda.Analyzers.Test.Helpers;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Diagnostics;

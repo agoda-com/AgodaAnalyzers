@@ -361,7 +361,7 @@
     <value>The C# code contains a region within the body of a code element.</value>
   </data>
   <data name="SA1123MessageFormat" xml:space="preserve">
-    <value>Region must not be located within a code element.</value>
+    <value>Region must not be located within a code element</value>
   </data>
   <data name="SA1123Title" xml:space="preserve">
     <value>Do not place regions within elements</value>

@@ -1,17 +1,14 @@
 ﻿using System.Collections.Immutable;
 using System.Threading.Tasks;
-using Agoda.Analyzers.CodeFixes.Helpers;
-using Agoda.Analyzers.Helpers;
-using Agoda.Analyzers.StyleCop;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Editing;
-using DocumentBasedFixAllProvider = Agoda.Analyzers.CodeFixes.Helpers.DocumentBasedFixAllProvider;
+using DocumentBasedFixAllProvider = Agoda.Analyzers.Helpers.DocumentBasedFixAllProvider;
 
-namespace Agoda.Analyzers.CodeFixes.StyleCop
+namespace Agoda.Analyzers.StyleCop
 {
-    public class SA1107FixAllProvider : DocumentBasedFixAllProvider
+    public class SA1107FixAllProvider : Helpers.DocumentBasedFixAllProvider
     {
         protected override string CodeActionTitle => ReadabilityResources.SA1107CodeFix;
 

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
 
-namespace Agoda.Analyzers.CodeFixes.Helpers
+namespace Agoda.Analyzers.Helpers
 {
     public class TestDiagnosticProvider : FixAllContext.DiagnosticProvider
     {

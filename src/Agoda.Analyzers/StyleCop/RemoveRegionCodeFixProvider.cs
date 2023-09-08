@@ -2,14 +2,13 @@
 using System.Composition;
 using System.Threading.Tasks;
 using Agoda.Analyzers.Helpers;
-using Agoda.Analyzers.StyleCop;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace Agoda.Analyzers.CodeFixes.StyleCop
+namespace Agoda.Analyzers.StyleCop
 {
     /// <summary>
     /// Implements a code fix for <see cref="SA1123DoNotPlaceRegionsWithinElements"/> and <see cref="SA1124DoNotUseRegions"/>.

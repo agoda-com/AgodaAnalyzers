@@ -58,14 +58,6 @@
     <Content Include="stylesheet.css" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Agoda.Analyzers.CodeFixes\Agoda.Analyzers.CodeFixes.csproj">
-      <AdditionalProperties>TargetFramework=net472</AdditionalProperties>
-      <Project>{A5863784-CD41-4419-9C8F-53D89D509FE9}</Project>
-      <Name>Agoda.Analyzers.CodeFixes</Name>
-      <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup%3bBuiltProjectOutputGroupDependencies%3bGetCopyToOutputDirectoryItems%3bSatelliteDllsProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
-      <IncludeOutputGroupsInVSIXLocalOnly>DebugSymbolsProjectOutputGroup%3b</IncludeOutputGroupsInVSIXLocalOnly>
-      <Private>False</Private>
-    </ProjectReference>
     <ProjectReference Include="..\Agoda.Analyzers\Agoda.Analyzers.csproj">
       <AdditionalProperties>TargetFramework=net472</AdditionalProperties>
       <Project>{4F934D25-9BFF-4153-8965-F12F52BA41DF}</Project>

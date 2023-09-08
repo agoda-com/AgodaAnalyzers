@@ -8,12 +8,15 @@
     <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+	<EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
   </PropertyGroup>
 	<PropertyGroup>
 		<Authors>Joel Dickson</Authors>
 		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
 		<PackageProjectUrl>https://github.com/agoda-com/AgodaAnalyzers</PackageProjectUrl>
-		<PackageIconUrl>https://raw.githubusercontent.com/agoda-com/AgodaAnalyzers/master/AgodaAnalyzersAgoji.png</PackageIconUrl>
+		<PackageIcon>AgodaAnalyzersAgoji.png</PackageIcon>
 		<RepositoryUrl>https://github.com/agoda-com/AgodaAnalyzers</RepositoryUrl>
 		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
 		<Description>A set of opinionated Roslyn analyzers for C#. This project is used by Agoda internally for analysis of our C# projects. We have opened it for community contribution and usage.</Description>
@@ -42,15 +45,16 @@
     </PackageReference>
     <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.5.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.5.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.Common" Version="4.5.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
   </ItemGroup>
 	<ItemGroup>
 		<None Include="bin\Release\netstandard2.0\Agoda.Analyzers.dll" Pack="true" PackagePath="analyzers\dotnet\cs" Visible="false" />
 		<None Include="bin\Release\netstandard2.0\**\Agoda.Analyzers.resources.dll" Pack="true" PackagePath="analyzers\dotnet\cs" Visible="false" />
 		<None Include="bin\Release\netstandard2.0\Agoda.Analyzers.pdb" Pack="true" PackagePath="analyzers\dotnet\cs" Visible="false" />
-		<None Include="..\Agoda.Analyzers.CodeFixes\bin\Release\netstandard2.0\Agoda.Analyzers.CodeFixes.dll" Pack="true" PackagePath="analyzers\dotnet\cs" Visible="false" />
-		<None Include="..\Agoda.Analyzers.CodeFixes\bin\Release\netstandard2.0\**\Agoda.Analyzers.CodeFixes.resources.dll" Pack="true" PackagePath="analyzers\dotnet\cs" Visible="false" />
-		<None Include="..\Agoda.Analyzers.CodeFixes\bin\Release\netstandard2.0\Agoda.Analyzers.CodeFixes.pdb" Pack="true" PackagePath="analyzers\dotnet\cs" Visible="false" />
+		<Content Include="AgodaAnalyzersAgoji.png" Pack="true" PackagePath="">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
 	</ItemGroup>
   <ItemGroup>
     <Compile Update="AgodaCustom\AG0018PermitOnlyCertainPubliclyExposedEnumerables.cs">
