@@ -5,8 +5,6 @@ VisualStudioVersion = 17.5.33530.505
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Agoda.Analyzers", "Agoda.Analyzers\Agoda.Analyzers.csproj", "{4F934D25-9BFF-4153-8965-F12F52BA41DF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Agoda.Analyzers.CodeFixes", "Agoda.Analyzers.CodeFixes\Agoda.Analyzers.CodeFixes.csproj", "{A5863784-CD41-4419-9C8F-53D89D509FE9}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Agoda.Analyzers.Test", "Agoda.Analyzers.Test\Agoda.Analyzers.Test.csproj", "{756B9DD8-2FE7-485D-8640-6E2755514EAE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Agoda.Analyzers.Vsix", "Agoda.Analyzers.Vsix\Agoda.Analyzers.Vsix.csproj", "{55E08542-C84B-477C-B739-FC1979EB1D91}"
@@ -40,18 +38,6 @@ Global
 		{4F934D25-9BFF-4153-8965-F12F52BA41DF}.Release|arm64.Build.0 = Release|Any CPU
 		{4F934D25-9BFF-4153-8965-F12F52BA41DF}.Release|x86.ActiveCfg = Release|Any CPU
 		{4F934D25-9BFF-4153-8965-F12F52BA41DF}.Release|x86.Build.0 = Release|Any CPU
-		{A5863784-CD41-4419-9C8F-53D89D509FE9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A5863784-CD41-4419-9C8F-53D89D509FE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A5863784-CD41-4419-9C8F-53D89D509FE9}.Debug|arm64.ActiveCfg = Debug|Any CPU
-		{A5863784-CD41-4419-9C8F-53D89D509FE9}.Debug|arm64.Build.0 = Debug|Any CPU
-		{A5863784-CD41-4419-9C8F-53D89D509FE9}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{A5863784-CD41-4419-9C8F-53D89D509FE9}.Debug|x86.Build.0 = Debug|Any CPU
-		{A5863784-CD41-4419-9C8F-53D89D509FE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A5863784-CD41-4419-9C8F-53D89D509FE9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A5863784-CD41-4419-9C8F-53D89D509FE9}.Release|arm64.ActiveCfg = Release|Any CPU
-		{A5863784-CD41-4419-9C8F-53D89D509FE9}.Release|arm64.Build.0 = Release|Any CPU
-		{A5863784-CD41-4419-9C8F-53D89D509FE9}.Release|x86.ActiveCfg = Release|Any CPU
-		{A5863784-CD41-4419-9C8F-53D89D509FE9}.Release|x86.Build.0 = Release|Any CPU
 		{756B9DD8-2FE7-485D-8640-6E2755514EAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{756B9DD8-2FE7-485D-8640-6E2755514EAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{756B9DD8-2FE7-485D-8640-6E2755514EAE}.Debug|arm64.ActiveCfg = Debug|Any CPU

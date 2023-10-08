@@ -8,7 +8,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Diagnostics;
 
-namespace Agoda.Analyzers.CodeFixes.Helpers
+namespace Agoda.Analyzers.Helpers
 {
     internal static class FixAllContextHelper
     {

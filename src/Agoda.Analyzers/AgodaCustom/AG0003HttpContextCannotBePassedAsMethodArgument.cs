@@ -43,6 +43,7 @@ namespace Agoda.Analyzers.AgodaCustom
         {
             context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
             context.EnableConcurrentExecution();
+            context.EnableConcurrentExecution();
 
             context.RegisterSyntaxNodeAction(AnalyzeNode, SyntaxKind.Parameter);
         }

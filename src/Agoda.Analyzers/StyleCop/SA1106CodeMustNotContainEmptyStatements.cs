@@ -44,6 +44,7 @@ namespace Agoda.Analyzers.StyleCop
         {
             context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
             context.EnableConcurrentExecution();
+            context.EnableConcurrentExecution();
 
             context.RegisterSyntaxNodeAction(EmptyStatementAction, SyntaxKind.EmptyStatement);
             context.RegisterSyntaxNodeAction(BaseTypeDeclarationAction, SyntaxKinds.BaseTypeDeclaration);

@@ -414,7 +414,7 @@ namespace Agoda.Analyzers.AgodaCustom {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to A Selenium test case - and/or its entire test class - must be decorated with the [OwnedBy()] attribute..
+        ///   Looks up a localized string similar to A Selenium test case - and/or its entire test class - must be decorated with the [OwnedBy()] attribute.
         /// </summary>
         public static string AG0037Description {
             get {
@@ -423,7 +423,7 @@ namespace Agoda.Analyzers.AgodaCustom {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to A Selenium test must indicate the team responsible for its maintenance..
+        ///   Looks up a localized string similar to A Selenium test must indicate the team responsible for its maintenance.
         /// </summary>
         public static string AG0037Title {
             get {
@@ -441,7 +441,7 @@ namespace Agoda.Analyzers.AgodaCustom {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Method {0} has {1} lines of code and is potentially not readable, consider refactoring for better readability. {2} non-whitespace lines is what we recommend as a maximum, but its up to individual context..
+        ///   Looks up a localized string similar to Method {0} has {1} lines of code and is potentially not readable, consider refactoring for better readability {2} non-whitespace lines is what we recommend as a maximum, but its up to individual context.
         /// </summary>
         public static string AG0039Title {
             get {
