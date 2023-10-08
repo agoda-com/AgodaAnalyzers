@@ -63,6 +63,7 @@
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.CodeFix.Testing" Version="1.1.1" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.CodeFix.Testing.NUnit" Version="1.1.1" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.CodeRefactoring.Testing.NUnit" Version="1.1.1" />
+	<PackageReference Include="Microsoft.CodeAnalysis.CSharp.SourceGenerators.Testing.NUnit" Version="1.1.1" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.5.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.Testing.Verifiers.NUnit" Version="1.1.1" />
     <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.Common" Version="4.5.0" />

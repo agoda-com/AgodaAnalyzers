@@ -448,5 +448,14 @@ namespace Agoda.Analyzers.AgodaCustom {
                 return ResourceManager.GetString("AG0039Title", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Too many elseif condition, consider moving to switch case to make it more readable.
+        /// </summary>
+        public static string AG0040Title {
+            get {
+                return ResourceManager.GetString("AG0040Title", resourceCulture);
+            }
+        }
     }
 }
