@@ -333,7 +333,7 @@ public abstract partial class DiagnosticVerifier
     /// <param name="filenames">The filenames or null if the default filename should be used</param>
     /// <returns>A collection of <see cref="Diagnostic"/>s that surfaced in the source code, sorted by
     /// <see cref="Diagnostic.Location"/>.</returns>
-    private Task<ImmutableArray<Diagnostic>> GetSortedDiagnosticsAsync(string[] sources, string language, ImmutableArray<DiagnosticAnalyzer> analyzers, CancellationToken cancellationToken, string[] filenames)
+    internal Task<ImmutableArray<Diagnostic>> GetSortedDiagnosticsAsync(string[] sources, string language, ImmutableArray<DiagnosticAnalyzer> analyzers, CancellationToken cancellationToken, string[] filenames)
     {
         return GetSortedDiagnosticsFromDocumentsAsync(analyzers, GetDocuments(sources, language, filenames), cancellationToken);
     }
