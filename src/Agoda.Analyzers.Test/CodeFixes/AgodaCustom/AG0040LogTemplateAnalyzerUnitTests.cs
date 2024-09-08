@@ -74,7 +74,7 @@ public class AG0040LogTemplateAnalyzerTests
             ExpectedDiagnostics = new[]
             {
                 new DiagnosticResult(AG0040LogTemplateAnalyzer.Rule)
-                    .WithSpan(13, 27, 13, 56)
+                    .WithSpan(13, 27, 13, 53)
                     .WithArguments("string concatenation")
             }
         }).SetName("Serilog with string concatenation - debug logging");
@@ -93,7 +93,7 @@ public class AG0040LogTemplateAnalyzerTests
             Usings = "using Serilog;",
             SetupCode = "private readonly ILogger _logger;private string ip;",
             LogStatement = "_logger.Information($\"Received request from {ip} at {DateTime.Now}\");",
-            ExpectedFix = "_logger.Information(\"Received request from {Ip} at {ReceivedAt}\", ip, DateTime.Now);",
+            ExpectedFix = "_logger.Information(\"Received request from {Ip} at {DateTime.Now}\", ip, DateTime.Now);",
             ExpectedDiagnostics = new[]
             {
                 new DiagnosticResult(AG0040LogTemplateAnalyzer.Rule)
@@ -114,10 +114,10 @@ public class AG0040LogTemplateAnalyzerTests
             ExpectedDiagnostics = new[]
             {
                 new DiagnosticResult(AG0040LogTemplateAnalyzer.Rule)
-                    .WithSpan(15, 36, 13, 52)
+                    .WithSpan(15, 38, 15, 51)
                     .WithArguments("string interpolation"),
                 new DiagnosticResult(AG0040LogTemplateAnalyzer.Rule)
-                    .WithSpan(14, 40, 14, 59)
+                    .WithSpan(16, 37, 16, 52)
                     .WithArguments("string concatenation")
             }
         }).SetName("Multiple loggers - both with issues");
