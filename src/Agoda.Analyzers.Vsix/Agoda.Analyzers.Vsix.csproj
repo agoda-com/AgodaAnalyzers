@@ -70,7 +70,6 @@
   <Target Name="BeforeBuild">
     <ItemGroup>
       <VSIXSourceItem Include="..\Agoda.Analyzers\bin\$(Configuration)\Agoda.Analyzers.dll" />
-      <VSIXSourceItem Include="..\Agoda.Analyzers.CodeFixes\bin\$(Configuration)\Agoda.Analyzers.CodeFixes.dll" />
     </ItemGroup>
   </Target>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
