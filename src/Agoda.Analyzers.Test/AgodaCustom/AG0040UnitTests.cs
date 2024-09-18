@@ -11,9 +11,9 @@ namespace Agoda.Analyzers.Test.AgodaCustom;
 [TestFixture]
 class AG0040UnitTests : DiagnosticVerifier
 {
-    protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0040DependencyResolverMustNotBeUsed();
+    protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0040WaitUntilStateNetworkIdleMustNotBeUsed();
         
-    protected override string DiagnosticId => AG0040DependencyResolverMustNotBeUsed.DIAGNOSTIC_ID;
+    protected override string DiagnosticId => AG0040WaitUntilStateNetworkIdleMustNotBeUsed.DIAGNOSTIC_ID;
 	    
     [Test]
     public async Task TestDependencyResolverUsageAsync()
