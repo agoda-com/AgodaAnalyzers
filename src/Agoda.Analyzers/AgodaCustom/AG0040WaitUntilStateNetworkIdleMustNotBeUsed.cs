@@ -6,7 +6,7 @@ using Microsoft.CodeAnalysis.Diagnostics;
 namespace Agoda.Analyzers.AgodaCustom
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    public class AG0040DependencyResolverMustNotBeUsed : PropertyInvocationAnalyzerBase
+    public class AG0040WaitUntilStateNetworkIdleMustNotBeUsed : PropertyInvocationAnalyzerBase
     {
         public const string DIAGNOSTIC_ID = "AG0040";
 
@@ -21,14 +21,14 @@ namespace Agoda.Analyzers.AgodaCustom
             typeof(CustomRulesResources));
 
         private static readonly LocalizableString Description
-            = DescriptionContentLoader.GetAnalyzerDescription(nameof(AG0040DependencyResolverMustNotBeUsed));
+            = DescriptionContentLoader.GetAnalyzerDescription(nameof(AG0040WaitUntilStateNetworkIdleMustNotBeUsed));
 
         protected override DiagnosticDescriptor Descriptor => new DiagnosticDescriptor(
             DIAGNOSTIC_ID,
             Title,
             MessageFormat,
             AnalyzerCategory.CustomQualityRules,
-            DiagnosticSeverity.Warning,
+            DiagnosticSeverity.Error,
             AnalyzerConstants.EnabledByDefault,
             Description,
             "https://playwright.dev/dotnet/docs/api/class-page#page-go-back",
