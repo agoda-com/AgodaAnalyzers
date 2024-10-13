@@ -8,12 +8,12 @@ using Microsoft.CodeAnalysis.Diagnostics;
 namespace Agoda.Analyzers.AgodaCustom
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    public class AG0040LogTemplateAnalyzer : DiagnosticAnalyzer
+    public class AG0041LogTemplateAnalyzer : DiagnosticAnalyzer
     {
-        public const string DiagnosticId = "AG0040";
+        public const string DiagnosticId = "AG0041";
 
-        private static readonly LocalizableString Title = new LocalizableResourceString(nameof(CustomRulesResources.AG0040Title), CustomRulesResources.ResourceManager, typeof(CustomRulesResources));
-        private static readonly LocalizableString MessageFormat = new LocalizableResourceString(nameof(CustomRulesResources.AG0040Title), CustomRulesResources.ResourceManager, typeof(CustomRulesResources));
+        private static readonly LocalizableString Title = new LocalizableResourceString(nameof(CustomRulesResources.AG0041Title), CustomRulesResources.ResourceManager, typeof(CustomRulesResources));
+        private static readonly LocalizableString MessageFormat = new LocalizableResourceString(nameof(CustomRulesResources.AG0041Title), CustomRulesResources.ResourceManager, typeof(CustomRulesResources));
         private const string Category = "Best Practices";
 
         internal static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(DiagnosticId, 

@@ -10,7 +10,7 @@ using NUnit.Framework;
 
 namespace Agoda.Analyzers.Test.AgodaCustom;
 
-public class AG0040LogTemplateAnalyzerTests
+public class AG0041LogTemplateAnalyzerTests
 {
     private static IEnumerable<TestCaseData> TestCases()
     {
@@ -22,7 +22,7 @@ public class AG0040LogTemplateAnalyzerTests
             ExpectedFix = "_logger.LogInformation(\"User {Name} is {Age} years old\", name, age);",
             ExpectedDiagnostics = new[]
             {
-                new DiagnosticResult(AG0040LogTemplateAnalyzer.Rule)
+                new DiagnosticResult(AG0041LogTemplateAnalyzer.Rule)
                     .WithSpan(13, 36, 13, 69)
                     .WithArguments("string interpolation")
             }
@@ -36,7 +36,7 @@ public class AG0040LogTemplateAnalyzerTests
             ExpectedFix = "_logger.Information(\"User {Name} is {Age} years old\", name, age);",
             ExpectedDiagnostics = new[]
             {
-                new DiagnosticResult(AG0040LogTemplateAnalyzer.Rule)
+                new DiagnosticResult(AG0041LogTemplateAnalyzer.Rule)
                     .WithSpan(13, 33, 13, 77)
                     .WithArguments("string concatenation")
             }
@@ -59,7 +59,7 @@ public class AG0040LogTemplateAnalyzerTests
             ExpectedFix = "_logger.LogError(\"Error occurred: {Ex.Message}\", ex.Message);",
             ExpectedDiagnostics = new[]
             {
-                new DiagnosticResult(AG0040LogTemplateAnalyzer.Rule)
+                new DiagnosticResult(AG0041LogTemplateAnalyzer.Rule)
                     .WithSpan(13, 30, 13, 61)
                     .WithArguments("string interpolation")
             }
@@ -73,7 +73,7 @@ public class AG0040LogTemplateAnalyzerTests
             ExpectedFix = "_logger.Debug(\"Debug info: {DebugInfo}\", debugInfo);",
             ExpectedDiagnostics = new[]
             {
-                new DiagnosticResult(AG0040LogTemplateAnalyzer.Rule)
+                new DiagnosticResult(AG0041LogTemplateAnalyzer.Rule)
                     .WithSpan(13, 27, 13, 53)
                     .WithArguments("string concatenation")
             }
@@ -96,7 +96,7 @@ public class AG0040LogTemplateAnalyzerTests
             ExpectedFix = "_logger.Information(\"Received request from {Ip} at {DateTime.Now}\", ip, DateTime.Now);",
             ExpectedDiagnostics = new[]
             {
-                new DiagnosticResult(AG0040LogTemplateAnalyzer.Rule)
+                new DiagnosticResult(AG0041LogTemplateAnalyzer.Rule)
                     .WithSpan(13, 33, 13, 80)
                     .WithArguments("string interpolation")
             }
@@ -113,10 +113,10 @@ public class AG0040LogTemplateAnalyzerTests
                 "_msLogger.LogInformation(\"MS: {Info}\", info);\n            _seriLogger.Information(\"Seri: {Info}\", info);",
             ExpectedDiagnostics = new[]
             {
-                new DiagnosticResult(AG0040LogTemplateAnalyzer.Rule)
+                new DiagnosticResult(AG0041LogTemplateAnalyzer.Rule)
                     .WithSpan(15, 38, 15, 51)
                     .WithArguments("string interpolation"),
-                new DiagnosticResult(AG0040LogTemplateAnalyzer.Rule)
+                new DiagnosticResult(AG0041LogTemplateAnalyzer.Rule)
                     .WithSpan(16, 37, 16, 52)
                     .WithArguments("string concatenation")
             }
@@ -186,7 +186,7 @@ namespace TestNamespace
         await codeFixTest.RunAsync(CancellationToken.None);
     }
 
-    private class CodeFixTest : CSharpCodeFixTest<AG0040LogTemplateAnalyzer, AG0040CodeFixProvider, NUnitVerifier>
+    private class CodeFixTest : CSharpCodeFixTest<AG0041LogTemplateAnalyzer, AG0041CodeFixProvider, NUnitVerifier>
     {
         public CodeFixTest(
             string source,

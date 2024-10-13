@@ -251,7 +251,7 @@ One exception is logging, where it can be useful to see the exact DC / cluster /
   <data name="AG0039Title" xml:space="preserve">
     <value>Method {0} has {1} lines of code and is potentially not readable, consider refactoring for better readability {2} non-whitespace lines is what we recommend as a maximum, but its up to individual context</value>
   </data>
-  <data name="AG0040Title" xml:space="preserve">
+  <data name="AG0041Title" xml:space="preserve">
     <value>You are using either an interpolated string or concatenation string in your logs, change these to the message template format to preserve structure in your logs</value>
   </data>
 </root>

@@ -12,12 +12,12 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Agoda.Analyzers.AgodaCustom
 {
-    [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(AG0040CodeFixProvider)), Shared]
-    public class AG0040CodeFixProvider : CodeFixProvider
+    [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(AG0041CodeFixProvider)), Shared]
+    public class AG0041CodeFixProvider : CodeFixProvider
     {
         private const string Title = "Use message template";
 
-        public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(AG0040LogTemplateAnalyzer.DiagnosticId);
+        public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(AG0041LogTemplateAnalyzer.DiagnosticId);
 
         public sealed override FixAllProvider GetFixAllProvider() => WellKnownFixAllProviders.BatchFixer;
 
