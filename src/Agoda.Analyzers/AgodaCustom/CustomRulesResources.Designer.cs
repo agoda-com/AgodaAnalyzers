@@ -314,5 +314,14 @@ namespace Agoda.Analyzers.AgodaCustom {
                 return ResourceManager.GetString("AG0040MessageFormat", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You are using either an interpolated string or concatenation string in your logs, change these to the message template format to preserve structure in your logs.
+        /// </summary>
+        public static string AG0041Title {
+            get {
+                return ResourceManager.GetString("AG0041Title", resourceCulture);
+            }
+        }
     }
 }

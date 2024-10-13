@@ -1,5 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 using Microsoft.CodeAnalysis;
+[assembly: InternalsVisibleTo("Agoda.Analyzers.Test")]
 
 namespace Agoda.Analyzers
 {
