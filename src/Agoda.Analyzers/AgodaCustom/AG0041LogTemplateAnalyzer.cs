@@ -22,7 +22,7 @@ namespace Agoda.Analyzers.AgodaCustom
             Category, 
             DiagnosticSeverity.Warning, 
             isEnabledByDefault: true, 
-            helpLinkUri: "https://github.com/agoda-com/AgodaAnalyzers/issues/183");
+            helpLinkUri: "https://github.com/agoda-com/AgodaAnalyzers/blob/master/doc/AG0041.md");
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
 
