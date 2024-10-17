@@ -31,7 +31,7 @@ namespace Agoda.Analyzers.AgodaCustom
             DiagnosticSeverity.Warning,
             AnalyzerConstants.EnabledByDefault,
             Description,
-            "https://playwright.dev/dotnet/docs/api/class-elementhandle",
+            "https://github.com/agoda-com/AgodaAnalyzers/blob/master/docs/AG0042.md",
             WellKnownDiagnosticTags.EditAndContinue);
 
         public override void Initialize(AnalysisContext context)
@@ -47,29 +47,23 @@ namespace Agoda.Analyzers.AgodaCustom
         {
             var invocationExpression = (InvocationExpressionSyntax)context.Node;
 
-            var memberAccess = invocationExpression.Expression as MemberAccessExpressionSyntax;
-            if (memberAccess == null)
+            if (!(invocationExpression.Expression is MemberAccessExpressionSyntax memberAccess))
                 return;
 
             var methodName = memberAccess.Name.Identifier.Text;
 
-            // Check if the method is QuerySelectorAsync
             if (methodName != "QuerySelectorAsync")
                 return;
 
-            // Get the semantic model to resolve types
             var semanticModel = context.SemanticModel;
 
-            // Get the type of the object calling the method (e.g., 'page' in 'page.QuerySelectorAsync')
             var symbolInfo = semanticModel.GetSymbolInfo(memberAccess.Expression, context.CancellationToken);
             var symbol = symbolInfo.Symbol;
 
             if (symbol == null)
                 return;
 
-            // Check if it's a local variable, parameter, field, or property
-            INamedTypeSymbol typeSymbol = null;
-
+            INamedTypeSymbol typeSymbol;
             switch (symbol)
             {
                 case ILocalSymbol localSymbol:
@@ -84,17 +78,18 @@ namespace Agoda.Analyzers.AgodaCustom
                 case IPropertySymbol propertySymbol:
                     typeSymbol = propertySymbol.Type as INamedTypeSymbol;
                     break;
+                default:
+                    typeSymbol = null;
+                    break;
             }
-            
+
             if (typeSymbol == null)
                 return;
 
-            // Check if the type is Playwright's Page or IPage
             if (typeSymbol.ToString() != "Microsoft.Playwright.IPage" &&
                 typeSymbol.ToString() != "Microsoft.Playwright.Page")
                 return;
 
-            // Report a diagnostic at the location of this method call
             var diagnostic = Diagnostic.Create(Descriptor, invocationExpression.GetLocation());
             context.ReportDiagnostic(diagnostic);
         }
