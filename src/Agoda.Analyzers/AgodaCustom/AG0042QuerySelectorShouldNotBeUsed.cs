@@ -31,7 +31,7 @@ namespace Agoda.Analyzers.AgodaCustom
             DiagnosticSeverity.Warning,
             AnalyzerConstants.EnabledByDefault,
             Description,
-            "https://github.com/agoda-com/AgodaAnalyzers/blob/master/docs/AG0042.md",
+            "https://github.com/agoda-com/AgodaAnalyzers/blob/master/doc/AG0042.md",
             WellKnownDiagnosticTags.EditAndContinue);
 
         public override void Initialize(AnalysisContext context)
