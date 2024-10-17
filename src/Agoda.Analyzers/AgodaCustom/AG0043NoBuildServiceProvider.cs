@@ -34,7 +34,7 @@ namespace Agoda.Analyzers.AgodaCustom
             DiagnosticSeverity.Error,
             AnalyzerConstants.EnabledByDefault,
             Description,
-            "https://github.com/agoda-com/AgodaAnalyzers/issues/190",
+            "https://github.com/agoda-com/AgodaAnalyzers/blob/master/doc/AG0043.md",
             WellKnownDiagnosticTags.EditAndContinue);
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Descriptor);
@@ -50,30 +50,24 @@ namespace Agoda.Analyzers.AgodaCustom
         {
             var invocationExpr = (InvocationExpressionSyntax)context.Node;
 
-            // Check if it's a member access (e.g., something.BuildServiceProvider())
             if (!(invocationExpr.Expression is MemberAccessExpressionSyntax memberAccessExpr))
                 return;
 
-            // Check if the method name is BuildServiceProvider
             if (memberAccessExpr.Name.Identifier.ValueText != "BuildServiceProvider")
                 return;
 
-            // Get the method symbol
             var methodSymbol = context.SemanticModel.GetSymbolInfo(invocationExpr).Symbol as IMethodSymbol;
             if (methodSymbol == null)
                 return;
 
-            // Verify it's from the correct namespace
             if (!methodSymbol.ContainingNamespace.ToDisplayString()
                     .StartsWith("Microsoft.Extensions.DependencyInjection"))
                 return;
 
-            // Get the containing type that defines the BuildServiceProvider method
             var containingType = methodSymbol.ContainingType;
             if (containingType == null)
                 return;
 
-            // Check if the containing type is an extension method class for IServiceCollection
             var isServiceCollectionExtension = containingType
                 .GetTypeMembers()
                 .SelectMany(t => t.GetMembers())
@@ -82,7 +76,6 @@ namespace Agoda.Analyzers.AgodaCustom
                           m.Parameters[0].Type.ToDisplayString() ==
                           "Microsoft.Extensions.DependencyInjection.IServiceCollection");
 
-            // For extension methods, check the type of the expression being extended
             var expressionType = context.SemanticModel.GetTypeInfo(memberAccessExpr.Expression).Type;
             var isExpressionServiceCollection = expressionType != null &&
                                                 (expressionType.AllInterfaces.Any(i =>
