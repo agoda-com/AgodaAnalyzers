@@ -260,6 +260,9 @@ One exception is logging, where it can be useful to see the exact DC / cluster /
   <data name="AG0041Title" xml:space="preserve">
     <value>You are using either an interpolated string or string concatenation in your logs, change these to the message template format to preserve structure in your logs</value>
   </data>
+  <data name="AG0042Title" xml:space="preserve">
+    <value>QuerySelectorAsync usage found Replace with Locator or GetByRole for more reliable tests</value>
+  </data>
   <data name="AG0043Title" xml:space="preserve">
     <value>BuildServiceProvider detected in request processing code. This may cause memory leaks. Remove the BuildServiceProvider() call and let the framework manage the service provider lifecycle.</value>
   </data>

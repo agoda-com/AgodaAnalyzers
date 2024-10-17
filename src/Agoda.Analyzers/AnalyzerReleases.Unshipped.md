@@ -22,6 +22,9 @@ AG0030 | Agoda.CSharp.CustomQualityRules | Warning | AG0030PreventUseOfDynamics,
 AG0037 | Agoda.CSharp.CustomQualityRules | Error | AG0037EnsureSeleniumTestHasOwnedByAttribute
 AG0038 | Agoda.CSharp.CustomQualityRules | Warning | AG0038PreventUseOfRegionPreprocessorDirective, [Documentation](https://agoda-com.github.io/standards-c-sharp/code-style/regions.html)
 AG0039 | Documentation | Hidden | AG0039MethodLineLengthAnalyzer, [Documentation](https://github.com/agoda-com/AgodaAnalyzers/blob/master/src/Agoda.Analyzers/RuleContent/AG0039MethodLineLengthAnalyzer.html)
+AG0041 | Best Practices | Warning | AG0041LogTemplateAnalyzer, [Documentation](https://github.com/agoda-com/AgodaAnalyzers/blob/master/doc/AG0041.md)
+AG0042 | Agoda.CSharp.CustomQualityRules | Warning | AG0042QuerySelectorShouldNotBeUsed, [Documentation](https://github.com/agoda-com/AgodaAnalyzers/blob/master/doc/AG0042.md)
+AG0043 | Agoda.CSharp.CustomQualityRules | Error | AG0043NoBuildServiceProvider, [Documentation](https://github.com/agoda-com/AgodaAnalyzers/blob/master/doc/AG0043.md)
 SA1106 | StyleCop.CSharp.ReadabilityRules | Warning | SA1106CodeMustNotContainEmptyStatements
 SA1107 | StyleCop.CSharp.ReadabilityRules | Warning | SA1107CodeMustNotContainMultipleStatementsOnOneLine
 SA1123 | StyleCop.CSharp.ReadabilityRules | Warning | SA1123DoNotPlaceRegionsWithinElements
