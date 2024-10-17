@@ -329,5 +329,11 @@ namespace Agoda.Analyzers.AgodaCustom {
                 return ResourceManager.GetString("AG0042Title", resourceCulture);
             }
         }
+        
+        public static string AG0043Title {
+            get {
+                return ResourceManager.GetString("AG0043Title", resourceCulture);
+            }
+        }
     }
 }
