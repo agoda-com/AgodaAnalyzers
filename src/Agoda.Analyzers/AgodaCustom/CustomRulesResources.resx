@@ -266,4 +266,13 @@ One exception is logging, where it can be useful to see the exact DC / cluster /
   <data name="AG0043Title" xml:space="preserve">
     <value>BuildServiceProvider detected in request processing code. This may cause memory leaks. Remove the BuildServiceProvider() call and let the framework manage the service provider lifecycle.</value>
   </data>
+  <data name="AG0044Title" xml:space="preserve">
+    <value>Force option should not be used in Locator methods</value>
+  </data>
+  <data name="AG0044MessageFormat" xml:space="preserve">
+    <value>Avoid using Force option in Locator methods as it bypasses important element state validations</value>
+  </data>
+  <data name="AG0044Description" xml:space="preserve">
+    <value>Force options bypass Playwright's built-in checks and can lead to unstable tests. Use proper waiting and interaction patterns instead.</value>
+  </data>
 </root>

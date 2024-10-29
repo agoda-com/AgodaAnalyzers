@@ -315,9 +315,6 @@ namespace Agoda.Analyzers.AgodaCustom {
             }
         }
         
-        /// <summary>
-        ///   Looks up a localized string similar to You are using either an interpolated string or concatenation string in your logs, change these to the message template format to preserve structure in your logs.
-        /// </summary>
         public static string AG0041Title {
             get {
                 return ResourceManager.GetString("AG0041Title", resourceCulture);
@@ -333,6 +330,24 @@ namespace Agoda.Analyzers.AgodaCustom {
         public static string AG0043Title {
             get {
                 return ResourceManager.GetString("AG0043Title", resourceCulture);
+            }
+        }
+        
+        public static string AG0044Title {
+            get {
+                return ResourceManager.GetString("AG0044Title", resourceCulture);
+            }
+        }
+        
+        public static string AG0044MessageFormat {
+            get {
+                return ResourceManager.GetString("AG0044MessageFormat", resourceCulture);
+            }
+        }
+        
+        public static string AG0044Description {
+            get {
+                return ResourceManager.GetString("AG0044Description", resourceCulture);
             }
         }
     }
