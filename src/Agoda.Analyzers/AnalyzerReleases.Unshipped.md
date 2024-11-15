@@ -25,6 +25,7 @@ AG0039 | Documentation | Hidden | AG0039MethodLineLengthAnalyzer, [Documentation
 AG0041 | Best Practices | Warning | AG0041LogTemplateAnalyzer, [Documentation](https://github.com/agoda-com/AgodaAnalyzers/blob/master/doc/AG0041.md)
 AG0042 | Agoda.CSharp.CustomQualityRules | Warning | AG0042QuerySelectorShouldNotBeUsed, [Documentation](https://github.com/agoda-com/AgodaAnalyzers/blob/master/doc/AG0042.md)
 AG0043 | Agoda.CSharp.CustomQualityRules | Error | AG0043NoBuildServiceProvider, [Documentation](https://github.com/agoda-com/AgodaAnalyzers/blob/master/doc/AG0043.md)
+AG0044 | Usage | Warning | AG0044ForceOptionShouldNotBeUsed
 SA1106 | StyleCop.CSharp.ReadabilityRules | Warning | SA1106CodeMustNotContainEmptyStatements
 SA1107 | StyleCop.CSharp.ReadabilityRules | Warning | SA1107CodeMustNotContainMultipleStatementsOnOneLine
 SA1123 | StyleCop.CSharp.ReadabilityRules | Warning | SA1123DoNotPlaceRegionsWithinElements
