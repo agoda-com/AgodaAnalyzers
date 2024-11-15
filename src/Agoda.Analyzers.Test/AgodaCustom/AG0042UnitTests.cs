@@ -9,9 +9,144 @@ namespace Agoda.Analyzers.Test.AgodaCustom;
 
 class AG0042UnitTests : DiagnosticVerifier
 {
-    protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0042QuerySelectorShouldNotBeUsed();
+    protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0042ElementHandlerShouldNotBeUsed();
 
-    protected override string DiagnosticId => AG0042QuerySelectorShouldNotBeUsed.DIAGNOSTIC_ID;
+    protected override string DiagnosticId => AG0042ElementHandlerShouldNotBeUsed.DIAGNOSTIC_ID;
+
+    [TestCase("QuerySelectorAsync")]
+    [TestCase("QuerySelectorAllAsync")]
+    [TestCase("WaitForSelectorAsync")]
+    public async Task AG0042_WhenUsingElementHandlerMethodWithPlaywrightPage_ShowWarning(string methodName)
+    {
+        var code = new CodeDescriptor
+        {
+            References = new[] { typeof(IPage).Assembly },
+            Code = $@"
+                    using System.Threading.Tasks;
+                    using Microsoft.Playwright;
+
+                    class TestClass
+                    {{
+                        public async Task TestMethod(IPage page)
+                        {{
+                            await page.{methodName}(""#element"");
+                        }}
+                    }}"
+        };
+
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(9, 35));
+    }
+
+    [Test]
+    public async Task AG0042_WhenUsingLocatorMethod_NoWarning()
+    {
+        var code = new CodeDescriptor
+        {
+            References = new[] { typeof(IPage).Assembly },
+            Code = @"
+                    using System.Threading.Tasks;
+                    using Microsoft.Playwright;
+
+                    class TestClass
+                    {
+                        public void TestMethod(IPage page)
+                        {
+                            var element = page.Locator(""[data-testid='element']"");
+                            element.GetByRole(AriaRole.Button).ClickAsync();
+                        }
+                    }"
+        };
+
+        await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+    }
+
+    [Test]
+    public async Task AG0042_WhenUsingMethodReturningElementHandleArray_ShowWarning()
+    {
+        var code = new CodeDescriptor
+        {
+            References = new[] { typeof(IPage).Assembly },
+            Code = @"
+            using System.Threading.Tasks;
+            using Microsoft.Playwright;
+
+            class TestClass
+            {
+                public async Task TestMethod(IPage page)
+                {
+                    await page.QuerySelectorAllAsync(""#element"");
+                }
+            }"
+        };
+
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(9, 27));
+    }
+
+    [Test]
+    public async Task AG0042_WhenUsingMethodReturningNonTaskType_NoWarning()
+    {
+        var code = new CodeDescriptor
+        {
+            References = new[] { typeof(IPage).Assembly },
+            Code = @"
+            using System.Threading.Tasks;
+            using Microsoft.Playwright;
+
+            class TestClass
+            {
+                public void TestMethod(IPage page)
+                {
+                    var result = page.ToString();
+                }
+            }"
+        };
+
+        await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+    }
+
+    [Test]
+    public async Task AG0042_WhenUsingMethodWithGenericTaskButNotElementHandle_NoWarning()
+    {
+        var code = new CodeDescriptor
+        {
+            References = new[] { typeof(IPage).Assembly },
+            Code = @"
+            using System.Threading.Tasks;
+            using Microsoft.Playwright;
+
+            class TestClass
+            {
+                public async Task TestMethod(IPage page)
+                {
+                    await page.EvaluateAsync<string>(""() => 'test'"");
+                }
+            }"
+        };
+
+        await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+    }
+
+    [Test]
+    public async Task AG0042_WhenMethodSymbolIsNull_NoWarning()
+    {
+        var code = new CodeDescriptor
+        {
+            Code = @"
+            using System.Threading.Tasks;
+
+            class TestClass
+            {
+                public async Task TestMethod()
+                {
+                    dynamic page = null;
+                    // This will make methodSymbol null since it's dynamic
+                    await page.NonExistentMethod(""#element"");
+                }
+            }"
+        };
+
+        await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+    }
 
     [Test]
     public async Task AG0042_WhenUsingQuerySelectorAsyncWithPlaywrightPage_ShowWarning()
