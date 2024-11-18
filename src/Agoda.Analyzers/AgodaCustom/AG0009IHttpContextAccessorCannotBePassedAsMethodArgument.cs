@@ -30,7 +30,7 @@ namespace Agoda.Analyzers.AgodaCustom
 
         private static readonly DiagnosticDescriptor Descriptor =
             new DiagnosticDescriptor(DIAGNOSTIC_ID, Title, MessageFormat, AnalyzerCategory.CustomQualityRules,
-                DiagnosticSeverity.Warning, AnalyzerConstants.EnabledByDefault, Description, null,
+                DiagnosticSeverity.Warning, AnalyzerConstants.EnabledByDefault, Description, $"https://github.com/agoda-com/AgodaAnalyzers/blob/master/doc/{DIAGNOSTIC_ID}.md", 
                 WellKnownDiagnosticTags.EditAndContinue);
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Descriptor);

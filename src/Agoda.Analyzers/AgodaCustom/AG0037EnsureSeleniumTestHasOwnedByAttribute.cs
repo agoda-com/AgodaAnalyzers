@@ -42,7 +42,7 @@ namespace Agoda.Analyzers.AgodaCustom
             DiagnosticSeverity.Error, 
             AnalyzerConstants.EnabledByDefault, 
             DescriptionContentLoader.GetAnalyzerDescription(nameof(AG0037EnsureSeleniumTestHasOwnedByAttribute)),
-            null,
+            $"https://github.com/agoda-com/AgodaAnalyzers/blob/master/doc/{DIAGNOSTIC_ID}.md", 
             WellKnownDiagnosticTags.EditAndContinue);
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Descriptor);

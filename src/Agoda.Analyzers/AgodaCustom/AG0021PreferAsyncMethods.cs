@@ -35,8 +35,8 @@ namespace Agoda.Analyzers.AgodaCustom
             AnalyzerCategory.CustomQualityRules,
             DiagnosticSeverity.Info, 
             AnalyzerConstants.EnabledByDefault, 
-            Description, 
-            "https://agoda-com.github.io/standards-c-sharp/async/consume-async-method.html",
+            Description,
+            $"https://github.com/agoda-com/AgodaAnalyzers/blob/master/doc/{DIAGNOSTIC_ID}.md", 
             WellKnownDiagnosticTags.EditAndContinue);
 
         public override void Initialize(AnalysisContext context)

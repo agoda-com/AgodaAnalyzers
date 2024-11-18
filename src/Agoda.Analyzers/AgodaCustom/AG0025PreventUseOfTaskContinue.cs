@@ -36,8 +36,8 @@ namespace Agoda.Analyzers.AgodaCustom
             AnalyzerCategory.CustomQualityRules,
             DiagnosticSeverity.Warning, 
             AnalyzerConstants.EnabledByDefault, 
-            Description, 
-            "https://agoda-com.github.io/standards-c-sharp/async/never-task-continue-with.html", 
+            Description,
+            $"https://github.com/agoda-com/AgodaAnalyzers/blob/master/doc/{DIAGNOSTIC_ID}.md", 
             WellKnownDiagnosticTags.EditAndContinue);
 
         protected override IEnumerable<InvocationRule> Rules => new[]

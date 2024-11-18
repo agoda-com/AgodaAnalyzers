@@ -32,7 +32,7 @@ namespace Agoda.Analyzers.AgodaCustom
             DiagnosticSeverity.Warning,
             AnalyzerConstants.EnabledByDefault,
             Description,
-            "https://github.com/agoda-com/AgodaAnalyzers/blob/master/doc/AG0042.md",
+            $"https://github.com/agoda-com/AgodaAnalyzers/blob/master/doc/{DIAGNOSTIC_ID}.md",
             WellKnownDiagnosticTags.EditAndContinue);
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Descriptor);

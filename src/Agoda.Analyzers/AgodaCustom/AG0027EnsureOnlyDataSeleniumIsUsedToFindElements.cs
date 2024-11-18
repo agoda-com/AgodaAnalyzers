@@ -33,7 +33,7 @@ namespace Agoda.Analyzers.AgodaCustom
             DiagnosticSeverity.Warning,
             AnalyzerConstants.EnabledByDefault,
             DescriptionContentLoader.GetAnalyzerDescription(nameof(AG0027EnsureOnlyDataSeleniumIsUsedToFindElements)),
-            "https://agoda-com.github.io/standards-c-sharp/gui-testing/data-selenium.html",
+            $"https://github.com/agoda-com/AgodaAnalyzers/blob/master/doc/{DIAGNOSTIC_ID}.md", 
             WellKnownDiagnosticTags.EditAndContinue);
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Descriptor);

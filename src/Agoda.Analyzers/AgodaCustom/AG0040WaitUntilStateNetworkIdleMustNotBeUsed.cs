@@ -34,7 +34,7 @@ namespace Agoda.Analyzers.AgodaCustom
             DiagnosticSeverity.Error,
             AnalyzerConstants.EnabledByDefault,
             Description,
-            "https://playwright.dev/dotnet/docs/api/class-page#page-go-back",
+            $"https://github.com/agoda-com/AgodaAnalyzers/blob/master/doc/{DIAGNOSTIC_ID}.md",
             WellKnownDiagnosticTags.EditAndContinue);
 
         protected override IEnumerable<InvocationRule> Rules => new[]

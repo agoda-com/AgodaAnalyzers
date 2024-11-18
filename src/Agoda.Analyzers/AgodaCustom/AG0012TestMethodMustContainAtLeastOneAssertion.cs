@@ -36,7 +36,7 @@ namespace Agoda.Analyzers.AgodaCustom
             DiagnosticSeverity.Warning,
             AnalyzerConstants.EnabledByDefault,
             Description,
-            "https://agoda-com.github.io/standards-c-sharp/testing/tests-as-a-specification.html",
+            $"https://github.com/agoda-com/AgodaAnalyzers/blob/master/doc/{DIAGNOSTIC_ID}.md", 
             WellKnownDiagnosticTags.EditAndContinue);
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = ImmutableArray.Create(Descriptor);

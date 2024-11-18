@@ -39,7 +39,7 @@ namespace Agoda.Analyzers.AgodaCustom
             DiagnosticSeverity.Warning,
             AnalyzerConstants.EnabledByDefault,
             Description,
-            "https://agoda-com.github.io/standards-c-sharp/di/attribute-based-registration.html",
+            $"https://github.com/agoda-com/AgodaAnalyzers/blob/master/doc/{DIAGNOSTIC_ID}.md",
             WellKnownDiagnosticTags.EditAndContinue);
 
         protected override IEnumerable<InvocationRule> Rules => new[]

@@ -37,8 +37,8 @@ namespace Agoda.Analyzers.AgodaCustom
             AnalyzerCategory.CustomQualityRules,
             DiagnosticSeverity.Warning, 
             AnalyzerConstants.EnabledByDefault, 
-            Description, 
-            null,
+            Description,
+            $"https://github.com/agoda-com/AgodaAnalyzers/blob/master/doc/{DIAGNOSTIC_ID}.md", 
             WellKnownDiagnosticTags.EditAndContinue);
 
         public override void Initialize(AnalysisContext context)

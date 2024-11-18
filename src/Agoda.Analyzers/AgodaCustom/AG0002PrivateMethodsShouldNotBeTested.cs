@@ -33,7 +33,8 @@ namespace Agoda.Analyzers.AgodaCustom
             AnalyzerCategory.CustomQualityRules, 
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            description: Description
+            description: Description,
+            $"https://github.com/agoda-com/AgodaAnalyzers/blob/master/doc/{DIAGNOSTIC_ID}.md"
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);

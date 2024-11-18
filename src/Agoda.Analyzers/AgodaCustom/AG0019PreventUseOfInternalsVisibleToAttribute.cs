@@ -29,7 +29,7 @@ namespace Agoda.Analyzers.AgodaCustom
                 DiagnosticSeverity.Error,
                 AnalyzerConstants.EnabledByDefault,
                 DescriptionContentLoader.GetAnalyzerDescription(nameof(AG0019PreventUseOfInternalsVisibleToAttribute)),
-                "https://agoda-com.github.io/standards-c-sharp/unit-testing/only-test-the-public-interface.html",
+                $"https://github.com/agoda-com/AgodaAnalyzers/blob/master/doc/{DIAGNOSTIC_ID}.md", 
                 WellKnownDiagnosticTags.EditAndContinue);
         }
 

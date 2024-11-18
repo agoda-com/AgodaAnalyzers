@@ -17,7 +17,7 @@ namespace Agoda.Analyzers.AgodaCustom
     {
         private const string Title = "Use message template";
 
-        public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(AG0041LogTemplateAnalyzer.DiagnosticId);
+        public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(AG0041LogTemplateAnalyzer.DIAGNOSTIC_ID);
 
         public sealed override FixAllProvider GetFixAllProvider() => WellKnownFixAllProviders.BatchFixer;
 

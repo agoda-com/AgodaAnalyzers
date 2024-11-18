@@ -34,8 +34,8 @@ namespace Agoda.Analyzers.AgodaCustom
             AnalyzerCategory.CustomQualityRules,
             DiagnosticSeverity.Warning, 
             AnalyzerConstants.EnabledByDefault, 
-            Description, 
-            "https://agoda-com.github.io/standards-c-sharp/collections/null-empty-enumerables.html",
+            Description,
+            $"https://github.com/agoda-com/AgodaAnalyzers/blob/master/doc/{DIAGNOSTIC_ID}.md", 
             WellKnownDiagnosticTags.EditAndContinue);
 
         public override void Initialize(AnalysisContext context)

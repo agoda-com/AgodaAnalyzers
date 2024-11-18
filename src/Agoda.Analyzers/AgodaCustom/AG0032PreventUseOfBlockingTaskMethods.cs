@@ -36,7 +36,7 @@ namespace Agoda.Analyzers.AgodaCustom
             DiagnosticSeverity.Error, 
             AnalyzerConstants.EnabledByDefault, 
             DescriptionContentLoader.GetAnalyzerDescription(nameof(AG0032PreventUseOfBlockingTaskMethods)),
-            "https://agoda-com.github.io/standards-c-sharp/async/never-task-wait.html", 
+            $"https://github.com/agoda-com/AgodaAnalyzers/blob/master/doc/{DIAGNOSTIC_ID}.md", 
             WellKnownDiagnosticTags.EditAndContinue);
 
         protected override IEnumerable<InvocationRule> Rules => new[]
