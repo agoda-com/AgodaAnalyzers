@@ -46,11 +46,13 @@ public class AllAnalyzersUnitTests
     [TestCaseSource(nameof(GetAnalyzerTestCases))]
     public void Analyzer_Should_Have_Required_Properties_For_Diagnostic_Create(Type analyzerType)
     {
-        // Get all methods in the analyzer
+        // Modified BindingFlags to include all methods
         var methods = analyzerType.GetMethods(BindingFlags.Instance |
-                                            BindingFlags.NonPublic |
-                                            BindingFlags.Public |
-                                            BindingFlags.DeclaredOnly);
+                                              BindingFlags.NonPublic |
+                                              BindingFlags.Public |
+                                              BindingFlags.DeclaredOnly |
+                                              BindingFlags.Static |  // Added to catch static methods
+                                              BindingFlags.FlattenHierarchy); // Added to get inherited methods
 
         var violations = new List<string>();
 
@@ -76,7 +78,7 @@ public class AllAnalyzersUnitTests
                         BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
 
                     propertiesInfo.ShouldNotBeNull($"Analyzer uses Diagnostic.Create in method {method.Name} " +
-                                                 "but doesn't have a Properties property");
+                                                   "but doesn't have a Properties property");
 
                     var properties = propertiesInfo.GetValue(analyzer) as IDictionary<string, string>;
 
@@ -85,7 +87,6 @@ public class AllAnalyzersUnitTests
                     properties.ContainsKey("MyKey")
                         .ShouldBeTrue($"Method {method.Name} doesn't contain required 'MyKey' property");
 
-                    // Optional: Check property value if needed
                     properties["MyKey"].ShouldNotBeNullOrWhiteSpace(
                         $"MyKey property in method {method.Name} should have a value");
                 }
