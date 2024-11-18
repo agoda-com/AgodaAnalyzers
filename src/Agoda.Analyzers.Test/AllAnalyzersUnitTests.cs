@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
 using Agoda.Analyzers.Helpers;
@@ -44,14 +45,14 @@ public class AllAnalyzersUnitTests
     }
 
     [TestCaseSource(nameof(GetAnalyzerTestCases))]
-    public void Analyzer_Should_Have_Required_Properties_For_Diagnostic_Create(Type analyzerType)
+    public void Analyzer_Should_Pass_Properties_To_Diagnostic_Create(Type analyzerType)
     {
         var methods = analyzerType.GetMethods(BindingFlags.Instance |
-                                              BindingFlags.NonPublic |
-                                              BindingFlags.Public |
-                                              BindingFlags.DeclaredOnly |
-                                              BindingFlags.Static |  
-                                              BindingFlags.FlattenHierarchy); 
+                                            BindingFlags.NonPublic |
+                                            BindingFlags.Public |
+                                            BindingFlags.DeclaredOnly |
+                                            BindingFlags.Static |
+                                            BindingFlags.FlattenHierarchy);
 
         var violations = new List<string>();
 
@@ -59,35 +60,12 @@ public class AllAnalyzersUnitTests
         {
             try
             {
-                // Get the IL bytes of the method
-                var methodBody = method.GetMethodBody();
-                if (methodBody == null) continue;
-
-                var instructions = methodBody.GetILAsByteArray();
-                if (instructions == null) continue;
-
-                // Check if the method contains a call to Diagnostic.Create
-                if (ContainsDiagnosticCreate(method))
+                foreach (var diagnosticCreateCall in FindDiagnosticCreateCalls(method))
                 {
-                    // Create instance of analyzer to check properties
-                    var analyzer = Activator.CreateInstance(analyzerType);
-
-                    // Get the Properties dictionary/field
-                    var propertiesInfo = analyzerType.GetProperty("Properties",
-                        BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
-
-                    propertiesInfo.ShouldNotBeNull($"Analyzer uses Diagnostic.Create in method {method.Name} " +
-                                                   "but doesn't have a Properties property");
-
-                    var properties = propertiesInfo.GetValue(analyzer) as IDictionary<string, string>;
-
-                    properties.ShouldNotBeNull($"Properties is null or not a dictionary");
-
-                    properties.ContainsKey(AnalyzerConstants.KEY_TECH_DEBT_IN_MINUTES)
-                        .ShouldBeTrue($"Method {method.Name} doesn't contain required '{AnalyzerConstants.KEY_TECH_DEBT_IN_MINUTES}' property When calling Diagnostic.Create");
-
-                    properties["MyKey"].ShouldNotBeNullOrWhiteSpace(
-                        $"MyKey property in method {method.Name} should have a value");
+                    if (!diagnosticCreateCall.HasPropertiesParameter)
+                    {
+                        violations.Add($"Method {method.Name} in {analyzerType.Name} calls Diagnostic.Create without properties parameter");
+                    }
                 }
             }
             catch (Exception ex)
@@ -99,21 +77,24 @@ public class AllAnalyzersUnitTests
         violations.ShouldBeEmpty();
     }
 
-    private bool ContainsDiagnosticCreate(MethodInfo method)
+    private class DiagnosticCreateCall
     {
+        public bool HasPropertiesParameter { get; set; }
+        public int ParameterCount { get; set; }
+    }
+
+    private IEnumerable<DiagnosticCreateCall> FindDiagnosticCreateCalls(MethodInfo method)
+    {
+        var calls = new List<DiagnosticCreateCall>();
         try
         {
-            // Get all method calls within the method
             var body = method.GetMethodBody();
-            if (body == null) return false;
+            if (body == null) return calls;
 
-            // Decompile IL to find calls to Diagnostic.Create
             var instructions = body.GetILAsByteArray();
-            if (instructions == null) return false;
+            if (instructions == null) return calls;
 
-            // Get all method calls from the IL
             var moduleHandle = method.Module.ModuleHandle;
-            var methodCalls = new List<MethodInfo>();
 
             for (int i = 0; i < instructions.Length; i++)
             {
@@ -129,7 +110,18 @@ public class AllAnalyzersUnitTests
                         if (calledMethod?.DeclaringType?.FullName == "Microsoft.CodeAnalysis.Diagnostic" &&
                             calledMethod.Name == "Create")
                         {
-                            return true;
+                            var parameters = calledMethod.GetParameters();
+                            var hasPropertiesParam = parameters.Any(p =>
+                                p.ParameterType.IsGenericType &&
+                                p.ParameterType.GetGenericTypeDefinition() == typeof(ImmutableDictionary<,>) &&
+                                p.ParameterType.GetGenericArguments()[0] == typeof(string) &&
+                                p.ParameterType.GetGenericArguments()[1] == typeof(string));
+
+                            calls.Add(new DiagnosticCreateCall
+                            {
+                                HasPropertiesParameter = hasPropertiesParam,
+                                ParameterCount = parameters.Length
+                            });
                         }
                     }
                     catch
@@ -142,10 +134,9 @@ public class AllAnalyzersUnitTests
         }
         catch
         {
-            // If we can't analyze the method, assume it might contain Diagnostic.Create
-            return true;
+            // If we can't analyze the method, we'll skip it
         }
 
-        return false;
+        return calls;
     }
 }

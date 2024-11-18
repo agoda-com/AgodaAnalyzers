@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using Agoda.Analyzers.Helpers;
@@ -86,9 +87,14 @@ namespace Agoda.Analyzers.AgodaCustom
 
             if (isServiceCollectionExtension || isExpressionServiceCollection)
             {
-                var diagnostic = Diagnostic.Create(Descriptor, memberAccessExpr.Name.GetLocation());
+                var diagnostic = Diagnostic.Create(Descriptor, memberAccessExpr.Name.GetLocation(), properties: _props.ToImmutableDictionary());
                 context.ReportDiagnostic(diagnostic);
             }
         }
+
+        private static Dictionary<string, string> _props = new Dictionary<string, string>()
+        {
+            { AnalyzerConstants.KEY_TECH_DEBT_IN_MINUTES, "10" }
+        };
     }
 }

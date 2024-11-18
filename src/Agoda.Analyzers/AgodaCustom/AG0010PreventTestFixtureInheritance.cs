@@ -6,6 +6,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Agoda.Analyzers.Helpers;
+using System.Collections.Generic;
 
 namespace Agoda.Analyzers.AgodaCustom
 {
@@ -58,7 +59,11 @@ namespace Agoda.Analyzers.AgodaCustom
                 .Any(x => TestMethodHelpers.IsTestCase(x, context));
             if (!hasTestMethod) return;
 
-            context.ReportDiagnostic(Diagnostic.Create(Descriptor, classDeclaration.GetLocation()));
+            context.ReportDiagnostic(Diagnostic.Create(Descriptor, classDeclaration.GetLocation(), properties: _props.ToImmutableDictionary()));
         }
+        private static Dictionary<string, string> _props = new Dictionary<string, string>()
+        {
+            { AnalyzerConstants.KEY_TECH_DEBT_IN_MINUTES, "10" }
+        };
     }
 }

@@ -64,7 +64,7 @@ namespace Agoda.Analyzers.AgodaCustom
         private static void Analyze(SyntaxNodeAnalysisContext context)
         {
             if (context.ContainingSymbol.DeclaredAccessibility != Accessibility.Public || IsPubliclyExposedIEnumerableTypes(context.ContainingSymbol)) { return; }
-            context.ReportDiagnostic(Diagnostic.Create(Descriptor, context.Node.GetLocation()));
+            context.ReportDiagnostic(Diagnostic.Create(Descriptor, context.Node.GetLocation(), properties: _props.ToImmutableDictionary()));
         }
 
         private static bool IsPubliclyExposedIEnumerableTypes(ISymbol symbol)
@@ -113,5 +113,10 @@ namespace Agoda.Analyzers.AgodaCustom
 
             return true;
         }
+
+        private static Dictionary<string, string> _props = new Dictionary<string, string>()
+        {
+            { AnalyzerConstants.KEY_TECH_DEBT_IN_MINUTES, "10" }
+        };
     }
 }

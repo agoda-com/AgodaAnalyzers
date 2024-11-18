@@ -6,6 +6,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using System.Text.RegularExpressions;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Collections.Generic;
 
 namespace Agoda.Analyzers.AgodaCustom
 {
@@ -53,9 +54,14 @@ namespace Agoda.Analyzers.AgodaCustom
                 
             if(!IsTestPrametersMoreThanLimit(methodDeclaration)) { return; }
 
-            context.ReportDiagnostic(Diagnostic.Create(_diagnosticDescriptor, methodDeclaration.GetLocation()));
+            context.ReportDiagnostic(Diagnostic.Create(_diagnosticDescriptor, methodDeclaration.GetLocation(),_props.ToImmutableDictionary()));
         }
 
         private bool IsTestPrametersMoreThanLimit(MethodDeclarationSyntax method) => (method.ParameterList?.Parameters.Count ?? 0) > MAXIMUM_TEST_PARAMETERS;
+
+        private static Dictionary<string, string> _props = new Dictionary<string, string>()
+        {
+            { AnalyzerConstants.KEY_TECH_DEBT_IN_MINUTES, "10" }
+        };
     }
 }

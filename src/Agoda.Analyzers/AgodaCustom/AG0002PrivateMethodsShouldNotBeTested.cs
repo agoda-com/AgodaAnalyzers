@@ -1,4 +1,5 @@
-﻿using Agoda.Analyzers.Helpers;
+﻿using System.Collections.Generic;
+using Agoda.Analyzers.Helpers;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -71,7 +72,12 @@ namespace Agoda.Analyzers.AgodaCustom
             //var references = SymbolFinder.FindReferencesAsync(methodSymbol, null).Result;
             //if (references.Count() > 1)
 
-            context.ReportDiagnostic(Diagnostic.Create(Rule, context.Node.GetLocation()));
+            context.ReportDiagnostic(Diagnostic.Create(Rule, context.Node.GetLocation(),properties: _props.ToImmutableDictionary()));
         }
+
+        private static Dictionary<string, string> _props = new Dictionary<string, string>()
+        {
+            { AnalyzerConstants.KEY_TECH_DEBT_IN_MINUTES, "10" }
+        };
     }
 }

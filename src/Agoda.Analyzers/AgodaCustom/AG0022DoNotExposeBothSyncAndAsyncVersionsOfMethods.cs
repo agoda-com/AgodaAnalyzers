@@ -87,10 +87,14 @@ namespace Agoda.Analyzers.AgodaCustom
                 var methodSymbol = context.SemanticModel.GetDeclaredSymbol(methodSyntax);
                 if (!AsyncHelpers.IsAsyncIntent(methodSymbol))
                 {
-                    context.ReportDiagnostic(Diagnostic.Create(Descriptor, methodSyntax.GetLocation()));    
+                    context.ReportDiagnostic(Diagnostic.Create(Descriptor, methodSyntax.GetLocation(), properties: _props.ToImmutableDictionary()));    
                 }
             }
-                         
-        }        
+        }
+
+        private static Dictionary<string, string> _props = new Dictionary<string, string>()
+        {
+            { AnalyzerConstants.KEY_TECH_DEBT_IN_MINUTES, "10" }
+        };
     }
 }

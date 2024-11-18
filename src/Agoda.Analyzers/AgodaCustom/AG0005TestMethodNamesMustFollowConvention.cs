@@ -6,6 +6,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Agoda.Analyzers.Helpers;
+using System.Collections.Generic;
 
 namespace Agoda.Analyzers.AgodaCustom
 {
@@ -69,7 +70,11 @@ namespace Agoda.Analyzers.AgodaCustom
 
             // report error at position of method name
             var methodNameToken = methodDeclaration.ChildTokens().First(t => t.IsKind(SyntaxKind.IdentifierToken));
-            context.ReportDiagnostic(Diagnostic.Create(Descriptor, methodNameToken.GetLocation()));
+            context.ReportDiagnostic(Diagnostic.Create(Descriptor, methodNameToken.GetLocation(), properties: _props.ToImmutableDictionary()));
         }
+        private static Dictionary<string, string> _props = new Dictionary<string, string>()
+        {
+            { AnalyzerConstants.KEY_TECH_DEBT_IN_MINUTES, "10" }
+        };
     }
 }

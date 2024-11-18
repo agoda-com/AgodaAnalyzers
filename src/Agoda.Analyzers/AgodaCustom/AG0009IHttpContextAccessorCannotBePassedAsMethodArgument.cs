@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using Agoda.Analyzers.Helpers;
 using Microsoft.CodeAnalysis;
@@ -45,7 +46,7 @@ namespace Agoda.Analyzers.AgodaCustom
             if ("Microsoft.AspNetCore.Http.IHttpContextAccessor" == paramTypeName
                 || "Microsoft.AspNetCore.Http.HttpContextAccessor" == paramTypeName)
             {
-                context.ReportDiagnostic(Diagnostic.Create(Descriptor, context.Node.GetLocation()));
+                context.ReportDiagnostic(Diagnostic.Create(Descriptor, context.Node.GetLocation(), properties: _props.ToImmutableDictionary()));
             }
         }
 
@@ -57,5 +58,9 @@ namespace Agoda.Analyzers.AgodaCustom
 
             context.RegisterSyntaxNodeAction(AnalyzeNode, SyntaxKind.Parameter);
         }
+        private static Dictionary<string, string> _props = new Dictionary<string, string>()
+        {
+            { AnalyzerConstants.KEY_TECH_DEBT_IN_MINUTES, "10" }
+        };
     }
 }

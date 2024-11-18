@@ -1,4 +1,5 @@
-﻿using System.Collections.Immutable;
+﻿using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -47,7 +48,7 @@ namespace Agoda.Analyzers.AgodaCustom
             if (argument.Expression.IsKind(SyntaxKind.InterpolatedStringExpression) ||
                 ContainsStringConcatenation(argument.Expression))
             {
-                var diagnostic = Diagnostic.Create(Rule, argument.GetLocation());
+                var diagnostic = Diagnostic.Create(Rule, argument.GetLocation(), properties: _props.ToImmutableDictionary());
                 context.ReportDiagnostic(diagnostic);
             }
         }
@@ -86,5 +87,10 @@ namespace Agoda.Analyzers.AgodaCustom
                             (bes.Left.IsKind(SyntaxKind.StringLiteralExpression) ||
                              bes.Right.IsKind(SyntaxKind.StringLiteralExpression)));
         }
+
+        private static Dictionary<string, string> _props = new Dictionary<string, string>()
+        {
+            { AnalyzerConstants.KEY_TECH_DEBT_IN_MINUTES, "10" }
+        };
     }
 }

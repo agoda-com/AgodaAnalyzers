@@ -71,7 +71,7 @@ namespace Agoda.Analyzers.AgodaCustom
 
             if (lineCount <= MaxLines) return;
 
-            var diagnostic = Diagnostic.Create(Descriptor, methodNode.Identifier.GetLocation(), methodNode.Identifier.Text, lineCount, MaxLines);
+            var diagnostic = Diagnostic.Create(Descriptor, methodNode.Identifier.GetLocation(), properties: _props.ToImmutableDictionary(), methodNode.Identifier.Text, lineCount, MaxLines);
             context.ReportDiagnostic(diagnostic);
         }
 
@@ -79,5 +79,10 @@ namespace Agoda.Analyzers.AgodaCustom
         {
             return lines.Count(line => !string.IsNullOrWhiteSpace(line.ToString()));
         }
+
+        private static Dictionary<string, string> _props = new Dictionary<string, string>()
+        {
+            { AnalyzerConstants.KEY_TECH_DEBT_IN_MINUTES, "10" }
+        };
     }
 }

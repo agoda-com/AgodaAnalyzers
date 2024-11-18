@@ -6,6 +6,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Agoda.Analyzers.Helpers;
+using System.Collections.Generic;
 
 namespace Agoda.Analyzers.AgodaCustom
 {
@@ -59,7 +60,7 @@ namespace Agoda.Analyzers.AgodaCustom
             // Type.GetType("") - this method is completely banned as all its overloads take types as strings
             if (!GetTypeRule.Verify(methodSymbol))
             {
-                context.ReportDiagnostic(Diagnostic.Create(Descriptor, context.Node.GetLocation()));
+                context.ReportDiagnostic(Diagnostic.Create(Descriptor, context.Node.GetLocation(), properties: _props.ToImmutableDictionary()));
                 return;
             }
 
@@ -78,8 +79,12 @@ namespace Agoda.Analyzers.AgodaCustom
 
             if (firstParameter.Type.Name.ToLower() == "string")
             {
-                context.ReportDiagnostic(Diagnostic.Create(Descriptor, context.Node.GetLocation()));
+                context.ReportDiagnostic(Diagnostic.Create(Descriptor, context.Node.GetLocation(), properties: _props.ToImmutableDictionary()));
             }
         }
+        private static Dictionary<string, string> _props = new Dictionary<string, string>()
+        {
+            { AnalyzerConstants.KEY_TECH_DEBT_IN_MINUTES, "10" }
+        };
     }
 }

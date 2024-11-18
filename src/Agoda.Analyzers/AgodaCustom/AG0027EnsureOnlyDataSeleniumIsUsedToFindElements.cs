@@ -63,7 +63,7 @@ namespace Agoda.Analyzers.AgodaCustom
             var firstArgument = invocationExpressionSyntax.ArgumentList.Arguments.FirstOrDefault();
             if (firstArgument?.Expression is LiteralExpressionSyntax && !MatchDataSelenium.IsMatch(firstArgument.ToString()))
             {
-                context.ReportDiagnostic(Diagnostic.Create(Descriptor, firstArgument.GetLocation()));
+                context.ReportDiagnostic(Diagnostic.Create(Descriptor, firstArgument.GetLocation(), properties: _props.ToImmutableDictionary()));
             }
 
             if (!(firstArgument?.Expression is IdentifierNameSyntax))
@@ -75,8 +75,13 @@ namespace Agoda.Analyzers.AgodaCustom
             var constantValue = context.SemanticModel.GetConstantValue(firstArgument.Expression);
             if (constantValue.HasValue && !MatchDataSelenium.IsMatch($@"""{constantValue.Value}"""))
             {
-                context.ReportDiagnostic(Diagnostic.Create(Descriptor, firstArgument.GetLocation()));
+                context.ReportDiagnostic(Diagnostic.Create(Descriptor, firstArgument.GetLocation(), properties: _props.ToImmutableDictionary()));
             }
         }
+
+        private static Dictionary<string, string> _props = new Dictionary<string, string>()
+        {
+            { AnalyzerConstants.KEY_TECH_DEBT_IN_MINUTES, "10" }
+        };
     }
 }
