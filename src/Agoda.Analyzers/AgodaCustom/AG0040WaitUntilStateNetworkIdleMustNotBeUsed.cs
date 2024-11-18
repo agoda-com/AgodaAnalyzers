@@ -8,6 +8,9 @@ namespace Agoda.Analyzers.AgodaCustom
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public class AG0040WaitUntilStateNetworkIdleMustNotBeUsed : PropertyInvocationAnalyzerBase
     {
+        internal override Dictionary<string, string> Properties => new Dictionary<string, string>()
+            { { Const.KEY_TECH_DEBT_IN_MINUTES, "10" } };
+
         public const string DIAGNOSTIC_ID = "AG0040";
 
         private static readonly LocalizableString Title = new LocalizableResourceString(

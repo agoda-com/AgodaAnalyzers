@@ -40,5 +40,8 @@ namespace Agoda.Analyzers.AgodaCustom
         {
             new BlacklistedInvocationRule("Microsoft.AspNetCore.Http.HttpRequest", "QueryString")
         };
+
+        internal override Dictionary<string, string> Properties => new Dictionary<string, string>()
+            { { Const.KEY_TECH_DEBT_IN_MINUTES, "10" } };
     }
 }

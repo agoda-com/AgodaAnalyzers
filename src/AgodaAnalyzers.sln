@@ -16,6 +16,43 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		..\README.md = ..\README.md
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Doc", "Doc", "{670A7514-B0EC-4BB2-B0A9-81F96D4B6AD5}"
+	ProjectSection(SolutionItems) = preProject
+		..\doc\AG0001.md = ..\doc\AG0001.md
+		..\doc\AG0002.md = ..\doc\AG0002.md
+		..\doc\AG0003.md = ..\doc\AG0003.md
+		..\doc\AG0004.md = ..\doc\AG0004.md
+		..\doc\AG0005.md = ..\doc\AG0005.md
+		..\doc\AG0006.md = ..\doc\AG0006.md
+		..\doc\AG0009.md = ..\doc\AG0009.md
+		..\doc\AG0010.md = ..\doc\AG0010.md
+		..\doc\AG0011.md = ..\doc\AG0011.md
+		..\doc\AG0012.md = ..\doc\AG0012.md
+		..\doc\AG0013.md = ..\doc\AG0013.md
+		..\doc\AG0018.md = ..\doc\AG0018.md
+		..\doc\AG0019.md = ..\doc\AG0019.md
+		..\doc\AG0020.md = ..\doc\AG0020.md
+		..\doc\AG0021.md = ..\doc\AG0021.md
+		..\doc\AG0022.md = ..\doc\AG0022.md
+		..\doc\AG0023.md = ..\doc\AG0023.md
+		..\doc\AG0024.md = ..\doc\AG0024.md
+		..\doc\AG0025.md = ..\doc\AG0025.md
+		..\doc\AG0026.md = ..\doc\AG0026.md
+		..\doc\AG0027.md = ..\doc\AG0027.md
+		..\doc\AG0030.md = ..\doc\AG0030.md
+		..\doc\AG0032.md = ..\doc\AG0032.md
+		..\doc\AG0033.md = ..\doc\AG0033.md
+		..\doc\AG0035.md = ..\doc\AG0035.md
+		..\doc\AG0037.md = ..\doc\AG0037.md
+		..\doc\AG0038.md = ..\doc\AG0038.md
+		..\doc\AG0039.md = ..\doc\AG0039.md
+		..\doc\AG0040.md = ..\doc\AG0040.md
+		..\doc\AG0041.md = ..\doc\AG0041.md
+		..\doc\AG0042.md = ..\doc\AG0042.md
+		..\doc\AG0043.md = ..\doc\AG0043.md
+		..\doc\AG0044.md = ..\doc\AG0044.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
