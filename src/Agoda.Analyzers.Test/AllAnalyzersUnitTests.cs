@@ -46,13 +46,12 @@ public class AllAnalyzersUnitTests
     [TestCaseSource(nameof(GetAnalyzerTestCases))]
     public void Analyzer_Should_Have_Required_Properties_For_Diagnostic_Create(Type analyzerType)
     {
-        // Modified BindingFlags to include all methods
         var methods = analyzerType.GetMethods(BindingFlags.Instance |
                                               BindingFlags.NonPublic |
                                               BindingFlags.Public |
                                               BindingFlags.DeclaredOnly |
-                                              BindingFlags.Static |  // Added to catch static methods
-                                              BindingFlags.FlattenHierarchy); // Added to get inherited methods
+                                              BindingFlags.Static |  
+                                              BindingFlags.FlattenHierarchy); 
 
         var violations = new List<string>();
 
@@ -84,8 +83,8 @@ public class AllAnalyzersUnitTests
 
                     properties.ShouldNotBeNull($"Properties is null or not a dictionary");
 
-                    properties.ContainsKey("MyKey")
-                        .ShouldBeTrue($"Method {method.Name} doesn't contain required 'MyKey' property");
+                    properties.ContainsKey(AnalyzerConstants.KEY_TECH_DEBT_IN_MINUTES)
+                        .ShouldBeTrue($"Method {method.Name} doesn't contain required '{AnalyzerConstants.KEY_TECH_DEBT_IN_MINUTES}' property When calling Diagnostic.Create");
 
                     properties["MyKey"].ShouldNotBeNullOrWhiteSpace(
                         $"MyKey property in method {method.Name} should have a value");

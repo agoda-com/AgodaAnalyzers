@@ -105,17 +105,20 @@ WRITING STYLE TO FOLLOW
 - A blocking call ties up the thread while it waits for a response. During this time, it could have been doing something more useful, like serving other requests or redrawing the GUI.
 - A non-blocking call returns the thread to the threadpool, or keeps the GUI thread responsive, while the task completes.
 
-#### Don't
+#### Don't ❌
+
 ```c#
 Thread.Sleep(5000); // thread is blocked for 5 seconds
 ```
 
-#### Do
+#### Do ✅
+
 ```c#
 await Task.Delay(5000); // thread can do other stuff for 5 seconds.
 ```
 
-#### Don't
+#### Don't ❌
+
 ```c#
 public void CreateCsv()
 {
@@ -126,7 +129,8 @@ public void CreateCsv()
 }
 ```
 
-#### Do
+#### Do ✅
+
 ```c#
 public async Task CreateCsvAsync()
 {
@@ -136,6 +140,7 @@ public async Task CreateCsvAsync()
     }
 }
 ```
+
 ## Use attribute-based routing instead of convention-based routing
 
 - Convention-based routing tightly couples your code to your URLs. By default, renaming an action method would change
@@ -145,7 +150,7 @@ without breaking the site, or at least having to implement redirects.
 - Attribute-based routing is arguably easier to understand, as the URL appears right above the code to which it points.
 - For these reasons, always use attribute-based routing when exposing HTTP endpoints.
 
-#### Don't
+#### Don't ❌
 
 ```c#
 public class Global
@@ -168,7 +173,8 @@ public class Global
 }  
 ```
 
-#### Do
+#### Do ✅
+
 ```c#
 public class HomeController: Controller  
 {  
