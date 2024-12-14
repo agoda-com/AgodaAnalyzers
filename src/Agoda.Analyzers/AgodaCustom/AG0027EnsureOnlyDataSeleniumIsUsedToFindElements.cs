@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Microsoft.CodeAnalysis;
 using Agoda.Analyzers.Helpers;
 using System.Collections.Immutable;
-using System.ComponentModel;
 using System.Linq;
-using System.Linq.Expressions;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System.Text.RegularExpressions;
 using Microsoft.CodeAnalysis.CSharp;

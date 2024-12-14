@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using Agoda.Analyzers.StyleCop;
 using Agoda.Analyzers.Test.Helpers;

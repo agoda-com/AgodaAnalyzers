@@ -1,5 +1,4 @@
 ﻿using System.Collections.Immutable;
-using System.Resources;
 using Agoda.Analyzers.Helpers;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -7,7 +6,6 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Text;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 
 namespace Agoda.Analyzers.AgodaCustom

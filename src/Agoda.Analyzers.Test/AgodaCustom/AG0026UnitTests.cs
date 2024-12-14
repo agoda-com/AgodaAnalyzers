@@ -1,15 +1,9 @@
-using System.Collections.Generic;
 using NUnit.Framework;
 using System.Threading.Tasks;
 using Agoda.Analyzers.Test.Helpers;
 using Microsoft.CodeAnalysis.Diagnostics;
-using System.Collections.Immutable;
-using System.Threading;
-using System.Linq;
-using Microsoft.CodeAnalysis;
 using OpenQA.Selenium;
 using Agoda.Analyzers.AgodaCustom;
-using System.Collections.ObjectModel;
 
 namespace Agoda.Analyzers.Test.AgodaCustom;
 

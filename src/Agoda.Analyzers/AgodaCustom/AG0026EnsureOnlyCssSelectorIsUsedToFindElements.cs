@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.CodeAnalysis;
 using Agoda.Analyzers.Helpers;
-using System.Collections.Immutable;
 using Microsoft.CodeAnalysis.Diagnostics;
-using System.Text.RegularExpressions;
 
 namespace Agoda.Analyzers.AgodaCustom
 {

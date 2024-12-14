@@ -1,9 +1,7 @@
-﻿using System.Linq;
-using Microsoft.CodeAnalysis;
+﻿using Microsoft.CodeAnalysis;
 using Agoda.Analyzers.Helpers;
 using System.Collections.Immutable;
 using Microsoft.CodeAnalysis.CSharp;
-using System.Text.RegularExpressions;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Generic;

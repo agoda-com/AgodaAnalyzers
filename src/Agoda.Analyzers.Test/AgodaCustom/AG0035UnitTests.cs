@@ -4,7 +4,6 @@ using Agoda.Analyzers.Test.Helpers;
 #if NET462
 using System.Web;
 #else
-using Microsoft.AspNetCore.Http;
 #endif
 using Microsoft.CodeAnalysis.Diagnostics;
 using NUnit.Framework;
