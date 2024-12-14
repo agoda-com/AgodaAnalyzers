@@ -1,4 +1,5 @@
-﻿using System.Collections.Immutable;
+﻿using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using Agoda.Analyzers.Helpers;
 using Microsoft.CodeAnalysis;
@@ -33,8 +34,8 @@ namespace Agoda.Analyzers.AgodaCustom
             AnalyzerCategory.CustomQualityRules,
             DiagnosticSeverity.Warning, 
             AnalyzerConstants.EnabledByDefault, 
-            Description, 
-            "https://agoda-com.github.io/standards-c-sharp/collections/null-empty-enumerables.html",
+            Description,
+            $"https://github.com/agoda-com/AgodaAnalyzers/blob/master/doc/{DIAGNOSTIC_ID}.md", 
             WellKnownDiagnosticTags.EditAndContinue);
 
         public override void Initialize(AnalysisContext context)
@@ -93,10 +94,14 @@ namespace Agoda.Analyzers.AgodaCustom
                      && methodReturnType.ConstructedFrom.Interfaces.Any(x => x.ToDisplayString() == "System.Collections.IEnumerable")
                      && methodReturnType.ConstructedFrom.ToDisplayString() != "string"))
                 {
-                    context.ReportDiagnostic(Diagnostic.Create(Descriptor, location));
+                    context.ReportDiagnostic(Diagnostic.Create(Descriptor, location, properties: _props.ToImmutableDictionary()));
                 }
 
             }
         }
+        private static Dictionary<string, string> _props = new Dictionary<string, string>()
+        {
+            { AnalyzerConstants.KEY_TECH_DEBT_IN_MINUTES, "10" }
+        };
     }
 }

@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.CodeAnalysis;
 using Agoda.Analyzers.Helpers;
-using System.Collections.Immutable;
 using Microsoft.CodeAnalysis.Diagnostics;
-using System.Text.RegularExpressions;
 
 namespace Agoda.Analyzers.AgodaCustom
 {
@@ -25,7 +23,7 @@ namespace Agoda.Analyzers.AgodaCustom
             DiagnosticSeverity.Warning,
             AnalyzerConstants.EnabledByDefault,
             DescriptionContentLoader.GetAnalyzerDescription(nameof(AG0026EnsureOnlyCssSelectorIsUsedToFindElements)),
-            "https://agoda-com.github.io/standards-c-sharp/gui-testing/css-selectors.html",
+            $"https://github.com/agoda-com/AgodaAnalyzers/blob/master/doc/{DIAGNOSTIC_ID}.md", 
             WellKnownDiagnosticTags.EditAndContinue);
         
         protected override IEnumerable<InvocationRule> Rules => TestMethodHelpers.PermittedSeleniumAccessors;

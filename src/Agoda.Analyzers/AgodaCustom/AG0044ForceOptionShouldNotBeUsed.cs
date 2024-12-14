@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -35,7 +36,7 @@ namespace Agoda.Analyzers.AgodaCustom
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
             description: Description,
-            "https://github.com/agoda-com/AgodaAnalyzers/blob/master/doc/AG0044.md",
+            $"https://github.com/agoda-com/AgodaAnalyzers/blob/master/doc/{DIAGNOSTIC_ID}.md",
             WellKnownDiagnosticTags.EditAndContinue);
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
@@ -70,7 +71,7 @@ namespace Agoda.Analyzers.AgodaCustom
                 if (!(assignment.Right is LiteralExpressionSyntax literal) ||
                     literal.Token.ValueText != "true") continue;
                 
-                var diagnostic = Diagnostic.Create(Rule, expression.GetLocation());
+                var diagnostic = Diagnostic.Create(Rule, expression.GetLocation(), properties: _props.ToImmutableDictionary());
                 context.ReportDiagnostic(diagnostic);
             }
         }
@@ -87,5 +88,10 @@ namespace Agoda.Analyzers.AgodaCustom
                 typeName.Contains("LocatorUncheck") ||
                 typeName.Contains("LocatorSelectOption"));
         }
+
+        private static Dictionary<string, string> _props = new Dictionary<string, string>()
+        {
+            { AnalyzerConstants.KEY_TECH_DEBT_IN_MINUTES, "60" }
+        };
     }
 }

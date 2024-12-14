@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.Collections.Immutable;
 using Agoda.Analyzers.Helpers;
 using Microsoft.CodeAnalysis;
@@ -29,7 +29,7 @@ namespace Agoda.Analyzers.AgodaCustom
 
         private static readonly DiagnosticDescriptor Descriptor =
             new DiagnosticDescriptor(DIAGNOSTIC_ID, Title, MessageFormat, AnalyzerCategory.CustomQualityRules,
-                DiagnosticSeverity.Warning, AnalyzerConstants.EnabledByDefault, Description, null,
+                DiagnosticSeverity.Warning, AnalyzerConstants.EnabledByDefault, Description, $"https://github.com/agoda-com/AgodaAnalyzers/blob/master/doc/{DIAGNOSTIC_ID}.md", 
                 WellKnownDiagnosticTags.EditAndContinue);
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Descriptor);
@@ -45,7 +45,7 @@ namespace Agoda.Analyzers.AgodaCustom
             if ("Microsoft.AspNetCore.Http.IHttpContextAccessor" == paramTypeName
                 || "Microsoft.AspNetCore.Http.HttpContextAccessor" == paramTypeName)
             {
-                context.ReportDiagnostic(Diagnostic.Create(Descriptor, context.Node.GetLocation()));
+                context.ReportDiagnostic(Diagnostic.Create(Descriptor, context.Node.GetLocation(), properties: _props.ToImmutableDictionary()));
             }
         }
 
@@ -57,5 +57,9 @@ namespace Agoda.Analyzers.AgodaCustom
 
             context.RegisterSyntaxNodeAction(AnalyzeNode, SyntaxKind.Parameter);
         }
+        private static Dictionary<string, string> _props = new Dictionary<string, string>()
+        {
+            { AnalyzerConstants.KEY_TECH_DEBT_IN_MINUTES, "10" }
+        };
     }
 }

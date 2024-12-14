@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using Agoda.Analyzers.Helpers;
 using Microsoft.CodeAnalysis;
@@ -31,7 +32,7 @@ namespace Agoda.Analyzers.AgodaCustom
             DiagnosticSeverity.Warning,
             AnalyzerConstants.EnabledByDefault,
             Description,
-            "https://github.com/agoda-com/AgodaAnalyzers/blob/master/doc/AG0042.md",
+            $"https://github.com/agoda-com/AgodaAnalyzers/blob/master/doc/{DIAGNOSTIC_ID}.md",
             WellKnownDiagnosticTags.EditAndContinue);
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Descriptor);
@@ -70,7 +71,7 @@ namespace Agoda.Analyzers.AgodaCustom
             var returnType = methodSymbol.ReturnType;
             if (!IsElementHandleReturnType(returnType)) return;
 
-            var diagnostic = Diagnostic.Create(Descriptor, invocationExpression.GetLocation());
+            var diagnostic = Diagnostic.Create(Descriptor, invocationExpression.GetLocation(), properties: _props.ToImmutableDictionary());
             context.ReportDiagnostic(diagnostic);
         }
 
@@ -130,5 +131,10 @@ namespace Agoda.Analyzers.AgodaCustom
                    typeName == "Microsoft.Playwright.IElementHandle" ||
                    typeName == "Microsoft.Playwright.ElementHandle";
         }
+
+        private static Dictionary<string, string> _props = new Dictionary<string, string>()
+        {
+            { AnalyzerConstants.KEY_TECH_DEBT_IN_MINUTES, "10" }
+        };
     }
 }

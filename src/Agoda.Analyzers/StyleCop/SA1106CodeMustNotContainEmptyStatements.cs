@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using Agoda.Analyzers.Helpers;
 using Microsoft.CodeAnalysis;
@@ -57,7 +58,7 @@ namespace Agoda.Analyzers.StyleCop
 
             if (declaration.SemicolonToken.IsKind(SyntaxKind.SemicolonToken))
             {
-                context.ReportDiagnostic(Diagnostic.Create(Descriptor, declaration.SemicolonToken.GetLocation()));
+                context.ReportDiagnostic(Diagnostic.Create(Descriptor, declaration.SemicolonToken.GetLocation(), properties: _props.ToImmutableDictionary()));
             }
         }
 
@@ -67,7 +68,7 @@ namespace Agoda.Analyzers.StyleCop
 
             if (declaration.SemicolonToken.IsKind(SyntaxKind.SemicolonToken))
             {
-                context.ReportDiagnostic(Diagnostic.Create(Descriptor, declaration.SemicolonToken.GetLocation()));
+                context.ReportDiagnostic(Diagnostic.Create(Descriptor, declaration.SemicolonToken.GetLocation(), properties: _props.ToImmutableDictionary()));
             }
         }
 
@@ -101,7 +102,12 @@ namespace Agoda.Analyzers.StyleCop
             }
 
             // Code must not contain empty statements
-            context.ReportDiagnostic(Diagnostic.Create(Descriptor, syntax.GetLocation()));
+            context.ReportDiagnostic(Diagnostic.Create(Descriptor, syntax.GetLocation(), properties: _props.ToImmutableDictionary()));
         }
+
+        private static Dictionary<string, string> _props = new Dictionary<string, string>()
+        {
+            { AnalyzerConstants.KEY_TECH_DEBT_IN_MINUTES, "10" }
+        };
     }
 }

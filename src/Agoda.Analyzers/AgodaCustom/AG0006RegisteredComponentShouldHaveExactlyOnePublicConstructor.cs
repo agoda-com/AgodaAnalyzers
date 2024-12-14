@@ -1,4 +1,5 @@
-﻿using System.Collections.Immutable;
+﻿using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Agoda.Analyzers.Helpers;
@@ -36,8 +37,8 @@ namespace Agoda.Analyzers.AgodaCustom
             AnalyzerCategory.CustomQualityRules,
             DiagnosticSeverity.Warning, 
             AnalyzerConstants.EnabledByDefault, 
-            Description, 
-            null,
+            Description,
+            $"https://github.com/agoda-com/AgodaAnalyzers/blob/master/doc/{DIAGNOSTIC_ID}.md", 
             WellKnownDiagnosticTags.EditAndContinue);
 
         public override void Initialize(AnalysisContext context)
@@ -74,7 +75,11 @@ namespace Agoda.Analyzers.AgodaCustom
 
             if (publicConstructorsCount == 1) return;
             
-            context.ReportDiagnostic(Diagnostic.Create(Descriptor, classDeclaration.GetLocation()));
+            context.ReportDiagnostic(Diagnostic.Create(Descriptor, classDeclaration.GetLocation(), properties: _props.ToImmutableDictionary()));
         }
+        private static Dictionary<string, string> _props = new Dictionary<string, string>()
+        {
+            { AnalyzerConstants.KEY_TECH_DEBT_IN_MINUTES, "10" }
+        };
     }
 }

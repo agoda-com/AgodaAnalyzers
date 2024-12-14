@@ -1,11 +1,10 @@
-﻿using System.Linq;
-using Microsoft.CodeAnalysis;
+﻿using Microsoft.CodeAnalysis;
 using Agoda.Analyzers.Helpers;
 using System.Collections.Immutable;
 using Microsoft.CodeAnalysis.CSharp;
-using System.Text.RegularExpressions;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Collections.Generic;
 
 namespace Agoda.Analyzers.AgodaCustom
 {
@@ -30,8 +29,8 @@ namespace Agoda.Analyzers.AgodaCustom
                 AnalyzerCategory.CustomQualityRules,
                 DiagnosticSeverity.Warning, 
                 AnalyzerConstants.EnabledByDefault, 
-                DescriptionContentLoader.GetAnalyzerDescription(nameof(AG0013LimitNumberOfTestMethodParametersTo5)), 
-                "https://agoda-com.github.io/standards-c-sharp/unit-testing/use-test-cases-appropriately.html", 
+                DescriptionContentLoader.GetAnalyzerDescription(nameof(AG0013LimitNumberOfTestMethodParametersTo5)),
+                $"https://github.com/agoda-com/AgodaAnalyzers/blob/master/doc/{DIAGNOSTIC_ID}.md", 
                 WellKnownDiagnosticTags.EditAndContinue
             );
         }
@@ -53,9 +52,14 @@ namespace Agoda.Analyzers.AgodaCustom
                 
             if(!IsTestPrametersMoreThanLimit(methodDeclaration)) { return; }
 
-            context.ReportDiagnostic(Diagnostic.Create(_diagnosticDescriptor, methodDeclaration.GetLocation()));
+            context.ReportDiagnostic(Diagnostic.Create(_diagnosticDescriptor, methodDeclaration.GetLocation(),_props.ToImmutableDictionary()));
         }
 
         private bool IsTestPrametersMoreThanLimit(MethodDeclarationSyntax method) => (method.ParameterList?.Parameters.Count ?? 0) > MAXIMUM_TEST_PARAMETERS;
+
+        private static Dictionary<string, string> _props = new Dictionary<string, string>()
+        {
+            { AnalyzerConstants.KEY_TECH_DEBT_IN_MINUTES, "10" }
+        };
     }
 }

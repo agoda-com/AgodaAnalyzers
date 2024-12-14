@@ -8,6 +8,9 @@ namespace Agoda.Analyzers.AgodaCustom
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public class AG0040WaitUntilStateNetworkIdleMustNotBeUsed : PropertyInvocationAnalyzerBase
     {
+        internal override Dictionary<string, string> Properties => new Dictionary<string, string>()
+            { { AnalyzerConstants.KEY_TECH_DEBT_IN_MINUTES, "10" } };
+
         public const string DIAGNOSTIC_ID = "AG0040";
 
         private static readonly LocalizableString Title = new LocalizableResourceString(
@@ -31,7 +34,7 @@ namespace Agoda.Analyzers.AgodaCustom
             DiagnosticSeverity.Error,
             AnalyzerConstants.EnabledByDefault,
             Description,
-            "https://playwright.dev/dotnet/docs/api/class-page#page-go-back",
+            $"https://github.com/agoda-com/AgodaAnalyzers/blob/master/doc/{DIAGNOSTIC_ID}.md",
             WellKnownDiagnosticTags.EditAndContinue);
 
         protected override IEnumerable<InvocationRule> Rules => new[]

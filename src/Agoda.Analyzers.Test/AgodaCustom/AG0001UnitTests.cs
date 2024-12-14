@@ -2,9 +2,7 @@
 using System.Web.Mvc;
 using Agoda.Analyzers.AgodaCustom;
 using Agoda.Analyzers.Test.Helpers;
-using Microsoft.CodeAnalysis.CSharp.Testing;
 using Microsoft.CodeAnalysis.Diagnostics;
-using Microsoft.CodeAnalysis.Testing.Verifiers;
 using NUnit.Framework;
 
 namespace Agoda.Analyzers.Test.AgodaCustom;

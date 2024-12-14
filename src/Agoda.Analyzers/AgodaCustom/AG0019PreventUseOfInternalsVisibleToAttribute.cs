@@ -3,6 +3,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 
 namespace Agoda.Analyzers.AgodaCustom
@@ -28,7 +29,7 @@ namespace Agoda.Analyzers.AgodaCustom
                 DiagnosticSeverity.Error,
                 AnalyzerConstants.EnabledByDefault,
                 DescriptionContentLoader.GetAnalyzerDescription(nameof(AG0019PreventUseOfInternalsVisibleToAttribute)),
-                "https://agoda-com.github.io/standards-c-sharp/unit-testing/only-test-the-public-interface.html",
+                $"https://github.com/agoda-com/AgodaAnalyzers/blob/master/doc/{DIAGNOSTIC_ID}.md", 
                 WellKnownDiagnosticTags.EditAndContinue);
         }
 
@@ -51,9 +52,14 @@ namespace Agoda.Analyzers.AgodaCustom
             {
                 if (attribute.Name is IdentifierNameSyntax name && name.Identifier.Text == "InternalsVisibleTo")
                 {
-                    context.ReportDiagnostic(Diagnostic.Create(_diagnosticDescriptor, attribute.GetLocation()));
+                    context.ReportDiagnostic(Diagnostic.Create(_diagnosticDescriptor, attribute.GetLocation(),properties: _props.ToImmutableDictionary()));
                 }
             }
         }
+
+        private static Dictionary<string, string> _props = new Dictionary<string, string>()
+        {
+            { AnalyzerConstants.KEY_TECH_DEBT_IN_MINUTES, "10" }
+        };
     }
 }

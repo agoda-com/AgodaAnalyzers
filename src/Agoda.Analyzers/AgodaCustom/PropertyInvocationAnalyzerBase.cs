@@ -19,6 +19,7 @@ namespace Agoda.Analyzers.AgodaCustom
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Descriptor);
         protected abstract DiagnosticDescriptor Descriptor { get; }
         protected abstract IEnumerable<InvocationRule> Rules { get; }
+        internal abstract Dictionary<string, string> Properties { get; }
 
         private static readonly Regex MatchGeneric = new Regex("<.*>$"); 
 

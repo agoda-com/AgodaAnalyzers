@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Microsoft.CodeAnalysis;
 using Agoda.Analyzers.Helpers;
 using System.Collections.Immutable;
-using System.ComponentModel;
 using System.Linq;
-using System.Linq.Expressions;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System.Text.RegularExpressions;
 using Microsoft.CodeAnalysis.CSharp;
@@ -33,7 +30,7 @@ namespace Agoda.Analyzers.AgodaCustom
             DiagnosticSeverity.Warning,
             AnalyzerConstants.EnabledByDefault,
             DescriptionContentLoader.GetAnalyzerDescription(nameof(AG0027EnsureOnlyDataSeleniumIsUsedToFindElements)),
-            "https://agoda-com.github.io/standards-c-sharp/gui-testing/data-selenium.html",
+            $"https://github.com/agoda-com/AgodaAnalyzers/blob/master/doc/{DIAGNOSTIC_ID}.md", 
             WellKnownDiagnosticTags.EditAndContinue);
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Descriptor);
@@ -63,7 +60,7 @@ namespace Agoda.Analyzers.AgodaCustom
             var firstArgument = invocationExpressionSyntax.ArgumentList.Arguments.FirstOrDefault();
             if (firstArgument?.Expression is LiteralExpressionSyntax && !MatchDataSelenium.IsMatch(firstArgument.ToString()))
             {
-                context.ReportDiagnostic(Diagnostic.Create(Descriptor, firstArgument.GetLocation()));
+                context.ReportDiagnostic(Diagnostic.Create(Descriptor, firstArgument.GetLocation(), properties: _props.ToImmutableDictionary()));
             }
 
             if (!(firstArgument?.Expression is IdentifierNameSyntax))
@@ -75,8 +72,13 @@ namespace Agoda.Analyzers.AgodaCustom
             var constantValue = context.SemanticModel.GetConstantValue(firstArgument.Expression);
             if (constantValue.HasValue && !MatchDataSelenium.IsMatch($@"""{constantValue.Value}"""))
             {
-                context.ReportDiagnostic(Diagnostic.Create(Descriptor, firstArgument.GetLocation()));
+                context.ReportDiagnostic(Diagnostic.Create(Descriptor, firstArgument.GetLocation(), properties: _props.ToImmutableDictionary()));
             }
         }
+
+        private static Dictionary<string, string> _props = new Dictionary<string, string>()
+        {
+            { AnalyzerConstants.KEY_TECH_DEBT_IN_MINUTES, "10" }
+        };
     }
 }

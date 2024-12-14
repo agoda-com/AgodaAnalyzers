@@ -1,5 +1,4 @@
 ﻿using System.Collections.Immutable;
-using System.Resources;
 using Agoda.Analyzers.Helpers;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -7,7 +6,6 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Text;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 
 namespace Agoda.Analyzers.AgodaCustom
@@ -39,7 +37,7 @@ namespace Agoda.Analyzers.AgodaCustom
             Category,
             DiagnosticSeverity.Hidden, // THis rule should be opt in and not on by default
             isEnabledByDefault: true,
-            helpLinkUri: "https://github.com/agoda-com/AgodaAnalyzers/blob/master/src/Agoda.Analyzers/RuleContent/AG0039MethodLineLengthAnalyzer.html");
+            helpLinkUri: $"https://github.com/agoda-com/AgodaAnalyzers/blob/master/doc/{DIAGNOSTIC_ID}.md");
         
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get { return ImmutableArray.Create(Descriptor); } }
 
@@ -71,7 +69,7 @@ namespace Agoda.Analyzers.AgodaCustom
 
             if (lineCount <= MaxLines) return;
 
-            var diagnostic = Diagnostic.Create(Descriptor, methodNode.Identifier.GetLocation(), methodNode.Identifier.Text, lineCount, MaxLines);
+            var diagnostic = Diagnostic.Create(Descriptor, methodNode.Identifier.GetLocation(), properties: _props.ToImmutableDictionary(), methodNode.Identifier.Text, lineCount, MaxLines);
             context.ReportDiagnostic(diagnostic);
         }
 
@@ -79,5 +77,10 @@ namespace Agoda.Analyzers.AgodaCustom
         {
             return lines.Count(line => !string.IsNullOrWhiteSpace(line.ToString()));
         }
+
+        private static Dictionary<string, string> _props = new Dictionary<string, string>()
+        {
+            { AnalyzerConstants.KEY_TECH_DEBT_IN_MINUTES, "10" }
+        };
     }
 }

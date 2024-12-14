@@ -1,4 +1,5 @@
-﻿using System.Collections.Immutable;
+﻿using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using Agoda.Analyzers.Helpers;
 using Microsoft.CodeAnalysis;
@@ -34,7 +35,7 @@ namespace Agoda.Analyzers.AgodaCustom
             DiagnosticSeverity.Warning,
             AnalyzerConstants.EnabledByDefault,
             Description,
-            "https://agoda-com.github.io/standards-c-sharp/code-style/dynamics.html",
+            $"https://github.com/agoda-com/AgodaAnalyzers/blob/master/doc/{DIAGNOSTIC_ID}.md", 
             WellKnownDiagnosticTags.EditAndContinue);
 
         public override void Initialize(AnalysisContext context)
@@ -52,21 +53,21 @@ namespace Agoda.Analyzers.AgodaCustom
         {
             var variableDeclaration = (VariableDeclarationSyntax)context.Node;
             if (ValidateReturnType(variableDeclaration.Type)) return;
-            context.ReportDiagnostic(Diagnostic.Create(Descriptor, variableDeclaration.GetLocation()));
+            context.ReportDiagnostic(Diagnostic.Create(Descriptor, variableDeclaration.GetLocation(), properties: _props.ToImmutableDictionary()));
         }
 
         private void AnalyzeMethodDeclaration(SyntaxNodeAnalysisContext context)
         {
             var methodDeclaration = (MethodDeclarationSyntax)context.Node;
             if (ValidateReturnType(methodDeclaration.ReturnType)) return;
-            context.ReportDiagnostic(Diagnostic.Create(Descriptor, methodDeclaration.GetLocation()));
+            context.ReportDiagnostic(Diagnostic.Create(Descriptor, methodDeclaration.GetLocation(), properties: _props.ToImmutableDictionary()));
         }
 
         private void AnalyzeGenericName(SyntaxNodeAnalysisContext context)
         {
             var genericName = (GenericNameSyntax)context.Node;
             if (ValidateGenericType(genericName)) return;
-            context.ReportDiagnostic(Diagnostic.Create(Descriptor, genericName.GetLocation()));
+            context.ReportDiagnostic(Diagnostic.Create(Descriptor, genericName.GetLocation(), properties: _props.ToImmutableDictionary()));
         }
 
         private bool ValidateReturnType(TypeSyntax returnTypeSyntax)
@@ -79,5 +80,10 @@ namespace Agoda.Analyzers.AgodaCustom
         {
             return genericName.TypeArgumentList.Arguments.All(argument => argument.GetText().ToString() != "dynamic");
         }
+
+        private static Dictionary<string, string> _props = new Dictionary<string, string>()
+        {
+            { AnalyzerConstants.KEY_TECH_DEBT_IN_MINUTES, "30" }
+        };
     }
 }

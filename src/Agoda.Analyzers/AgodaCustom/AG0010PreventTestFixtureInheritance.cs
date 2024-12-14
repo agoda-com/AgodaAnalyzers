@@ -1,11 +1,11 @@
 ﻿using System.Linq;
 using System.Collections.Immutable;
-using System.Text.RegularExpressions;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Agoda.Analyzers.Helpers;
+using System.Collections.Generic;
 
 namespace Agoda.Analyzers.AgodaCustom
 {
@@ -35,7 +35,7 @@ namespace Agoda.Analyzers.AgodaCustom
             DiagnosticSeverity.Warning,
             AnalyzerConstants.EnabledByDefault,
             Description,
-            "https://agoda-com.github.io/standards-c-sharp/unit-testing/be-wary-of-refactoring-tests.html",
+            $"https://github.com/agoda-com/AgodaAnalyzers/blob/master/doc/{DIAGNOSTIC_ID}.md", 
             WellKnownDiagnosticTags.EditAndContinue);
 
         public override void Initialize(AnalysisContext context)
@@ -58,7 +58,11 @@ namespace Agoda.Analyzers.AgodaCustom
                 .Any(x => TestMethodHelpers.IsTestCase(x, context));
             if (!hasTestMethod) return;
 
-            context.ReportDiagnostic(Diagnostic.Create(Descriptor, classDeclaration.GetLocation()));
+            context.ReportDiagnostic(Diagnostic.Create(Descriptor, classDeclaration.GetLocation(), properties: _props.ToImmutableDictionary()));
         }
+        private static Dictionary<string, string> _props = new Dictionary<string, string>()
+        {
+            { AnalyzerConstants.KEY_TECH_DEBT_IN_MINUTES, "10" }
+        };
     }
 }

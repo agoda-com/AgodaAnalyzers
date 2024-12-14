@@ -1,18 +1,16 @@
 ﻿using Agoda.Analyzers.Helpers;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
-using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Text.RegularExpressions;
 
 namespace Agoda.Analyzers.AgodaCustom
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public class AG0001DependencyResolverMustNotBeUsed : PropertyInvocationAnalyzerBase
     {
+        internal override Dictionary<string, string> Properties => new Dictionary<string, string>()
+            { { AnalyzerConstants.KEY_TECH_DEBT_IN_MINUTES, "10" } };
+
         public const string DIAGNOSTIC_ID = "AG0001";
 
         private static readonly LocalizableString Title = new LocalizableResourceString(
@@ -36,7 +34,7 @@ namespace Agoda.Analyzers.AgodaCustom
             DiagnosticSeverity.Warning,
             AnalyzerConstants.EnabledByDefault,
             Description,
-            "https://agoda-com.github.io/standards-c-sharp/di/attribute-based-registration.html",
+            $"https://github.com/agoda-com/AgodaAnalyzers/blob/master/doc/{DIAGNOSTIC_ID}.md",
             WellKnownDiagnosticTags.EditAndContinue);
 
         protected override IEnumerable<InvocationRule> Rules => new[]

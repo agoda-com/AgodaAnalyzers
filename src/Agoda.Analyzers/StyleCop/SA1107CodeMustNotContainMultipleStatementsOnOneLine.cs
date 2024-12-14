@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using Agoda.Analyzers.Helpers;
 using Microsoft.CodeAnalysis;
@@ -67,7 +68,7 @@ namespace Agoda.Analyzers.StyleCop
                         == currentStatementLocation.StartLinePosition.Line
                         && !IsLastTokenMissing(previousStatement))
                     {
-                        context.ReportDiagnostic(Diagnostic.Create(Descriptor, block.Statements[i].GetLocation()));
+                        context.ReportDiagnostic(Diagnostic.Create(Descriptor, block.Statements[i].GetLocation(), properties: _props.ToImmutableDictionary()));
                     }
 
                     previousStatementLocation = currentStatementLocation;
@@ -80,5 +81,10 @@ namespace Agoda.Analyzers.StyleCop
         {
             return previousStatement.GetLastToken(includeZeroWidth: true, includeSkipped: true).IsMissing;
         }
+
+        private static Dictionary<string, string> _props = new Dictionary<string, string>()
+        {
+            { AnalyzerConstants.KEY_TECH_DEBT_IN_MINUTES, "10" }
+        };
     }
 }

@@ -7,6 +7,8 @@ namespace Agoda.Analyzers
 {
     internal static class AnalyzerConstants
     {
+        internal const string KEY_TECH_DEBT_IN_MINUTES = "TechDebtInMinutes";
+
         static AnalyzerConstants()
         {
 #if DEBUG

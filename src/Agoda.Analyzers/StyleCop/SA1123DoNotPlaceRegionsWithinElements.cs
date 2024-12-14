@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.CodeAnalysis;
@@ -94,8 +95,13 @@ namespace Agoda.Analyzers.StyleCop
             if (IsCompletelyContainedInBody(regionSyntax))
             {
                 // Region must not be located within a code element.
-                context.ReportDiagnostic(Diagnostic.Create(Descriptor, regionSyntax.GetLocation()));
+                context.ReportDiagnostic(Diagnostic.Create(Descriptor, regionSyntax.GetLocation(), properties: _props.ToImmutableDictionary()));
             }
         }
+
+        private static Dictionary<string, string> _props = new Dictionary<string, string>()
+        {
+            { AnalyzerConstants.KEY_TECH_DEBT_IN_MINUTES, "10" }
+        };
     }
 }

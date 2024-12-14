@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using System.Web.Mvc;
 using Agoda.Analyzers.AgodaCustom;
 using Agoda.Analyzers.Test.Helpers;
 using Microsoft.CodeAnalysis.Diagnostics;

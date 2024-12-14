@@ -6,7 +6,6 @@ using NUnit.Framework;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
-using FluentAssertions;
 
 namespace Agoda.Analyzers.Test.AgodaCustom;
 
