@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Agoda.Analyzers.AgodaCustom;
 using Agoda.Analyzers.Test.Helpers;
@@ -32,7 +33,7 @@ class AG0045UnitTests : DiagnosticVerifier
                 }"
         };
 
-        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(9, 35));
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(9, 44));
     }
 
     [Test]
@@ -54,7 +55,7 @@ class AG0045UnitTests : DiagnosticVerifier
                 }"
         };
 
-        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(9, 35));
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(9, 44));
     }
 
     [Test]
@@ -69,15 +70,16 @@ class AG0045UnitTests : DiagnosticVerifier
 
                 class TestClass
                 {
+                    private const string Selector = ""//div[contains(@class,'menu')]/following-sibling::div"";
+
                     public async Task TestMethod(IPage page)
                     {
-                        string selector = ""//div[contains(@class,'menu')]/following-sibling::div"";
-                        await page.Locator(selector).ClickAsync();
+                        await page.Locator(Selector).ClickAsync();
                     }
                 }"
         };
 
-        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(10, 35));
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(11, 44));
     }
 
     [Test]
@@ -99,7 +101,7 @@ class AG0045UnitTests : DiagnosticVerifier
                 }"
         };
 
-        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(9, 35));
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(9, 44));
     }
 
     [Test]
@@ -107,7 +109,7 @@ class AG0045UnitTests : DiagnosticVerifier
     {
         var code = new CodeDescriptor
         {
-            References = new[] { typeof(IPage).Assembly },
+            References = new[] { typeof(IPage).Assembly, typeof(Regex).Assembly },
             Code = @"
                 using System.Threading.Tasks;
                 using Microsoft.Playwright;

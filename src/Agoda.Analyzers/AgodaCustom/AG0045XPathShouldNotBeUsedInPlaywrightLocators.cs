@@ -84,12 +84,33 @@ namespace Agoda.Analyzers.AgodaCustom
             if (firstArgument.Expression is IdentifierNameSyntax identifierName)
             {
                 var symbol = semanticModel.GetSymbolInfo(identifierName).Symbol;
-                if (symbol != null && symbol is ILocalSymbol localSymbol && localSymbol.Type.SpecialType == SpecialType.System_String)
+                if (symbol != null)
                 {
-                    var constantValue = semanticModel.GetConstantValue(firstArgument.Expression);
-                    if (constantValue.HasValue && constantValue.Value is string stringValue && XPathPattern.IsMatch(stringValue))
+                    // Check local variables
+                    if (symbol is ILocalSymbol localSymbol && localSymbol.Type.SpecialType == SpecialType.System_String)
                     {
-                        context.ReportDiagnostic(Diagnostic.Create(Descriptor, firstArgument.GetLocation(), properties: _props.ToImmutableDictionary()));
+                        var constantValue = semanticModel.GetConstantValue(firstArgument.Expression);
+                        if (constantValue.HasValue && constantValue.Value is string stringValue && XPathPattern.IsMatch(stringValue))
+                        {
+                            context.ReportDiagnostic(Diagnostic.Create(Descriptor, firstArgument.GetLocation(), properties: _props.ToImmutableDictionary()));
+                        }
+                    }
+                    // Check fields and properties
+                    else if (symbol is IFieldSymbol fieldSymbol && fieldSymbol.Type.SpecialType == SpecialType.System_String)
+                    {
+                        var constantValue = semanticModel.GetConstantValue(firstArgument.Expression);
+                        if (constantValue.HasValue && constantValue.Value is string stringValue && XPathPattern.IsMatch(stringValue))
+                        {
+                            context.ReportDiagnostic(Diagnostic.Create(Descriptor, firstArgument.GetLocation(), properties: _props.ToImmutableDictionary()));
+                        }
+                    }
+                    else if (symbol is IPropertySymbol propertySymbol && propertySymbol.Type.SpecialType == SpecialType.System_String)
+                    {
+                        var constantValue = semanticModel.GetConstantValue(firstArgument.Expression);
+                        if (constantValue.HasValue && constantValue.Value is string stringValue && XPathPattern.IsMatch(stringValue))
+                        {
+                            context.ReportDiagnostic(Diagnostic.Create(Descriptor, firstArgument.GetLocation(), properties: _props.ToImmutableDictionary()));
+                        }
                     }
                 }
             }
