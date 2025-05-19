@@ -86,31 +86,51 @@ namespace Agoda.Analyzers.AgodaCustom
                 var symbol = semanticModel.GetSymbolInfo(identifierName).Symbol;
                 if (symbol != null)
                 {
+                    string stringValue = null;
+
                     // Check local variables
                     if (symbol is ILocalSymbol localSymbol && localSymbol.Type.SpecialType == SpecialType.System_String)
                     {
-                        var constantValue = semanticModel.GetConstantValue(firstArgument.Expression);
-                        if (constantValue.HasValue && constantValue.Value is string stringValue && XPathPattern.IsMatch(stringValue))
+                        // Try to get the initializer value
+                        if (localSymbol.DeclaringSyntaxReferences.Length > 0)
                         {
-                            context.ReportDiagnostic(Diagnostic.Create(Descriptor, firstArgument.GetLocation(), properties: _props.ToImmutableDictionary()));
+                            var declaration = localSymbol.DeclaringSyntaxReferences[0].GetSyntax() as VariableDeclaratorSyntax;
+                            if (declaration?.Initializer?.Value is LiteralExpressionSyntax initializer)
+                            {
+                                stringValue = initializer.Token.ValueText;
+                            }
                         }
                     }
-                    // Check fields and properties
+                    // Check fields
                     else if (symbol is IFieldSymbol fieldSymbol && fieldSymbol.Type.SpecialType == SpecialType.System_String)
                     {
-                        var constantValue = semanticModel.GetConstantValue(firstArgument.Expression);
-                        if (constantValue.HasValue && constantValue.Value is string stringValue && XPathPattern.IsMatch(stringValue))
+                        // Try to get the initializer value
+                        if (fieldSymbol.DeclaringSyntaxReferences.Length > 0)
                         {
-                            context.ReportDiagnostic(Diagnostic.Create(Descriptor, firstArgument.GetLocation(), properties: _props.ToImmutableDictionary()));
+                            var declaration = fieldSymbol.DeclaringSyntaxReferences[0].GetSyntax() as VariableDeclaratorSyntax;
+                            if (declaration?.Initializer?.Value is LiteralExpressionSyntax initializer)
+                            {
+                                stringValue = initializer.Token.ValueText;
+                            }
                         }
                     }
+                    // Check properties
                     else if (symbol is IPropertySymbol propertySymbol && propertySymbol.Type.SpecialType == SpecialType.System_String)
                     {
-                        var constantValue = semanticModel.GetConstantValue(firstArgument.Expression);
-                        if (constantValue.HasValue && constantValue.Value is string stringValue && XPathPattern.IsMatch(stringValue))
+                        // Try to get the initializer value
+                        if (propertySymbol.DeclaringSyntaxReferences.Length > 0)
                         {
-                            context.ReportDiagnostic(Diagnostic.Create(Descriptor, firstArgument.GetLocation(), properties: _props.ToImmutableDictionary()));
+                            var declaration = propertySymbol.DeclaringSyntaxReferences[0].GetSyntax() as PropertyDeclarationSyntax;
+                            if (declaration?.Initializer?.Value is LiteralExpressionSyntax initializer)
+                            {
+                                stringValue = initializer.Token.ValueText;
+                            }
                         }
+                    }
+
+                    if (stringValue != null && XPathPattern.IsMatch(stringValue))
+                    {
+                        context.ReportDiagnostic(Diagnostic.Create(Descriptor, firstArgument.GetLocation(), properties: _props.ToImmutableDictionary()));
                     }
                 }
             }

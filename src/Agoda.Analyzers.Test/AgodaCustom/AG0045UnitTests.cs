@@ -63,7 +63,7 @@ class AG0045UnitTests : DiagnosticVerifier
     {
         var code = new CodeDescriptor
         {
-            References = new[] { typeof(IPage).Assembly },
+            References = new[] { typeof(IPage).Assembly, typeof(Regex).Assembly },
             Code = @"
                 using System.Threading.Tasks;
                 using Microsoft.Playwright;
@@ -71,6 +71,77 @@ class AG0045UnitTests : DiagnosticVerifier
                 class TestClass
                 {
                     private const string Selector = ""//div[contains(@class,'menu')]/following-sibling::div"";
+
+                    public async Task TestMethod(IPage page)
+                    {
+                        await page.Locator(Selector).ClickAsync();
+                    }
+                }"
+        };
+
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(11, 44));
+    }
+
+    [Test]
+    public async Task AG0045_WhenUsingXPathInLocalVariable_ShowError()
+    {
+        var code = new CodeDescriptor
+        {
+            References = new[] { typeof(IPage).Assembly, typeof(Regex).Assembly },
+            Code = @"
+                using System.Threading.Tasks;
+                using Microsoft.Playwright;
+
+                class TestClass
+                {
+                    public async Task TestMethod(IPage page)
+                    {
+                        string myVar = ""//div[@class='form']/button"";
+                        await page.Locator(myVar).ClickAsync();
+                    }
+                }"
+        };
+
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(10, 44));
+    }
+
+    [Test]
+    public async Task AG0045_WhenUsingXPathInField_ShowError()
+    {
+        var code = new CodeDescriptor
+        {
+            References = new[] { typeof(IPage).Assembly, typeof(Regex).Assembly },
+            Code = @"
+                using System.Threading.Tasks;
+                using Microsoft.Playwright;
+
+                class TestClass
+                {
+                    private string _selector = ""//div[@class='form']/button"";
+
+                    public async Task TestMethod(IPage page)
+                    {
+                        await page.Locator(_selector).ClickAsync();
+                    }
+                }"
+        };
+
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(11, 44));
+    }
+
+    [Test]
+    public async Task AG0045_WhenUsingXPathInProperty_ShowError()
+    {
+        var code = new CodeDescriptor
+        {
+            References = new[] { typeof(IPage).Assembly, typeof(Regex).Assembly },
+            Code = @"
+                using System.Threading.Tasks;
+                using Microsoft.Playwright;
+
+                class TestClass
+                {
+                    private string Selector { get; } = ""//div[@class='form']/button"";
 
                     public async Task TestMethod(IPage page)
                     {
