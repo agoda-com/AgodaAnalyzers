@@ -284,4 +284,13 @@ One exception is logging, where it can be useful to see the exact DC / cluster /
   <data name="AG0045Description" xml:space="preserve">
     <value>XPath selectors are brittle and tightly coupled to DOM structure. Use Playwright's built-in locators like GetByRole, GetByText, GetByTestId, etc. for more reliable tests.</value>
   </data>
+  <data name="AG0047Title" xml:space="preserve">
+    <value>TestContainer Build() must be called after setting TESTCONTAINERS_HUB_IMAGE_NAME_PREFIX environment variable</value>
+  </data>
+  <data name="AG0047Description" xml:space="preserve">
+    <value>When using TestContainers with a mirror/proxy pull-through cache for Docker, the TESTCONTAINERS_HUB_IMAGE_NAME_PREFIX environment variable must be set before calling Build() on any container. This ensures that all container images are pulled from the correct mirror.</value>
+  </data>
+  <data name="AG0047MessageFormat" xml:space="preserve">
+    <value>TestContainer Build() must be called after setting {0} environment variable to ensure images are pulled from the correct mirror</value>
+  </data>
 </root>
