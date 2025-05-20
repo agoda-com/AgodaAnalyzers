@@ -547,5 +547,32 @@ namespace Agoda.Analyzers.AgodaCustom {
                 return ResourceManager.GetString("AG0045Title", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Using test IDs for element selection creates a clear contract between the UI and tests, leading to more stable and maintainable test automation. Other locator methods like GetByText(), GetByRole(), etc. can make tests brittle and tightly coupled to UI changes..
+        /// </summary>
+        public static string AG0046Description {
+            get {
+                return ResourceManager.GetString("AG0046Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use GetByTestId() to create a stable testing contract instead of {0}.
+        /// </summary>
+        public static string AG0046MessageFormat {
+            get {
+                return ResourceManager.GetString("AG0046MessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use GetByTestId() instead of other locator methods.
+        /// </summary>
+        public static string AG0046Title {
+            get {
+                return ResourceManager.GetString("AG0046Title", resourceCulture);
+            }
+        }
     }
 }

@@ -284,4 +284,13 @@ One exception is logging, where it can be useful to see the exact DC / cluster /
   <data name="AG0045Description" xml:space="preserve">
     <value>XPath selectors are brittle and tightly coupled to DOM structure. Use Playwright's built-in locators like GetByRole, GetByText, GetByTestId, etc. for more reliable tests.</value>
   </data>
+  <data name="AG0046Title" xml:space="preserve">
+    <value>Use GetByTestId() instead of other locator methods</value>
+  </data>
+  <data name="AG0046MessageFormat" xml:space="preserve">
+    <value>Use GetByTestId() to create a stable testing contract instead of {0}</value>
+  </data>
+  <data name="AG0046Description" xml:space="preserve">
+    <value>Using test IDs for element selection creates a clear contract between the UI and tests, leading to more stable and maintainable test automation. Other locator methods like GetByText(), GetByRole(), etc. can make tests brittle and tightly coupled to UI changes.</value>
+  </data>
 </root>
