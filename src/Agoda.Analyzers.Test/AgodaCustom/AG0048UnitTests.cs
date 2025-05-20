@@ -325,4 +325,148 @@ class TestClass
         await VerifyDiagnosticsAsync(code, new DiagnosticLocation(22, 53));
     }
 
+    [Test]
+    public async Task TestMicrosoftExtensionsLogging_ShouldReportWhenArgumentExceptionPassedAsMessage()
+    {
+        var code = new CodeDescriptor
+        {
+            References = new[] { typeof(ILogger<>).Assembly },
+            Code = @"
+using Microsoft.Extensions.Logging;
+using System;
+
+class TestClass
+{
+    private readonly ILogger<TestClass> _logger;
+
+    public TestClass(ILogger<TestClass> logger)
+    {
+        _logger = logger;
+    }
+
+    public void TestMethod()
+    {
+        try
+        {
+            throw new ArgumentException(""Invalid argument"");
+        }
+        catch (ArgumentException ex)
+        {
+            _logger.LogError(""Something went wrong"", ex); // Should report warning
+        }
+    }
+}"
+        };
+
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(22, 54));
+    }
+
+    [Test]
+    public async Task TestMicrosoftExtensionsLogging_ShouldNotReportWhenArgumentExceptionPassedAsFirstParameter()
+    {
+        var code = new CodeDescriptor
+        {
+            References = new[] { typeof(ILogger<>).Assembly },
+            Code = @"
+using Microsoft.Extensions.Logging;
+using System;
+
+class TestClass
+{
+    private readonly ILogger<TestClass> _logger;
+
+    public TestClass(ILogger<TestClass> logger)
+    {
+        _logger = logger;
+    }
+
+    public void TestMethod()
+    {
+        try
+        {
+            throw new ArgumentException(""Invalid argument"");
+        }
+        catch (ArgumentException ex)
+        {
+            _logger.LogError(ex, ""Something went wrong""); // Should not report warning
+        }
+    }
+}"
+        };
+
+        await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+    }
+
+    [Test]
+    public async Task TestSerilog_ShouldReportWhenInvalidOperationExceptionPassedAsMessage()
+    {
+        var code = new CodeDescriptor
+        {
+            References = new[] { typeof(Serilog.ILogger).Assembly },
+            Code = @"
+using Serilog;
+using System;
+
+class TestClass
+{
+    private readonly ILogger _logger;
+
+    public TestClass(ILogger logger)
+    {
+        _logger = logger;
+    }
+
+    public void TestMethod()
+    {
+        try
+        {
+            throw new InvalidOperationException(""Invalid operation"");
+        }
+        catch (InvalidOperationException ex)
+        {
+            _logger.Error(""Something went wrong"", ex); // Should report warning
+        }
+    }
+}"
+        };
+
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(22, 51));
+    }
+
+    [Test]
+    public async Task TestSerilog_ShouldNotReportWhenInvalidOperationExceptionPassedAsFirstParameter()
+    {
+        var code = new CodeDescriptor
+        {
+            References = new[] { typeof(Serilog.ILogger).Assembly },
+            Code = @"
+using Serilog;
+using System;
+
+class TestClass
+{
+    private readonly ILogger _logger;
+
+    public TestClass(ILogger logger)
+    {
+        _logger = logger;
+    }
+
+    public void TestMethod()
+    {
+        try
+        {
+            throw new InvalidOperationException(""Invalid operation"");
+        }
+        catch (InvalidOperationException ex)
+        {
+            _logger.Error(ex, ""Something went wrong""); // Should not report warning
+        }
+    }
+}"
+        };
+
+        await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+    }
+
 } 
