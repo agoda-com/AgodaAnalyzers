@@ -547,5 +547,23 @@ namespace Agoda.Analyzers.AgodaCustom {
                 return ResourceManager.GetString("AG0045Title", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Exception should be passed as the first parameter to logger methods, not as a message parameter.
+        /// </summary>
+        public static string AG0048MessageFormat {
+            get {
+                return ResourceManager.GetString("AG0048MessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Do not pass exception as message parameter to logger methods.
+        /// </summary>
+        public static string AG0048Title {
+            get {
+                return ResourceManager.GetString("AG0048Title", resourceCulture);
+            }
+        }
     }
 }
