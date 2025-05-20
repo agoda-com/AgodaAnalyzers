@@ -181,9 +181,148 @@ class TestClass
         await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
     }
 
-    // Use Microsoft.Extensions.Logging.ILogger for Microsoft tests
-    // private class MicrosoftLoggerStub : Microsoft.Extensions.Logging.ILogger { }
+    [Test]
+    public async Task TestMicrosoftExtensionsLogging_ShouldReportWhenExceptionPassedAsMessage_LogInformation()
+    {
+        var code = new CodeDescriptor
+        {
+            References = new[] { typeof(ILogger<>).Assembly },
+            Code = @"
+using Microsoft.Extensions.Logging;
+using System;
 
-    // Use Serilog.ILogger for Serilog tests
-    // private class SerilogLoggerStub : Serilog.ILogger { }
+class TestClass
+{
+    private readonly ILogger<TestClass> _logger;
+
+    public TestClass(ILogger<TestClass> logger)
+    {
+        _logger = logger;
+    }
+
+    public void TestMethod()
+    {
+        try
+        {
+            throw new Exception(""Test"");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogInformation(""Something went wrong"", ex); // Should report warning
+        }
+    }
+}"
+        };
+
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(22, 60));
+    }
+
+    [Test]
+    public async Task TestMicrosoftExtensionsLogging_ShouldReportWhenExceptionPassedAsMessage_LogWarning()
+    {
+        var code = new CodeDescriptor
+        {
+            References = new[] { typeof(ILogger<>).Assembly },
+            Code = @"
+using Microsoft.Extensions.Logging;
+using System;
+
+class TestClass
+{
+    private readonly ILogger<TestClass> _logger;
+
+    public TestClass(ILogger<TestClass> logger)
+    {
+        _logger = logger;
+    }
+
+    public void TestMethod()
+    {
+        try
+        {
+            throw new Exception(""Test"");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(""Something went wrong"", ex); // Should report warning
+        }
+    }
+}"
+        };
+
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(22, 56));
+    }
+
+    [Test]
+    public async Task TestSerilog_ShouldReportWhenExceptionPassedAsMessage_Information()
+    {
+        var code = new CodeDescriptor
+        {
+            References = new[] { typeof(Serilog.ILogger).Assembly },
+            Code = @"
+using Serilog;
+using System;
+
+class TestClass
+{
+    private readonly ILogger _logger;
+
+    public TestClass(ILogger logger)
+    {
+        _logger = logger;
+    }
+
+    public void TestMethod()
+    {
+        try
+        {
+            throw new Exception(""Test"");
+        }
+        catch (Exception ex)
+        {
+            _logger.Information(""Something went wrong"", ex); // Should report warning
+        }
+    }
+}"
+        };
+
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(22, 57));
+    }
+
+    [Test]
+    public async Task TestSerilog_ShouldReportWhenExceptionPassedAsMessage_Warning()
+    {
+        var code = new CodeDescriptor
+        {
+            References = new[] { typeof(Serilog.ILogger).Assembly },
+            Code = @"
+using Serilog;
+using System;
+
+class TestClass
+{
+    private readonly ILogger _logger;
+
+    public TestClass(ILogger logger)
+    {
+        _logger = logger;
+    }
+
+    public void TestMethod()
+    {
+        try
+        {
+            throw new Exception(""Test"");
+        }
+        catch (Exception ex)
+        {
+            _logger.Warning(""Something went wrong"", ex); // Should report warning
+        }
+    }
+}"
+        };
+
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(22, 53));
+    }
+
 } 
