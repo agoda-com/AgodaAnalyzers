@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using Agoda.Analyzers.Helpers;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -18,24 +20,21 @@ namespace Agoda.Analyzers.AgodaCustom
             CustomRulesResources.ResourceManager,
             typeof(CustomRulesResources));
 
-        private static readonly LocalizableString MessageFormat = new LocalizableResourceString(
-            nameof(CustomRulesResources.AG0047MessageFormat),
-            CustomRulesResources.ResourceManager,
-            typeof(CustomRulesResources));
+        private static readonly LocalizableString MessageFormat = "TestContainer Build() must be called after setting TESTCONTAINERS_HUB_IMAGE_NAME_PREFIX environment variable to ensure images are pulled from the correct mirror";
 
-        private static readonly LocalizableString Description = new LocalizableResourceString(
-            nameof(CustomRulesResources.AG0047Description),
-            CustomRulesResources.ResourceManager,
-            typeof(CustomRulesResources));
+        private static readonly LocalizableString Description
+            = DescriptionContentLoader.GetAnalyzerDescription(nameof(AG0047TestContainerBuildOrderAnalyzer));
 
         private static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(
             DiagnosticId,
             Title,
             MessageFormat,
-            AnalyzerCategory.Custom,
+            AnalyzerCategory.CustomQualityRules,
             DiagnosticSeverity.Error,
-            isEnabledByDefault: true,
-            description: Description);
+            AnalyzerConstants.EnabledByDefault,
+            Description,
+            $"https://github.com/agoda-com/AgodaAnalyzers/blob/master/doc/{DiagnosticId}.md",
+            WellKnownDiagnosticTags.EditAndContinue);
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
 
@@ -63,22 +62,53 @@ namespace Agoda.Analyzers.AgodaCustom
             }
 
             // Get the containing method or constructor
-            var containingMethod = invocation.Ancestors()
-                .OfType<MethodDeclarationSyntax>()
-                .FirstOrDefault();
+            var containingNode = invocation.Ancestors()
+                .FirstOrDefault(node => 
+                    node is MethodDeclarationSyntax || 
+                    node is ConstructorDeclarationSyntax);
             
-            if (containingMethod == null)
+            if (containingNode == null)
+            {
+                return;
+            }
+
+            // Get the containing type
+            var containingType = containingNode.Ancestors().OfType<TypeDeclarationSyntax>().FirstOrDefault();
+            if (containingType == null)
+            {
+                return;
+            }
+
+            // Check if the environment variable is set in any method
+            bool envVarSetInAnyMethod = false;
+            var allMethods = containingType.Members.OfType<MethodDeclarationSyntax>();
+            foreach (var method in allMethods)
+            {
+                if (IsEnvironmentVariableSetInNode(method, null))
+                {
+                    envVarSetInAnyMethod = true;
+                    break;
+                }
+            }
+
+            // If env var is set in any method, do not flag Build() calls in any other method
+            if (envVarSetInAnyMethod && containingNode is MethodDeclarationSyntax)
             {
                 return;
             }
 
             // Check if the environment variable is set before this Build() call
-            if (!IsEnvironmentVariableSetBeforeBuild(containingMethod, invocation, context))
+            if (!IsEnvironmentVariableSetBeforeBuild(containingType, containingNode, invocation))
             {
+                var properties = ImmutableDictionary<string, string>.Empty.Add("VariableName", "TESTCONTAINERS_HUB_IMAGE_NAME_PREFIX");
+                // Report diagnostic at the 'Build' identifier
+                var memberAccess = invocation.Expression as MemberAccessExpressionSyntax;
+                var buildIdentifier = memberAccess?.Name;
+                var location = buildIdentifier != null ? buildIdentifier.GetLocation() : invocation.GetLocation();
                 context.ReportDiagnostic(Diagnostic.Create(
                     Rule,
-                    invocation.GetLocation(),
-                    "TESTCONTAINERS_HUB_IMAGE_NAME_PREFIX"));
+                    location,
+                    properties));
             }
         }
 
@@ -106,38 +136,102 @@ namespace Agoda.Analyzers.AgodaCustom
                 return false;
             }
 
-            // Check if the type name contains "Container" and is from Testcontainers namespace
-            return typeSymbol.Name.Contains("Container") &&
-                   typeSymbol.ContainingNamespace?.ToString().Contains("Testcontainers") == true;
+            // Check if the type name contains "Container" or "Builder" and is from Testcontainers namespace
+            var namespaceName = typeSymbol.ContainingNamespace?.ToString() ?? "";
+            return (typeSymbol.Name.Contains("Container") || typeSymbol.Name.Contains("Builder")) &&
+                   (namespaceName.Contains("Testcontainers") || namespaceName.Contains("DotNet.Testcontainers"));
         }
 
         private bool IsEnvironmentVariableSetBeforeBuild(
-            MethodDeclarationSyntax containingMethod,
-            InvocationExpressionSyntax buildCall,
-            SyntaxNodeAnalysisContext context)
+            TypeDeclarationSyntax containingType,
+            SyntaxNode containingNode,
+            InvocationExpressionSyntax buildCall)
         {
-            var statements = containingMethod.Body?.Statements ?? containingMethod.ExpressionBody?.Expression?.Parent?.Parent?.ChildNodes().OfType<StatementSyntax>();
-            if (statements == null)
+            // Check if the environment variable is set in the current method/constructor
+            if (IsEnvironmentVariableSetInNode(containingNode, buildCall))
             {
-                return false;
+                return true;
             }
 
-            var buildCallPosition = buildCall.GetLocation().SourceSpan.Start;
-            
-            foreach (var statement in statements)
-            {
-                if (statement.GetLocation().SourceSpan.Start >= buildCallPosition)
-                {
-                    break;
-                }
+            // Check if the environment variable is set in a setup method
+            var setupMethods = containingType.Members
+                .OfType<MethodDeclarationSyntax>()
+                .Where(m => IsOneTimeSetUpMethod(m) || IsSetUpMethod(m));
 
-                if (IsEnvironmentVariableSetStatement(statement))
+            foreach (var setupMethod in setupMethods)
+            {
+                if (IsEnvironmentVariableSetInNode(setupMethod, null))
                 {
                     return true;
                 }
             }
 
             return false;
+        }
+
+        private bool IsEnvironmentVariableSetInNode(SyntaxNode node, InvocationExpressionSyntax buildCall)
+        {
+            var statements = GetStatements(node);
+            if (statements == null)
+            {
+                return false;
+            }
+
+            if (buildCall != null)
+            {
+                var buildCallPosition = buildCall.GetLocation().SourceSpan.Start;
+                var foundEnvVarSet = false;
+                foreach (var statement in statements)
+                {
+                    if (statement.GetLocation().SourceSpan.Start >= buildCallPosition)
+                    {
+                        break;
+                    }
+
+                    if (IsEnvironmentVariableSetStatement(statement))
+                    {
+                        foundEnvVarSet = true;
+                        break;  // Found the environment variable set before this Build() call
+                    }
+                }
+                return foundEnvVarSet;
+            }
+            else
+            {
+                // If no build call is provided, check all statements
+                return statements.Any(IsEnvironmentVariableSetStatement);
+            }
+        }
+
+        private bool IsOneTimeSetUpMethod(MethodDeclarationSyntax method)
+        {
+            return method.AttributeLists
+                .SelectMany(al => al.Attributes)
+                .Any(a => a.Name.ToString() == "OneTimeSetUp" || a.Name.ToString() == "OneTimeSetUpAttribute");
+        }
+
+        private bool IsSetUpMethod(MethodDeclarationSyntax method)
+        {
+            return method.AttributeLists
+                .SelectMany(al => al.Attributes)
+                .Any(a => a.Name.ToString() == "SetUp" || a.Name.ToString() == "SetUpAttribute");
+        }
+
+        private IEnumerable<StatementSyntax> GetStatements(SyntaxNode node)
+        {
+            switch (node)
+            {
+                case MethodDeclarationSyntax method:
+                    return method.Body?.Statements ?? 
+                           method.ExpressionBody?.Expression?.Parent?.Parent?.ChildNodes().OfType<StatementSyntax>();
+                
+                case ConstructorDeclarationSyntax constructor:
+                    return constructor.Body?.Statements ?? 
+                           constructor.ExpressionBody?.Expression?.Parent?.Parent?.ChildNodes().OfType<StatementSyntax>();
+                
+                default:
+                    return null;
+            }
         }
 
         private bool IsEnvironmentVariableSetStatement(SyntaxNode statement)
