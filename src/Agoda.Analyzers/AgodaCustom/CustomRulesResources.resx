@@ -284,4 +284,13 @@ One exception is logging, where it can be useful to see the exact DC / cluster /
   <data name="AG0045Description" xml:space="preserve">
     <value>XPath selectors are brittle and tightly coupled to DOM structure. Use Playwright's built-in locators like GetByRole, GetByText, GetByTestId, etc. for more reliable tests.</value>
   </data>
+  <data name="AG0046Title" xml:space="preserve">
+    <value>Avoid using force: true in Playwright click operations</value>
+  </data>
+  <data name="AG0046Description" xml:space="preserve">
+    <value>Using force: true in LocatorClickOptions bypasses actionability checks and can lead to flaky tests. Instead, use proper waiting mechanisms and fix underlying visibility/state issues.</value>
+  </data>
+  <data name="AG0046MessageFormat" xml:space="preserve">
+    <value>Using force: true in LocatorClickOptions bypasses actionability checks and can lead to flaky tests. Consider using proper waiting mechanisms instead.</value>
+  </data>
 </root>
