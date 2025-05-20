@@ -7,6 +7,7 @@ using NUnit.Framework;
 namespace Agoda.Analyzers.Test.AgodaCustom;
 
 [TestFixture]
+[Parallelizable(ParallelScope.All)]
 internal class AG0024UnitTests : DiagnosticVerifier
 {
 

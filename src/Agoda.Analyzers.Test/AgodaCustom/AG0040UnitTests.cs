@@ -8,6 +8,7 @@ using Microsoft.Playwright;
 namespace Agoda.Analyzers.Test.AgodaCustom;
 
 [TestFixture]
+[Parallelizable(ParallelScope.All)]
 class AG0040UnitTests : DiagnosticVerifier
 {
     protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0040WaitUntilStateNetworkIdleMustNotBeUsed();

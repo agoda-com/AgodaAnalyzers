@@ -8,6 +8,7 @@ using Agoda.Analyzers.AgodaCustom;
 namespace Agoda.Analyzers.Test.AgodaCustom;
 
 [TestFixture]
+[Parallelizable(ParallelScope.All)]
 class AG0026UnitTests : DiagnosticVerifier
 {
     protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0026EnsureOnlyCssSelectorIsUsedToFindElements();

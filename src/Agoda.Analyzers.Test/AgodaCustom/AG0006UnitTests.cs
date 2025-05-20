@@ -7,6 +7,7 @@ using NUnit.Framework;
 namespace Agoda.Analyzers.Test.AgodaCustom;
 
 [TestFixture]
+[Parallelizable(ParallelScope.All)]
 internal class AG0006UnitTests : DiagnosticVerifier
 {
     private const string REGISTER_SINGLETON = "RegisterSingleton";
