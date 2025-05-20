@@ -7,7 +7,6 @@ using Microsoft.CodeAnalysis.Diagnostics;
 namespace Agoda.Analyzers.Test.AgodaCustom;
 
 [TestFixture]
-[Parallelizable(ParallelScope.All)]
 class AG0013UnitTests : DiagnosticVerifier
 {
     protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0013LimitNumberOfTestMethodParametersTo5();

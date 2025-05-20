@@ -8,7 +8,6 @@ using NUnit.Framework;
 namespace Agoda.Analyzers.Test.AgodaCustom;
 
 [TestFixture]
-[Parallelizable(ParallelScope.All)]
 class AG0044UnitTests : DiagnosticVerifier
 {
     protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0044ForceOptionShouldNotBeUsed();

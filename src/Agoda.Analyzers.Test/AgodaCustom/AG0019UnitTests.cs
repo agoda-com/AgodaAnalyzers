@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 namespace Agoda.Analyzers.Test.AgodaCustom;
 
 [TestFixture]
-[Parallelizable(ParallelScope.All)]
 internal class AG0019UnitTests : DiagnosticVerifier
 {
     protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0019PreventUseOfInternalsVisibleToAttribute();

@@ -7,7 +7,6 @@ using NUnit.Framework;
 namespace Agoda.Analyzers.Test.AgodaCustom;
 
 [TestFixture]
-[Parallelizable(ParallelScope.All)]
 internal class AG0025UnitTests : DiagnosticVerifier
 {
     protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0025PreventUseOfTaskContinue();
