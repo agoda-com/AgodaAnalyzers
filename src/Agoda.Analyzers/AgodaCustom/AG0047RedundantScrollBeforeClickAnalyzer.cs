@@ -43,7 +43,7 @@ namespace Agoda.Analyzers.AgodaCustom
         {
             { AnalyzerConstants.KEY_TECH_DEBT_IN_MINUTES, "5" }
         };
-
+        
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Descriptor);
 
         public override void Initialize(AnalysisContext context)

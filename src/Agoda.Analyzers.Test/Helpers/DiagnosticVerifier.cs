@@ -247,13 +247,16 @@ public abstract partial class DiagnosticVerifier
 
             if (actual.GetMessage() != expected.Message)
             {
+                // Normalize line endings to LF for both actual and expected before comparing
+                string actualMsg = actual.GetMessage()?.Replace("\r\n", "\n").Replace("\r", "\n");
+                string expectedMsg = expected.Message?.Replace("\r\n", "\n").Replace("\r", "\n");
                 var message =
                     string.Format(
                         "Expected diagnostic message to be \"{0}\" was \"{1}\"\r\n\r\nDiagnostic:\r\n    {2}\r\n",
-                        expected.Message,
-                        actual.GetMessage(),
+                        expectedMsg,
+                        actualMsg,
                         FormatDiagnostics(analyzers, actual));
-                Assert.True(false, message);
+                Assert.True(actualMsg == expectedMsg, message);
             }
         }
     }
