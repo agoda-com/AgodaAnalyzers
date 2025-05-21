@@ -8,7 +8,6 @@ using Microsoft.Extensions.DependencyInjection;
 namespace Agoda.Analyzers.Test.AgodaCustom;
 
 [TestFixture]
-[Parallelizable(ParallelScope.All)]
 class AG0043UnitTests : DiagnosticVerifier
 {
     protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0043NoBuildServiceProvider();
