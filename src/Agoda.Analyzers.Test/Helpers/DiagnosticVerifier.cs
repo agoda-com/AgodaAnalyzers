@@ -430,4 +430,15 @@ public abstract partial class DiagnosticVerifier
             }
         }
     }
+
+    [Test]
+    public async Task VerifyDiagnosticsAsync_NoDiagnostic()
+    {
+        var code = new CodeDescriptor
+        {
+            References = new[] { typeof(object).Assembly },
+            Code = @"class C { }"
+        };
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation[0]);
+    }
 }
