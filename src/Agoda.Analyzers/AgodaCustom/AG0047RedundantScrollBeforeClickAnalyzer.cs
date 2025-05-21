@@ -39,6 +39,11 @@ namespace Agoda.Analyzers.AgodaCustom
             Description,
             $"https://github.com/agoda-com/AgodaAnalyzers/blob/master/doc/{DIAGNOSTIC_ID}.md");
 
+        private static readonly Dictionary<string, string> _props = new Dictionary<string, string>()
+        {
+            { AnalyzerConstants.KEY_TECH_DEBT_IN_MINUTES, "5" }
+        };
+
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Descriptor);
 
         public override void Initialize(AnalysisContext context)
@@ -78,7 +83,7 @@ namespace Agoda.Analyzers.AgodaCustom
                     ma.Name.Identifier.Text == "ClickAsync" &&
                     ma.Expression.ToString() == locatorExpr)
                 {
-                    context.ReportDiagnostic(Diagnostic.Create(Descriptor, exprStmt.GetLocation()));
+                    context.ReportDiagnostic(Diagnostic.Create(Descriptor, exprStmt.GetLocation(), properties: _props.ToImmutableDictionary()));
                     return;
                 }
                 // Allow Task.Delay or trivial statements
