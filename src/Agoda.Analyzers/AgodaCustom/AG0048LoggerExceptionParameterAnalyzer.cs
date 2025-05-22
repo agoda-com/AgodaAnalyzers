@@ -76,18 +76,25 @@ namespace Agoda.Analyzers.AgodaCustom
             var namespaceName = containingNamespace.ToDisplayString();
             var methodName = methodSymbol.Name;
 
+            // Common log method names (both with and without "Log" prefix)
+            var logMethods = new[] 
+            { 
+                "Verbose", "Debug", "Information", "Warning", "Error", "Fatal", "Write",
+                "LogVerbose", "LogDebug", "LogInformation", "LogWarning", "LogError", "LogFatal", "Log"
+            };
+
             // Microsoft.Extensions.Logging: only extension methods
             if (namespaceName == "Microsoft.Extensions.Logging" && methodSymbol.IsExtensionMethod)
-                return true;
+            {
+                return logMethods.Contains(methodName);
+            }
 
             // Serilog: allow instance methods on Serilog.ILogger
             if (namespaceName.StartsWith("Serilog"))
             {
-                var serilogMethods = new[] { "Verbose", "Debug", "Information", "Warning", "Error", "Fatal", "Write" };
-                // Check if the containing type implements Serilog.ILogger
-                if (serilogMethods.Contains(methodName))
-                    return true;
+                return logMethods.Contains(methodName);
             }
+
             return false;
         }
 
