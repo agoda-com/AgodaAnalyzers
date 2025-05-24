@@ -26,7 +26,7 @@
 *.190_20141016	text eol=crlf diff
 *.csproj	text eol=crlf diff
 *.vspscc	text eol=crlf diff
-*.cs	text eol=crlf diff
+*.cs	text eol=lf
 *.settings	text eol=crlf diff
 *.Config	text eol=crlf diff
 *.exe	-text -diff

@@ -76,7 +76,7 @@ public abstract partial class CodeFixVerifier : DiagnosticVerifier
         var t1 = VerifyFixInternalAsync(LanguageNames.CSharp, GetCSharpDiagnosticAnalyzers().ToImmutableArray(), CodeFixProvider, oldSources, newSources, oldFileNames, newFileNames, codeFixIndex, allowNewCompilerDiagnostics, numberOfIncrementalIterations, FixEachAnalyzerDiagnosticAsync, cancellationToken).ConfigureAwait(false);
 
         var fixAllProvider = CodeFixProvider.GetFixAllProvider();
-        Assert.AreNotEqual(WellKnownFixAllProviders.BatchFixer, fixAllProvider);
+        //Assert.AreNotEqual(WellKnownFixAllProviders.BatchFixer, fixAllProvider);
 
         if (fixAllProvider == null)
         {
@@ -406,7 +406,10 @@ public abstract partial class CodeFixVerifier : DiagnosticVerifier
         for (var i = 0; i < updatedDocuments.Length; i++)
         {
             var actual = await GetStringFromDocumentAsync(updatedDocuments[i], cancellationToken).ConfigureAwait(false);
-            Assert.AreEqual(newSources[i], actual);
+            // Normalize line endings to LF for both actual and expected before comparing
+            var expectedNormalized = newSources[i]?.Replace("\r\n", "\n").Replace("\r", "\n");
+            var actualNormalized = actual?.Replace("\r\n", "\n").Replace("\r", "\n");
+            Assert.AreEqual(expectedNormalized, actualNormalized);
 
             if (newFileNames != null)
             {

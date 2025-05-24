@@ -590,5 +590,32 @@ namespace Agoda.Analyzers.AgodaCustom {
                 return ResourceManager.GetString("AG0048Title", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Calling ScrollIntoViewIfNeededAsync immediately before ClickAsync is unnecessary and may hide underlying test issues. ClickAsync already scrolls the element into view as needed..
+        /// </summary>
+        public static string AG0049Description {
+            get {
+                return ResourceManager.GetString("AG0049Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ScrollIntoViewIfNeededAsync is redundant before ClickAsync as clicking already performs scrolling automatically..
+        /// </summary>
+        public static string AG0049MessageFormat {
+            get {
+                return ResourceManager.GetString("AG0049MessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Redundant ScrollIntoViewIfNeededAsync before ClickAsync.
+        /// </summary>
+        public static string AG0049Title {
+            get {
+                return ResourceManager.GetString("AG0049Title", resourceCulture);
+            }
+        }
     }
 }
