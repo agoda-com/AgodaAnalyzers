@@ -549,6 +549,15 @@ namespace Agoda.Analyzers.AgodaCustom {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to When using TestContainers with a mirror/proxy pull-through cache for Docker, the TESTCONTAINERS_HUB_IMAGE_NAME_PREFIX environment variable must be set before calling Build() on any container. This ensures that all container images are pulled from the correct mirror..
+        /// </summary>
+        public static string AG0047Description {
+            get {
+                return ResourceManager.GetString("AG0047Description", resourceCulture);
+                }
+         }
+         
+        /// <summary>
         ///   Looks up a localized string similar to Using test IDs for element selection creates a clear contract between the UI and tests, leading to more stable and maintainable test automation. Other locator methods like GetByText(), GetByRole(), etc. can make tests brittle and tightly coupled to UI changes..
         /// </summary>
         public static string AG0046Description {
@@ -566,6 +575,14 @@ namespace Agoda.Analyzers.AgodaCustom {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to TestContainer Build() must be called after setting {0} environment variable to ensure images are pulled from the correct mirror.
+        /// </summary>
+        public static string AG0047MessageFormat {
+            get {
+                return ResourceManager.GetString("AG0047MessageFormat", resourceCulture);
+                }
+         }
+        /// <summary>
         ///   Looks up a localized string similar to Use GetByTestId() to create a stable testing contract instead of {0}.
         /// </summary>
         public static string AG0046MessageFormat {
@@ -574,6 +591,15 @@ namespace Agoda.Analyzers.AgodaCustom {
             }
         }
         
+        /// <summary>
+        ///   Looks up a localized string similar to TestContainer Build() must be called after setting TESTCONTAINERS_HUB_IMAGE_NAME_PREFIX environment variable.
+        /// </summary>
+        public static string AG0047Title {
+            get {
+                return ResourceManager.GetString("AG0047Title", resourceCulture);
+                }
+         }
+
         /// <summary>
         ///   Looks up a localized string similar to Use GetByTestId() instead of other locator methods.
         /// </summary>
