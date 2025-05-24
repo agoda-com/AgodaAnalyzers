@@ -51,6 +51,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Doc", "Doc", "{670A7514-B0E
 		..\doc\AG0042.md = ..\doc\AG0042.md
 		..\doc\AG0043.md = ..\doc\AG0043.md
 		..\doc\AG0044.md = ..\doc\AG0044.md
+		..\doc\AG0049.md = ..\doc\AG0049.md
 	EndProjectSection
 EndProject
 Global
