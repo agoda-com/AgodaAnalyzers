@@ -11,8 +11,8 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Agoda.Analyzers.AgodaCustom
 {
-    [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(AG0049RedundantScrollBeforeClickCodeFixProvider)), Shared]
-    public class AG0049RedundantScrollBeforeClickCodeFixProvider : CodeFixProvider
+    [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(AG0047RedundantScrollBeforeClickCodeFixProvider)), Shared]
+    public class AG0047RedundantScrollBeforeClickCodeFixProvider : CodeFixProvider
     {
         private const string Title = "Remove redundant ScrollIntoViewIfNeededAsync call";
 

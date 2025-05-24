@@ -10,22 +10,22 @@ using Agoda.Analyzers.Helpers;
 namespace Agoda.Analyzers.AgodaCustom
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    public class AG0047RedundantScrollBeforeClickAnalyzer : DiagnosticAnalyzer
+    public class AG0049RedundantScrollBeforeClickAnalyzer : DiagnosticAnalyzer
     {
-        public const string DIAGNOSTIC_ID = "AG0047";
+        public const string DIAGNOSTIC_ID = "AG0049";
 
         private static readonly LocalizableString Title = new LocalizableResourceString(
-            nameof(CustomRulesResources.AG0047Title),
+            nameof(CustomRulesResources.AG0049Title),
             CustomRulesResources.ResourceManager,
             typeof(CustomRulesResources));
 
         private static readonly LocalizableString MessageFormat = new LocalizableResourceString(
-            nameof(CustomRulesResources.AG0047MessageFormat),
+            nameof(CustomRulesResources.AG0049MessageFormat),
             CustomRulesResources.ResourceManager,
             typeof(CustomRulesResources));
 
         private static readonly LocalizableString Description = new LocalizableResourceString(
-            nameof(CustomRulesResources.AG0047Description),
+            nameof(CustomRulesResources.AG0049Description),
             CustomRulesResources.ResourceManager,
             typeof(CustomRulesResources));
 

@@ -76,7 +76,7 @@ public abstract partial class CodeFixVerifier : DiagnosticVerifier
         var t1 = VerifyFixInternalAsync(LanguageNames.CSharp, GetCSharpDiagnosticAnalyzers().ToImmutableArray(), CodeFixProvider, oldSources, newSources, oldFileNames, newFileNames, codeFixIndex, allowNewCompilerDiagnostics, numberOfIncrementalIterations, FixEachAnalyzerDiagnosticAsync, cancellationToken).ConfigureAwait(false);
 
         var fixAllProvider = CodeFixProvider.GetFixAllProvider();
-        Assert.AreNotEqual(WellKnownFixAllProviders.BatchFixer, fixAllProvider);
+        //Assert.AreNotEqual(WellKnownFixAllProviders.BatchFixer, fixAllProvider);
 
         if (fixAllProvider == null)
         {

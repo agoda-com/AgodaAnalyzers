@@ -7,13 +7,13 @@ using NUnit.Framework;
 
 namespace Agoda.Analyzers.Test.AgodaCustom;
 
-class AG0047UnitTests : DiagnosticVerifier
+class AG0049UnitTests : DiagnosticVerifier
 {
-    protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0047RedundantScrollBeforeClickAnalyzer();
-    protected override string DiagnosticId => AG0047RedundantScrollBeforeClickAnalyzer.DIAGNOSTIC_ID;
+    protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0049RedundantScrollBeforeClickAnalyzer();
+    protected override string DiagnosticId => AG0049RedundantScrollBeforeClickAnalyzer.DIAGNOSTIC_ID;
 
     [Test]
-    public async Task AG0047_WhenScrollAndClickOnSameLocator_ShouldShowDiagnostic()
+    public async Task AG0049_WhenScrollAndClickOnSameLocator_ShouldShowDiagnostic()
     {
         var code = new CodeDescriptor
         {
@@ -35,7 +35,7 @@ class AG0047UnitTests : DiagnosticVerifier
     }
 
     [Test]
-    public async Task AG0047_WhenScrollAndClickWithDelay_ShouldShowDiagnostic()
+    public async Task AG0049_WhenScrollAndClickWithDelay_ShouldShowDiagnostic()
     {
         var code = new CodeDescriptor
         {
@@ -58,7 +58,7 @@ class AG0047UnitTests : DiagnosticVerifier
     }
 
     [Test]
-    public async Task AG0047_WhenOnlyClick_ShouldNotShowDiagnostic()
+    public async Task AG0049_WhenOnlyClick_ShouldNotShowDiagnostic()
     {
         var code = new CodeDescriptor
         {
@@ -79,7 +79,7 @@ class AG0047UnitTests : DiagnosticVerifier
     }
 
     [Test]
-    public async Task AG0047_WhenScrollAndHoverThenClick_ShouldNotShowDiagnostic()
+    public async Task AG0049_WhenScrollAndHoverThenClick_ShouldNotShowDiagnostic()
     {
         var code = new CodeDescriptor
         {

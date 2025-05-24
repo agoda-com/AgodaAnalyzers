@@ -9,11 +9,11 @@ using NUnit.Framework;
 namespace Agoda.Analyzers.Test.CodeFixes.AgodaCustom;
 
 [TestFixture]
-public class AG0047RedundantScrollBeforeClickCodeFixProviderTests : CodeFixVerifier
+public class Ag0049RedundantScrollBeforeClickCodeFixProviderTests : CodeFixVerifier
 {
-    protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0047RedundantScrollBeforeClickAnalyzer();
-    protected override CodeFixProvider CodeFixProvider => new AG0047RedundantScrollBeforeClickCodeFixProvider();
-    protected override string DiagnosticId => AG0047RedundantScrollBeforeClickAnalyzer.DIAGNOSTIC_ID;
+    protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0049RedundantScrollBeforeClickAnalyzer();
+    protected override CodeFixProvider CodeFixProvider => new AG0049RedundantScrollBeforeClickCodeFixProvider();
+    protected override string DiagnosticId => AG0049RedundantScrollBeforeClickAnalyzer.DIAGNOSTIC_ID;
 
     [Test]
     public async Task CodeFix_RemovesRedundantScrollIntoViewIfNeededAsync_BeforeClickAsync()
