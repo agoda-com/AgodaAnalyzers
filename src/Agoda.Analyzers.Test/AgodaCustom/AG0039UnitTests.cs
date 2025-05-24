@@ -6,6 +6,7 @@ using NUnit.Framework;
 
 namespace Agoda.Analyzers.Test.AgodaCustom;
 
+[TestFixture]
 class AG0039UnitTests : DiagnosticVerifier
 {
     protected override DiagnosticAnalyzer DiagnosticAnalyzer => new AG0039MethodLineLengthAnalyzer();
