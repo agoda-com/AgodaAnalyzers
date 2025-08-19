@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net472</TargetFrameworks>
     <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
@@ -49,9 +49,9 @@
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
   </ItemGroup>
 	<ItemGroup>
-		<None Include="bin\Release\netstandard2.0\Agoda.Analyzers.dll" Pack="true" PackagePath="analyzers\dotnet\cs" Visible="false" />
-		<None Include="bin\Release\netstandard2.0\**\Agoda.Analyzers.resources.dll" Pack="true" PackagePath="analyzers\dotnet\cs" Visible="false" />
-		<None Include="bin\Release\netstandard2.0\Agoda.Analyzers.pdb" Pack="true" PackagePath="analyzers\dotnet\cs" Visible="false" />
+		<None Include="bin\$(Configuration)\netstandard2.0\Agoda.Analyzers.dll" Pack="true" PackagePath="analyzers\dotnet\cs" Visible="false" />
+		<None Include="bin\$(Configuration)\netstandard2.0\**\Agoda.Analyzers.resources.dll" Pack="true" PackagePath="analyzers\dotnet\cs" Visible="false" />
+		<None Include="bin\$(Configuration)\netstandard2.0\Agoda.Analyzers.pdb" Pack="true" PackagePath="analyzers\dotnet\cs" Visible="false" />
 		<Content Include="AgodaAnalyzersAgoji.png" Pack="true" PackagePath="">
 		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
