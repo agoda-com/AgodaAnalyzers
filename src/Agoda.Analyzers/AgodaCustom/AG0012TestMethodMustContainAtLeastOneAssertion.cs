@@ -88,27 +88,37 @@ namespace Agoda.Analyzers.AgodaCustom
 
         private static bool HasInvokedAssertExtensionMethod(MethodDeclarationSyntax methodDeclaration, SyntaxNodeAnalysisContext context)
         {
-            var i = methodDeclaration.Body.Statements
+            var methodCalls = methodDeclaration.Body.Statements
                 .SelectMany(s => s.DescendantNodesAndSelf())
                 .OfType<InvocationExpressionSyntax>()
                 .Select(ies => ies.Expression)
-                .OfType<MemberAccessExpressionSyntax>();
-            var z = i.Select(mae => mae.Name)
-                .OfType<IdentifierNameSyntax>();
-            foreach (var identifierNameSyntax in z)
-            {
-                var t = context.SemanticModel.GetSymbolInfo(identifierNameSyntax);
-                var u = context.SemanticModel.GetDiagnostics();
-                var r = context.SemanticModel.GetDeclaredSymbol(identifierNameSyntax);
-            }
-            var y = z.Select(ins => context.SemanticModel.GetSymbolInfo(ins).Symbol)
-            .Any(symbol => AssertionLibraryList
-                    .Where(lib => lib.HasExtenstionMethods).Any(lib
-                    => symbol.ContainingNamespace.ToDisplayString() == lib.Namespace
-                    && symbol.ContainingModule.ToDisplayString() == lib.Module
-                    && symbol.ContainingType.ToDisplayString().StartsWith(lib.Type)
-                    && symbol.Name.StartsWith(lib.Name)));
-            return y;
+                .OfType<MemberAccessExpressionSyntax>()
+                .Select(mae => mae.Name)
+                .OfType<IdentifierNameSyntax>()
+                .ToList();
+
+            // Also check for generic method calls
+            var genericMethodCalls = methodDeclaration.Body.Statements
+                .SelectMany(s => s.DescendantNodesAndSelf())
+                .OfType<InvocationExpressionSyntax>()
+                .Select(ies => ies.Expression)
+                .OfType<MemberAccessExpressionSyntax>()
+                .Select(mae => mae.Name)
+                .OfType<GenericNameSyntax>()
+                .ToList();
+
+            // Then check for other extension methods using symbol analysis
+            var allMethodCalls = methodCalls.Cast<SimpleNameSyntax>().Concat(genericMethodCalls.Cast<SimpleNameSyntax>());
+            return allMethodCalls
+                .Select(ins => context.SemanticModel.GetSymbolInfo(ins).Symbol)
+                .Any(symbol => symbol != null && AssertionLibraryList
+                    .Where(lib => lib.HasExtenstionMethods)
+                    .Any(lib => symbol.ContainingNamespace != null 
+                        && symbol.ContainingModule != null 
+                        && symbol.ContainingType != null
+                        && symbol.ContainingNamespace.ToDisplayString() == lib.Namespace
+                        && symbol.ContainingModule.ToDisplayString() == lib.Module
+                        && symbol.ContainingType.ToDisplayString().StartsWith(lib.Type)));
         }
 
         private class AssertLibraryInfo
