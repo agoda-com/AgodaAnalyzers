@@ -242,4 +242,31 @@ internal class AG0012UnitTests : DiagnosticVerifier
 
         await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
     }
+    
+    [Test]
+    public async Task AG0012_WithShouldlyBeOfTypeAssertion_ShouldNotShowWarning()
+    {
+        var code = new CodeDescriptor
+        {
+            References = new[] { typeof(TestFixtureAttribute).Assembly, typeof(Shouldly.Should).Assembly },
+            Code = @"
+                    using NUnit.Framework;
+                    using Shouldly;
+                    
+                    namespace Tests
+                    {
+                        public class TestClass
+                        {
+                            [Test]
+                            public void OnActionExecutionAsync_UnAuthorized_ReturnsUnauthorizedResult()
+                            {
+                                TestClass result = new TestClass();
+                                result.ShouldBeOfType<TestClass>();
+                            }
+                        }
+                    }"
+        };
+
+        await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+    }
 }
