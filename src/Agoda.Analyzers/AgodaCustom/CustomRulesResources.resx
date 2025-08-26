@@ -308,4 +308,14 @@ One exception is logging, where it can be useful to see the exact DC / cluster /
   <data name="AG0048MessageFormat" xml:space="preserve">
     <value>Exception should be passed as the first parameter to logger methods, not as a message parameter</value>
   </data>
+
+  <data name="AG0050Title" xml:space="preserve">
+    <value>Generated client model used in controller action</value>
+  </data>
+  <data name="AG0050MessageFormat" xml:space="preserve">
+    <value>Controller action '{0}' uses generated client model '{1}' from assembly '{2}'. Use dedicated response/request models to avoid tight coupling.</value>
+  </data>
+  <data name="AG0050Description" xml:space="preserve">
+    <value>Controller actions should not use generated client models in parameters or return types (including nested properties) to avoid tight coupling between data/dependency layer models and API response models.</value>
+  </data>
 </root>
