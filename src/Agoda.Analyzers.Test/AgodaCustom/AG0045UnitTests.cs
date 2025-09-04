@@ -80,7 +80,7 @@ class AG0045UnitTests : DiagnosticVerifier
                 }"
         };
 
-        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(11, 44));
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(7, 53));
     }
 
     [Test]
@@ -103,7 +103,7 @@ class AG0045UnitTests : DiagnosticVerifier
                 }"
         };
 
-        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(10, 44));
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(9, 40));
     }
 
     [Test]
@@ -127,7 +127,7 @@ class AG0045UnitTests : DiagnosticVerifier
                 }"
         };
 
-        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(11, 44));
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(7, 48));
     }
 
     [Test]
@@ -151,7 +151,7 @@ class AG0045UnitTests : DiagnosticVerifier
                 }"
         };
 
-        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(11, 44));
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(7, 56));
     }
 
     [Test]
@@ -226,5 +226,219 @@ class AG0045UnitTests : DiagnosticVerifier
         };
 
         await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+    }
+
+    // Tests for new XPath detection in declarations
+    [Test]
+    public async Task AG0045_WhenUsingXPathInConstDeclaration_ShowError()
+    {
+        var code = @"
+            class TestClass
+            {
+                public const string XPathBaseDiscountInput = ""//*[@data-element-name=\""ycs-channel-discounts-base-discount-input\""]"";
+            }";
+
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(4, 62));
+    }
+
+    [Test]
+    public async Task AG0045_WhenUsingXPathInMultipleConstDeclarations_ShowMultipleErrors()
+    {
+        var code = @"
+            class TestClass
+            {
+                public const string XPathStackingTypeToggle = ""//*[@data-element-name=\""ycs-channel-discounts-allow-stack-toggle\""]"";
+                public const string XPathStackedDiscountInput = ""//*[@data-element-name=\""ycs-channel-discounts-stacked-discount-input\""]"";
+                public const string XPathFirstRateplan = ""//*[@data-testid=\""ycs-promotion-rate-plans-v2-option-1997\""]"";
+            }";
+
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation[]
+        {
+            new DiagnosticLocation(4, 63),
+            new DiagnosticLocation(5, 65),
+            new DiagnosticLocation(6, 58)
+        });
+    }
+
+    [Test]
+    public async Task AG0045_WhenUsingXPathInStaticReadonlyField_ShowError()
+    {
+        var code = @"
+            class TestClass
+            {
+                private static readonly string XPathDeactivationFooterButton = ""//*[@data-element-name=\""ycs-channel-discounts-deactivate-channel-button\""]"";
+            }";
+
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(4, 80));
+    }
+
+    [Test]
+    public async Task AG0045_WhenUsingXPathInPropertyInitializer_ShowError()
+    {
+        var code = @"
+            class TestClass
+            {
+                public string XPathSaveButton { get; } = ""//*[@data-testid=\""footer-save-promotion\""]"";
+            }";
+
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(4, 58));
+    }
+
+    [Test]
+    public async Task AG0045_WhenUsingXPathInReturnStatement_ShowError()
+    {
+        var code = @"
+            class TestClass
+            {
+                public string GetXPathSelector()
+                {
+                    return ""//*[@data-selenium=\""save-success-toast\""]"";
+                }
+            }";
+
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(6, 28));
+    }
+
+    [Test]
+    public async Task AG0045_WhenUsingXPathInInterpolatedString_ShowError()
+    {
+        var code = @"
+            class TestClass
+            {
+                public static string XPathDatePickerDate(string date) => $""//*[@data-day=\""{date}\""]"";
+            }";
+
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(4, 74));
+    }
+
+    [Test]
+    public async Task AG0045_WhenUsingXPathInMethodWithInterpolation_ShowError()
+    {
+        var code = @"
+            class TestClass
+            {
+                public string GetDateSelector(string date)
+                {
+                    return $""//*[@data-day=\""{date}\""]"";
+                }
+            }";
+
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(6, 28));
+    }
+
+    [Test]
+    public async Task AG0045_WhenUsingXPathNamedVariableWithNonXPathValue_ShowError()
+    {
+        var code = @"
+            class TestClass
+            {
+                public const string XPathSelector = ""button.submit"";
+            }";
+
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(4, 53));
+    }
+
+    [Test]
+    public async Task AG0045_WhenUsingNonXPathNamedVariableWithXPathValue_ShowError()
+    {
+        var code = @"
+            class TestClass
+            {
+                public const string ButtonSelector = ""//*[@data-testid=\""submit-button\""]"";
+            }";
+
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(4, 54));
+    }
+
+    [Test]
+    public async Task AG0045_WhenUsingXPathWithDataSeleniumAttribute_ShowError()
+    {
+        var code = @"
+            class TestClass
+            {
+                public const string XPathCxlPolicyOption13308 = ""//*[@data-selenium=\""channel-discount-cancellation-policy-selection-item-13308\""]"";
+            }";
+
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(4, 65));
+    }
+
+    [Test]
+    public async Task AG0045_WhenUsingXPathWithComplexExpression_ShowError()
+    {
+        var code = @"
+            class TestClass
+            {
+                public const string ComplexXPath = ""//div[contains(@class,'menu')]/following-sibling::div[@data-testid='item']"";
+            }";
+
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(4, 52));
+    }
+
+    [Test]
+    public async Task AG0045_WhenUsingValidCssSelectors_NoError()
+    {
+        var code = @"
+            class TestClass
+            {
+                public const string ButtonSelector = ""button.submit"";
+                public const string FormSelector = "".form-container > input[type='text']"";
+                public const string IdSelector = ""#submit-button"";
+                public string DataTestIdSelector { get; } = ""[data-testid='login-form']"";
+                
+                public string GetSelector(string id)
+                {
+                    return $""button[data-id='{id}']"";
+                }
+            }";
+
+        await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+    }
+
+    [Test]
+    public async Task AG0045_WhenUsingValidAriaSelectors_NoError()
+    {
+        var code = @"
+            class TestClass
+            {
+                public const string AriaSelector = ""[aria-label='Submit Form']"";
+                public const string RoleSelector = ""[role='button']"";
+                public string AccessibilitySelector { get; } = ""[aria-describedby='help-text']"";
+            }";
+
+        await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+    }
+
+    [Test]
+    public async Task AG0045_WhenUsingMixedValidAndInvalidSelectors_ShowOnlyXPathErrors()
+    {
+        var code = @"
+            class TestClass
+            {
+                public const string ValidSelector = ""button.submit"";
+                public const string XPathSelector = ""//*[@data-testid='submit']"";
+                public const string AnotherValidSelector = ""#login-form"";
+                public const string AnotherXPathSelector = ""//div[@class='container']"";
+            }";
+
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation[]
+        {
+            new DiagnosticLocation(5, 53),
+            new DiagnosticLocation(7, 60)
+        });
+    }
+
+    [Test]
+    public async Task AG0045_WhenUsingXPathInVariableDeclarationWithMultipleVariables_ShowError()
+    {
+        var code = @"
+            class TestClass
+            {
+                public void TestMethod()
+                {
+                    string validSelector = ""button.submit"", xpathSelector = ""//*[@id='test']"";
+                }
+            }";
+
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(6, 77));
     }
 } 
