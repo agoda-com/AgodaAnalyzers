@@ -609,11 +609,47 @@ namespace Agoda.Analyzers.AgodaCustom {
             }
         }
         /// <summary>
+        ///   Looks up a localized string similar to When logging exceptions, pass the exception as the first parameter to ensure proper exception handling and formatting by logging frameworks. This improves error tracking and debugging capabilities.
+        /// </summary>
+        public static string AG0048Description {
+            get {
+                return ResourceManager.GetString("AG0048Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Do not pass exception as message parameter to logger methods.
         /// </summary>
         public static string AG0048Title {
             get {
                 return ResourceManager.GetString("AG0048Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to WaitForResponseAsync can cause flaky tests due to race conditions. Use RunAndWaitForResponseAsync to ensure the action that triggers the response is executed within the wait context, making tests more reliable.
+        /// </summary>
+        public static string AG0049Description {
+            get {
+                return ResourceManager.GetString("AG0049Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use RunAndWaitForResponseAsync instead of WaitForResponseAsync to avoid test flakiness and race conditions.
+        /// </summary>
+        public static string AG0049MessageFormat {
+            get {
+                return ResourceManager.GetString("AG0049MessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Avoid using WaitForResponseAsync in Playwright tests.
+        /// </summary>
+        public static string AG0049Title {
+            get {
+                return ResourceManager.GetString("AG0049Title", resourceCulture);
             }
         }
     }

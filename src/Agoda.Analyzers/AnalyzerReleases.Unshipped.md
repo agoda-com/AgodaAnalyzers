@@ -27,6 +27,7 @@ AG0042 | Agoda.CSharp.CustomQualityRules | Warning | AG0042QuerySelectorShouldNo
 AG0043 | Agoda.CSharp.CustomQualityRules | Error | AG0043NoBuildServiceProvider, [Documentation](https://github.com/agoda-com/AgodaAnalyzers/blob/master/doc/AG0043.md)
 AG0044 | Usage | Warning | AG0044ForceOptionShouldNotBeUsed
 AG0047 | Agoda.CSharp.CustomQualityRules | Error | AG0047TestContainerBuildOrderAnalyzer
+AG0049 | Agoda.CSharp.CustomQualityRules | Warning | AG0049AvoidWaitForResponseAsync, [Documentation](https://github.com/agoda-com/AgodaAnalyzers/blob/master/doc/AG0049.md)
 SA1106 | StyleCop.CSharp.ReadabilityRules | Warning | SA1106CodeMustNotContainEmptyStatements
 SA1107 | StyleCop.CSharp.ReadabilityRules | Warning | SA1107CodeMustNotContainMultipleStatementsOnOneLine
 SA1123 | StyleCop.CSharp.ReadabilityRules | Warning | SA1123DoNotPlaceRegionsWithinElements
