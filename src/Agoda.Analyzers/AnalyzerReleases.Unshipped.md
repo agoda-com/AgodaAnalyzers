@@ -26,7 +26,10 @@ AG0041 | Best Practices | Warning | AG0041LogTemplateAnalyzer, [Documentation](h
 AG0042 | Agoda.CSharp.CustomQualityRules | Warning | AG0042QuerySelectorShouldNotBeUsed, [Documentation](https://github.com/agoda-com/AgodaAnalyzers/blob/master/doc/AG0042.md)
 AG0043 | Agoda.CSharp.CustomQualityRules | Error | AG0043NoBuildServiceProvider, [Documentation](https://github.com/agoda-com/AgodaAnalyzers/blob/master/doc/AG0043.md)
 AG0044 | Usage | Warning | AG0044ForceOptionShouldNotBeUsed
+AG0045 | Agoda.CSharp.CustomQualityRules | Warning | AG0045XPathShouldNotBeUsedInPlaywrightLocators, [Documentation](https://github.com/agoda-com/AgodaAnalyzers/blob/master/doc/AG0045.md)
+AG0046 | Agoda.CSharp.CustomQualityRules | Warning | AG0046EnforceGetByTestIdUsageInPlaywright, [Documentation](https://github.com/agoda-com/AgodaAnalyzers/blob/master/doc/AG0046.md)
 AG0047 | Agoda.CSharp.CustomQualityRules | Error | AG0047TestContainerBuildOrderAnalyzer
+AG0048 | Agoda.CSharp.CustomQualityRules | Warning | AG0048LoggerExceptionParameterAnalyzer, [Documentation](https://github.com/agoda-com/AgodaAnalyzers/blob/master/doc/AG0048.md)
 AG0049 | Agoda.CSharp.CustomQualityRules | Warning | AG0049AvoidWaitForResponseAsync, [Documentation](https://github.com/agoda-com/AgodaAnalyzers/blob/master/doc/AG0049.md)
 SA1106 | StyleCop.CSharp.ReadabilityRules | Warning | SA1106CodeMustNotContainEmptyStatements
 SA1107 | StyleCop.CSharp.ReadabilityRules | Warning | SA1107CodeMustNotContainMultipleStatementsOnOneLine
