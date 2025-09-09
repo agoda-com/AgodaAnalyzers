@@ -43,7 +43,7 @@ namespace Agoda.Analyzers.AgodaCustom
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Descriptor);
 
-        private static readonly Regex XPathPattern = new Regex(@"^(xpath=|//|\.\./|/\*|ancestor::|following-sibling::|preceding-sibling::|parent::|child::|descendant::|ancestor-or-self::|descendant-or-self::|following::|preceding::|self::|\$)");
+        private static readonly Regex XPathPattern = new Regex(@"^(xpath=|//[@\[\*]|//[a-zA-Z][a-zA-Z0-9\-_]*(\[|$)|\.\./|/\*|ancestor::|following-sibling::|preceding-sibling::|parent::|child::|descendant::|ancestor-or-self::|descendant-or-self::|following::|preceding::|self::)");
 
         public override void Initialize(AnalysisContext context)
         {
