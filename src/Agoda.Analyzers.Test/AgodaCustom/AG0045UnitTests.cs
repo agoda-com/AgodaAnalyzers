@@ -441,4 +441,68 @@ class AG0045UnitTests : DiagnosticVerifier
 
         await VerifyDiagnosticsAsync(code, new DiagnosticLocation(6, 77));
     }
+
+    [Test]
+    public async Task AG0045_WhenUsingDollarSignInLogging_NoError()
+    {
+        var code = @"
+            using System.Threading.Tasks;
+            using System.Linq;
+
+            class LogHelper
+            {
+                public static string GetCommaSeparatedList(System.Collections.Generic.IEnumerable<int> items)
+                {
+                    return string.Join("","", items);
+                }
+            }
+
+            class GwModel
+            {
+                public System.Collections.Generic.List<RateMutation> RatesMutationList { get; set; }
+            }
+
+            class RateMutation
+            {
+                public int RatePlanId { get; set; }
+            }
+
+            class Logger
+            {
+                public void Information(string message) { }
+            }
+
+            class TestClass
+            {
+                private Logger _logger = new Logger();
+
+                public void TestMethod()
+                {
+                    var gwModel = new GwModel();
+                    _logger.Information($""Updating mutation for A variant "" +
+                                        $""${LogHelper.GetCommaSeparatedList(gwModel
+                                            .RatesMutationList?
+                                            .Select(x => x.RatePlanId))}"");
+                }
+            }";
+
+        await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+    }
+
+    [Test]
+    public async Task AG0045_WhenUsingDoubleSlashInNonXPathContext_NoError()
+    {
+        var code = @"
+            class TestClass
+            {
+                public void TestMethod()
+                {
+                    string url = ""https://example.com//path"";
+                    string comment = ""// This is a comment"";
+                    string regex = ""//d+"";
+                }
+            }";
+
+        await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+    }
 } 
