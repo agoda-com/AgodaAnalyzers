@@ -505,4 +505,87 @@ class AG0045UnitTests : DiagnosticVerifier
 
         await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
     }
+
+    [Test]
+    public async Task AG0045_WhenUsingUrlsWithDoubleSlash_NoError()
+    {
+        var code = @"
+            class TestClass
+            {
+                private string _agodaHomesChromeExtensionId = ""test-id"";
+                
+                public void TestMethod()
+                {
+                    string url = ""//hkg.agoda.com/path"";
+                    string interpolatedUrl1 = $""//hkg.agoda.com{url}"";
+                    string interpolatedUrl2 = $""//chrome.google.com/webstore/detail/{_agodaHomesChromeExtensionId}"";
+                    string protocolRelativeUrl = ""//cdn.example.com/script.js"";
+                    string networkPath = ""//server.domain.com/resource"";
+                    string apiEndpoint = ""//api.service.com/v1/data"";
+                }
+            }";
+
+        await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+    }
+
+    [Test]
+    public async Task AG0045_WhenUsingCommonNonXPathPatterns_NoError()
+    {
+        var code = @"
+            class TestClass
+            {
+                public void TestMethod()
+                {
+                    // URLs and protocol-relative URLs
+                    string url1 = ""//example.com"";
+                    string url2 = ""//subdomain.example.com/path"";
+                    string url3 = ""//cdn.jsdelivr.net/npm/package"";
+                    
+                    // Comments and documentation
+                    string comment1 = ""// TODO: implement this"";
+                    string comment2 = ""//NOTE: this is important"";
+                    
+                    // Regex patterns
+                    string regex1 = ""//d+"";
+                    string regex2 = ""//s*"";
+                    string regex3 = ""//w+"";
+                    
+                    // File paths (Windows UNC paths)
+                    string uncPath = ""//server/share/file.txt"";
+                    
+                    // Network protocols
+                    string ftpUrl = ""//ftp.example.com/file"";
+                    string smbPath = ""//networkdrive/folder"";
+                }
+            }";
+
+        await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+    }
+
+    [Test]
+    public async Task AG0045_WhenUsingActualXPathExpressions_ShowError()
+    {
+        var code = @"
+            class TestClass
+            {
+                public void TestMethod()
+                {
+                    // These should still be detected as XPath
+                    string xpath1 = ""//*[@id='test']"";
+                    string xpath2 = ""//div[@class='container']"";
+                    string xpath3 = ""//button[text()='Submit']"";
+                    string xpath4 = ""//input[@data-testid='username']"";
+                    string xpath5 = ""//*"";
+                }
+            }";
+
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation[]
+        {
+            new DiagnosticLocation(7, 37),
+            new DiagnosticLocation(8, 37),
+            new DiagnosticLocation(9, 37),
+            new DiagnosticLocation(10, 37),
+            new DiagnosticLocation(11, 37)
+        });
+    }
 } 
