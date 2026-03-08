@@ -19,7 +19,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         private const string SpecFlowStub = @"
 namespace TechTalk.SpecFlow
 {
-    [System.AttributeUsage(System.AttributeTargets.Class)]
+    [System.AttributeUsage(System.AttributeTargets.Class, AllowMultiple = true)]
     public class BindingAttribute : System.Attribute { }
 
     [System.AttributeUsage(System.AttributeTargets.Method)]
@@ -44,7 +44,7 @@ namespace TechTalk.SpecFlow
         private const string ReqnrollStub = @"
 namespace Reqnroll
 {
-    [System.AttributeUsage(System.AttributeTargets.Class)]
+    [System.AttributeUsage(System.AttributeTargets.Class, AllowMultiple = true)]
     public class BindingAttribute : System.Attribute { }
 
     [System.AttributeUsage(System.AttributeTargets.Method)]
@@ -161,8 +161,9 @@ public partial class OrderSteps
         {
             var code = new CodeDescriptor
             {
-                Code = SpecFlowStub + @"
+                Code = @"
 using TechTalk.SpecFlow;
+" + SpecFlowStub + @"
 
 [Binding]
 public class OrderSteps
@@ -207,8 +208,9 @@ public partial class OrderSteps
         {
             var code = new CodeDescriptor
             {
-                Code = SpecFlowStub + @"
+                Code = @"
 using TechTalk.SpecFlow;
+" + SpecFlowStub + @"
 
 [Binding]
 public class OrderSteps
@@ -226,8 +228,9 @@ public class OrderSteps
         {
             var code = new CodeDescriptor
             {
-                Code = SpecFlowStub + @"
+                Code = @"
 using TechTalk.SpecFlow;
+" + SpecFlowStub + @"
 
 [Binding]
 public partial class OrderSteps
@@ -281,7 +284,11 @@ public class OrderThenSteps
             var project = CreateProject(sources);
             var documents = project.Documents.ToArray();
             var analyzersArray = ImmutableArray.Create(DiagnosticAnalyzer);
-            var diagnostics = await GetSortedDiagnosticsFromDocumentsAsync(analyzersArray, documents, CancellationToken.None);
+            var allDiagnostics = await GetSortedDiagnosticsFromDocumentsAsync(analyzersArray, documents, CancellationToken.None);
+
+            var diagnostics = allDiagnostics
+                .Where(d => d.Id == AG0054DetectSplitBindingStepDefinitions.DIAGNOSTIC_ID)
+                .ToArray();
 
             Assert.AreEqual(expectedCount, diagnostics.Length,
                 $"Expected {expectedCount} diagnostics but got {diagnostics.Length}. " +

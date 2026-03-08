@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -40,6 +41,12 @@ namespace Agoda.Analyzers.AgodaCustom
             Description,
             $"https://github.com/agoda-com/AgodaAnalyzers/blob/master/doc/{DiagnosticId}.md",
             WellKnownDiagnosticTags.EditAndContinue);
+
+        private static readonly ImmutableDictionary<string, string> Properties =
+            new Dictionary<string, string>
+            {
+                { AnalyzerConstants.KEY_TECH_DEBT_IN_MINUTES, "10" }
+            }.ToImmutableDictionary();
 
         private const int SafeYearThreshold = 2020;
 
@@ -85,7 +92,7 @@ namespace Agoda.Analyzers.AgodaCustom
             if (year < SafeYearThreshold)
                 return;
 
-            context.ReportDiagnostic(Diagnostic.Create(Rule, creation.GetLocation()));
+            context.ReportDiagnostic(Diagnostic.Create(Rule, creation.GetLocation(), Properties));
         }
 
         private void AnalyzeInvocation(SyntaxNodeAnalysisContext context)
@@ -123,7 +130,7 @@ namespace Agoda.Analyzers.AgodaCustom
             if (TryExtractYear(dateString, out var year) && year < SafeYearThreshold)
                 return;
 
-            context.ReportDiagnostic(Diagnostic.Create(Rule, invocation.GetLocation()));
+            context.ReportDiagnostic(Diagnostic.Create(Rule, invocation.GetLocation(), Properties));
         }
 
         private static bool AllArgumentsAreLiterals(System.Collections.Generic.IEnumerable<ArgumentSyntax> arguments)

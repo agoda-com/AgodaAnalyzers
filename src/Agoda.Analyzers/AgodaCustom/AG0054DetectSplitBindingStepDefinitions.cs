@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.CodeAnalysis;
@@ -35,6 +36,12 @@ namespace Agoda.Analyzers.AgodaCustom
             Description,
             $"https://github.com/agoda-com/AgodaAnalyzers/blob/master/doc/{DIAGNOSTIC_ID}.md",
             WellKnownDiagnosticTags.EditAndContinue);
+
+        private static readonly ImmutableDictionary<string, string> Properties =
+            new Dictionary<string, string>
+            {
+                { AnalyzerConstants.KEY_TECH_DEBT_IN_MINUTES, "15" }
+            }.ToImmutableDictionary();
 
         private static readonly string[] BindingAttributeNames =
         {
@@ -76,6 +83,8 @@ namespace Agoda.Analyzers.AgodaCustom
             context.ReportDiagnostic(Diagnostic.Create(
                 Descriptor,
                 namedType.Locations[0],
+                Properties,
+                null,
                 namedType.Name,
                 distinctTrees));
         }

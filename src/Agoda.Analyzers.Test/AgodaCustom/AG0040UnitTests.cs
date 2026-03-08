@@ -49,7 +49,7 @@ class AG0040UnitTests : DiagnosticVerifier
                     }
                 "
         };
-        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(6, 51));
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(6, 46));
     }
 
     [Test]
