@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -319,5 +319,14 @@ One exception is logging, where it can be useful to see the exact DC / cluster /
   </data>
   <data name="AG0049Description" xml:space="preserve">
     <value>WaitForResponseAsync can cause flaky tests due to race conditions. Use RunAndWaitForResponseAsync to ensure the action that triggers the response is executed within the wait context, making tests more reliable.</value>
+  </data>
+  <data name="AG0053Title" xml:space="preserve">
+    <value>Playwright screenshot/snapshot assertions must be preceded by an explicit wait</value>
+  </data>
+  <data name="AG0053MessageFormat" xml:space="preserve">
+    <value>Add an explicit wait (ToBeVisibleAsync, WaitForAsync, or WaitForSelectorAsync) before taking a screenshot or snapshot to avoid flaky visual tests</value>
+  </data>
+  <data name="AG0053Description" xml:space="preserve">
+    <value>Taking screenshots or snapshot assertions without first waiting for elements to be visible and stable causes flaky visual tests. Always add an explicit element wait before ScreenshotAsync, ToHaveScreenshotAsync, or ToMatchSnapshotAsync calls.</value>
   </data>
 </root>
