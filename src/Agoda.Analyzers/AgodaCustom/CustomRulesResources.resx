@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -252,10 +252,10 @@ One exception is logging, where it can be useful to see the exact DC / cluster /
     <value>Method {0} has {1} lines of code and is potentially not readable, consider refactoring for better readability {2} non-whitespace lines is what we recommend as a maximum, but its up to individual context</value>
   </data>
   <data name="AG0040Title" xml:space="preserve">
-    <value>Do not use WaitUntilState.NetworlIdle. It makes test flaky. Don't use this method for testing, rely on web assertions to assess readiness instead.</value>
+    <value>Do not use WaitUntilState.NetworkIdle or LoadState.NetworkIdle. It makes tests flaky. Rely on web assertions to assess readiness instead.</value>
   </data>
   <data name="AG0040MessageFormat" xml:space="preserve">
-    <value>Do not use WaitUntilState.NetworlIdle. It makes test flaky. Don't use this method for testing, rely on web assertions to assess readiness instead.</value>
+    <value>Do not use WaitUntilState.NetworkIdle or LoadState.NetworkIdle. It makes tests flaky. Rely on web assertions to assess readiness instead.</value>
   </data>
   <data name="AG0041Title" xml:space="preserve">
     <value>You are using either an interpolated string or string concatenation in your logs, change these to the message template format to preserve structure in your logs</value>
@@ -319,5 +319,41 @@ One exception is logging, where it can be useful to see the exact DC / cluster /
   </data>
   <data name="AG0049Description" xml:space="preserve">
     <value>WaitForResponseAsync can cause flaky tests due to race conditions. Use RunAndWaitForResponseAsync to ensure the action that triggers the response is executed within the wait context, making tests more reliable.</value>
+  </data>
+  <data name="AG0052Title" xml:space="preserve">
+    <value>Do not use Task.Delay with hardcoded values in test code</value>
+  </data>
+  <data name="AG0052MessageFormat" xml:space="preserve">
+    <value>Task.Delay with a hardcoded duration makes tests flakey. Use explicit waits, event-driven synchronization, or configurable timeouts instead.</value>
+  </data>
+  <data name="AG0052Description" xml:space="preserve">
+    <value>Task.Delay with hardcoded durations in test code creates timing-dependent tests that are flakey — they either wait too long (slowing CI) or not long enough (causing intermittent failures on slower machines). Use explicit waits, event-driven synchronization, or configurable timeouts instead.</value>
+  </data>
+  <data name="AG0053Title" xml:space="preserve">
+    <value>Playwright screenshot/snapshot assertions must be preceded by an explicit wait</value>
+  </data>
+  <data name="AG0053MessageFormat" xml:space="preserve">
+    <value>Add an explicit wait (ToBeVisibleAsync, WaitForAsync, or WaitForSelectorAsync) before taking a screenshot or snapshot to avoid flaky visual tests</value>
+  </data>
+  <data name="AG0053Description" xml:space="preserve">
+    <value>Taking screenshots or snapshot assertions without first waiting for elements to be visible and stable causes flaky visual tests. Always add an explicit element wait before ScreenshotAsync, ToHaveScreenshotAsync, or ToMatchSnapshotAsync calls.</value>
+  </data>
+  <data name="AG0051Title" xml:space="preserve">
+    <value>Do not use hardcoded date literals in test data</value>
+  </data>
+  <data name="AG0051MessageFormat" xml:space="preserve">
+    <value>Hardcoded date literal acts as a timebomb — use DateTime.Today/UtcNow with relative offsets instead</value>
+  </data>
+  <data name="AG0051Description" xml:space="preserve">
+    <value>Hardcoded dates in test fixtures (e.g. new DateTime(2025, 12, 31)) become timebombs that cause test failures when the calendar passes the hardcoded date. Use DateTime.Today.AddDays(N) or DateTimeOffset.UtcNow.AddDays(N) with relative offsets instead.</value>
+  </data>
+  <data name="AG0054Title" xml:space="preserve">
+    <value>SpecFlow [Binding] partial class is split across multiple files</value>
+  </data>
+  <data name="AG0054MessageFormat" xml:space="preserve">
+    <value>SpecFlow [Binding] class '{0}' is split across {1} files. Consolidate step definitions into a single file to avoid intermittent binding resolution failures.</value>
+  </data>
+  <data name="AG0054Description" xml:space="preserve">
+    <value>SpecFlow step definition classes decorated with [Binding] should not be split across multiple files using partial classes. Splitting step definitions across files can cause intermittent binding resolution failures at runtime.</value>
   </data>
 </root>

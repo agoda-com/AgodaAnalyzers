@@ -1,4 +1,4 @@
-﻿; Unshipped analyzer release
+; Unshipped analyzer release
 ; https://github.com/dotnet/roslyn-analyzers/blob/main/src/Microsoft.CodeAnalysis.Analyzers/ReleaseTrackingAnalyzers.Help.md
 
 ### New Rules
@@ -31,6 +31,10 @@ AG0046 | Agoda.CSharp.CustomQualityRules | Warning | AG0046EnforceGetByTestIdUsa
 AG0047 | Agoda.CSharp.CustomQualityRules | Error | AG0047TestContainerBuildOrderAnalyzer
 AG0048 | Agoda.CSharp.CustomQualityRules | Warning | AG0048LoggerExceptionParameterAnalyzer, [Documentation](https://github.com/agoda-com/AgodaAnalyzers/blob/master/doc/AG0048.md)
 AG0049 | Agoda.CSharp.CustomQualityRules | Warning | AG0049AvoidWaitForResponseAsync, [Documentation](https://github.com/agoda-com/AgodaAnalyzers/blob/master/doc/AG0049.md)
+AG0051 | Agoda.CSharp.CustomQualityRules | Warning | AG0051DetectHardcodedDateLiterals, [Documentation](https://github.com/agoda-com/AgodaAnalyzers/blob/master/doc/AG0051.md)
+AG0052 | Agoda.CSharp.CustomQualityRules | Warning | AG0052PreventHardcodedTaskDelayInTests, [Documentation](https://github.com/agoda-com/AgodaAnalyzers/blob/master/doc/AG0052.md)
+AG0053 | Agoda.CSharp.CustomQualityRules | Warning | AG0053ScreenshotMustHavePrecedingWait, [Documentation](https://github.com/agoda-com/AgodaAnalyzers/blob/master/doc/AG0053.md)
+AG0054 | Agoda.CSharp.CustomQualityRules | Warning | AG0054DetectSplitBindingStepDefinitions, [Documentation](https://github.com/agoda-com/AgodaAnalyzers/blob/master/doc/AG0054.md)
 SA1106 | StyleCop.CSharp.ReadabilityRules | Warning | SA1106CodeMustNotContainEmptyStatements
 SA1107 | StyleCop.CSharp.ReadabilityRules | Warning | SA1107CodeMustNotContainMultipleStatementsOnOneLine
 SA1123 | StyleCop.CSharp.ReadabilityRules | Warning | SA1123DoNotPlaceRegionsWithinElements
