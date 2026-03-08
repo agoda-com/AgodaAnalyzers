@@ -51,8 +51,14 @@ namespace Agoda.Analyzers.AgodaCustom
         private const int SafeYearThreshold = 2020;
 
         private static readonly Regex DateStringPattern = new Regex(
-            @"^\d{4}[-/]\d{1,2}[-/]\d{1,2}",
+            @"^\d{4}[-/]\d{1,2}[-/]\d{1,2}($|[T\s])",
             RegexOptions.Compiled);
+
+        private static readonly HashSet<string> TestClassAttributes = new HashSet<string>
+        {
+            "NUnit.Framework.TestFixtureAttribute",
+            "Microsoft.VisualStudio.TestTools.UnitTesting.TestClassAttribute",
+        };
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
 
@@ -66,6 +72,9 @@ namespace Agoda.Analyzers.AgodaCustom
 
         private void AnalyzeObjectCreation(SyntaxNodeAnalysisContext context)
         {
+            if (!IsInTestContext(context))
+                return;
+
             var creation = (ObjectCreationExpressionSyntax)context.Node;
             var typeInfo = context.SemanticModel.GetTypeInfo(creation);
             var typeSymbol = typeInfo.Type;
@@ -97,6 +106,9 @@ namespace Agoda.Analyzers.AgodaCustom
 
         private void AnalyzeInvocation(SyntaxNodeAnalysisContext context)
         {
+            if (!IsInTestContext(context))
+                return;
+
             var invocation = (InvocationExpressionSyntax)context.Node;
 
             if (!(invocation.Expression is MemberAccessExpressionSyntax memberAccess))
@@ -133,7 +145,43 @@ namespace Agoda.Analyzers.AgodaCustom
             context.ReportDiagnostic(Diagnostic.Create(Rule, invocation.GetLocation(), Properties));
         }
 
-        private static bool AllArgumentsAreLiterals(System.Collections.Generic.IEnumerable<ArgumentSyntax> arguments)
+        private static bool IsInTestContext(SyntaxNodeAnalysisContext context)
+        {
+            var containingSymbol = context.ContainingSymbol;
+            var ns = containingSymbol?.ContainingNamespace?.ToDisplayString();
+            if (ns != null && HasTestNamespaceSegment(ns))
+                return true;
+
+            var containingType = containingSymbol?.ContainingType ?? containingSymbol as INamedTypeSymbol;
+            while (containingType != null)
+            {
+                if (HasTestAttribute(containingType))
+                    return true;
+                containingType = containingType.ContainingType;
+            }
+
+            return false;
+        }
+
+        private static bool HasTestNamespaceSegment(string ns)
+        {
+            foreach (var segment in ns.Split('.'))
+            {
+                if (segment.EndsWith("Test", StringComparison.OrdinalIgnoreCase) ||
+                    segment.EndsWith("Tests", StringComparison.OrdinalIgnoreCase) ||
+                    segment.StartsWith("Test", StringComparison.OrdinalIgnoreCase))
+                    return true;
+            }
+            return false;
+        }
+
+        private static bool HasTestAttribute(INamedTypeSymbol type)
+        {
+            return type.GetAttributes().Any(attr =>
+                TestClassAttributes.Contains(attr.AttributeClass?.ToString()));
+        }
+
+        private static bool AllArgumentsAreLiterals(IEnumerable<ArgumentSyntax> arguments)
         {
             return arguments.All(arg => arg.Expression is LiteralExpressionSyntax literal
                                         && literal.IsKind(SyntaxKind.NumericLiteralExpression));

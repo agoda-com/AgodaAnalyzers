@@ -84,7 +84,6 @@ namespace Agoda.Analyzers.AgodaCustom
                 Descriptor,
                 namedType.Locations[0],
                 Properties,
-                null,
                 namedType.Name,
                 distinctTrees));
         }
