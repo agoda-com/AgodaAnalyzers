@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -319,5 +319,14 @@ One exception is logging, where it can be useful to see the exact DC / cluster /
   </data>
   <data name="AG0049Description" xml:space="preserve">
     <value>WaitForResponseAsync can cause flaky tests due to race conditions. Use RunAndWaitForResponseAsync to ensure the action that triggers the response is executed within the wait context, making tests more reliable.</value>
+  </data>
+  <data name="AG0052Title" xml:space="preserve">
+    <value>Do not use Task.Delay with hardcoded values in test code</value>
+  </data>
+  <data name="AG0052MessageFormat" xml:space="preserve">
+    <value>Task.Delay with a hardcoded duration makes tests flakey. Use explicit waits, event-driven synchronization, or configurable timeouts instead.</value>
+  </data>
+  <data name="AG0052Description" xml:space="preserve">
+    <value>Task.Delay with hardcoded durations in test code creates timing-dependent tests that are flakey — they either wait too long (slowing CI) or not long enough (causing intermittent failures on slower machines). Use explicit waits, event-driven synchronization, or configurable timeouts instead.</value>
   </data>
 </root>
