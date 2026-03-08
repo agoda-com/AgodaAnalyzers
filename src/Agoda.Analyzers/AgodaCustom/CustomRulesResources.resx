@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -319,5 +319,14 @@ One exception is logging, where it can be useful to see the exact DC / cluster /
   </data>
   <data name="AG0049Description" xml:space="preserve">
     <value>WaitForResponseAsync can cause flaky tests due to race conditions. Use RunAndWaitForResponseAsync to ensure the action that triggers the response is executed within the wait context, making tests more reliable.</value>
+  </data>
+  <data name="AG0054Title" xml:space="preserve">
+    <value>SpecFlow [Binding] partial class is split across multiple files</value>
+  </data>
+  <data name="AG0054MessageFormat" xml:space="preserve">
+    <value>SpecFlow [Binding] class '{0}' is split across {1} files. Consolidate step definitions into a single file to avoid intermittent binding resolution failures.</value>
+  </data>
+  <data name="AG0054Description" xml:space="preserve">
+    <value>SpecFlow step definition classes decorated with [Binding] should not be split across multiple files using partial classes. Splitting step definitions across files can cause intermittent binding resolution failures at runtime.</value>
   </data>
 </root>
