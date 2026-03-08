@@ -14,7 +14,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         protected override string DiagnosticId => AG0053ScreenshotMustHavePrecedingWait.DIAGNOSTIC_ID;
 
         [Test]
-        public async Task AG0053_ScreenshotWithoutWait_ShowsWarning()
+        public async Task AG0053_PageScreenshotWithoutWait_ShowsWarning()
         {
             var code = new CodeDescriptor
             {
@@ -33,78 +33,7 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                 }"
             };
 
-            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(9, 25));
-        }
-
-        [Test]
-        public async Task AG0053_ToHaveScreenshotWithoutWait_ShowsWarning()
-        {
-            var code = new CodeDescriptor
-            {
-                References = new[] { typeof(Microsoft.Playwright.IPage).Assembly },
-                Code = @"
-                using System.Threading.Tasks;
-                using Microsoft.Playwright;
-
-                class TestClass
-                {
-                    public async Task TestMethod(IPage page)
-                    {
-                        await page.GotoAsync(""/dashboard"");
-                        await Assertions.Expect(page).ToHaveScreenshotAsync();
-                    }
-                }"
-            };
-
-            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(9, 25));
-        }
-
-        [Test]
-        public async Task AG0053_ScreenshotWithPrecedingToBeVisibleAsync_NoWarning()
-        {
-            var code = new CodeDescriptor
-            {
-                References = new[] { typeof(Microsoft.Playwright.IPage).Assembly },
-                Code = @"
-                using System.Threading.Tasks;
-                using Microsoft.Playwright;
-
-                class TestClass
-                {
-                    public async Task TestMethod(IPage page)
-                    {
-                        await page.GotoAsync(""/dashboard"");
-                        await Assertions.Expect(page.GetByTestId(""content"")).ToBeVisibleAsync();
-                        await page.ScreenshotAsync();
-                    }
-                }"
-            };
-
-            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
-        }
-
-        [Test]
-        public async Task AG0053_ToHaveScreenshotWithPrecedingToBeVisibleAsync_NoWarning()
-        {
-            var code = new CodeDescriptor
-            {
-                References = new[] { typeof(Microsoft.Playwright.IPage).Assembly },
-                Code = @"
-                using System.Threading.Tasks;
-                using Microsoft.Playwright;
-
-                class TestClass
-                {
-                    public async Task TestMethod(IPage page)
-                    {
-                        await page.GotoAsync(""/dashboard"");
-                        await Assertions.Expect(page.GetByTestId(""loaded"")).ToBeVisibleAsync();
-                        await Assertions.Expect(page).ToHaveScreenshotAsync();
-                    }
-                }"
-            };
-
-            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(10, 31));
         }
 
         [Test]
@@ -132,55 +61,6 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         }
 
         [Test]
-        public async Task AG0053_ScreenshotWithPrecedingLocatorWaitForAsync_NoWarning()
-        {
-            var code = new CodeDescriptor
-            {
-                References = new[] { typeof(Microsoft.Playwright.IPage).Assembly },
-                Code = @"
-                using System.Threading.Tasks;
-                using Microsoft.Playwright;
-
-                class TestClass
-                {
-                    public async Task TestMethod(IPage page)
-                    {
-                        await page.GotoAsync(""/dashboard"");
-                        var locator = page.GetByTestId(""content"");
-                        await locator.WaitForAsync();
-                        await page.ScreenshotAsync();
-                    }
-                }"
-            };
-
-            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
-        }
-
-        [Test]
-        public async Task AG0053_LocatorScreenshotWithoutWait_ShowsWarning()
-        {
-            var code = new CodeDescriptor
-            {
-                References = new[] { typeof(Microsoft.Playwright.IPage).Assembly },
-                Code = @"
-                using System.Threading.Tasks;
-                using Microsoft.Playwright;
-
-                class TestClass
-                {
-                    public async Task TestMethod(IPage page)
-                    {
-                        await page.GetByTestId(""open-modal"").ClickAsync();
-                        var modal = page.GetByTestId(""modal-container"");
-                        await modal.ScreenshotAsync();
-                    }
-                }"
-            };
-
-            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(10, 25));
-        }
-
-        [Test]
         public async Task AG0053_WaitForLoadStateIsNotSufficient_ShowsWarning()
         {
             var code = new CodeDescriptor
@@ -196,12 +76,12 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                     {
                         await page.GotoAsync(""/profile"");
                         await page.WaitForLoadStateAsync();
-                        await Assertions.Expect(page).ToHaveScreenshotAsync();
+                        await page.ScreenshotAsync();
                     }
                 }"
             };
 
-            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(10, 25));
+            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(11, 31));
         }
 
         [Test]
@@ -231,7 +111,54 @@ namespace Agoda.Analyzers.Test.AgodaCustom
         }
 
         [Test]
-        public async Task AG0053_MultipleScreenshots_OnlyFirstWithoutWait_ShowsWarning()
+        public async Task AG0053_ScreenshotAssignedToVar_ShowsWarning()
+        {
+            var code = new CodeDescriptor
+            {
+                References = new[] { typeof(Microsoft.Playwright.IPage).Assembly },
+                Code = @"
+                using System.Threading.Tasks;
+                using Microsoft.Playwright;
+
+                class TestClass
+                {
+                    public async Task TestMethod(IPage page)
+                    {
+                        await page.GotoAsync(""/settings"");
+                        var bytes = await page.ScreenshotAsync();
+                    }
+                }"
+            };
+
+            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(10, 43));
+        }
+
+        [Test]
+        public async Task AG0053_ScreenshotWithWaitForSelectorBefore_NoWarning()
+        {
+            var code = new CodeDescriptor
+            {
+                References = new[] { typeof(Microsoft.Playwright.IPage).Assembly },
+                Code = @"
+                using System.Threading.Tasks;
+                using Microsoft.Playwright;
+
+                class TestClass
+                {
+                    public async Task TestMethod(IPage page)
+                    {
+                        await page.GotoAsync(""/analytics"");
+                        var element = await page.WaitForSelectorAsync("".chart-ready"");
+                        var bytes = await page.ScreenshotAsync();
+                    }
+                }"
+            };
+
+            await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+        }
+
+        [Test]
+        public async Task AG0053_MultiplePageScreenshots_FirstWithoutWait_ShowsWarning()
         {
             var code = new CodeDescriptor
             {
@@ -246,13 +173,13 @@ namespace Agoda.Analyzers.Test.AgodaCustom
                     {
                         await page.GotoAsync(""/dashboard"");
                         await page.ScreenshotAsync();
-                        await Assertions.Expect(page.GetByTestId(""content"")).ToBeVisibleAsync();
-                        await Assertions.Expect(page).ToHaveScreenshotAsync();
+                        await page.WaitForSelectorAsync("".loaded"");
+                        await page.ScreenshotAsync();
                     }
                 }"
             };
 
-            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(9, 25));
+            await VerifyDiagnosticsAsync(code, new DiagnosticLocation(10, 31));
         }
     }
 }
