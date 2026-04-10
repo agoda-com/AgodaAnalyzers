@@ -43,7 +43,11 @@ namespace Agoda.Analyzers.AgodaCustom
         private static readonly AssertLibraryInfo[] AssertionLibraryList =
         {
             new AssertLibraryInfo("NUnit.Framework", "nunit.framework.dll", "Assert"),
-            new AssertLibraryInfo("Shouldly", "Shouldly.dll", "Should", "Shouldly.Should"),
+            new AssertLibraryInfo("Shouldly", "Shouldly.dll", "Should", "Shouldly."),
+            new AssertLibraryInfo("NSubstitute", "NSubstitute.dll", "SubstituteExtensions", "NSubstitute.SubstituteExtensions",
+                new[] { "Received", "DidNotReceive", "ReceivedWithAnyArgs", "DidNotReceiveWithAnyArgs" }),
+            new AssertLibraryInfo("NSubstitute.ReceivedExtensions", "NSubstitute.dll", "ReceivedExtensions",
+                "NSubstitute.ReceivedExtensions.ReceivedExtensions"),
             //FluentAssertions
         };
 
@@ -118,7 +122,8 @@ namespace Agoda.Analyzers.AgodaCustom
                         && symbol.ContainingType != null
                         && symbol.ContainingNamespace.ToDisplayString() == lib.Namespace
                         && symbol.ContainingModule.ToDisplayString() == lib.Module
-                        && symbol.ContainingType.ToDisplayString().StartsWith(lib.Type)));
+                        && symbol.ContainingType.ToDisplayString().StartsWith(lib.Type)
+                        && (lib.AssertMethodNames == null || lib.AssertMethodNames.Contains(symbol.Name))));
         }
 
         private class AssertLibraryInfo
@@ -128,14 +133,17 @@ namespace Agoda.Analyzers.AgodaCustom
             public string Name { get; }
             public string Type { get; }
             public bool HasExtenstionMethods { get; }
+            public string[] AssertMethodNames { get; }
 
-            public AssertLibraryInfo(string namespaceTitle, string module, string name, string type = null)
+            public AssertLibraryInfo(string namespaceTitle, string module, string name, string type = null,
+                string[] assertMethodNames = null)
             {
                 Namespace = namespaceTitle;
                 Module = module;
                 Name = name;
                 Type = type;
                 HasExtenstionMethods = type != null;
+                AssertMethodNames = assertMethodNames;
             }
         }
         private static Dictionary<string, string> _props = new Dictionary<string, string>()
