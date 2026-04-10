@@ -48,7 +48,7 @@ namespace Agoda.Analyzers.AgodaCustom
                 new[] { "Received", "DidNotReceive", "ReceivedWithAnyArgs", "DidNotReceiveWithAnyArgs" }),
             new AssertLibraryInfo("NSubstitute.ReceivedExtensions", "NSubstitute.dll", "ReceivedExtensions",
                 "NSubstitute.ReceivedExtensions.ReceivedExtensions"),
-            //FluentAssertions
+            new AssertLibraryInfo("FluentAssertions", "FluentAssertions.dll", "AssertionExtensions", "FluentAssertions."),
         };
 
         public override void Initialize(AnalysisContext context)

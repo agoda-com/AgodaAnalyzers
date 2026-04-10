@@ -138,10 +138,10 @@ internal class AG0012UnitTests : DiagnosticVerifier
 
                     namespace Tests
                     {
-                        internal class TestClass
+                        public class TestClass
                         {
                             [Test]
-                            internal void This_Is_Valid()
+                            public void This_Is_Valid()
                             {
                                 int arrayToAssert = 1;
                                 arrayToAssert.Should().Be(1);
