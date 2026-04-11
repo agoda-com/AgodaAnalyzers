@@ -118,28 +118,27 @@ namespace Agoda.Analyzers.AgodaCustom
 
         private static bool HasPrecedingWaitCall(MethodDeclarationSyntax method, InvocationExpressionSyntax screenshotCall)
         {
-            var containingBlock = screenshotCall.Ancestors()
-                .OfType<BlockSyntax>()
-                .FirstOrDefault();
-
-            if (containingBlock == null)
-                return false;
-
             var screenshotPosition = screenshotCall.SpanStart;
 
-            foreach (var statement in containingBlock.Statements)
+            foreach (var block in screenshotCall.Ancestors().OfType<BlockSyntax>())
             {
-                if (statement.SpanStart >= screenshotPosition)
-                    break;
-
-                foreach (var inv in statement.DescendantNodes().OfType<InvocationExpressionSyntax>())
+                foreach (var statement in block.Statements)
                 {
-                    if (inv.Expression is MemberAccessExpressionSyntax ma &&
-                        WaitMethodNames.Contains(ma.Name.Identifier.ValueText))
+                    if (statement.SpanStart >= screenshotPosition)
+                        break;
+
+                    foreach (var inv in statement.DescendantNodes().OfType<InvocationExpressionSyntax>())
                     {
-                        return true;
+                        if (inv.Expression is MemberAccessExpressionSyntax ma &&
+                            WaitMethodNames.Contains(ma.Name.Identifier.ValueText))
+                        {
+                            return true;
+                        }
                     }
                 }
+
+                if (block.Parent is MethodDeclarationSyntax)
+                    break;
             }
 
             return false;
