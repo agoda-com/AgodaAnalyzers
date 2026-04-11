@@ -59,6 +59,14 @@ namespace Agoda.Analyzers.AgodaCustom
             "Microsoft.VisualStudio.TestTools.UnitTesting.TestClassAttribute",
         };
 
+        private static readonly HashSet<string> TestMethodAttributes = new HashSet<string>
+        {
+            "NUnit.Framework.TestAttribute",
+            "Xunit.FactAttribute",
+            "Xunit.TheoryAttribute",
+            "Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute",
+        };
+
         private static readonly Dictionary<string, string> _props = new Dictionary<string, string>
         {
             { AnalyzerConstants.KEY_TECH_DEBT_IN_MINUTES, "15" }
@@ -75,7 +83,7 @@ namespace Agoda.Analyzers.AgodaCustom
         {
             var invocation = (InvocationExpressionSyntax)context.Node;
 
-            if (!IsTaskDelayInvocation(invocation, context))
+            if (!IsDelayOrSleepInvocation(invocation, context))
                 return;
 
             if (!HasHardcodedDuration(invocation, context))
@@ -93,14 +101,15 @@ namespace Agoda.Analyzers.AgodaCustom
                 properties: _props.ToImmutableDictionary()));
         }
 
-        private static bool IsTaskDelayInvocation(InvocationExpressionSyntax invocation, SyntaxNodeAnalysisContext context)
+        private static bool IsDelayOrSleepInvocation(InvocationExpressionSyntax invocation, SyntaxNodeAnalysisContext context)
         {
             var symbolInfo = context.SemanticModel.GetSymbolInfo(invocation);
             if (!(symbolInfo.Symbol is IMethodSymbol methodSymbol))
                 return false;
 
-            return methodSymbol.ContainingType?.ToString() == "System.Threading.Tasks.Task" &&
-                   methodSymbol.Name == "Delay";
+            var containingType = methodSymbol.ContainingType?.ToString();
+            return (containingType == "System.Threading.Tasks.Task" && methodSymbol.Name == "Delay") ||
+                   (containingType == "System.Threading.Thread" && methodSymbol.Name == "Sleep");
         }
 
         private static bool HasHardcodedDuration(InvocationExpressionSyntax invocation, SyntaxNodeAnalysisContext context)
@@ -110,7 +119,7 @@ namespace Agoda.Analyzers.AgodaCustom
 
             var firstArg = invocation.ArgumentList.Arguments[0].Expression;
 
-            if (IsLiteralNumeric(firstArg))
+            if (IsConstantNumericExpression(firstArg))
                 return true;
 
             if (firstArg is InvocationExpressionSyntax innerInvocation)
@@ -122,7 +131,7 @@ namespace Agoda.Analyzers.AgodaCustom
                 {
                     if (innerInvocation.ArgumentList.Arguments.Count > 0)
                     {
-                        return IsLiteralNumeric(innerInvocation.ArgumentList.Arguments[0].Expression);
+                        return IsConstantNumericExpression(innerInvocation.ArgumentList.Arguments[0].Expression);
                     }
                 }
             }
@@ -134,17 +143,26 @@ namespace Agoda.Analyzers.AgodaCustom
                     objectCreation.ArgumentList?.Arguments.Count > 0)
                 {
                     return objectCreation.ArgumentList.Arguments.All(
-                        a => IsLiteralNumeric(a.Expression));
+                        a => IsConstantNumericExpression(a.Expression));
                 }
             }
 
             return false;
         }
 
-        private static bool IsLiteralNumeric(ExpressionSyntax expression)
+        private static bool IsConstantNumericExpression(ExpressionSyntax expression)
         {
-            return expression is LiteralExpressionSyntax literal &&
-                   literal.IsKind(SyntaxKind.NumericLiteralExpression);
+            if (expression is LiteralExpressionSyntax literal &&
+                literal.IsKind(SyntaxKind.NumericLiteralExpression))
+                return true;
+
+            if (expression is BinaryExpressionSyntax binary)
+                return IsConstantNumericExpression(binary.Left) && IsConstantNumericExpression(binary.Right);
+
+            if (expression is ParenthesizedExpressionSyntax paren)
+                return IsConstantNumericExpression(paren.Expression);
+
+            return false;
         }
 
         private static bool IsInsideWhenAny(InvocationExpressionSyntax invocation, SyntaxNodeAnalysisContext context)
@@ -176,6 +194,17 @@ namespace Agoda.Analyzers.AgodaCustom
 
         private static bool IsInTestClass(InvocationExpressionSyntax invocation, SyntaxNodeAnalysisContext context)
         {
+            var methodDecl = invocation.Ancestors().OfType<MethodDeclarationSyntax>().FirstOrDefault();
+            if (methodDecl != null)
+            {
+                var methodSymbol = context.SemanticModel.GetDeclaredSymbol(methodDecl);
+                if (methodSymbol != null && methodSymbol.GetAttributes().Any(attr =>
+                    TestMethodAttributes.Contains(attr.AttributeClass?.ToString())))
+                {
+                    return true;
+                }
+            }
+
             var classDecl = invocation.Ancestors().OfType<ClassDeclarationSyntax>().FirstOrDefault();
             if (classDecl == null)
                 return false;

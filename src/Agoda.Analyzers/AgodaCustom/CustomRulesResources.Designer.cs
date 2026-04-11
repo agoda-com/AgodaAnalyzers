@@ -654,7 +654,7 @@ namespace Agoda.Analyzers.AgodaCustom {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Do not use Task.Delay with hardcoded values in test code.
+        ///   Looks up a localized string similar to Do not use hardcoded delays in test code.
         /// </summary>
         public static string AG0052Title {
             get {
@@ -663,7 +663,7 @@ namespace Agoda.Analyzers.AgodaCustom {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Task.Delay with a hardcoded duration makes tests flakey. Use explicit waits, event-driven synchronization, or configurable timeouts instead.
+        ///   Looks up a localized string similar to Hardcoded delay (Task.Delay/Thread.Sleep) makes tests flakey. Use explicit waits, event-driven synchronization, or configurable timeouts instead.
         /// </summary>
         public static string AG0052MessageFormat {
             get {
@@ -672,7 +672,7 @@ namespace Agoda.Analyzers.AgodaCustom {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Task.Delay with hardcoded durations in test code creates timing-dependent tests that are flakey.
+        ///   Looks up a localized string similar to Task.Delay and Thread.Sleep with hardcoded durations in test code creates timing-dependent tests that are flakey.
         /// </summary>
         public static string AG0052Description {
             get {
