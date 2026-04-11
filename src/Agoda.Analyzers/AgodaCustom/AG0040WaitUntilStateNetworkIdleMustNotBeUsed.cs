@@ -39,7 +39,8 @@ namespace Agoda.Analyzers.AgodaCustom
 
         protected override IEnumerable<InvocationRule> Rules => new[]
         {
-            new BlacklistedInvocationRule("Microsoft.Playwright.WaitUntilState", "NetworkIdle")
+            new BlacklistedInvocationRule("Microsoft.Playwright.WaitUntilState", "NetworkIdle"),
+            new BlacklistedInvocationRule("Microsoft.Playwright.LoadState", "NetworkIdle")
         };
     }
 }
