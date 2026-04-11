@@ -652,5 +652,32 @@ namespace Agoda.Analyzers.AgodaCustom {
                 return ResourceManager.GetString("AG0049Title", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SpecFlow [Binding] partial class is split across multiple files.
+        /// </summary>
+        public static string AG0054Title {
+            get {
+                return ResourceManager.GetString("AG0054Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SpecFlow [Binding] class '{0}' is split across {1} files.
+        /// </summary>
+        public static string AG0054MessageFormat {
+            get {
+                return ResourceManager.GetString("AG0054MessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SpecFlow step definition classes decorated with [Binding] should not be split across multiple files.
+        /// </summary>
+        public static string AG0054Description {
+            get {
+                return ResourceManager.GetString("AG0054Description", resourceCulture);
+            }
+        }
     }
 }
