@@ -60,6 +60,8 @@ namespace Agoda.Analyzers.AgodaCustom
             "Microsoft.VisualStudio.TestTools.UnitTesting.TestClassAttribute",
         };
 
+        private static readonly char[] DateSeparators = { '-', '/' };
+
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
 
         public override void Initialize(AnalysisContext context)
@@ -152,10 +154,13 @@ namespace Agoda.Analyzers.AgodaCustom
             if (ns != null && HasTestNamespaceSegment(ns))
                 return true;
 
+            if (containingSymbol is IMethodSymbol method && HasTestMethodAttribute(method))
+                return true;
+
             var containingType = containingSymbol?.ContainingType ?? containingSymbol as INamedTypeSymbol;
             while (containingType != null)
             {
-                if (HasTestAttribute(containingType))
+                if (HasTestClassAttribute(containingType))
                     return true;
                 containingType = containingType.ContainingType;
             }
@@ -168,17 +173,30 @@ namespace Agoda.Analyzers.AgodaCustom
             foreach (var segment in ns.Split('.'))
             {
                 if (segment.EndsWith("Test", StringComparison.OrdinalIgnoreCase) ||
-                    segment.EndsWith("Tests", StringComparison.OrdinalIgnoreCase) ||
-                    segment.StartsWith("Test", StringComparison.OrdinalIgnoreCase))
+                    segment.EndsWith("Tests", StringComparison.OrdinalIgnoreCase))
                     return true;
             }
             return false;
         }
 
-        private static bool HasTestAttribute(INamedTypeSymbol type)
+        private static readonly HashSet<string> TestMethodAttributes = new HashSet<string>
+        {
+            "NUnit.Framework.TestAttribute",
+            "Xunit.FactAttribute",
+            "Xunit.TheoryAttribute",
+            "Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute",
+        };
+
+        private static bool HasTestClassAttribute(INamedTypeSymbol type)
         {
             return type.GetAttributes().Any(attr =>
                 TestClassAttributes.Contains(attr.AttributeClass?.ToString()));
+        }
+
+        private static bool HasTestMethodAttribute(IMethodSymbol method)
+        {
+            return method.GetAttributes().Any(attr =>
+                TestMethodAttributes.Contains(attr.AttributeClass?.ToString()));
         }
 
         private static bool AllArgumentsAreLiterals(IEnumerable<ArgumentSyntax> arguments)
@@ -190,7 +208,7 @@ namespace Agoda.Analyzers.AgodaCustom
         private static bool TryExtractYear(string dateString, out int year)
         {
             year = 0;
-            var dashIndex = dateString.IndexOfAny(new[] { '-', '/' });
+            var dashIndex = dateString.IndexOfAny(DateSeparators);
             if (dashIndex <= 0)
                 return false;
 
