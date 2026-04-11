@@ -654,6 +654,33 @@ namespace Agoda.Analyzers.AgodaCustom {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Do not use hardcoded date literals in test data.
+        /// </summary>
+        public static string AG0051Title {
+            get {
+                return ResourceManager.GetString("AG0051Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hardcoded date literal acts as a timebomb — use DateTime.Today/UtcNow with relative offsets instead.
+        /// </summary>
+        public static string AG0051MessageFormat {
+            get {
+                return ResourceManager.GetString("AG0051MessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hardcoded dates in test fixtures become timebombs that cause test failures when the calendar passes the hardcoded date.
+        /// </summary>
+        public static string AG0051Description {
+            get {
+                return ResourceManager.GetString("AG0051Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to SpecFlow [Binding] partial class is split across multiple files.
         /// </summary>
         public static string AG0054Title {
