@@ -6,6 +6,7 @@ using NUnit.Framework;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
+using NSubstitute;
 
 namespace Agoda.Analyzers.Test.AgodaCustom;
 
@@ -137,10 +138,10 @@ internal class AG0012UnitTests : DiagnosticVerifier
 
                     namespace Tests
                     {
-                        internal class TestClass
+                        public class TestClass
                         {
                             [Test]
-                            internal void This_Is_Valid()
+                            public void This_Is_Valid()
                             {
                                 int arrayToAssert = 1;
                                 arrayToAssert.Should().Be(1);
@@ -268,5 +269,158 @@ internal class AG0012UnitTests : DiagnosticVerifier
         };
 
         await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+    }
+
+    [Test]
+    public async Task AG0012_WithShouldlyShouldContain_ShouldNotShowWarning()
+    {
+        var code = new CodeDescriptor
+        {
+            References = new[] { typeof(TestFixtureAttribute).Assembly, typeof(Shouldly.Should).Assembly },
+            Code = @"
+                    using NUnit.Framework;
+                    using Shouldly;
+                    using System.Collections.Generic;
+                    
+                    namespace Tests
+                    {
+                        public class TestClass
+                        {
+                            [Test]
+                            public void List_ShouldContain_Item()
+                            {
+                                var list = new List<int> { 1, 2, 3 };
+                                list.ShouldContain(2);
+                            }
+                        }
+                    }"
+        };
+
+        await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+    }
+
+    [Test]
+    public async Task AG0012_WithShouldlyShouldNotThrow_ShouldNotShowWarning()
+    {
+        var code = new CodeDescriptor
+        {
+            References = new[] { typeof(TestFixtureAttribute).Assembly, typeof(Shouldly.Should).Assembly },
+            Code = @"
+                    using NUnit.Framework;
+                    using Shouldly;
+                    using System;
+                    
+                    namespace Tests
+                    {
+                        public class TestClass
+                        {
+                            [Test]
+                            public void Action_ShouldNotThrow()
+                            {
+                                Action action = () => { var x = 1; };
+                                action.ShouldNotThrow();
+                            }
+                        }
+                    }"
+        };
+
+        await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+    }
+
+    [Test]
+    public async Task AG0012_WithNSubstituteReceived_ShouldNotShowWarning()
+    {
+        var code = new CodeDescriptor
+        {
+            References = new[] { typeof(TestFixtureAttribute).Assembly, typeof(Substitute).Assembly },
+            Code = @"
+                    using NUnit.Framework;
+                    using NSubstitute;
+                    
+                    namespace Tests
+                    {
+                        public interface IService
+                        {
+                            void Execute();
+                        }
+
+                        public class TestClass
+                        {
+                            [Test]
+                            public void Service_ShouldReceiveCall()
+                            {
+                                IService service = Substitute.For<IService>();
+                                service.Execute();
+                                service.Received().Execute();
+                            }
+                        }
+                    }"
+        };
+
+        await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+    }
+
+    [Test]
+    public async Task AG0012_WithNSubstituteDidNotReceive_ShouldNotShowWarning()
+    {
+        var code = new CodeDescriptor
+        {
+            References = new[] { typeof(TestFixtureAttribute).Assembly, typeof(Substitute).Assembly },
+            Code = @"
+                    using NUnit.Framework;
+                    using NSubstitute;
+                    
+                    namespace Tests
+                    {
+                        public interface IService
+                        {
+                            void Execute();
+                        }
+
+                        public class TestClass
+                        {
+                            [Test]
+                            public void Service_ShouldNotReceiveCall()
+                            {
+                                IService service = Substitute.For<IService>();
+                                service.DidNotReceive().Execute();
+                            }
+                        }
+                    }"
+        };
+
+        await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+    }
+
+    [Test]
+    public async Task AG0012_WithNSubstituteReturnsOnly_ShouldShowWarning()
+    {
+        var code = new CodeDescriptor
+        {
+            References = new[] { typeof(TestFixtureAttribute).Assembly, typeof(Substitute).Assembly },
+            Code = @"
+                    using NUnit.Framework;
+                    using NSubstitute;
+                    
+                    namespace Tests
+                    {
+                        public interface ICalculator
+                        {
+                            int Add(int a, int b);
+                        }
+
+                        public class TestClass
+                        {
+                            [Test]
+                            public void Setup_Without_Assertion_Is_NotValid()
+                            {
+                                ICalculator calc = Substitute.For<ICalculator>();
+                                calc.Add(1, 2).Returns(3);
+                            }
+                        }
+                    }"
+        };
+
+        await VerifyDiagnosticsAsync(code, new DiagnosticLocation(14, 29));
     }
 }
