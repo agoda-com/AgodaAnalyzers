@@ -681,6 +681,33 @@ namespace Agoda.Analyzers.AgodaCustom {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Do not use hardcoded delays in test code.
+        /// </summary>
+        public static string AG0052Title {
+            get {
+                return ResourceManager.GetString("AG0052Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hardcoded delay (Task.Delay/Thread.Sleep) makes tests flakey. Use explicit waits, event-driven synchronization, or configurable timeouts instead.
+        /// </summary>
+        public static string AG0052MessageFormat {
+            get {
+                return ResourceManager.GetString("AG0052MessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Task.Delay and Thread.Sleep with hardcoded durations in test code creates timing-dependent tests that are flakey.
+        /// </summary>
+        public static string AG0052Description {
+            get {
+                return ResourceManager.GetString("AG0052Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to SpecFlow [Binding] partial class is split across multiple files.
         /// </summary>
         public static string AG0054Title {
