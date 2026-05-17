@@ -58,6 +58,9 @@ namespace Agoda.Analyzers.AgodaCustom
 
         private static void AnalyzeInvocationExpression(SyntaxNodeAnalysisContext context)
         {
+            if (!HasPlaywrightUsing(context.Node))
+                return;
+
             var invocationExpression = (InvocationExpressionSyntax)context.Node;
 
             if (!(invocationExpression.Expression is MemberAccessExpressionSyntax memberAccess))
@@ -90,6 +93,9 @@ namespace Agoda.Analyzers.AgodaCustom
 
         private static void AnalyzeVariableDeclaration(SyntaxNodeAnalysisContext context)
         {
+            if (!HasPlaywrightUsing(context.Node))
+                return;
+
             var variableDeclaration = (VariableDeclarationSyntax)context.Node;
             
             // Check if it's a string type
@@ -111,6 +117,9 @@ namespace Agoda.Analyzers.AgodaCustom
 
         private static void AnalyzePropertyDeclaration(SyntaxNodeAnalysisContext context)
         {
+            if (!HasPlaywrightUsing(context.Node))
+                return;
+
             var propertyDeclaration = (PropertyDeclarationSyntax)context.Node;
             
             // Check if it's a string type
@@ -129,6 +138,9 @@ namespace Agoda.Analyzers.AgodaCustom
 
         private static void AnalyzeReturnStatement(SyntaxNodeAnalysisContext context)
         {
+            if (!HasPlaywrightUsing(context.Node))
+                return;
+
             var returnStatement = (ReturnStatementSyntax)context.Node;
             
             if (returnStatement.Expression is LiteralExpressionSyntax literalExpression)
@@ -147,6 +159,9 @@ namespace Agoda.Analyzers.AgodaCustom
 
         private static void AnalyzeInterpolatedString(SyntaxNodeAnalysisContext context)
         {
+            if (!HasPlaywrightUsing(context.Node))
+                return;
+
             var interpolatedString = (InterpolatedStringExpressionSyntax)context.Node;
             
             // Skip if this interpolated string is part of a return statement
@@ -181,6 +196,12 @@ namespace Agoda.Analyzers.AgodaCustom
             
             // Report if either the name suggests XPath or the value contains XPath patterns
             return isXPathNamed || containsXPath;
+        }
+
+        private static bool HasPlaywrightUsing(SyntaxNode node)
+        {
+            var compilationUnit = node.SyntaxTree.GetCompilationUnitRoot();
+            return compilationUnit.Usings.Any(u => u.Name?.ToString().StartsWith("Microsoft.Playwright") == true);
         }
 
         private static bool IsPlaywrightLocatorMethod(IMethodSymbol methodSymbol)
