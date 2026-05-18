@@ -58,7 +58,7 @@ namespace Agoda.Analyzers.AgodaCustom
 
         private static void AnalyzeInvocationExpression(SyntaxNodeAnalysisContext context)
         {
-            if (!HasPlaywrightUsing(context.Node))
+            if (!HasPlaywrightUsing(context))
                 return;
 
             var invocationExpression = (InvocationExpressionSyntax)context.Node;
@@ -93,7 +93,7 @@ namespace Agoda.Analyzers.AgodaCustom
 
         private static void AnalyzeVariableDeclaration(SyntaxNodeAnalysisContext context)
         {
-            if (!HasPlaywrightUsing(context.Node))
+            if (!HasPlaywrightUsing(context))
                 return;
 
             var variableDeclaration = (VariableDeclarationSyntax)context.Node;
@@ -117,7 +117,7 @@ namespace Agoda.Analyzers.AgodaCustom
 
         private static void AnalyzePropertyDeclaration(SyntaxNodeAnalysisContext context)
         {
-            if (!HasPlaywrightUsing(context.Node))
+            if (!HasPlaywrightUsing(context))
                 return;
 
             var propertyDeclaration = (PropertyDeclarationSyntax)context.Node;
@@ -138,7 +138,7 @@ namespace Agoda.Analyzers.AgodaCustom
 
         private static void AnalyzeReturnStatement(SyntaxNodeAnalysisContext context)
         {
-            if (!HasPlaywrightUsing(context.Node))
+            if (!HasPlaywrightUsing(context))
                 return;
 
             var returnStatement = (ReturnStatementSyntax)context.Node;
@@ -159,7 +159,7 @@ namespace Agoda.Analyzers.AgodaCustom
 
         private static void AnalyzeInterpolatedString(SyntaxNodeAnalysisContext context)
         {
-            if (!HasPlaywrightUsing(context.Node))
+            if (!HasPlaywrightUsing(context))
                 return;
 
             var interpolatedString = (InterpolatedStringExpressionSyntax)context.Node;
@@ -198,10 +198,15 @@ namespace Agoda.Analyzers.AgodaCustom
             return isXPathNamed || containsXPath;
         }
 
-        private static bool HasPlaywrightUsing(SyntaxNode node)
+        private static bool HasPlaywrightUsing(SyntaxNodeAnalysisContext context)
         {
-            var compilationUnit = node.SyntaxTree.GetCompilationUnitRoot();
-            return compilationUnit.Usings.Any(u => u.Name?.ToString().StartsWith("Microsoft.Playwright") == true);
+            var compilationUnit = context.Node.SyntaxTree.GetCompilationUnitRoot();
+            if (compilationUnit.Usings.Any(u => u.Name?.ToString().StartsWith("Microsoft.Playwright") == true))
+            {
+                return true;
+            }
+
+            return context.SemanticModel.Compilation.ReferencedAssemblyNames.Any(a => a.Name == "Microsoft.Playwright");
         }
 
         private static bool IsPlaywrightLocatorMethod(IMethodSymbol methodSymbol)
