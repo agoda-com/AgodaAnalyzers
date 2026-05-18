@@ -588,4 +588,20 @@ class AG0045UnitTests : DiagnosticVerifier
             new DiagnosticLocation(11, 37)
         });
     }
+
+    [Test]
+    public async Task AG0045_WhenUsingFilesystemPathWithoutPlaywright_NoError()
+    {
+        var code = @"
+            using NUnit.Framework;
+
+            [SetUpFixture]
+            public class SetUpFixture
+            {
+                private const string PactPath = ""../../../../Agoda.Supply.IAM.Contract/pacts/ui"";
+            }";
+
+        await VerifyDiagnosticsAsync(code, EmptyDiagnosticResults);
+    }
+
 } 

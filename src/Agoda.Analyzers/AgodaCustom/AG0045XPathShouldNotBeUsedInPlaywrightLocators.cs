@@ -97,13 +97,16 @@ namespace Agoda.Analyzers.AgodaCustom
                 return;
 
             var variableDeclaration = (VariableDeclarationSyntax)context.Node;
-            
+
             // Check if it's a string type
             if (variableDeclaration.Type.ToString() != "string")
                 return;
 
             foreach (var variable in variableDeclaration.Variables)
             {
+                if (!IsUsedInPlaywrightLocator(context, variable))
+                    continue;
+
                 if (variable.Initializer?.Value is LiteralExpressionSyntax literalExpression)
                 {
                     var value = literalExpression.Token.ValueText;
@@ -121,9 +124,12 @@ namespace Agoda.Analyzers.AgodaCustom
                 return;
 
             var propertyDeclaration = (PropertyDeclarationSyntax)context.Node;
-            
+
             // Check if it's a string type
             if (propertyDeclaration.Type.ToString() != "string")
+                return;
+
+            if (!IsUsedInPlaywrightLocator(context, propertyDeclaration))
                 return;
 
             if (propertyDeclaration.Initializer?.Value is LiteralExpressionSyntax literalExpression)
@@ -216,6 +222,47 @@ namespace Agoda.Analyzers.AgodaCustom
                    containingType == "Microsoft.Playwright.Page" ||
                    containingType == "Microsoft.Playwright.ILocator" ||
                    containingType == "Microsoft.Playwright.Locator";
+        }
+
+        private static bool IsUsedInPlaywrightLocator(SyntaxNodeAnalysisContext context, VariableDeclaratorSyntax variable)
+        {
+            var symbol = context.SemanticModel.GetDeclaredSymbol(variable);
+            if (symbol == null)
+                return false;
+
+            return IsSymbolUsedInPlaywrightLocator(context, symbol, variable.SyntaxTree);
+        }
+
+        private static bool IsUsedInPlaywrightLocator(SyntaxNodeAnalysisContext context, PropertyDeclarationSyntax property)
+        {
+            var symbol = context.SemanticModel.GetDeclaredSymbol(property);
+            if (symbol == null)
+                return false;
+
+            return IsSymbolUsedInPlaywrightLocator(context, symbol, property.SyntaxTree);
+        }
+
+        private static bool IsSymbolUsedInPlaywrightLocator(SyntaxNodeAnalysisContext context, ISymbol symbol, SyntaxTree tree)
+        {
+            var root = tree.GetCompilationUnitRoot();
+            var invocations = root.DescendantNodes().OfType<InvocationExpressionSyntax>();
+
+            foreach (var invocation in invocations)
+            {
+                var methodSymbol = context.SemanticModel.GetSymbolInfo(invocation).Symbol as IMethodSymbol;
+                if (methodSymbol == null || !IsPlaywrightLocatorMethod(methodSymbol))
+                    continue;
+
+                var firstArgument = invocation.ArgumentList.Arguments.FirstOrDefault()?.Expression;
+                if (firstArgument == null)
+                    continue;
+
+                var argSymbol = context.SemanticModel.GetSymbolInfo(firstArgument).Symbol;
+                if (argSymbol != null && SymbolEqualityComparer.Default.Equals(argSymbol, symbol))
+                    return true;
+            }
+
+            return false;
         }
 
         private static Dictionary<string, string> _props = new Dictionary<string, string>()
