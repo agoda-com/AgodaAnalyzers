@@ -104,6 +104,32 @@ For the second form, write the explicit type: `List<Item> items = CreateItems();
 
 Don't chain side-effectful calls across a single line to save vertical space. Split multi-step expressions into named intermediates when it aids the reader. Keep test assertions obvious — one logical check per assertion, or use the test framework's group/multi-assert facility for related checks.
 
+## Code comments — explain *why*, not *what*
+
+Comments should add information the code can't communicate itself. Restating the syntax is noise.
+
+```csharp
+// Avoid — the comment is what the code already says
+// check if x is a MemberAccessExpressionSyntax
+if (x is MemberAccessExpressionSyntax) { ... }
+
+// Avoid — the comment is what the method name already says
+// check the method name
+if (methodName != "QuerySelectorAsync") { ... }
+
+// Prefer — comment captures the non-obvious *why*
+// Skip generated client projects — they're allowed to use raw GraphQL types here
+if (filePath.EndsWith(".g.cs", StringComparison.Ordinal)) return;
+```
+
+Specific things to strip on review:
+
+- **Restatement comments** above an `if`, `foreach`, or assignment that just verbalise the next line.
+- **AI-generated boilerplate** — `// As an AI assistant…`, emoji-headed sections, "I have implemented…" narration. Leftover GPT/Claude artifacts get caught in review fast; remove them before pushing.
+- **Stale TODOs** — if the TODO is tracked elsewhere (issue, ticket), point to that ID. Otherwise it rots.
+
+When documentation references an external API, include the link to the official docs in the doc comment or the user-facing rule documentation, so the next reader (or the IDE quick-info popup) lands on authoritative material rather than relearning the API from your code.
+
 ## Prefer positive predicates
 
 Double negation is hard to read. Prefer inverting the check with a guard clause, or applying De Morgan's law, rather than leaving negations stacked.

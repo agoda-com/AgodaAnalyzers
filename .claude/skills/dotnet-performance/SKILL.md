@@ -142,6 +142,41 @@ Same for `string.Format`, interpolated strings stored in a variable, and concate
 
 If you are designing internal helper methods for diagnostics, avoid `params object[]` arrays if the method is called on the happy path. Provide explicit overloads for 1, 2, or 3 arguments to avoid the array allocation, or ensure the formatting method is only invoked after the check has already failed.
 
+## Analyzer callbacks run on every keystroke
+
+Roslyn analyzer callbacks (the methods registered via `RegisterSyntaxNodeAction`, `RegisterSymbolAction`, etc.) execute every time the user types. The cost compounds across every project the analyzer ships to. Tight rules apply on top of the general guidance above:
+
+- **Hoist all literal allocations.** Any `new[] { ... }`, `Regex`, dictionary literal, or string array used by the callback belongs in a `private static readonly` field, not constructed inline.
+- **Cheap-out early.** Do the cheapest possible discriminator first — a string/identifier comparison on the syntax node before touching the semantic model. `SemanticModel.GetSymbolInfo` is *not* free.
+- **Filter at registration, not in the callback.** `RegisterSyntaxNodeAction(handler, SyntaxKind.InvocationExpression)` is cheaper than registering for everything and filtering inside `handler`.
+- **Avoid `DescendantNodes()` over the whole method.** When you need to look at neighbours of the current node, walk the containing block/single ancestor — `DescendantNodes().OfType<InvocationExpressionSyntax>()` over an entire method body becomes O(N²) when the analyzer fires multiple times per method.
+- **Prefer `SymbolEqualityComparer` over `ToDisplayString()` comparisons.** Stringifying a symbol per callback is wasteful; use the comparer or compare `ISymbol` references directly.
+
+```csharp
+// Avoid — allocates per call, semantic model first, walks whole method
+private static void Analyze(SyntaxNodeAnalysisContext ctx)
+{
+    var sep = new[] { '-', '/' };
+    var symbol = ctx.SemanticModel.GetSymbolInfo(ctx.Node).Symbol;
+    var allInvocations = ctx.Node.Ancestors().OfType<MethodDeclarationSyntax>()
+        .First().DescendantNodes().OfType<InvocationExpressionSyntax>();
+    ...
+}
+
+// Prefer — hoisted, cheap check first, scoped walk
+private static readonly char[] Separators = { '-', '/' };
+
+private static void Analyze(SyntaxNodeAnalysisContext ctx)
+{
+    if (ctx.Node is not InvocationExpressionSyntax invocation) return;
+    if (invocation.Expression is not MemberAccessExpressionSyntax member) return;
+    if (member.Name.Identifier.ValueText != "Screenshot") return;          // cheap
+
+    var symbol = ctx.SemanticModel.GetSymbolInfo(invocation).Symbol;       // expensive, gated
+    ...
+}
+```
+
 ## Back performance claims with a benchmark
 
 Performance changes should come with evidence. For non-trivial perf PRs, include a `BenchmarkDotNet` benchmark showing the before/after numbers.
