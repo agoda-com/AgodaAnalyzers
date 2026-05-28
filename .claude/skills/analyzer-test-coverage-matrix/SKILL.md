@@ -1,108 +1,61 @@
 ---
 name: analyzer-test-coverage-matrix
-description: Use when adding or modifying tests for a Roslyn diagnostic analyzer. Replaces the reviewer's hand-rolled "did you cover X, Y, and Z?" list with an explicit coverage matrix in the test file, so the question is answered before the PR is opened.
+description: Use when writing or changing tests for a Roslyn diagnostic analyzer. Produces an explicit coverage matrix so negative and edge cases are covered before the PR opens.
 ---
 
 # Analyzer test coverage matrix
 
-For every positive case the analyzer fires on, reviewers enumerate the negative and edge cases you forgot. The recurring list across this repo's review history:
+For each positive case, cover the matching negatives and edges along these axes:
 
-- accessibility modifiers: `public` / `internal` / `protected` / `private`
-- syntactic form: literal, named constant, local variable, parenthesised expression, binary expression, interpolated string, fully-qualified type reference
-- generics: generic vs. non-generic, open vs. closed
+- accessibility: `public` / `internal` / `protected` / `private`
+- syntactic form: literal, named constant, local variable, parenthesised, binary expression, interpolated string, fully-qualified reference
+- generics: generic vs. non-generic
 - collection-ness: scalar vs. array vs. `IEnumerable<T>` vs. `IReadOnlyList<T>`
-- interface vs. class implementation
-- test context: in-test vs. production (see [[test-context-detection]])
+- interface vs. class
+- test vs. production context ([[test-context-detection]])
 
-A test file that doesn't visibly cover these axes triggers blocking review comments. The fix is to make the coverage explicit.
+## Write the matrix as a comment at the top of the test file
 
-## Build the matrix from the rule's behaviour
-
-At the top of the test file, write a coverage matrix as a comment. It serves two purposes: forces you to think about each axis before writing tests, and answers the reviewer's question before they ask.
+Forces consideration of each axis and documents coverage. You needn't test the full cartesian product — but each cell is either covered or deliberately skipped (skip recorded in the matrix).
 
 ```csharp
-// AG0XXX coverage matrix
-//
-// Trigger:  public field on a class — flag.
-//
-// Axis                         | Cases covered                                  | Test method
-// -----------------------------+------------------------------------------------+---------------------------
-// Accessibility                | public                                         | PublicField_IsFlagged
-//                              | internal                                       | InternalField_IsAllowed
-//                              | protected                                      | ProtectedField_IsAllowed
-//                              | private                                        | PrivateField_IsAllowed
-// Field type                   | int                                            | IntField_IsFlagged
-//                              | byte[]                                         | ByteArrayField_IsFlagged
-//                              | string                                         | StringField_IsFlagged
-//                              | List<T>                                        | ListField_IsFlagged
-// Generic context              | generic class                                  | GenericClass_PublicField_IsFlagged
-// Test vs production           | test class                                     | InTestClass_IsAllowed
-//                              | production class                               | InProductionClass_IsFlagged
-// Regression                   | issue #NNN — fully-qualified field type        | Issue_NNN_FullyQualifiedFieldType
+// AG0XXX — flags public fields on a class.
+// Axis           | Cases                         | Test
+// ---------------+-------------------------------+----------------------------
+// Accessibility  | public / internal / protected | Public/Internal/Protected_*
+//                | private                       | PrivateField_IsAllowed
+// Field type     | int / byte[] / string / List  | *Field_*
+// Generic        | generic class                 | GenericClass_PublicField
+// Context        | test vs production            | InTest_IsAllowed / InProd_IsFlagged
+// Regression     | issue #N — fully-qualified    | Issue_N_FullyQualified
 ```
-
-You don't have to test the cartesian product. You do have to *consider* it and either cover or deliberately skip each cell, with the skip recorded in the matrix.
 
 ## One assertion per cell
 
-Each cell in the matrix gets one focused test method. Don't combine three cells into one test; when it fails, you want the failing assertion to name the exact axis.
+One focused test per cell, so a failure names the exact axis.
+
+## Negatives must actually fail on regression
+
+A negative test that only asserts "no exception" is decorative. Assert an empty diagnostic list.
 
 ```csharp
-[Test]
-public async Task ProtectedField_IsAllowed()
-{
-    const string code = @"
-        public class Foo { protected int X; }
-    ";
-    await VerifyCSharpDiagnosticAsync(code, expected: EmptyDiagnosticResults);
-}
+// Decorative
+await VerifyCSharpDiagnosticAsync(code);
+// Real
+await VerifyCSharpDiagnosticAsync(code, expected: EmptyDiagnosticResults);
 ```
 
-## Always include a regression test for the cited issue
+## Always add a regression test for a cited issue
 
-If the PR title or body cites an issue number (`Fixes #N`, `Closes #N`), the test file must contain a test reproducing the exact symptom from that issue:
+If the PR cites `Fixes #N`, include a `Issue_N_*` test reproducing the exact symptom. A later bug adds a new test — never edit the original ([[dotnet-testing]]).
 
-```csharp
-// Regression: input from issue #N — escaped string in attribute argument used to throw.
-[Test]
-public async Task Issue_N_EscapedStringInAttributeArgument()
-{
-    const string code = @"[SomeAttribute(""\""quoted\"""")] public class Foo {}";
-    await VerifyCSharpDiagnosticAsync(code, expected: ...);
-}
-```
+## Don't edit existing tests to fill gaps
 
-If a reviewer files a bug after merge, the next PR adds another regression test, never modifies the original. See [[dotnet-testing]] for the broader rule on not editing existing tests.
+Add new methods. Editing risks silently moving an existing assertion's behaviour.
 
-## Negative tests have to actually run
+## Checklist
 
-A frequent failure mode: the matrix lists negative cases, but the test method body matches the positive case (just without the assert). Read each negative test and ask: *if the analyzer changed to fire on this input, would this test catch it?* If the only assertion is "no exception thrown," the test is decorative; assert the diagnostic list is empty.
-
-```csharp
-// Decorative — doesn't fail if the analyzer starts flagging this input
-[Test]
-public async Task InternalField_IsAllowed()
-{
-    const string code = "public class Foo { internal int X; }";
-    await VerifyCSharpDiagnosticAsync(code);
-}
-
-// Real — fails if the analyzer regresses
-[Test]
-public async Task InternalField_IsAllowed()
-{
-    const string code = "public class Foo { internal int X; }";
-    await VerifyCSharpDiagnosticAsync(code, expected: EmptyDiagnosticResults);
-}
-```
-
-## Don't modify existing tests when adding coverage
-
-If the matrix shows a gap, add a new test method — don't edit an existing one to also cover the new axis. Editing risks moving the existing assertion's behaviour silently. See [[dotnet-testing]] for the reasoning.
-
-## Before-merge checklist
-
-- [ ] Coverage matrix at the top of the test file, listing every axis the rule's behaviour depends on.
-- [ ] Each negative test asserts an empty diagnostic list, not just "no exception."
-- [ ] Every cited issue number has a corresponding `Issue_NNN_*` regression test.
-- [ ] No existing test method was edited; gaps were filled with new methods.
+- [ ] Coverage matrix at top of file.
+- [ ] Each negative asserts empty diagnostics, not just no-throw.
+- [ ] Every cited issue has an `Issue_N_*` test.
+- [ ] No existing test edited.

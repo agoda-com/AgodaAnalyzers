@@ -1,92 +1,69 @@
 ---
 name: code-fix-preservation
-description: Use when authoring or modifying a Roslyn `CodeFixProvider`. Prevents the most severe class of analyzer bug — a code fix that silently removes unrelated user code while "fixing" the diagnostic.
+description: Use when writing or changing a Roslyn CodeFixProvider. Ensures a fix alters only the node the diagnostic identifies, never removing sibling syntax or trivia.
 ---
 
 # Code-fix preservation
 
-The cost of a wrong code fix is asymmetric: a missed fix is annoying, an incorrect fix that *removes* user code is a corruption. This has happened in this repo when a code fix replaced an entire attribute list to remove one offending attribute, taking the surrounding `[AssemblyDescription("...")]`, `[AssemblyVersion(...)]`, and similar siblings with it.
+A wrong fix that *removes* user code is corruption, not an annoyance. Rule: **alter only the exact offending node; siblings, modifiers, and trivia survive verbatim.**
 
-The rule is simple: **a code fix must alter only the exact syntax node identified by the diagnostic.** Siblings, parents, and trivia must survive verbatim.
+## Edit children, not the container
 
-## Common patterns where preservation fails
-
-### Attribute lists
-
-`[A, B, C]` is one `AttributeListSyntax` with three `AttributeSyntax` children. Removing attribute `B` by replacing the entire `AttributeListSyntax` removes `A` and `C` too. Operate on the child collection:
+`[A, B, C]` is one `AttributeListSyntax` with three children. Replacing the list to drop `B` drops `A` and `C` too.
 
 ```csharp
-// Wrong — replaces the whole list, drops siblings
-var newAttributeList = oldAttributeList.WithAttributes(SyntaxFactory.SeparatedList<AttributeSyntax>());
-editor.ReplaceNode(oldAttributeList, newAttributeList);
-
-// Right — remove just the offending attribute, leave siblings intact
-var remaining = oldAttributeList.Attributes.Where(a => a != offendingAttribute);
-var newList = oldAttributeList.WithAttributes(SyntaxFactory.SeparatedList(remaining));
-editor.ReplaceNode(oldAttributeList, newList);
+// Wrong — drops siblings
+editor.ReplaceNode(oldList, oldList.WithAttributes(SyntaxFactory.SeparatedList<AttributeSyntax>()));
+// Right — remove only the offender
+var remaining = oldList.Attributes.Where(a => a != offending);
+editor.ReplaceNode(oldList, oldList.WithAttributes(SyntaxFactory.SeparatedList(remaining)));
 ```
 
-If removing the last attribute would leave an empty `[]`, remove the entire list node instead. Don't ship empty attribute lists.
+Same for parameter lists, argument lists, member lists. If removing the last element leaves an empty `[]`/`()`, remove the whole container node instead.
 
-### Parameter lists, argument lists, member lists
+For modifiers (`SyntaxTokenList`), use `WithModifiers(original.Remove(token))`, not a fresh list.
 
-Same pattern as attributes — the container is a single node holding a separated list of children. Edit the children, not the container.
+## Preserve trivia
 
-### Modifier lists
-
-`public static readonly int X = 1;` — the modifiers are a `SyntaxTokenList`. Removing `readonly` shouldn't touch `public static`. Use `WithModifiers(originalModifiers.Remove(readonlyToken))`, not a new token list built from scratch.
-
-### Trivia (whitespace and comments)
-
-Leading and trailing trivia (the whitespace, newlines, and comments around a node) belong to the node. When you replace a node, propagate its original trivia:
+Whitespace/comments belong to the node. Propagate on replace:
 
 ```csharp
-var newNode = MakeReplacement(oldNode)
-    .WithLeadingTrivia(oldNode.GetLeadingTrivia())
-    .WithTrailingTrivia(oldNode.GetTrailingTrivia());
+var newNode = MakeReplacement(old)
+    .WithLeadingTrivia(old.GetLeadingTrivia())
+    .WithTrailingTrivia(old.GetTrailingTrivia());
 ```
 
-Otherwise the user's blank lines, XML doc comments, or `// ` comments above the line vanish silently.
+## Required test: target among siblings
 
-## Required test: target is one of several siblings
-
-For every code fix, write a test where the targeted syntax is **embedded among siblings**, and assert the siblings survive verbatim:
+Every fix needs a test where the target sits among siblings, asserting they survive:
 
 ```csharp
 [Test]
-public async Task CodeFix_PreservesSiblingAttributes()
+public async Task CodeFix_PreservesSiblings()
 {
     const string before = """
-        [AssemblyDescription("Description")]
-        [DeprecatedAttribute]
+        [AssemblyDescription("D")]
+        [Deprecated]
         [AssemblyVersion("1.0.0")]
         public class Foo {}
         """;
-
     const string after = """
-        [AssemblyDescription("Description")]
+        [AssemblyDescription("D")]
         [AssemblyVersion("1.0.0")]
         public class Foo {}
         """;
-
     await VerifyCSharpFixAsync(before, after);
 }
 ```
 
-Same shape for parameters, arguments, modifiers, members. A code fix without this test is not finished.
+## Multi-node fixes
 
-## Use `DocumentEditor` when fixes touch multiple nodes
+If one diagnostic produces several edits (remove attribute + add `using`), use `DocumentEditor` — chained `ReplaceNode` calls produce stale spans.
 
-If a single diagnostic produces multiple syntax edits (e.g. remove an attribute *and* add a `using` directive), use `DocumentEditor` rather than chained `ReplaceNode` calls. Multiple replaces against the same root produce stale spans; `DocumentEditor` handles span tracking correctly.
+## Checklist
 
-## Re-test the round-trip
-
-After applying the fix, parse the result and assert the diagnostic no longer fires. A fix that "compiles" but still triggers the analyzer means the fix didn't actually address the diagnostic — the test infrastructure (`VerifyCSharpFixAsync`) does this round-trip automatically; don't skip it by manually constructing expected strings.
-
-## Before-merge checklist
-
-- [ ] Fix operates on the precise offending node, not its parent container.
-- [ ] Siblings, modifiers, and trivia are preserved.
-- [ ] Empty containers (empty attribute lists, empty parameter lists) are removed entirely, not left as `[]` or `()`.
-- [ ] A test case exists where the target sits among other siblings, asserting siblings survive verbatim.
-- [ ] The fix has been verified to remove the diagnostic, not just compile.
+- [ ] Operates on the offending node, not its container.
+- [ ] Siblings, modifiers, trivia preserved.
+- [ ] Empty containers removed entirely, not left as `[]`/`()`.
+- [ ] Test with target among siblings, asserting siblings survive.
+- [ ] `VerifyCSharpFixAsync` confirms the diagnostic is gone (round-trip), not just that it compiles.

@@ -122,13 +122,13 @@ if (methodName != "QuerySelectorAsync") { ... }
 if (filePath.EndsWith(".g.cs", StringComparison.Ordinal)) return;
 ```
 
-Specific things to strip on review:
+Strip before committing:
 
-- **Restatement comments** above an `if`, `foreach`, or assignment that just verbalise the next line.
-- **AI-generated boilerplate** — `// As an AI assistant…`, emoji-headed sections, "I have implemented…" narration. Leftover GPT/Claude artifacts get caught in review fast; remove them before pushing.
-- **Stale TODOs** — if the TODO is tracked elsewhere (issue, ticket), point to that ID. Otherwise it rots.
+- **Restatement comments** that just verbalise the next line.
+- **AI-generated boilerplate** — `// As an AI assistant…`, emoji-headed sections, "I have implemented…" narration.
+- **Stale TODOs** — point to a tracking issue/ID, or delete.
 
-When documentation references an external API, include the link to the official docs in the doc comment or the user-facing rule documentation, so the next reader (or the IDE quick-info popup) lands on authoritative material rather than relearning the API from your code.
+When referencing an external API, link the official docs in the doc comment or rule documentation so the reader lands on authoritative material.
 
 ## Prefer positive predicates
 

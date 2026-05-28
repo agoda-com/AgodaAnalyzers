@@ -1,74 +1,55 @@
 ---
 name: analyzer-scope-guard
-description: Use when authoring a new Roslyn diagnostic analyzer or modifying an existing one's reporting conditions. Prevents the single most common reviewer correction in this repo — analyzers that fire in contexts the rule was never intended for (false positives in production code, naming-prefix collisions, global enum-member blacklists, etc.).
+description: Use when writing or changing a Roslyn diagnostic's reporting conditions. Keeps detection narrow so the analyzer fires only in its intended context — avoiding false positives in production code, name-prefix collisions, and over-broad symbol/enum matches.
 ---
 
 # Analyzer scope guard
 
-Reviewers consistently push back on analyzers whose detection is too broad — production code flagged by a test-only rule, `TestimonialService` flagged because the class name starts with `Test`, every reference to `LoadState.NetworkIdle` flagged because one method passes it to a waiter. Each false positive becomes a follow-up "fix false positive" PR and a noise complaint from downstream teams.
+Before `context.ReportDiagnostic(...)`, answer: **what is the narrowest context where this rule should fire?** Apply every scoping level that matches.
 
-Before you write `context.ReportDiagnostic(...)`, answer one question: **what is the narrowest context in which this rule is intended to fire?** The rest of this skill turns that answer into checks.
+## 1. Test-only rules — gate by test context, not names
 
-## Three scoping levels — apply all that match
+Use real test detection (see [[test-context-detection]]), never namespace or class-name prefixes. `Test` is a substring of `TestimonialService`, `LatestPrice`, `ContestRules`. If you can't distinguish test from production without a heuristic, document the limitation.
 
-### 1. Test-only rules — gate by *test context*, not naming heuristics
+## 2. Blacklists — match the call site, not the bare symbol
 
-If the rule only makes sense in test code, use real test detection (see `[[test-context-detection]]`), not namespace or class-name prefix matching. `Test` is a substring inside legitimate production identifiers (`TestimonialService`, `LatestPrice`, `ContestRules`). Reviewers will name one within minutes if you ship a prefix-only check.
-
-If you genuinely cannot distinguish test from production without a heuristic, document the limitation in the rule doc — don't paper over it.
-
-### 2. Method/enum/string blacklists — match the *call site*, not the bare symbol
-
-A common mistake is registering for `IdentifierName` and reporting whenever the identifier text equals (say) `NetworkIdle`. That catches:
-
-- `var x = LoadState.NetworkIdle;` — assignment to a variable
-- `if (state == LoadState.NetworkIdle)` — comparison
-- `case LoadState.NetworkIdle:` — switch label
-- `// LoadState.NetworkIdle is the problematic one` — XML doc fragment in a comment? unlikely but trivia happens
-
-The rule was probably about `await page.WaitForLoadStateAsync(LoadState.NetworkIdle)`. Detect the **invocation** (receiver type + method name + the offending argument), not the symbol in isolation.
+Don't fire on every reference to a banned identifier. Detect the invocation (receiver type + method + offending argument).
 
 ```csharp
-// Avoid — fires on every reference to the enum value anywhere
+// Wrong — fires on assignment, comparison, switch label, anywhere
 if (memberAccess.Name.Identifier.ValueText == "NetworkIdle")
     context.ReportDiagnostic(...);
 
-// Prefer — fires only when passed into the targeted method
+// Right — fires only at the targeted call
 if (invocation.Expression is MemberAccessExpressionSyntax member
     && member.Name.Identifier.ValueText == "WaitForLoadStateAsync"
-    && invocation.ArgumentList.Arguments.FirstOrDefault()?.Expression is MemberAccessExpressionSyntax arg
-    && arg.Name.Identifier.ValueText == "NetworkIdle")
-{
+    && invocation.ArgumentList.Arguments.FirstOrDefault()?.Expression
+       is MemberAccessExpressionSyntax { Name.Identifier.ValueText: "NetworkIdle" })
     context.ReportDiagnostic(...);
-}
 ```
 
-When the offending value can arrive through a local variable, parameter, or property, use the semantic model to follow it back to its definition — don't assume the value is always literal at the call site.
+If the value can arrive via a variable, parameter, or property, follow it through the semantic model — don't assume it's literal at the call site.
 
-### 3. Syntactic-form variants — enumerate before merging
+## 3. Syntactic-form variants — enumerate before merging
 
-For every "the rule fires on `X`" assertion, ask: *what other AST shapes produce the same runtime behaviour?* A small selection that's bitten this repo:
+For every "fires on X," list the other AST shapes with the same behaviour. Example for `Task.Delay`:
 
-- `Task.Delay(1000)` — literal — detected
-- `Task.Delay(d)` where `d` is a local with the same value — possibly missed
+- `Task.Delay(1000)` — literal — caught
+- `Task.Delay(d)` — local variable — likely missed
 - `Task.Delay(5 * 200)` — `BinaryExpression`, not `NumericLiteralExpression` — missed
-- `Task.Delay(Constants.Default)` — `MemberAccess` to a constant — missed
-- `await global::System.Threading.Tasks.Task.Delay(1000)` — fully-qualified — missed if you only look at unqualified names
-- `using static System.Threading.Tasks.Task; ... Delay(1000)` — global/static using — missed if you don't check `ISymbol` from the semantic model
+- `Task.Delay(Constants.Default)` — constant member access — missed
+- `global::System.Threading.Tasks.Task.Delay(1000)` — fully qualified — missed if matching unqualified names
+- `using static ...Task; Delay(1000)` — static using — missed without semantic-model symbol check
 
-You don't have to cover every variant — but you need to *know* which ones you cover and which you don't, and the rule documentation needs to say so. Add a negative test case for each variant you deliberately don't catch, asserting the analyzer doesn't fire there either.
+Cover what you can; know what you don't. Add a negative test for each variant you deliberately skip, and state the covered scope in the rule doc.
 
-## Before-merge checklist
+## Checklist
 
-Run through this before opening the PR:
+- [ ] Test-only: gated by [[test-context-detection]], not name prefix.
+- [ ] Blacklist: matched at call site, not bare identifier.
+- [ ] Listed ≥3 non-target call sites (log strings, partial-name collisions, fully-qualified refs, generated code) with a negative test each.
+- [ ] Local functions, lambdas, expression-bodied members handled or excluded.
+- [ ] Generated code (`<auto-generated>`, `.g.cs`, `.Designer.cs`) skipped if irrelevant.
+- [ ] Doc lists exact detection scope.
 
-- [ ] If test-only: gated by `[[test-context-detection]]`, not name prefix.
-- [ ] If blacklisting a method/enum/string: matched at the call site, not as a bare identifier.
-- [ ] Enumerated at least three plausible non-target call sites (logging strings, partial-name collisions, fully-qualified references, generated code, comments-in-doc) and added a negative unit test for each.
-- [ ] Local function bodies, lambda bodies, and expression-bodied members all handled or explicitly excluded.
-- [ ] Generated code (`<auto-generated>` headers, `.g.cs`, `Designer.cs`) skipped if the rule isn't relevant to it.
-- [ ] Documentation lists the exact detection scope so users aren't surprised.
-
-## When a reviewer flags a false positive
-
-The fix is almost never "add another `if`". The fix is to identify *which scoping dimension* you missed (context, call-site, syntactic-form, generated-code) and add the matching guard plus a regression test that would have caught the case before. See related skills [[test-context-detection]], [[analyzer-test-coverage-matrix]].
+A false positive is almost never fixed with another `if`. Identify the missed dimension (context, call-site, syntactic-form, generated-code), add the guard, add a regression test. See [[analyzer-test-coverage-matrix]].
