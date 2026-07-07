@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Agoda.Analyzers.Helpers;
@@ -15,6 +16,8 @@ namespace Agoda.Analyzers.AgodaCustom
     public class AG0051DetectHardcodedDateLiterals : DiagnosticAnalyzer
     {
         public const string DiagnosticId = "AG0051";
+        public const string ConfidencePropertyName = "confidence";
+        public const string HighConfidence = "high";
 
         private static readonly LocalizableString Title = new LocalizableResourceString(
             nameof(CustomRulesResources.AG0051Title),
@@ -48,7 +51,9 @@ namespace Agoda.Analyzers.AgodaCustom
                 { AnalyzerConstants.KEY_TECH_DEBT_IN_MINUTES, "10" }
             }.ToImmutableDictionary();
 
-        private const int SafeYearThreshold = 2020;
+        private const int SentinelYearThreshold = 2999;
+
+        private static readonly DateTime AnalysisDate = DateTime.UtcNow.Date;
 
         private static readonly Regex DateStringPattern = new Regex(
             @"^\d{4}[-/]\d{1,2}[-/]\d{1,2}($|[T\s])",
@@ -60,7 +65,35 @@ namespace Agoda.Analyzers.AgodaCustom
             "Microsoft.VisualStudio.TestTools.UnitTesting.TestClassAttribute",
         };
 
-        private static readonly char[] DateSeparators = { '-', '/' };
+        private static readonly HashSet<string> AssertionMethods = new HashSet<string>
+        {
+            "ShouldBe",
+            "ShouldBeEquivalentTo",
+            "AreEqual",
+            "Equal",
+            "Be",
+            "BeEquivalentTo",
+        };
+
+        private static readonly HashSet<string> RiskyPropertyNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        {
+            "StartDate",
+            "EndDate",
+            "From",
+            "To",
+            "Expiry",
+            "Expiration",
+            "ExpiresAt",
+            "CheckIn",
+            "CheckOut",
+            "CheckInDate",
+            "CheckOutDate",
+            "ValidFrom",
+            "ValidTo",
+            "PayableDate",
+            "FirstLiveDate",
+            "EffectiveDate",
+        };
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
 
@@ -95,15 +128,13 @@ namespace Agoda.Analyzers.AgodaCustom
             if (!AllArgumentsAreLiterals(arguments.Value.Take(3)))
                 return;
 
-            var yearArg = arguments.Value[0].Expression as LiteralExpressionSyntax;
-            if (yearArg == null || !yearArg.IsKind(SyntaxKind.NumericLiteralExpression))
+            if (!TryGetDateParts(arguments.Value, out var year, out var month, out var day))
                 return;
 
-            var year = (int)yearArg.Token.Value;
-            if (year < SafeYearThreshold)
+            if (IsSentinelDate(year) || IsPastDate(year, month, day) || IsLowRiskUsage(creation))
                 return;
 
-            context.ReportDiagnostic(Diagnostic.Create(Rule, creation.GetLocation(), Properties));
+            context.ReportDiagnostic(CreateDiagnostic(creation));
         }
 
         private void AnalyzeInvocation(SyntaxNodeAnalysisContext context)
@@ -141,10 +172,23 @@ namespace Agoda.Analyzers.AgodaCustom
             if (!DateStringPattern.IsMatch(dateString))
                 return;
 
-            if (TryExtractYear(dateString, out var year) && year < SafeYearThreshold)
+            if (!DateTime.TryParse(dateString, CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsedDate))
                 return;
 
-            context.ReportDiagnostic(Diagnostic.Create(Rule, invocation.GetLocation(), Properties));
+            if (IsSentinelDate(parsedDate.Year) ||
+                IsPastDate(parsedDate.Year, parsedDate.Month, parsedDate.Day) ||
+                IsLowRiskUsage(invocation))
+                return;
+
+            context.ReportDiagnostic(CreateDiagnostic(invocation));
+        }
+
+        private static Diagnostic CreateDiagnostic(SyntaxNode node)
+        {
+            return Diagnostic.Create(
+                Rule,
+                node.GetLocation(),
+                Properties.Add(ConfidencePropertyName, HighConfidence));
         }
 
         private static bool IsInTestContext(SyntaxNodeAnalysisContext context)
@@ -205,14 +249,87 @@ namespace Agoda.Analyzers.AgodaCustom
                                         && literal.IsKind(SyntaxKind.NumericLiteralExpression));
         }
 
-        private static bool TryExtractYear(string dateString, out int year)
+        private static bool TryGetDateParts(SeparatedSyntaxList<ArgumentSyntax> arguments, out int year, out int month, out int day)
         {
             year = 0;
-            var dashIndex = dateString.IndexOfAny(DateSeparators);
-            if (dashIndex <= 0)
+            month = 0;
+            day = 0;
+
+            return TryGetIntLiteral(arguments[0], out year) &&
+                   TryGetIntLiteral(arguments[1], out month) &&
+                   TryGetIntLiteral(arguments[2], out day);
+        }
+
+        private static bool TryGetIntLiteral(ArgumentSyntax argument, out int value)
+        {
+            value = 0;
+            var literal = argument.Expression as LiteralExpressionSyntax;
+            if (literal == null || !literal.IsKind(SyntaxKind.NumericLiteralExpression))
                 return false;
 
-            return int.TryParse(dateString.Substring(0, dashIndex), out year);
+            if (literal.Token.Value is int intValue)
+            {
+                value = intValue;
+                return true;
+            }
+
+            return false;
+        }
+
+        private static bool IsSentinelDate(int year)
+        {
+            return year >= SentinelYearThreshold;
+        }
+
+        private static bool IsPastDate(int year, int month, int day)
+        {
+            if (year < 1 || year > 9999 || month < 1 || month > 12 || day < 1 || day > 31)
+                return false;
+
+            return new DateTime(year, month, 1).AddMonths(1) < AnalysisDate;
+        }
+
+        private static bool IsLowRiskUsage(SyntaxNode node)
+        {
+            if (IsLowRiskObjectInitializerAssignment(node))
+                return true;
+
+            var argument = node.Parent as ArgumentSyntax;
+            var invocation = argument?.Parent?.Parent as InvocationExpressionSyntax;
+            return invocation != null &&
+                   TryGetInvokedName(invocation, out var invokedName) &&
+                   AssertionMethods.Contains(invokedName);
+        }
+
+        private static bool IsLowRiskObjectInitializerAssignment(SyntaxNode node)
+        {
+            var assignment = node.Parent as AssignmentExpressionSyntax;
+            if (assignment == null || !(assignment.Parent is InitializerExpressionSyntax))
+                return false;
+
+            var identifierName = assignment.Left as IdentifierNameSyntax;
+            return identifierName != null && !RiskyPropertyNames.Contains(identifierName.Identifier.Text);
+        }
+
+        private static bool TryGetInvokedName(InvocationExpressionSyntax invocation, out string name)
+        {
+            name = null;
+
+            var memberAccess = invocation.Expression as MemberAccessExpressionSyntax;
+            if (memberAccess != null)
+            {
+                name = memberAccess.Name.Identifier.Text;
+                return !string.IsNullOrEmpty(name);
+            }
+
+            var identifierName = invocation.Expression as IdentifierNameSyntax;
+            if (identifierName != null)
+            {
+                name = identifierName.Identifier.Text;
+                return !string.IsNullOrEmpty(name);
+            }
+
+            return false;
         }
     }
 }
