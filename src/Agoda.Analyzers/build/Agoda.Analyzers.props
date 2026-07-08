@@ -1,0 +1,8 @@
+<Project>
+  <ItemGroup>
+    <GlobalAnalyzerConfigFiles Include="$(MSBuildThisFileDirectory)Agoda.Analyzers.globalconfig" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(IsTestProject)' == 'true'">
+    <GlobalAnalyzerConfigFiles Include="$(MSBuildThisFileDirectory)Agoda.Analyzers.Tests.globalconfig" />
+  </ItemGroup>
+</Project>
