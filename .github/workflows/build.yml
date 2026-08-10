@@ -64,7 +64,7 @@ jobs:
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         files: src/Agoda.Analyzers.Test/results.cobertura.xml  # optional
-        fail_ci_if_error: true # optional (default = false)
+        fail_ci_if_error: false # optional (default = false)
 
   deploy:
     needs: build
