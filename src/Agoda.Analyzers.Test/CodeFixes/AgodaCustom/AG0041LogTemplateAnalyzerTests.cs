@@ -557,6 +557,17 @@ namespace TestNamespace
     /// Stands in for SonarAnalyzer.CSharp's S2629 so the test suite does not need a dependency on
     /// it. It reports the same shape: an interpolated string passed to a member invocation.
     /// </summary>
+    /// <remarks>
+    /// The rules that police shipped analyzer projects do not apply to a stub that never leaves the
+    /// test assembly, and its title/message deliberately mirror Sonar's wording verbatim:
+    ///   RS1036 - EnforceExtendedAnalyzerRules is for projects that package analyzers; this one packages tests.
+    ///   RS2008 - S2629 is owned by SonarAnalyzer.CSharp, so it is not tracked in our release files.
+    ///   RS1031/RS1032 - the trailing period comes from Sonar's own text, which we copy on purpose.
+    /// </remarks>
+#pragma warning disable RS1036
+#pragma warning disable RS2008
+#pragma warning disable RS1031
+#pragma warning disable RS1032
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public class StubSonarS2629Analyzer : DiagnosticAnalyzer
     {
@@ -591,6 +602,10 @@ namespace TestNamespace
             context.ReportDiagnostic(Diagnostic.Create(Rule, argument.GetLocation()));
         }
     }
+#pragma warning restore RS1032
+#pragma warning restore RS1031
+#pragma warning restore RS2008
+#pragma warning restore RS1036
 
     public class TestCase
     {
