@@ -248,33 +248,34 @@ namespace Agoda.Analyzers.AgodaCustom
         private static InvocationExpressionSyntax CreateNewInvocation(InvocationExpressionSyntax originalInvocation, int templateIndex, string template, List<ArgumentSyntax> parameters)
         {
             var originalArguments = originalInvocation.ArgumentList.Arguments;
-            var newArguments = new List<ArgumentSyntax>();
+            var nodesAndTokens = new List<SyntaxNodeOrToken>();
 
-            // Leading arguments (exception / EventId) must survive the rewrite.
+            // Arguments the fix does not rewrite are copied verbatim, along with the commas that
+            // already separated them, so a multi-line call keeps its layout and a comment sitting
+            // between arguments survives. Only the separators around the arguments we introduce are
+            // synthesised.
             for (var i = 0; i < templateIndex; i++)
             {
-                newArguments.Add(originalArguments[i].WithoutTrivia());
+                nodesAndTokens.Add(originalArguments[i]);
+                nodesAndTokens.Add(originalArguments.GetSeparator(i));
             }
 
-            newArguments.Add(SyntaxFactory.Argument(
-                SyntaxFactory.LiteralExpression(SyntaxKind.StringLiteralExpression, SyntaxFactory.Literal(template))));
-            newArguments.AddRange(parameters);
+            // The literal takes the place of the interpolated string, so it inherits its trivia.
+            nodesAndTokens.Add(SyntaxFactory.Argument(
+                    SyntaxFactory.LiteralExpression(SyntaxKind.StringLiteralExpression, SyntaxFactory.Literal(template)))
+                .WithTriviaFrom(originalArguments[templateIndex]));
+
+            foreach (var parameter in parameters)
+            {
+                nodesAndTokens.Add(SyntaxFactory.Token(SyntaxKind.CommaToken).WithTrailingTrivia(SyntaxFactory.Space));
+                nodesAndTokens.Add(parameter);
+            }
 
             // Anything that followed the template was never part of it, so it is preserved too.
             for (var i = templateIndex + 1; i < originalArguments.Count; i++)
             {
-                newArguments.Add(originalArguments[i].WithoutTrivia());
-            }
-
-            var nodesAndTokens = new List<SyntaxNodeOrToken>();
-            for (var i = 0; i < newArguments.Count; i++)
-            {
-                if (i > 0)
-                {
-                    nodesAndTokens.Add(SyntaxFactory.Token(SyntaxKind.CommaToken).WithTrailingTrivia(SyntaxFactory.Space));
-                }
-
-                nodesAndTokens.Add(newArguments[i]);
+                nodesAndTokens.Add(originalArguments.GetSeparator(i - 1));
+                nodesAndTokens.Add(originalArguments[i]);
             }
 
             var newArgumentList = originalInvocation.ArgumentList

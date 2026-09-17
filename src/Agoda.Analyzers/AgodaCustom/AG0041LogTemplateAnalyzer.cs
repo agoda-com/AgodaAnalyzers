@@ -45,6 +45,16 @@ namespace Agoda.Analyzers.AgodaCustom
             "Serilog.ILogger",
             "Microsoft.Extensions.Logging.ILogger");
 
+        /// <summary>
+        /// Types that sit in front of the message template on the well-known overloads:
+        /// <c>ILogger.Log(LogLevel, ...)</c>, Serilog's <c>Write(LogEventLevel, ...)</c> and the
+        /// EventId-first forms. <c>System.Exception</c> is matched separately, by base type.
+        /// </summary>
+        private static readonly ImmutableHashSet<string> TemplatePrefixTypeNames = ImmutableHashSet.Create(
+            "Microsoft.Extensions.Logging.EventId",
+            "Microsoft.Extensions.Logging.LogLevel",
+            "Serilog.Events.LogEventLevel");
+
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
 
         public override void Initialize(AnalysisContext context)
@@ -76,9 +86,10 @@ namespace Agoda.Analyzers.AgodaCustom
         /// <summary>
         /// Finds the message-template argument of a logging call. The template is the first argument
         /// that is a string literal, an interpolated string or a string concatenation; leading
-        /// <c>Exception</c> and <c>EventId</c> arguments are skipped so that the exception-first and
-        /// EventId-first overloads are covered. Anything else stops the search, so we never report on
-        /// an argument that is not in message-template position.
+        /// <c>Exception</c>, <c>EventId</c>, <c>LogLevel</c> and <c>LogEventLevel</c> arguments are
+        /// skipped so that the exception-first, EventId-first and level-first overloads are covered.
+        /// Anything else stops the search, so we never report on an argument that is not in
+        /// message-template position.
         /// </summary>
         internal static ArgumentSyntax FindTemplateArgument(InvocationExpressionSyntax invocation, SemanticModel semanticModel)
         {
@@ -90,7 +101,7 @@ namespace Agoda.Analyzers.AgodaCustom
                 if (IsTemplateShaped(argument.Expression))
                     return argument;
 
-                if (IsExceptionOrEventId(argument.Expression, semanticModel))
+                if (IsTemplatePrefixArgument(argument.Expression, semanticModel))
                     continue;
 
                 return null;
@@ -119,18 +130,22 @@ namespace Agoda.Analyzers.AgodaCustom
                    && ContainsStringConcatenation(binary);
         }
 
-        private static bool IsExceptionOrEventId(ExpressionSyntax expression, SemanticModel semanticModel)
+        private static bool IsTemplatePrefixArgument(ExpressionSyntax expression, SemanticModel semanticModel)
         {
             var typeInfo = semanticModel.GetTypeInfo(expression);
-            return IsExceptionOrEventId(typeInfo.Type) || IsExceptionOrEventId(typeInfo.ConvertedType);
+            return IsTemplatePrefixType(typeInfo.Type) || IsTemplatePrefixType(typeInfo.ConvertedType);
         }
 
-        private static bool IsExceptionOrEventId(ITypeSymbol type)
+        private static bool IsTemplatePrefixType(ITypeSymbol type)
         {
+            // A logger implementation is free to declare its own overload taking LogLevel? or
+            // EventId?, so it is the underlying value type that decides.
+            type = UnwrapNullable(type);
+
             if (type == null)
                 return false;
 
-            if (type.Name == "EventId" && type.ContainingNamespace?.ToString() == "Microsoft.Extensions.Logging")
+            if (TemplatePrefixTypeNames.Contains(GetFullName(type)))
                 return true;
 
             for (var current = type; current != null; current = current.BaseType)
@@ -140,6 +155,15 @@ namespace Agoda.Analyzers.AgodaCustom
             }
 
             return false;
+        }
+
+        private static ITypeSymbol UnwrapNullable(ITypeSymbol type)
+        {
+            var named = type as INamedTypeSymbol;
+            if (named != null && named.OriginalDefinition?.SpecialType == SpecialType.System_Nullable_T)
+                return named.TypeArguments[0];
+
+            return type;
         }
 
         private static bool IsLoggingMethod(InvocationExpressionSyntax invocation, SemanticModel semanticModel)
@@ -173,7 +197,7 @@ namespace Agoda.Analyzers.AgodaCustom
             return type.AllInterfaces.Any(i => LoggerInterfaceNames.Contains(GetFullName(i)));
         }
 
-        private static string GetFullName(INamedTypeSymbol type)
+        private static string GetFullName(ITypeSymbol type)
         {
             var containingNamespace = type.ContainingNamespace;
             if (containingNamespace == null || containingNamespace.IsGlobalNamespace)

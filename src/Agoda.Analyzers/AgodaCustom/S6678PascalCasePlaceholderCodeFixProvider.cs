@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Composition;
@@ -54,8 +53,8 @@ namespace Agoda.Analyzers.AgodaCustom
                 var literal = FindStringLiteral(root, diagnostic.Location.SourceSpan);
                 if (literal == null)
                 {
-                    // The diagnostic did not resolve to a single string literal we understand. Register no fix
-                    // rather than guess, and rather than throw.
+                    // The diagnostic did not resolve to a single string literal we understand, so register
+                    // no fix rather than guess.
                     continue;
                 }
 
@@ -96,49 +95,38 @@ namespace Agoda.Analyzers.AgodaCustom
                 return null;
             }
 
-            try
+            // Covers both "points at the whole literal" and "points somewhere inside the literal".
+            var token = root.FindToken(span.Start);
+            for (var node = token.Parent; node != null; node = node.Parent)
             {
-                // Covers both "points at the whole literal" and "points somewhere inside the literal".
-                var token = root.FindToken(span.Start);
-                for (var node = token.Parent; node != null; node = node.Parent)
+                var candidate = node as LiteralExpressionSyntax;
+                if (candidate != null && candidate.IsKind(SyntaxKind.StringLiteralExpression))
                 {
-                    var candidate = node as LiteralExpressionSyntax;
-                    if (candidate != null && candidate.IsKind(SyntaxKind.StringLiteralExpression))
-                    {
-                        return candidate;
-                    }
-
-                    // Don't walk out past the statement the diagnostic is in.
-                    if (node is StatementSyntax || node is MemberDeclarationSyntax)
-                    {
-                        break;
-                    }
+                    return candidate;
                 }
 
-                // The diagnostic may point at a wider node (the argument, or the whole invocation). Accept it
-                // only when exactly one string literal sits underneath, otherwise we'd be guessing.
-                var enclosing = root.FindNode(span, getInnermostNodeForTie: true);
-                if (enclosing == null)
+                // Don't walk out past the statement the diagnostic is in.
+                if (node is StatementSyntax || node is MemberDeclarationSyntax)
                 {
-                    return null;
+                    break;
                 }
-
-                var literals = enclosing.DescendantNodesAndSelf()
-                    .OfType<LiteralExpressionSyntax>()
-                    .Where(l => l.IsKind(SyntaxKind.StringLiteralExpression))
-                    .Take(2)
-                    .ToList();
-
-                return literals.Count == 1 ? literals[0] : null;
             }
-            catch (ArgumentOutOfRangeException)
+
+            // The diagnostic may point at a wider node (the argument, or the whole invocation). Accept it
+            // only when exactly one string literal sits underneath, otherwise we'd be guessing.
+            var enclosing = root.FindNode(span, getInnermostNodeForTie: true);
+            if (enclosing == null)
             {
                 return null;
             }
-            catch (IndexOutOfRangeException)
-            {
-                return null;
-            }
+
+            var literals = enclosing.DescendantNodesAndSelf()
+                .OfType<LiteralExpressionSyntax>()
+                .Where(l => l.IsKind(SyntaxKind.StringLiteralExpression))
+                .Take(2)
+                .ToList();
+
+            return literals.Count == 1 ? literals[0] : null;
         }
 
         /// <summary>

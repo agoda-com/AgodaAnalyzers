@@ -190,6 +190,48 @@ public class AG0041LogTemplateAnalyzerTests
             ExpectedDiagnostics = new DiagnosticResult[] { }
         }).SetName("ILogger exception-first overload with a correct template (no diagnostics)");
 
+        yield return new TestCaseData(new TestCase
+        {
+            Usings = "using Microsoft.Extensions.Logging;",
+            SetupCode = "private readonly ILogger _logger;",
+            LogStatement = "_logger.Log(LogLevel.Error, $\"Failed to load {name}\");",
+            ExpectedFix = "_logger.Log(LogLevel.Error, \"Failed to load {Name}\", name);",
+            ExpectedDiagnostics = new[]
+            {
+                new DiagnosticResult(AG0041LogTemplateAnalyzer.Rule)
+                    .WithSpan(13, 41, 13, 65)
+                    .WithArguments("string interpolation")
+            }
+        }).SetName("ILogger LogLevel-first overload");
+
+        yield return new TestCaseData(new TestCase
+        {
+            Usings = "using Serilog;\nusing Serilog.Events;",
+            SetupCode = "private readonly ILogger _logger;",
+            LogStatement = "_logger.Write(LogEventLevel.Error, $\"Failed to load {name}\");",
+            ExpectedFix = "_logger.Write(LogEventLevel.Error, \"Failed to load {Name}\", name);",
+            ExpectedDiagnostics = new[]
+            {
+                new DiagnosticResult(AG0041LogTemplateAnalyzer.Rule)
+                    .WithSpan(14, 48, 14, 72)
+                    .WithArguments("string interpolation")
+            }
+        }).SetName("Serilog Write LogEventLevel-first overload");
+
+        yield return new TestCaseData(new TestCase
+        {
+            Usings = "using Serilog;\nusing Serilog.Events;",
+            SetupCode = "private Exception ex;",
+            LogStatement = "Log.Write(LogEventLevel.Error, ex, $\"Failed to load {name}\");",
+            ExpectedFix = "Log.Write(LogEventLevel.Error, ex, \"Failed to load {Name}\", name);",
+            ExpectedDiagnostics = new[]
+            {
+                new DiagnosticResult(AG0041LogTemplateAnalyzer.Rule)
+                    .WithSpan(14, 48, 14, 72)
+                    .WithArguments("string interpolation")
+            }
+        }).SetName("Serilog static Write - level then exception before the template");
+
         // ---------------------------------------------------------------------------------------
         // Receivers other than a field.
         // ---------------------------------------------------------------------------------------
@@ -461,6 +503,133 @@ namespace TestNamespace
 }}";
 
         var codeFixTest = new CodeFixTest(test, expected, testCase.ExpectedDiagnostics);
+
+        await codeFixTest.RunAsync(CancellationToken.None);
+    }
+
+    /// <summary>
+    /// The fix is meant to be run in bulk via <c>dotnet format analyzers</c>, so the arguments it does
+    /// not rewrite have to come through with their layout and comments intact.
+    /// </summary>
+    [Test]
+    public async Task PreservesTriviaOnArgumentsItDoesNotRewrite()
+    {
+        const string test = @"
+using System;
+using Microsoft.Extensions.Logging;
+
+namespace TestNamespace
+{
+    public class TestClass
+    {
+        private readonly ILogger _logger;
+        private Exception ex;
+
+        public void TestMethod(int propertyId)
+        {
+            _logger.LogError(
+                ex, // timeout from supplier
+                $""Failed to load {propertyId}"");
+        }
+    }
+}";
+
+        const string expected = @"
+using System;
+using Microsoft.Extensions.Logging;
+
+namespace TestNamespace
+{
+    public class TestClass
+    {
+        private readonly ILogger _logger;
+        private Exception ex;
+
+        public void TestMethod(int propertyId)
+        {
+            _logger.LogError(
+                ex, // timeout from supplier
+                ""Failed to load {PropertyId}"", propertyId);
+        }
+    }
+}";
+
+        var codeFixTest = new CodeFixTest(test, expected, new[]
+        {
+            new DiagnosticResult(AG0041LogTemplateAnalyzer.Rule)
+                .WithSpan(16, 17, 16, 47)
+                .WithArguments("string interpolation")
+        });
+
+        await codeFixTest.RunAsync(CancellationToken.None);
+    }
+
+    /// <summary>
+    /// A concrete <c>ILogger</c> is a logging type too, and one can declare a level-first overload
+    /// taking <c>LogLevel?</c>. The nullable has to be unwrapped or the argument stops the search for
+    /// the template and the interpolation goes unreported.
+    /// </summary>
+    [Test]
+    public async Task NullableLogLevelBeforeTheTemplateIsSkipped()
+    {
+        const string test = @"
+using System;
+using Microsoft.Extensions.Logging;
+
+namespace TestNamespace
+{
+    public class CustomLogger : ILogger
+    {
+        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter) { }
+        public bool IsEnabled(LogLevel logLevel) => true;
+        public IDisposable BeginScope<TState>(TState state) => null;
+
+        public void Log(LogLevel? logLevel, string messageTemplate, params object[] args) { }
+    }
+
+    public class TestClass
+    {
+        private readonly CustomLogger _logger = new CustomLogger();
+
+        public void TestMethod(string name, LogLevel? level)
+        {
+            _logger.Log(level, $""Failed to load {name}"");
+        }
+    }
+}";
+
+        const string expected = @"
+using System;
+using Microsoft.Extensions.Logging;
+
+namespace TestNamespace
+{
+    public class CustomLogger : ILogger
+    {
+        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter) { }
+        public bool IsEnabled(LogLevel logLevel) => true;
+        public IDisposable BeginScope<TState>(TState state) => null;
+
+        public void Log(LogLevel? logLevel, string messageTemplate, params object[] args) { }
+    }
+
+    public class TestClass
+    {
+        private readonly CustomLogger _logger = new CustomLogger();
+
+        public void TestMethod(string name, LogLevel? level)
+        {
+            _logger.Log(level, ""Failed to load {Name}"", name);
+        }
+    }
+}";
+
+        var codeFixTest = new CodeFixTest(test, expected, new[]
+        {
+            new DiagnosticResult(AG0041LogTemplateAnalyzer.Rule)
+                .WithSpan(22, 32, 22, 56)
+                .WithArguments("string interpolation")
+        });
 
         await codeFixTest.RunAsync(CancellationToken.None);
     }
