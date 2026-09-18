@@ -56,6 +56,12 @@
 		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
 	</ItemGroup>
+	<ItemGroup>
+		<None Include="build\Agoda.Analyzers.globalconfig" Pack="true" PackagePath="build" />
+		<None Include="build\Agoda.Analyzers.Tests.globalconfig" Pack="true" PackagePath="build" />
+		<None Include="build\Agoda.Analyzers.props" Pack="true" PackagePath="build" />
+		<None Include="buildTransitive\Agoda.Analyzers.props" Pack="true" PackagePath="buildTransitive" />
+	</ItemGroup>
   <ItemGroup>
     <Compile Update="AgodaCustom\AG0018PermitOnlyCertainPubliclyExposedEnumerables.cs">
       <SubType>Code</SubType>
