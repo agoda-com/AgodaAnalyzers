@@ -63,11 +63,12 @@ Evidence: AA #184 (AG0041 interpolated/concatenated forms), #246 (verbatim and `
 ## 4. Find the argument by parameter, not by index
 
 ```csharp
-// Don't: assumes the template is always first. Misses logger.LogError(ex, "...") and logger.Log(LogLevel.Warning, "...").
-var template = invocation.ArgumentList.Arguments[0];
+// Don't: syntax (InvocationExpressionSyntax), and assumes the template is always first.
+// Misses logger.LogError(ex, "...") and logger.Log(LogLevel.Warning, "...").
+var template = invocationSyntax.ArgumentList.Arguments[0];
 
-// Do: find the parameter by name/type on the resolved method
-var template = invocation.Arguments.FirstOrDefault(a => a.Parameter?.Name is "message" or "messageTemplate");
+// Do: operation (IInvocationOperation), and find the argument by the parameter it binds to
+var template = invocationOp.Arguments.FirstOrDefault(a => a.Parameter?.Name is "message" or "messageTemplate");
 ```
 
 Evidence: AA #246 (AG0041 missed exception-first and `LogLevel`-first calls; the fix matches `Exception`, `EventId`, `LogLevel` and `LogEventLevel` prefixes by type).

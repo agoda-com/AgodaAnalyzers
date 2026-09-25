@@ -24,10 +24,11 @@ def outcomes(path):
     result = {}
     for trx in files:
         root = ET.parse(trx).getroot()
-        classes = {
-            d.get("id"): d.find("t:TestMethod", NS).get("className")
-            for d in root.iterfind(".//t:TestDefinitions/t:UnitTest", NS)
-        }
+        classes = {}
+        for d in root.iterfind(".//t:TestDefinitions/t:UnitTest", NS):
+            # Some adapters (data-driven, ordered, custom) write a UnitTest with no TestMethod child.
+            tm = d.find("t:TestMethod", NS)
+            classes[d.get("id")] = tm.get("className") if tm is not None else "?"
         for r in root.iterfind(".//t:Results/t:UnitTestResult", NS):
             name = f"{classes.get(r.get('testId'), '?')}.{r.get('testName')}"
             result[name] = r.get("outcome")

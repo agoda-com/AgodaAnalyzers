@@ -37,14 +37,16 @@ internal sealed class TestAttributes
 
     public bool IsTestType(INamedTypeSymbol type)
     {
+        // Walk base types for both checks: GetMembers() only returns members declared on that type,
+        // and xUnit test classes often inherit [Fact] methods from an attribute-less abstract base.
         for (var t = type; t != null; t = t.BaseType)
         {
             if (HasAny(t, _classAttributes)) return true;
-        }
 
-        foreach (var member in type.GetMembers())
-        {
-            if (member is IMethodSymbol method && HasAny(method, _methodAttributes)) return true;
+            foreach (var member in t.GetMembers())
+            {
+                if (member is IMethodSymbol method && HasAny(method, _methodAttributes)) return true;
+            }
         }
 
         return HasTestNamespaceSegment(type.ContainingNamespace);
@@ -91,6 +93,7 @@ internal sealed class TestAttributes
 | no class attribute, one `[Fact]` method (xUnit) | fires |
 | `[TestClass]` + `[TestMethod]` (MSTest) | fires |
 | class inheriting a `[TestFixture]` base | fires |
+| no attributes, inherits `[Fact]` methods from an attribute-less abstract base | fires |
 | production class in namespace `MyApp.Tests.Helpers` | fires (namespace branch) |
 | class `TestimonialService` in `MyApp.Services` | does not fire |
 | namespace `MyApp.Contest` | does not fire |

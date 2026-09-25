@@ -13,7 +13,7 @@ from collections import Counter
 
 LINE = re.compile(
     r"^(?P<file>.+?)\((?P<line>\d+),(?P<col>\d+)(?:,\d+,\d+)?\): "
-    r"(?:warning|error|info) (?P<id>[A-Za-z]+\d+): (?P<msg>.*?)(?: \[[^\]]+\])?$"
+    r"(?i:warning|error|info) (?P<id>[A-Za-z]+\d+): (?P<msg>.*?)(?: \[[^\]]+\])?$"
 )
 
 
